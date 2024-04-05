@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import {Body, Controller, Get, Post} from '@nestjs/common';
 
 @Controller('users')
 export class BlogsController {
@@ -6,4 +6,11 @@ export class BlogsController {
   getUser() {
     return { key: 'Hello' };
   }
+  @Post()
+  createPost(@Body() inputBody: InBodyModel) {
+    return { key: inputBody.title }
+  }
+}
+type InBodyModel = {
+  title: string
 }
