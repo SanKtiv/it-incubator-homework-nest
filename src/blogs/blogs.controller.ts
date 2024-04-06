@@ -1,16 +1,18 @@
-import {Body, Controller, Get, Post} from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { BlogsService } from './blogs.service';
 
-@Controller('users')
+@Controller()
 export class BlogsController {
-  @Get()
-  getUser() {
-    return { key: 'Hello' };
+
+  constructor(private readonly blogsService: BlogsService) {}
+
+  @Get('blogs')
+  getAllBlogs() {
+    return this.blogsService.findAll();
   }
-  @Post()
-  createPost(@Body() inputBody: InBodyModel) {
-    return { key: inputBody.title }
+
+  @Post('blogs')
+  createBlog(@Body() inputBody) {
+    return this.blogsService.create(inputBody);
   }
-}
-type InBodyModel = {
-  title: string
 }
