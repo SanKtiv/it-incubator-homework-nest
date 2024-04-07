@@ -5,19 +5,19 @@ export type BlogDocument = HydratedDocument<Blog>;
 
 @Schema()
 export class Blog {
-  @Prop({required: true})
+  @Prop({ required: true })
   name: string;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   description: string;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   websiteUrl: string;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   createdAt: string;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   isMembership: boolean;
 }
 
