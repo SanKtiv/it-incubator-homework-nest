@@ -4,16 +4,18 @@ import { AppService } from './app.service';
 import { BlogsController } from './blogs/blogs.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogSchema } from './blogs/blogs.schema';
-import { BlogsService } from './blogs/blogs.service';
+import { BlogsRepository } from './blogs/blogs.repository';
+import { TestingController } from './testing/testig.controller';
+
+const mongoURI =
+  'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/tube?retryWrites=true&w=majority';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/tube?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(mongoURI),
     MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
   ],
-  controllers: [AppController, BlogsController],
-  providers: [AppService, BlogsService],
+  controllers: [AppController, TestingController, BlogsController],
+  providers: [AppService, BlogsRepository],
 })
 export class AppModule {}

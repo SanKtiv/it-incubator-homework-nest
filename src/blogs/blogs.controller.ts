@@ -1,17 +1,41 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { BlogsService } from './blogs.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { BlogsRepository } from './blogs.repository';
+import { Blog } from './blogs.schema';
 
 @Controller()
 export class BlogsController {
-  constructor(private readonly blogsService: BlogsService) {}
+  constructor(private readonly blogsRepository: BlogsRepository) {}
 
   @Get('blogs')
-  getAllBlogs() {
-    return this.blogsService.findAll();
+  async getAllBlogs() {
+    return this.blogsRepository.findAll();
+  }
+
+  @Get('blogs/:id')
+  async getBlogById(@Param('id') id: string) {
+    return this.blogsRepository.findById(id);
   }
 
   @Post('blogs')
-  createBlog(@Body() inputBody) {
-    return this.blogsService.create(inputBody);
+  async createBlog(@Body() inputBody): Promise<Blog> {
+    return this.blogsRepository.create(inputBody);
+  }
+
+  @Put('blogs/:id')
+  async updateBlogById(@Param('id') id: string, @Body() inputUpdate: any) {
+    await this.blogsRepository.updateById(id, inputUpdate);
+  }
+
+  @Delete('blogs/:id')
+  async deleteBlogById(@Param('id') id: string): Promise<void> {
+    await this.blogsRepository.deleteById(id);
   }
 }
