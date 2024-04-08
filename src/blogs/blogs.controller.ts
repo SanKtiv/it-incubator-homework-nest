@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpException, HttpStatus,
   Param,
   Post,
   Put,
@@ -10,31 +10,38 @@ import {
 import { BlogsRepository } from './blogs.repository';
 import { Blog } from './blogs.schema';
 
-@Controller()
+@Controller('blogs')
 export class BlogsController {
   constructor(private readonly blogsRepository: BlogsRepository) {}
 
-  @Get('blogs')
+  @Get()
   async getAllBlogs() {
     return this.blogsRepository.findAll();
   }
 
-  @Get('blogs/:id')
+  @Get(':id')
   async getBlogById(@Param('id') id: string) {
-    return this.blogsRepository.findById(id);
+    // try {
+    //   return this.blogsRepository.findById(id);
+    // } catch (e) {
+    //   throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    // }
+    const result = await this.blogsRepository.findById(id);
+    if (typeof result === "Error") throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    return result
   }
 
-  @Post('blogs')
+  @Post()
   async createBlog(@Body() inputBody): Promise<Blog> {
     return this.blogsRepository.create(inputBody);
   }
 
-  @Put('blogs/:id')
+  @Put(':id')
   async updateBlogById(@Param('id') id: string, @Body() inputUpdate: any) {
     await this.blogsRepository.updateById(id, inputUpdate);
   }
 
-  @Delete('blogs/:id')
+  @Delete(':id')
   async deleteBlogById(@Param('id') id: string): Promise<void> {
     await this.blogsRepository.deleteById(id);
   }

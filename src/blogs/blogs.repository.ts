@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from './blogs.schema';
-import { Model } from 'mongoose';
+import {Model, Types} from 'mongoose';
 
 @Injectable()
 export class BlogsRepository {
@@ -12,11 +12,15 @@ export class BlogsRepository {
     return createdBlog.save();
   }
 
-  async findById(id: string): Promise<Blog | null> {
+  async findById(id: string): Promise<BlogDocument | null | Error> {
     try {
-      return this.blogModel.findById(id);
-    } catch (error) {
-      throw new Error('Cannot find blog by id');
+      const newId = new Types.ObjectId(id)
+      //console.log('newId', newId)
+      return this.blogModel.findById(newId);
+    } catch (e) {
+      //return null
+      return new Error('Cannot find blog by id');
+      //console.log(error)
     }
   }
 
