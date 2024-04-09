@@ -14,13 +14,19 @@ export class BlogsRepository {
     return createdBlog as BlogDocument;
   }
 
+  async save(blogDto: BlogDocument) {
+    return blogDto.save();
+  }
+
   async updateById(id: string, inputUpdate: any) {
     try {
-      const resultUpdate = await this.blogModel.findByIdAndUpdate(id, inputUpdate);
-      console.log('resultUpdat', resultUpdate)
-    }
-    catch (e) {
-      return null
+      const resultUpdate = await this.blogModel.findByIdAndUpdate(
+        id,
+        inputUpdate,
+      );
+      console.log('resultUpdat', resultUpdate);
+    } catch (e) {
+      return null;
     }
   }
 

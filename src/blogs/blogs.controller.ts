@@ -10,11 +10,12 @@ import {
   Put,
 } from '@nestjs/common';
 import { BlogsRepository } from './blogs.repositories/blogs.repository';
-import {Blog, BlogDocument} from './blogs.schema';
+import {Blog, BlogDocument, BlogSchema} from './blogs.schema';
 import { BlogsInputDto } from './blogs.dto/blogs.input.dto';
 import { BlogsService } from './blogs.service';
 import { BlogsHandler } from './blogs.hendler';
 import { BlogsQueryRepository } from './blogs.repositories/blogs.query.repository';
+import {Model} from "mongoose";
 
 @Controller('blogs')
 export class BlogsController {
@@ -33,14 +34,17 @@ export class BlogsController {
   @Get(':id')
   async getBlogById(@Param('id') id: string) {
     const blog = await this.blogsQueryRepository.findById(id);
-    if (blog) return this.blogsHandler.blogViewDto(blog)
+    if (blog) return this.blogsHandler.blogViewDto(blog);
     throw new HttpException('Not found', HttpStatus.NOT_FOUND);
   }
 
   @Post()
   async createBlog(@Body() dto: BlogsInputDto): Promise<Blog> {
-    const blog = await this.blogsService.createBlog(dto);
-    return this.blogsHandler.blogViewDto(blog);
+    const blogDto :
+    await blogDto.createBlog1(dto)
+    return this.blogsRepository.save(blogDto)
+    // const blog = await this.blogsService.createBlog(dto);
+    // return this.blogsHandler.blogViewDto(blog);
   }
 
   @Put(':id')
