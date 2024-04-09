@@ -2,38 +2,45 @@ import {
   Body,
   Controller,
   Delete,
-  Get, HttpException, HttpStatus,
+  Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
-import { BlogsRepository } from './blogs.repository';
-import { Blog } from './blogs.schema';
+import { BlogsRepository } from './blogs.repositories/blogs.repository';
+import {Blog, BlogDocument} from './blogs.schema';
+import { BlogsInputDto } from './blogs.dto/blogs.input.dto';
+import { BlogsService } from './blogs.service';
+import { BlogsHandler } from './blogs.hendler';
+import { BlogsQueryRepository } from './blogs.repositories/blogs.query.repository';
 
 @Controller('blogs')
 export class BlogsController {
-  constructor(private readonly blogsRepository: BlogsRepository) {}
+  constructor(
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsRepository: BlogsRepository,
+    private readonly blogsService: BlogsService,
+    private readonly blogsHandler: BlogsHandler,
+  ) {}
 
   @Get()
   async getAllBlogs() {
-    return this.blogsRepository.findAll();
+    return this.blogsQueryRepository.findAll();
   }
 
   @Get(':id')
   async getBlogById(@Param('id') id: string) {
-    // try {
-    //   return this.blogsRepository.findById(id);
-    // } catch (e) {
-    //   throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    // }
-    const result = await this.blogsRepository.findById(id);
-    if (typeof result === "Error") throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    return result
+    const blog = await this.blogsQueryRepository.findById(id);
+    if (blog) return this.blogsHandler.blogViewDto(blog)
+    throw new HttpException('Not found', HttpStatus.NOT_FOUND);
   }
 
   @Post()
-  async createBlog(@Body() inputBody): Promise<Blog> {
-    return this.blogsRepository.create(inputBody);
+  async createBlog(@Body() dto: BlogsInputDto): Promise<Blog> {
+    const blog = await this.blogsService.createBlog(dto);
+    return this.blogsHandler.blogViewDto(blog);
   }
 
   @Put(':id')
