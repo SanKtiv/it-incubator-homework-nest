@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Blog, BlogDocument } from './blogs.schema';
-import { BlogsViewDto } from './blogs.dto/blogs.view.dto';
+import { BlogsViewDto, BlogsViewPagingDto } from './blogs.dto/blogs.view.dto';
+import { BlogQuery } from './blogs.dto/blogs.input.dto';
 
 @Injectable()
 export class BlogsHandler {
-  async blogViewDto(blog: BlogDocument): Promise<BlogsViewDto> {
+  blogViewDto(blog: BlogDocument): BlogsViewDto {
     return new BlogsViewDto(
       blog._id.toString(),
       blog.name,
@@ -13,5 +14,19 @@ export class BlogsHandler {
       blog.createdAt,
       blog.isMembership,
     );
+  }
+
+  blogPagingViewModel(
+    totalBlogs: number,
+    blogsPaging: BlogDocument[],
+    query: BlogQuery,
+  ): BlogsViewPagingDto {
+    return {
+      pagesCount: Math.ceil(totalBlogs / +query.pageSize),
+      page: +query.pageNumber,
+      pageSize: +query.pageSize,
+      totalCount: totalBlogs,
+      items: blogsPaging.map((blog) => this.blogViewDto(blog)),
+    };
   }
 }

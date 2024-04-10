@@ -7,16 +7,18 @@ import {
   HttpStatus,
   Param,
   Post,
-  Put, Query,
+  Put,
+  Query,
 } from '@nestjs/common';
 import { BlogsRepository } from './blogs.repositories/blogs.repository';
 import { Blog, BlogDocument, BlogSchema } from './blogs.schema';
-import { BlogsInputDto } from './blogs.dto/blogs.input.dto';
+import { BlogQuery, BlogsInputDto } from './blogs.dto/blogs.input.dto';
 import { BlogsService } from './blogs.service';
 import { BlogsHandler } from './blogs.hendler';
 import { BlogsQueryRepository } from './blogs.repositories/blogs.query.repository';
 import { Model } from 'mongoose';
-import { BlogsViewDto } from './blogs.dto/blogs.view.dto';
+import { BlogsViewDto, BlogsViewPagingDto } from './blogs.dto/blogs.view.dto';
+import { constants } from 'http2';
 
 @Controller('blogs')
 export class BlogsController {
@@ -28,8 +30,24 @@ export class BlogsController {
   ) {}
 
   @Get()
-  async getBlogsPaging(@Query()) {
-    return this.blogsQueryRepository.findAll();
+  async getBlogsPaging(@Query() query: BlogQuery) {
+    const totalBlogs = query.searchNameTerm
+      ? await this.blogsQueryRepository.getTotalBlogsByName(
+          query.searchNameTerm,
+        )
+      : await this.blogsQueryRepository.getTotalBlogs();
+
+    const blogsPaging =
+      await this.blogsQueryRepository.getBlogsWithPaging(query);
+
+    const blogsViewPagingDto = this.blogsHandler.blogPagingViewModel(
+      totalBlogs as number,
+      blogsPaging,
+      query,
+    );
+    console.log('blogsViewPagingDto', blogsViewPagingDto.items[0]);
+    return blogsViewPagingDto;
+    //res.status(constants.HTTP_STATUS_OK).send(blogsPagingView)
   }
 
   @Get(':id')

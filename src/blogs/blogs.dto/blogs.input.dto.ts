@@ -19,5 +19,11 @@ export class CreatingBlogDto {
 }
 
 export class BlogQuery {
-
+  constructor(
+    public searchNameTerm: string | null,
+    public sortBy: string,
+    public sortDirection: 'asc' | 'desc',
+    public pageNumber: string,
+    public pageSize: string,
+  ) {}
 }
