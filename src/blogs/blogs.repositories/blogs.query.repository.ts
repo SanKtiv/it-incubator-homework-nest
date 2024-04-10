@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument } from '../blogs.schema';
+import {Blog, BlogDocument, BlogsModelType} from '../blogs.schema';
 import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class BlogsQueryRepository {
-  constructor(@InjectModel(Blog.name) private blogModel: Model<BlogDocument>) {}
+  constructor(@InjectModel(Blog.name) private blogModel: BlogsModelType) {}
 
   async findById(id: string): Promise<BlogDocument | null> {
     try {
@@ -18,5 +18,35 @@ export class BlogsQueryRepository {
 
   async findAll() {
     return this.blogModel.find().exec();
+  }
+
+  async getTotalBlogs() {
+    return this.blogModel.countDocuments()
+  }
+
+  async getTotalBlogsByName(name: string) {
+
+    return this.blogModel
+        .countDocuments({name: {$regex: name, $options: 'i'}})
+  }
+
+  async getBlogsWithPaging(query: any): Promise<BlogDocument[]> {
+
+    if (query.searchNameTerm) {
+
+      return this.blogModel
+          .find({name: {$regex: query.searchNameTerm, $options: 'i'}})
+          .sort({[query.sortBy]: query.sortDirection})
+          .skip((+query.pageNumber - 1) * +query.pageSize)
+          .limit(+query.pageSize)
+          .lean()
+    }
+
+    return this.blogModel
+        .find()
+        .sort({[query.sortBy]: query.sortDirection})
+        .skip((+query.pageNumber - 1) * +query.pageSize)
+        .limit(+query.pageSize)
+        .lean()
   }
 }

@@ -17,3 +17,7 @@ export class CreatingBlogDto {
     public isMembership: boolean,
   ) {}
 }
+
+export class BlogQuery {
+
+}

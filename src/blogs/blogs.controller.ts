@@ -7,15 +7,16 @@ import {
   HttpStatus,
   Param,
   Post,
-  Put,
+  Put, Query,
 } from '@nestjs/common';
 import { BlogsRepository } from './blogs.repositories/blogs.repository';
-import {Blog, BlogDocument, BlogSchema} from './blogs.schema';
+import { Blog, BlogDocument, BlogSchema } from './blogs.schema';
 import { BlogsInputDto } from './blogs.dto/blogs.input.dto';
 import { BlogsService } from './blogs.service';
 import { BlogsHandler } from './blogs.hendler';
 import { BlogsQueryRepository } from './blogs.repositories/blogs.query.repository';
-import {Model} from "mongoose";
+import { Model } from 'mongoose';
+import { BlogsViewDto } from './blogs.dto/blogs.view.dto';
 
 @Controller('blogs')
 export class BlogsController {
@@ -27,7 +28,7 @@ export class BlogsController {
   ) {}
 
   @Get()
-  async getAllBlogs() {
+  async getBlogsPaging(@Query()) {
     return this.blogsQueryRepository.findAll();
   }
 
@@ -39,12 +40,9 @@ export class BlogsController {
   }
 
   @Post()
-  async createBlog(@Body() dto: BlogsInputDto): Promise<Blog> {
-    const blogDto :
-    await blogDto.createBlog1(dto)
-    return this.blogsRepository.save(blogDto)
-    // const blog = await this.blogsService.createBlog(dto);
-    // return this.blogsHandler.blogViewDto(blog);
+  async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {
+    const blogModel = await this.blogsService.createBlog(dto);
+    return this.blogsHandler.blogViewDto(blogModel);
   }
 
   @Put(':id')

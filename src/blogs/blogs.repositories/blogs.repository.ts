@@ -1,26 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument } from '../blogs.schema';
-import { Model, Types } from 'mongoose';
-import { CreatingBlogDto } from '../blogs.dto/blogs.input.dto';
+import {Blog, BlogDocument, BlogsModelType} from '../blogs.schema';
+import { BlogsInputDto} from '../blogs.dto/blogs.input.dto';
 
 @Injectable()
 export class BlogsRepository {
-  constructor(@InjectModel(Blog.name) private blogModel: Model<BlogDocument>) {}
+  constructor(
+    @InjectModel(Blog.name)
+    private BlogModel: BlogsModelType,
+  ) {}
 
-  async create(blogDto: CreatingBlogDto): Promise<BlogDocument> {
-    const createdBlog = new this.blogModel(blogDto);
-    await createdBlog.save();
-    return createdBlog as BlogDocument;
+  async create(blogDto: BlogsInputDto): Promise<BlogDocument> {
+    const blogDocument = this.BlogModel.createBlog(blogDto, this.BlogModel);
+    return blogDocument.save();// все работает но просит await или иную типизацию
+    // const model = new this.BlogModel() //реализация через методы экземпляра
+    // const document = model.createBlog(blogDto, this.BlogModel);
+    // return document.save();
   }
 
-  async save(blogDto: BlogDocument) {
-    return blogDto.save();
+  async save(blogDto: BlogDocument): Promise<void> {
+    await blogDto.save();
   }
 
   async updateById(id: string, inputUpdate: any) {
     try {
-      const resultUpdate = await this.blogModel.findByIdAndUpdate(
+      const resultUpdate = await this.BlogModel.findByIdAndUpdate(
         id,
         inputUpdate,
       );
@@ -31,10 +35,10 @@ export class BlogsRepository {
   }
 
   async deleteById(id: string): Promise<void> {
-    await this.blogModel.findByIdAndDelete(id);
+    await this.BlogModel.findByIdAndDelete(id);
   }
 
   async deleteAll(): Promise<void> {
-    await this.blogModel.deleteMany();
+    await this.BlogModel.deleteMany();
   }
 }

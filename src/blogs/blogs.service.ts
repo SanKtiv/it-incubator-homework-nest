@@ -9,13 +9,6 @@ export class BlogsService {
   constructor(private readonly blogsRepository: BlogsRepository) {}
 
   async createBlog(dto: BlogsInputDto): Promise<BlogDocument> {
-    const blogDto: CreatingBlogDto = new CreatingBlogDto(
-      dto.name,
-      dto.description,
-      dto.websiteUrl,
-      new Date().toISOString(),
-      false,
-    );
-    return this.blogsRepository.create(blogDto);
+    return this.blogsRepository.create(dto);
   }
 }

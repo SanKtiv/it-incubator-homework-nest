@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-import {BlogsInputDto, CreatingBlogDto} from "./blogs.dto/blogs.input.dto";
+import {HydratedDocument, Model, Types} from 'mongoose';
+import { BlogsInputDto, CreatingBlogDto } from './blogs.dto/blogs.input.dto';
 
 @Schema()
 export class Blog {
@@ -19,18 +19,29 @@ export class Blog {
   @Prop({ required: true })
   isMembership: boolean;
 
-  createBlog1(dto: BlogsInputDto) {
-    this.name = dto.name
-    this.description = dto.description
-    this.websiteUrl = dto.websiteUrl
-    this.createdAt = new Date().toISOString()
-    this.isMembership = false
+  // createBlog(dto: BlogsInputDto, BlogModel:Model<Blog>) {
+  //   return new BlogModel(dto)
+  // }
+
+  static createBlog(dto: BlogsInputDto, BlogModel:Model<Blog>) {
+    return new BlogModel(dto)
   }
 }
 
 export type BlogDocument = HydratedDocument<Blog>;
 
+export type BlogsModelType = Model<BlogDocument> & BlogsStaticMethodsType
+
 export const BlogSchema = SchemaFactory.createForClass(Blog);
-BlogSchema.methods = {
-  createBlog: Blog.prototype.createBlog1
-}
+
+// BlogSchema.methods = {
+//   createBlog: Blog.prototype.createBlog
+// }
+
+export type BlogsStaticMethodsType = {
+  createBlog: (dto: BlogsInputDto, BlogModel:Model<BlogDocument>) => BlogDocument
+};
+
+BlogSchema.statics = {
+  createBlog: Blog.createBlog,
+};
