@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model, Types } from 'mongoose';
-import { BlogsInputDto, CreatingBlogDto } from './blogs.dto/blogs.input.dto';
+import { BlogsInputDto, CreatingBlogDto } from '../api/models/input/blogs.input.dto';
 
 @Schema()
 export class Blog {

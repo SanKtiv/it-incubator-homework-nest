@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Blog, BlogDocument } from './blogs.schema';
-import { BlogsViewDto, BlogsViewPagingDto } from './blogs.dto/blogs.view.dto';
-import { BlogQuery } from './blogs.dto/blogs.input.dto';
+import { Blog, BlogDocument } from '../domain/blogs.schema';
+import { BlogsViewDto, BlogsViewPagingDto } from './models/output/blogs.view.dto';
+import { BlogQuery } from './models/input/blogs.input.dto';
 
 @Injectable()
 export class BlogsHandler {

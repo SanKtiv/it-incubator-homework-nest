@@ -1,5 +1,5 @@
 import { Controller, Delete } from '@nestjs/common';
-import { BlogsRepository } from '../blogs/blogs.repositories/blogs.repository';
+import { BlogsRepository } from '../features/blogs/infrastructure/blogs.repository';
 
 @Controller('testing/all-data')
 export class TestingController {

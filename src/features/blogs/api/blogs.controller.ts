@@ -12,14 +12,14 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { BlogsRepository } from './blogs.repositories/blogs.repository';
-import { Blog, BlogDocument, BlogSchema } from './blogs.schema';
-import { BlogQuery, BlogsInputDto } from './blogs.dto/blogs.input.dto';
-import { BlogsService } from './blogs.service';
+import { BlogsRepository } from '../infrastructure/blogs.repository';
+import { Blog, BlogDocument, BlogSchema } from '../domain/blogs.schema';
+import { BlogQuery, BlogsInputDto } from './models/input/blogs.input.dto';
+import { BlogsService } from '../application/blogs.service';
 import { BlogsHandler } from './blogs.hendler';
-import { BlogsQueryRepository } from './blogs.repositories/blogs.query.repository';
+import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
 import { Model } from 'mongoose';
-import { BlogsViewDto, BlogsViewPagingDto } from './blogs.dto/blogs.view.dto';
+import { BlogsViewDto, BlogsViewPagingDto } from './models/output/blogs.view.dto';
 import { constants } from 'http2';
 import {waitForDebugger} from "inspector";
 
