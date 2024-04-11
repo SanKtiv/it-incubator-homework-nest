@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument, BlogsModelType } from '../blogs.schema';
 import { BlogsInputDto } from '../blogs.dto/blogs.input.dto';
+import {Types} from "mongoose";
 
 @Injectable()
 export class BlogsRepository {
@@ -22,20 +23,22 @@ export class BlogsRepository {
     await blogDto.save();
   }
 
-  async updateById(id: string, inputUpdate: any) {
-    try {
-      const resultUpdate = await this.BlogModel.findByIdAndUpdate(
-        id,
-        inputUpdate,
-      );
-      console.log('resultUpdat', resultUpdate);
-    } catch (e) {
-      return null;
-    }
-  }
+  // async updateById(id: string, inputUpdate: any) {
+  //   try {
+  //     const resultUpdate = await this.BlogModel.findByIdAndUpdate(
+  //       id,
+  //       inputUpdate,
+  //     );
+  //     console.log('resultUpdate', resultUpdate)
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
 
-  async deleteById(id: string): Promise<void> {
-    await this.BlogModel.findByIdAndDelete(id);
+  async deleteById(id: string): Promise<boolean> {
+      const newId = new Types.ObjectId(id)
+      const result = await this.BlogModel.deleteOne(newId);
+      return result.deletedCount === 1
   }
 
   async deleteAll(): Promise<void> {

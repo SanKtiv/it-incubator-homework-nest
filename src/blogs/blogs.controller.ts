@@ -9,6 +9,8 @@ import {
   Post,
   Put,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { BlogsRepository } from './blogs.repositories/blogs.repository';
 import { Blog, BlogDocument, BlogSchema } from './blogs.schema';
@@ -19,6 +21,7 @@ import { BlogsQueryRepository } from './blogs.repositories/blogs.query.repositor
 import { Model } from 'mongoose';
 import { BlogsViewDto, BlogsViewPagingDto } from './blogs.dto/blogs.view.dto';
 import { constants } from 'http2';
+import {waitForDebugger} from "inspector";
 
 @Controller('blogs')
 export class BlogsController {
@@ -30,23 +33,20 @@ export class BlogsController {
   ) {}
 
   @Get()
+  @UsePipes(new ValidationPipe({ transform: true }))
   async getBlogsPaging(@Query() query: BlogQuery) {
-    const totalBlogs = query.searchNameTerm
-      ? await this.blogsQueryRepository.getTotalBlogsByName(
-          query.searchNameTerm,
-        )
-      : await this.blogsQueryRepository.getTotalBlogs();
+    const totalBlogs = await this.blogsQueryRepository.getTotalBlogsByName(
+      query.searchNameTerm,
+    );
 
     const blogsPaging =
       await this.blogsQueryRepository.getBlogsWithPaging(query);
 
-    const blogsViewPagingDto = this.blogsHandler.blogPagingViewModel(
+    return this.blogsHandler.blogPagingViewModel(
       totalBlogs as number,
       blogsPaging,
       query,
     );
-    console.log('blogsViewPagingDto', blogsViewPagingDto.items[0]);
-    return blogsViewPagingDto;
     //res.status(constants.HTTP_STATUS_OK).send(blogsPagingView)
   }
 
@@ -64,12 +64,15 @@ export class BlogsController {
   }
 
   @Put(':id')
-  async updateBlogById(@Param('id') id: string, @Body() inputUpdate: any) {
-    await this.blogsRepository.updateById(id, inputUpdate);
+  async updateBlogById(@Param('id') id: string, @Body() inputUpdate: BlogsInputDto) {
+    const blog = await this.blogsQueryRepository.findById(id);
+    if (!blog) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    await this.blogsService.updateBlog(blog, inputUpdate);
   }
 
   @Delete(':id')
   async deleteBlogById(@Param('id') id: string): Promise<void> {
-    await this.blogsRepository.deleteById(id);
+    const resultDeleting = await this.blogsService.deleteBlog(id)
+    if (!resultDeleting) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
   }
 }
