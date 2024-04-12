@@ -3,7 +3,7 @@ import {
   Injectable,
   ArgumentMetadata,
   HttpException,
-  HttpStatus,
+  HttpStatus, BadRequestException, NotFoundException,
 } from '@nestjs/common';
 import { BlogsQueryRepository } from '../../features/blogs/infrastructure/blogs.query.repository';
 
@@ -27,7 +27,7 @@ export class paramBlogIdPipe implements PipeTransform {
   constructor(private readonly blogsQueryRepository: BlogsQueryRepository) {}
   async transform(value: any, metadata: ArgumentMetadata) {
     const blog = await this.blogsQueryRepository.findById(value);
-    if (!blog) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    if (!blog) throw new NotFoundException()
     return value;
   }
 }
