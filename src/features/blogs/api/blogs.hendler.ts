@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Blog, BlogDocument } from '../domain/blogs.schema';
-import { BlogsViewDto, BlogsViewPagingDto } from './models/output/blogs.view.dto';
+import {
+  BlogsViewDto,
+  BlogsViewPagingDto,
+} from './models/output/blogs.view.dto';
 import { BlogQuery } from './models/input/blogs.input.dto';
 
 @Injectable()

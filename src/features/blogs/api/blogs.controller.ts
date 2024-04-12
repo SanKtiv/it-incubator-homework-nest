@@ -19,11 +19,16 @@ import { BlogsService } from '../application/blogs.service';
 import { BlogsHandler } from './blogs.hendler';
 import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
 import { Model } from 'mongoose';
-import { BlogsViewDto, BlogsViewPagingDto } from './models/output/blogs.view.dto';
+import {
+  BlogsViewDto,
+  BlogsViewPagingDto,
+} from './models/output/blogs.view.dto';
 import { constants } from 'http2';
-import {waitForDebugger} from "inspector";
+import { waitForDebugger } from 'inspector';
+import { paramBlogIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 
 @Controller('blogs')
+@UsePipes(new ValidationPipe({ transform: true, disableErrorMessages: true }))
 export class BlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
@@ -33,7 +38,6 @@ export class BlogsController {
   ) {}
 
   @Get()
-  @UsePipes(new ValidationPipe({ transform: true }))
   async getBlogsPaging(@Query() query: BlogQuery) {
     const totalBlogs = await this.blogsQueryRepository.getTotalBlogsByName(
       query.searchNameTerm,
@@ -51,28 +55,39 @@ export class BlogsController {
   }
 
   @Get(':id')
+  @UsePipes(paramBlogIdPipe)
+  //@UsePipes(new ValidationPipe({ transform: true }))
   async getBlogById(@Param('id') id: string) {
     const blog = await this.blogsQueryRepository.findById(id);
-    if (blog) return this.blogsHandler.blogViewDto(blog);
-    throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+
+    return this.blogsHandler.blogViewDto(blog!);
   }
 
   @Post()
   async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {
     const blogModel = await this.blogsService.createBlog(dto);
+
     return this.blogsHandler.blogViewDto(blogModel);
   }
 
   @Put(':id')
-  async updateBlogById(@Param('id') id: string, @Body() inputUpdate: BlogsInputDto) {
+  async updateBlogById(
+    @Param('id') id: string,
+    @Body() inputUpdate: BlogsInputDto,
+  ) {
     const blog = await this.blogsQueryRepository.findById(id);
+
     if (!blog) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+
     await this.blogsService.updateBlog(blog, inputUpdate);
   }
 
   @Delete(':id')
   async deleteBlogById(@Param('id') id: string): Promise<void> {
-    const resultDeleting = await this.blogsService.deleteBlog(id)
-    if (!resultDeleting) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    const blog = await this.blogsQueryRepository.findById(id);
+
+    if (!blog) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+
+    await this.blogsService.deleteBlog(id);
   }
 }

@@ -10,8 +10,7 @@ export class BlogsQueryRepository {
 
   async findById(id: string): Promise<BlogDocument | null> {
     try {
-      const newId = new Types.ObjectId(id);
-      return this.BlogModel.findById(newId);
+      return this.BlogModel.findById(new Types.ObjectId(id));
     } catch (e) {
       return null;
     }

@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { BlogsInputDto, CreatingBlogDto } from '../api/models/input/blogs.input.dto';
+import {
+  BlogsInputDto,
+  CreatingBlogDto,
+} from '../api/models/input/blogs.input.dto';
 import { BlogsRepository } from '../infrastructure/blogs.repository';
 import { BlogsViewDto } from '../api/models/output/blogs.view.dto';
 import { BlogDocument } from '../domain/blogs.schema';
@@ -17,10 +20,10 @@ export class BlogsService {
     // blog.name = inputUpdate.name
     // blog.description = inputUpdate.description
     // blog.websiteUrl = inputUpdate.websiteUrl
-    await this.blogsRepository.save(blog)
+    await this.blogsRepository.save(blog);
   }
 
-  async deleteBlog(id: string): Promise<boolean> {
-    return this.blogsRepository.deleteById(id)
+  async deleteBlog(id: string): Promise<void> {
+    await this.blogsRepository.remove(id);
   }
 }
