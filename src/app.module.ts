@@ -9,6 +9,10 @@ import { TestingController } from './testing/testig.controller';
 import { BlogsService } from './features/blogs/application/blogs.service';
 import { BlogsHandler } from './features/blogs/api/blogs.hendler';
 import { BlogsQueryRepository } from './features/blogs/infrastructure/blogs.query.repository';
+import {UsersService} from "./features/users/application/users.service";
+import {UsersRepository} from "./features/users/infrastructure/users.repository";
+import {UsersController} from "./features/users/api/users.controller";
+import {User, UsersSchema} from "./features/users/domain/users.schema";
 
 const mongoURI =
   'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/tube?retryWrites=true&w=majority';
@@ -16,15 +20,25 @@ const mongoURI =
 @Module({
   imports: [
     MongooseModule.forRoot(mongoURI),
-    MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
+    MongooseModule.forFeature(
+        [
+            { name: Blog.name, schema: BlogSchema },
+          { name: User.name, schema: UsersSchema }
+          ]),
   ],
-  controllers: [AppController, TestingController, BlogsController],
+  controllers: [
+      AppController,
+    TestingController,
+    BlogsController,
+    UsersController],
   providers: [
     AppService,
     BlogsQueryRepository,
     BlogsRepository,
     BlogsService,
     BlogsHandler,
+      UsersService,
+      UsersRepository
   ],
 })
 export class AppModule {}

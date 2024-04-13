@@ -1,0 +1,28 @@
+import {Injectable} from "@nestjs/common";
+import {UsersInputDto} from "../api/models/input/users.input.dto";
+import bcrypt from 'bcrypt'
+import {UsersRepository} from "../infrastructure/users.repository";
+import {v4 as uuidv4} from "uuid";
+import add from "date-fns/add";
+import {UserDocument} from "../domain/users.schema";
+
+@Injectable()
+export class UsersService {
+    constructor(private readonly usersRepository: UsersRepository) {
+    }
+
+    async createUser(dto: UsersInputDto): Promise<UserDocument> {
+        const passwordHash = await this.genHash(dto.password)
+        const confirmationCode = uuidv4()
+        const expirationDate = add(new Date(), {hours: 1, minutes: 5})
+        const userDocument = await this.usersRepository.create(dto, passwordHash, confirmationCode, expirationDate)
+        return this.usersRepository.save(userDocument)
+    }
+
+    async genHash(password: string): Promise<string> {
+
+        const salt = await bcrypt.genSalt(10)
+
+        return bcrypt.hash(password, salt)
+    }
+}
