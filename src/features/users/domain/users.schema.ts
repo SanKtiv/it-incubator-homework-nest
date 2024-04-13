@@ -1,8 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model, Types } from 'mongoose';
 import {UsersInputDto} from "../api/models/input/users.input.dto";
-import {v4 as uuidv4} from "uuid";
-import add from "date-fns/add";
 
 @Schema()
 class PasswordRecovery {
