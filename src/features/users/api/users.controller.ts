@@ -1,12 +1,22 @@
-import {Body, Controller, Delete, Get, Param, Post, Query, UsePipes} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UsePipes, ValidationPipe,
+} from '@nestjs/common';
 import { UsersInputDto } from './models/input/users.input.dto';
 import { UsersService } from '../application/users.service';
-import {usersOutputDto} from './models/output/users.output.dto';
-import {paramIdPipe} from "../../../infrastructure/pipes/validation.pipe";
-import {UsersQuery} from "./models/input/users.query.dto";
-import {UsersQueryRepository} from "../infrastructure/users.query.repository";
+import {usersOutputDto, usersPagingDto} from './models/output/users.output.dto';
+import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import { UsersQuery } from './models/input/users.query.dto';
+import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 
 @Controller('users')
+@UsePipes(new ValidationPipe({ transform: true}))
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -21,12 +31,15 @@ export class UsersController {
 
   @Get()
   async getUsersPaging(@Query() query: UsersQuery) {
-    const usersPaging = await this.usersQueryRepository.findPaging(query)
+    const totalUsers = await this
+        .usersQueryRepository.countDocument(query);
+    const usersPaging = await this.usersQueryRepository.findPaging(query);
+    return usersPagingDto(totalUsers, query, usersPaging);
   }
 
   @Delete(':userId')
   @UsePipes(paramIdPipe)
   async deleteUserById(@Param('userId') id: string) {
-    await this.usersService.deleteUserById(id)
+    await this.usersService.deleteUserById(id);
   }
 }

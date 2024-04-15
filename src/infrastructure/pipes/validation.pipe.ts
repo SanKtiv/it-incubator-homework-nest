@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { BlogsQueryRepository } from '../../features/blogs/infrastructure/blogs.query.repository';
-import {UsersQueryRepository} from "../../features/users/infrastructure/users.query.repository";
+import { UsersQueryRepository } from '../../features/users/infrastructure/users.query.repository';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform {
@@ -34,15 +34,18 @@ export class paramBlogIdPipe implements PipeTransform {
 
 @Injectable()
 export class paramIdPipe implements PipeTransform {
-  constructor(private readonly blogsQueryRepository: BlogsQueryRepository,
-              private readonly usersQueryRepository: UsersQueryRepository) {}
+  constructor(
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
+  ) {}
   async transform(value: any, metadata: ArgumentMetadata) {
+    let result: any = undefined;
 
-    let result: any = undefined
+    if (metadata.data === 'blogId')
+      result = await this.blogsQueryRepository.findById(value);
 
-    if (metadata.data === 'blogId') result = await this.blogsQueryRepository.findById(value);
-
-    if (metadata.data === 'userId') result = await this.usersQueryRepository.findById(value);
+    if (metadata.data === 'userId')
+      result = await this.usersQueryRepository.findById(value);
 
     if (!result) throw new NotFoundException();
 

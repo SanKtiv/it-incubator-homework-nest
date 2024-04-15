@@ -12,7 +12,7 @@ import { UsersService } from './features/users/application/users.service';
 import { UsersRepository } from './features/users/infrastructure/users.repository';
 import { UsersController } from './features/users/api/users.controller';
 import { User, UsersSchema } from './features/users/domain/users.schema';
-import {UsersQueryRepository} from "./features/users/infrastructure/users.query.repository";
+import { UsersQueryRepository } from './features/users/infrastructure/users.query.repository';
 
 const mongoURI =
   'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/tube?retryWrites=true&w=majority';
