@@ -1,3 +1,6 @@
+import {BlogDocument} from "../../../domain/blogs.schema";
+import {BlogQuery} from "../input/blogs.input.dto";
+
 export class BlogsViewDto {
   constructor(
     public id: string,
@@ -18,3 +21,24 @@ export class BlogsViewPagingDto {
     public items: BlogsViewDto[],
   ) {}
 }
+
+export const blogsViewDto = (blogDocument: BlogDocument) => new BlogsViewDto(
+    blogDocument._id.toString(),
+    blogDocument.name,
+    blogDocument.description,
+    blogDocument.websiteUrl,
+    blogDocument.createdAt,
+    blogDocument.isMembership
+)
+
+export const blogPagingViewModel = (
+    query: BlogQuery,
+    totalBlogs: number,
+    blogsPaging: BlogDocument[],
+) => new BlogsViewPagingDto(
+    Math.ceil(totalBlogs / query.pageSize),
+    query.pageNumber,
+    query.pageSize,
+    totalBlogs,
+    blogsPaging.map((blog) => blogsViewDto(blog))
+)

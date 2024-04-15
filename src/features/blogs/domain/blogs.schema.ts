@@ -30,7 +30,7 @@ export class Blog {
     const blogModel = new BlogModel(dto);
     //blogModel.name = dto.name
     //blogModel.description = dto.description
-    blogModel.websiteUrl = dto.websiteUrl
+    blogModel.websiteUrl = dto.websiteUrl;
     blogModel.createdAt = new Date().toISOString();
     blogModel.isMembership = false;
     return blogModel;
