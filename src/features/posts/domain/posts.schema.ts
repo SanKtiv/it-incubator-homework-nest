@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import {Document, HydratedDocument, Model} from 'mongoose';
+import {HydratedDocument, Model} from 'mongoose';
 import { PostsInputDto } from '../api/models/input/posts.input.dto';
 
 @Schema()
@@ -61,13 +61,13 @@ export class Post {
     blogName: string,
     PostModel: PostModelType,
   ): PostDocument {
-    const post = new PostModel(inputDto);
-    post.blogName = blogName;
+    const post = new PostModel();
+    // post.blogName = blogName;
     //post.createdAt = new Date().toISOString();
-    post.totalLikeStatuses = {
-        likesCount: 0,
-        dislikesCount: 0
-    };
+    // post.totalLikeStatuses = {
+    //     likesCount: 0,
+    //     dislikesCount: 0
+    // };
     return post;
   }
 }
