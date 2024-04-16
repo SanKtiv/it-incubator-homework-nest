@@ -17,7 +17,7 @@ export class UsersQueryRepository {
   }
 
   async countDocument(query: UsersQuery): Promise<number> {
-    const filter = this.filterForSearchTerm(query)
+    const filter = this.filterForSearchTerm(query);
     return this.UserModel.countDocuments(filter);
   }
 
@@ -35,15 +35,15 @@ export class UsersQueryRepository {
     const findArray: {}[] = [];
 
     if (query.searchLoginTerm) {
-      const login = new RegExp(query.searchLoginTerm, 'i')
-      findArray.push({ 'accountData.login': login })
-      filter = { $or: findArray }
+      const login = new RegExp(query.searchLoginTerm, 'i');
+      findArray.push({ 'accountData.login': login });
+      filter = { $or: findArray };
     }
     if (query.searchEmailTerm) {
-      const email = new RegExp(query.searchEmailTerm, 'i')
-      findArray.push({ 'accountData.email': email })
-      filter = { $or: findArray }
+      const email = new RegExp(query.searchEmailTerm, 'i');
+      findArray.push({ 'accountData.email': email });
+      filter = { $or: findArray };
     }
-    return filter
+    return filter;
   }
 }

@@ -13,6 +13,10 @@ import { UsersRepository } from './features/users/infrastructure/users.repositor
 import { UsersController } from './features/users/api/users.controller';
 import { User, UsersSchema } from './features/users/domain/users.schema';
 import { UsersQueryRepository } from './features/users/infrastructure/users.query.repository';
+import { PostController } from './features/posts/api/posts.controller';
+import { PostsService } from './features/posts/application/posts.service';
+import { PostsRepository } from './features/posts/infrastructure/posts.repository';
+import {Post, PostSchema} from "./features/posts/domain/posts.schema";
 
 const mongoURI =
   'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/tube?retryWrites=true&w=majority';
@@ -22,6 +26,7 @@ const mongoURI =
     MongooseModule.forRoot(mongoURI),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
+      { name: Post.name, schema: PostSchema },
       { name: User.name, schema: UsersSchema },
     ]),
   ],
@@ -29,6 +34,7 @@ const mongoURI =
     AppController,
     TestingController,
     BlogsController,
+    PostController,
     UsersController,
   ],
   providers: [
@@ -36,6 +42,8 @@ const mongoURI =
     BlogsQueryRepository,
     BlogsRepository,
     BlogsService,
+    PostsService,
+    PostsRepository,
     UsersService,
     UsersRepository,
     UsersQueryRepository,
