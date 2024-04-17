@@ -18,7 +18,7 @@ export class ExtendedLikesInfo {
     public likesCount: number,
     public dislikesCount: number,
     public myStatus: 'None' | 'Like' | 'Dislike' = 'None',
-    public newestLikes?: NewestLikes,
+    public newestLikes?: NewestLikes[],
   ) {}
 }
 
@@ -43,13 +43,13 @@ export const postsOutputDto = (
     postDocument.blogName,
     postDocument.createdAt,
     new ExtendedLikesInfo(
-      postDocument.totalLikeStatuses.likesCount,
-      postDocument.totalLikeStatuses.dislikesCount,
+      postDocument.likesCount,
+      postDocument.dislikesCount,
       likesUsers?.userStatus,
-      new NewestLikes(
+      [new NewestLikes(
         likesUsers?.addedAt,
         likesUsers?.userId,
         likesUsers?.login,
-      ),
+      )],
     ),
   );

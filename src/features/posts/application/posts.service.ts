@@ -14,4 +14,8 @@ export class PostsService {
   ): Promise<PostDocument> {
     return this.postsRepository.create(inputDto, blogName);
   }
+
+  async savePost(postDocument: PostDocument): Promise<PostDocument> {
+    return this.postsRepository.save(postDocument)
+  }
 }

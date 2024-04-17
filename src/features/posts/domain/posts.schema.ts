@@ -50,24 +50,25 @@ export class Post {
   @Prop({ required: true, default: new Date().toISOString()} )
   createdAt: string;
 
-  @Prop({ type: TotalLikeStatusesSchema, required: true, _id: false })
-  totalLikeStatuses: TotalLikeStatuses;
+  @Prop({ required: true, default: 0 })
+  likesCount: number;
 
-  @Prop({ type: LikesUsersSchema, required: true, _id: false })
-  likesUsers?: LikesUsers;
+  @Prop({ required: true, default: 0 })
+  dislikesCount: number;
+
+  // @Prop({ type: TotalLikeStatusesSchema, required: true, _id: false })
+  // totalLikeStatuses: TotalLikeStatuses;
+
+  @Prop({ type: LikesUsersSchema, _id: false })
+  likesUsers: LikesUsers;
 
   static createPost(
     inputDto: PostsInputDto,
     blogName: string,
     PostModel: PostModelType,
   ): PostDocument {
-    const post = new PostModel();
-    // post.blogName = blogName;
-    //post.createdAt = new Date().toISOString();
-    // post.totalLikeStatuses = {
-    //     likesCount: 0,
-    //     dislikesCount: 0
-    // };
+    const post = new PostModel(inputDto);
+    post.blogName = blogName;
     return post;
   }
 }

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { BlogsQueryRepository } from '../../features/blogs/infrastructure/blogs.query.repository';
 import { UsersQueryRepository } from '../../features/users/infrastructure/users.query.repository';
+import {PostsQueryRepository} from "../../features/posts/infrastructure/posts.query.repository";
 
 @Injectable()
 export class ValidationPipe implements PipeTransform {
@@ -37,6 +38,7 @@ export class paramIdPipe implements PipeTransform {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly postsQueryRepository: PostsQueryRepository
   ) {}
   async transform(value: any, metadata: ArgumentMetadata) {
     let result: any = undefined;
@@ -46,6 +48,9 @@ export class paramIdPipe implements PipeTransform {
 
     if (metadata.data === 'userId')
       result = await this.usersQueryRepository.findById(value);
+
+    if (metadata.data === 'postId')
+      result = await this.postsQueryRepository.findById(value);
 
     if (!result) throw new NotFoundException();
 

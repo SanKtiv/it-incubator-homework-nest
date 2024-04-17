@@ -17,6 +17,7 @@ import { PostController } from './features/posts/api/posts.controller';
 import { PostsService } from './features/posts/application/posts.service';
 import { PostsRepository } from './features/posts/infrastructure/posts.repository';
 import {Post, PostSchema} from "./features/posts/domain/posts.schema";
+import {PostsQueryRepository} from "./features/posts/infrastructure/posts.query.repository";
 
 const mongoURI =
   'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/tube?retryWrites=true&w=majority';
@@ -44,6 +45,7 @@ const mongoURI =
     BlogsService,
     PostsService,
     PostsRepository,
+    PostsQueryRepository,
     UsersService,
     UsersRepository,
     UsersQueryRepository,
