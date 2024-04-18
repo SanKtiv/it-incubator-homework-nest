@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import {HydratedDocument, Model} from 'mongoose';
+import { HydratedDocument, Model } from 'mongoose';
 import { PostsInputDto } from '../api/models/input/posts.input.dto';
 
 @Schema()
@@ -47,7 +47,7 @@ export class Post {
   @Prop({ required: true })
   blogName: string;
 
-  @Prop({ required: true, default: new Date().toISOString()} )
+  @Prop({ required: true })
   createdAt: string;
 
   @Prop({ required: true, default: 0 })
@@ -59,8 +59,8 @@ export class Post {
   // @Prop({ type: TotalLikeStatusesSchema, required: true, _id: false })
   // totalLikeStatuses: TotalLikeStatuses;
 
-  @Prop({ type: LikesUsersSchema, _id: false })
-  likesUsers: LikesUsers;
+  @Prop({ type: [LikesUsersSchema], _id: false })
+  likesUsers: LikesUsers[];
 
   static createPost(
     inputDto: PostsInputDto,
@@ -69,6 +69,7 @@ export class Post {
   ): PostDocument {
     const post = new PostModel(inputDto);
     post.blogName = blogName;
+    post.createdAt = new Date().toISOString();
     return post;
   }
 }

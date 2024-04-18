@@ -20,6 +20,9 @@ import {
   BlogsViewDto,
 } from './models/output/blogs.view.dto';
 import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import {PostQuery} from "../../posts/api/models/input/posts.input.dto";
+import {PostsQueryRepository} from "../../posts/infrastructure/posts.query.repository";
+import {postsPaging} from "../../posts/api/models/output/posts.output.dto";
 
 @Controller('blogs')
 @UsePipes(new ValidationPipe({ transform: true, disableErrorMessages: true }))
@@ -28,6 +31,7 @@ export class BlogsController {
     private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly blogsRepository: BlogsRepository,
     private readonly blogsService: BlogsService,
+    private readonly postsQueryRepository: PostsQueryRepository
   ) {}
 
   @Get()
@@ -55,6 +59,13 @@ export class BlogsController {
     const blogModel = await this.blogsService.createBlog(dto);
 
     return blogsViewDto(blogModel);
+  }
+
+  @Get(':blogId/posts')
+  async getPostsByBlogId(@Param('blogId', paramIdPipe) blogId: string, @Query() query: PostQuery) {
+    const totalPosts = await this.postsQueryRepository.countDocuments(blogId)
+    const postDocuments = await this.postsQueryRepository.findPaging(query, blogId)
+    return postsPaging(query, totalPosts, postDocuments)
   }
 
   @Put(':blogId')

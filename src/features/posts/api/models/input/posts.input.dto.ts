@@ -1,4 +1,5 @@
 import { IsString, MaxLength, MinLength } from 'class-validator';
+import { QueryDto } from '../../../../../infrastructure/models/query.dto';
 
 export class PostsInputDto {
   @IsString()
@@ -16,3 +17,5 @@ export class PostsInputDto {
   @IsString()
   blogId: string;
 }
+
+export class PostQuery extends QueryDto {}

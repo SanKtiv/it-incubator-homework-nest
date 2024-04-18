@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {Post, PostDocument, PostModelType} from '../domain/posts.schema';
+import { Post, PostDocument, PostModelType } from '../domain/posts.schema';
 import { PostsInputDto } from '../api/models/input/posts.input.dto';
 
 @Injectable()
@@ -12,10 +12,14 @@ export class PostsRepository {
   }
 
   async save(postDocument: PostDocument): Promise<PostDocument> {
-    return postDocument.save()
+    return postDocument.save();
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.PostModel.findByIdAndDelete(id);
   }
 
   async deleteAll() {
-    await this.PostModel.deleteMany()
+    await this.PostModel.deleteMany();
   }
 }

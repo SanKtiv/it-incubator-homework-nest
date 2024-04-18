@@ -1,4 +1,5 @@
 import { LikesUsers, PostDocument } from '../../../domain/posts.schema';
+import { PostQuery } from '../input/posts.input.dto';
 
 export class PostsOutputDto {
   constructor(
@@ -46,10 +47,34 @@ export const postsOutputDto = (
       postDocument.likesCount,
       postDocument.dislikesCount,
       likesUsers?.userStatus,
-      [new NewestLikes(
-        likesUsers?.addedAt,
-        likesUsers?.userId,
-        likesUsers?.login,
-      )],
+      [
+        new NewestLikes(
+          likesUsers?.addedAt,
+          likesUsers?.userId,
+          likesUsers?.login,
+        ),
+      ],
     ),
+  );
+
+export class PostsPaging {
+  constructor(
+    public pagesCount: number,
+    public page: number,
+    public pageSize: number,
+    public totalCount: number,
+    public items: PostsOutputDto[],
+  ) {}
+}
+export const postsPaging = (
+  query: PostQuery,
+  totalPosts: number,
+  postDocuments: PostDocument[],
+) =>
+  new PostsPaging(
+    Math.ceil(totalPosts / +query.pageSize),
+    +query.pageNumber,
+    +query.pageSize,
+    totalPosts,
+    postDocuments.map((document) => postsOutputDto(document)),
   );
