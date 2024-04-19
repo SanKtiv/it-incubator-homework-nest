@@ -20,7 +20,7 @@ export class PostsQueryRepository {
     //const filter = id ? {blogId: id} : {}
     const filter = this.filter(id);
     return this.PostModel.find(filter)
-      .sort({ createdAt: query.sortDirection })
+      .sort({ [query.sortBy]: query.sortDirection })
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize);
   }
