@@ -9,7 +9,6 @@ import {
   Put,
   Query,
   UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { PostsService } from '../application/posts.service';
 import { PostQuery, PostsInputDto } from './models/input/posts.input.dto';
@@ -24,7 +23,6 @@ import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { CommentInputDto } from '../../comments/api/models/comment.input.dto';
 import { CommentsService } from '../../comments/application/comments.service';
-import { Prop } from '@nestjs/mongoose';
 import {
   commentOutputDto,
   commentsPagingDto,
@@ -33,7 +31,6 @@ import { CommentsQueryRepository } from '../../comments/infrastructure/comments.
 import { QueryDto } from '../../../infrastructure/models/query.dto';
 
 @Controller('posts')
-//@UsePipes(new ValidationPipe({ transform: true }))
 export class PostController {
   constructor(
     private readonly postsService: PostsService,
