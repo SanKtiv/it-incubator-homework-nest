@@ -14,7 +14,7 @@ export class TestingController {
   ) {}
 
   @Delete()
-  @HttpCode(200)
+  @HttpCode(204)
   async deleteAllData(): Promise<void> {
     await this.blogsRepository.deleteAll();
     await this.usersRepository.removeAll();

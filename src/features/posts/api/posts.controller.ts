@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpCode,
   NotFoundException,
   Param,
   Post,
@@ -95,6 +95,7 @@ export class PostController {
   }
 
   @Put(':postId')
+  @HttpCode(204)
   async updatePostById(
     @Param('postId', paramIdPipe) id: string,
     @Body() postUpdateDto: PostsInputDto,

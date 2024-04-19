@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpCode,
   Param,
   Post,
   Put,
@@ -97,6 +97,7 @@ export class BlogsController {
   }
 
   @Put(':blogId')
+  @HttpCode(204)
   async updateBlogById(
     @Param('blogId', paramIdPipe) id: string,
     @Body() inputUpdate: BlogsInputDto,
