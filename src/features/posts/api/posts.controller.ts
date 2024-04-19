@@ -22,12 +22,15 @@ import {
 import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
-import {CommentInputDto} from "../../comments/api/models/comment.input.dto";
-import {CommentsService} from "../../comments/application/comments.service";
-import {Prop} from "@nestjs/mongoose";
-import {commentOutputDto, commentsPagingDto} from "../../comments/api/models/comment.output.dto";
-import {CommentsQueryRepository} from "../../comments/infrastructure/comments.query.repository";
-import {QueryDto} from "../../../infrastructure/models/query.dto";
+import { CommentInputDto } from '../../comments/api/models/comment.input.dto';
+import { CommentsService } from '../../comments/application/comments.service';
+import { Prop } from '@nestjs/mongoose';
+import {
+  commentOutputDto,
+  commentsPagingDto,
+} from '../../comments/api/models/comment.output.dto';
+import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query.repository';
+import { QueryDto } from '../../../infrastructure/models/query.dto';
 
 @Controller('posts')
 //@UsePipes(new ValidationPipe({ transform: true }))
@@ -37,7 +40,7 @@ export class PostController {
     private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsService: CommentsService,
-    private readonly commentsQueryRepository: CommentsQueryRepository
+    private readonly commentsQueryRepository: CommentsQueryRepository,
   ) {}
 
   @Post()
@@ -57,15 +60,18 @@ export class PostController {
   }
 
   @Post(':postId/comments')
-  async createCommentForPost(@Param('postId', paramIdPipe) id: string, @Body() inputDto: CommentInputDto) {
+  async createCommentForPost(
+    @Param('postId', paramIdPipe) id: string,
+    @Body() inputDto: CommentInputDto,
+  ) {
     const dto = {
       content: inputDto.content,
       userId: 'userId',
       userLogin: 'userLogin',
-      postId: id
-    }
-    const commentDocument = await this.commentsService.createComment(dto)
-    return commentOutputDto(commentDocument)
+      postId: id,
+    };
+    const commentDocument = await this.commentsService.createComment(dto);
+    return commentOutputDto(commentDocument);
   }
 
   @Get()
@@ -76,10 +82,16 @@ export class PostController {
   }
 
   @Get(':postId/comments')
-  async getCommentsByPostId(@Param('postId') id: string, @Query() query: QueryDto) {
-    const totalComments = await this.commentsQueryRepository.countDocuments(id)
-    const commentDocument = await this.commentsQueryRepository.findPaging(id, query)
-    return commentsPagingDto(query, totalComments, 'None', commentDocument)
+  async getCommentsByPostId(
+    @Param('postId') id: string,
+    @Query() query: QueryDto,
+  ) {
+    const totalComments = await this.commentsQueryRepository.countDocuments(id);
+    const commentDocument = await this.commentsQueryRepository.findPaging(
+      id,
+      query,
+    );
+    return commentsPagingDto(query, totalComments, 'None', commentDocument);
   }
 
   @Put(':postId')

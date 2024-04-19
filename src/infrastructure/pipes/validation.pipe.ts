@@ -7,7 +7,7 @@ import {
 import { BlogsQueryRepository } from '../../features/blogs/infrastructure/blogs.query.repository';
 import { UsersQueryRepository } from '../../features/users/infrastructure/users.query.repository';
 import { PostsQueryRepository } from '../../features/posts/infrastructure/posts.query.repository';
-import {CommentsQueryRepository} from "../../features/comments/infrastructure/comments.query.repository";
+import { CommentsQueryRepository } from '../../features/comments/infrastructure/comments.query.repository';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform {
@@ -40,7 +40,7 @@ export class paramIdPipe implements PipeTransform {
     private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
-    private readonly commentsQueryRepository: CommentsQueryRepository
+    private readonly commentsQueryRepository: CommentsQueryRepository,
   ) {}
   async transform(value: any, metadata: ArgumentMetadata) {
     let result: any = undefined;

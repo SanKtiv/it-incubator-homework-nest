@@ -18,11 +18,14 @@ import { PostsService } from './features/posts/application/posts.service';
 import { PostsRepository } from './features/posts/infrastructure/posts.repository';
 import { Post, PostSchema } from './features/posts/domain/posts.schema';
 import { PostsQueryRepository } from './features/posts/infrastructure/posts.query.repository';
-import {Comment, CommentSchema} from "./features/comments/domain/comment.schema";
-import {CommentsRepository} from "./features/comments/infrastructure/comments.repository";
-import {CommentsService} from "./features/comments/application/comments.service";
-import {CommentsController} from "./features/comments/api/comments.controller";
-import {CommentsQueryRepository} from "./features/comments/infrastructure/comments.query.repository";
+import {
+  Comment,
+  CommentSchema,
+} from './features/comments/domain/comment.schema';
+import { CommentsRepository } from './features/comments/infrastructure/comments.repository';
+import { CommentsService } from './features/comments/application/comments.service';
+import { CommentsController } from './features/comments/api/comments.controller';
+import { CommentsQueryRepository } from './features/comments/infrastructure/comments.query.repository';
 
 const mongoURI =
   'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/tube?retryWrites=true&w=majority';
@@ -43,7 +46,7 @@ const mongoURI =
     BlogsController,
     PostController,
     UsersController,
-      CommentsController
+    CommentsController,
   ],
   providers: [
     AppService,
@@ -56,9 +59,9 @@ const mongoURI =
     UsersService,
     UsersRepository,
     UsersQueryRepository,
-      CommentsRepository,
-      CommentsService,
-      CommentsQueryRepository
+    CommentsRepository,
+    CommentsService,
+    CommentsQueryRepository,
   ],
 })
 export class AppModule {}
