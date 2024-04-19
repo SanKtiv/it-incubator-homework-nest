@@ -12,7 +12,8 @@ export class BlogsService {
   constructor(private readonly blogsRepository: BlogsRepository) {}
 
   async createBlog(dto: BlogsInputDto): Promise<BlogDocument> {
-    return this.blogsRepository.create(dto);
+    const blogDocument = await this.blogsRepository.create(dto);
+    return this.blogsRepository.save(blogDocument);
   }
 
   async updateBlog(blog: BlogDocument, inputUpdate: BlogsInputDto) {

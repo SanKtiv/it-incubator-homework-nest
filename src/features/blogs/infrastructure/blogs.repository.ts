@@ -12,15 +12,11 @@ export class BlogsRepository {
   ) {}
 
   async create(blogDto: BlogsInputDto): Promise<BlogDocument> {
-    const blogDocument = this.BlogModel.createBlog(blogDto, this.BlogModel);
-    return blogDocument.save(); // все работает но просит await или иную типизацию
-    // const model = new this.BlogModel() //реализация через методы экземпляра
-    // const document = model.createBlog(blogDto, this.BlogModel);
-    // return document.save();
+    return this.BlogModel.createBlog(blogDto, this.BlogModel);
   }
 
-  async save(blogDto: BlogDocument): Promise<void> {
-    await blogDto.save();
+  async save(blogDto: BlogDocument): Promise<BlogDocument> {
+    return blogDto.save();
   }
 
   async remove(id: string): Promise<void> {

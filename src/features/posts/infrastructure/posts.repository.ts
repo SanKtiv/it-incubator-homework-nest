@@ -7,7 +7,10 @@ import { PostsInputDto } from '../api/models/input/posts.input.dto';
 export class PostsRepository {
   constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
 
-  async create(inputDto: PostsInputDto, blogName: string) {
+  async create(
+    inputDto: PostsInputDto,
+    blogName: string,
+  ): Promise<PostDocument> {
     return this.PostModel.createPost(inputDto, blogName, this.PostModel);
   }
 
@@ -19,7 +22,7 @@ export class PostsRepository {
     await this.PostModel.findByIdAndDelete(id);
   }
 
-  async deleteAll() {
+  async deleteAll(): Promise<void> {
     await this.PostModel.deleteMany();
   }
 }

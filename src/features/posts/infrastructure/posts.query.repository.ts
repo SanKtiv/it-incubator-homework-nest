@@ -18,7 +18,7 @@ export class PostsQueryRepository {
 
   async findPaging(query: PostQuery, id?: string): Promise<PostDocument[]> {
     //const filter = id ? {blogId: id} : {}
-    const filter = this.filter(id)
+    const filter = this.filter(id);
     return this.PostModel.find(filter)
       .sort({ createdAt: query.sortDirection })
       .skip((query.pageNumber - 1) * query.pageSize)
@@ -27,11 +27,11 @@ export class PostsQueryRepository {
 
   async countDocuments(id?: string): Promise<number> {
     //const filter = id ? {blogId: id} : {}
-    const filter = this.filter(id)
+    const filter = this.filter(id);
     return this.PostModel.countDocuments(filter);
   }
 
   private filter(id: string | undefined): {} {
-    return id ? {blogId: id} : {}
+    return id ? { blogId: id } : {};
   }
 }

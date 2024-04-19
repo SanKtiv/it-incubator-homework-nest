@@ -11,7 +11,8 @@ export class PostsService {
     inputDto: PostsInputDto,
     blogName: string,
   ): Promise<PostDocument> {
-    return this.postsRepository.create(inputDto, blogName);
+    const postDocument = await this.postsRepository.create(inputDto, blogName);
+    return this.postsRepository.save(postDocument);
   }
 
   async savePost(postDocument: PostDocument): Promise<PostDocument> {
