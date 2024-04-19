@@ -57,5 +57,5 @@ export const commentsPagingDto = (query: QueryDto, totalComments: number, userSt
     query.pageNumber,
     query.pageSize,
     totalComments,
-    commentsDocument.map(document => new commentOutputDto(document, userStatus))
+    commentsDocument.map(document => commentOutputDto(document, userStatus))
 )
