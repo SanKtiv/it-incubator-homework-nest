@@ -105,6 +105,7 @@ export class PostController {
   }
 
   @Delete(':postId')
+  @HttpCode(204)
   @UsePipes(paramIdPipe)
   async deletePostById(@Param('postId') id: string): Promise<void> {
     await this.postsService.deletePost(id);

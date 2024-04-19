@@ -107,6 +107,7 @@ export class BlogsController {
   }
 
   @Delete(':blogId')
+  @HttpCode(204)
   @UsePipes(paramIdPipe)
   async deleteBlogById(@Param('blogId') id: string): Promise<void> {
     await this.blogsService.deleteBlog(id);
