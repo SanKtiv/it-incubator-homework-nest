@@ -2,7 +2,8 @@ import {
   Body,
   Controller,
   Delete,
-  Get, HttpCode,
+  Get,
+  HttpCode,
   Param,
   Post,
   Put,
@@ -23,7 +24,6 @@ import {
 import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import {
   PostQuery,
-  PostsInputDto,
 } from '../../posts/api/models/input/posts.input.dto';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 import {

@@ -21,6 +21,6 @@ export class CommentsRepository {
   }
 
   async deleteAll() {
-    await this.CommentModel.deleteMany()
+    await this.CommentModel.deleteMany();
   }
 }

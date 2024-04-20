@@ -1,5 +1,4 @@
 import { CommentDocument } from '../../domain/comment.schema';
-import { BlogsViewDto } from '../../../blogs/api/models/output/blogs.view.dto';
 import { QueryDto } from '../../../../infrastructure/models/query.dto';
 
 export class CommentOutputDto {
