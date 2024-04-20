@@ -25,11 +25,15 @@ export class ValidationPipe implements PipeTransform {
 }
 
 @Injectable()
-export class paramBlogIdPipe implements PipeTransform {
+export class bodyPipe implements PipeTransform {
   constructor(private readonly blogsQueryRepository: BlogsQueryRepository) {}
+
   async transform(value: any, metadata: ArgumentMetadata) {
-    const blog = await this.blogsQueryRepository.findById(value);
-    if (!blog) throw new NotFoundException();
+
+    if (metadata.type !== 'body') return value;
+
+
+
     return value;
   }
 }
