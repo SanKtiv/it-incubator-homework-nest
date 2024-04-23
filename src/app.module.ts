@@ -27,13 +27,15 @@ import { CommentsService } from './features/comments/application/comments.servic
 import { CommentsController } from './features/comments/api/comments.controller';
 import { CommentsQueryRepository } from './features/comments/infrastructure/comments.query.repository';
 import dotenv from 'dotenv'
+import { ConfigModule } from '@nestjs/config';
 
 dotenv.config()
 
-const mongoURI = process.env.MONGO_URL || ''//'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/tube?retryWrites=true&w=majority';
+const mongoURI = process.env.MONGO_URL || ''//'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/nest-db?retryWrites=true&w=majority';
 
 @Module({
   imports: [
+      ConfigModule.forRoot(),
     MongooseModule.forRoot(mongoURI),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
@@ -67,3 +69,4 @@ const mongoURI = process.env.MONGO_URL || ''//'mongodb+srv://aktitorov:eNCT8uWLA
   ],
 })
 export class AppModule {}
+//
