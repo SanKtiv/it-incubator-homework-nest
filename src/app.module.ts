@@ -28,6 +28,7 @@ import { CommentsController } from './features/comments/api/comments.controller'
 import { CommentsQueryRepository } from './features/comments/infrastructure/comments.query.repository';
 import dotenv from 'dotenv'
 import { ConfigModule } from '@nestjs/config';
+import {AuthController} from "./features/auth/api/auth.controller";
 
 dotenv.config()
 
@@ -51,6 +52,7 @@ const mongoURI = process.env.MONGO_URL || ''//'mongodb+srv://aktitorov:eNCT8uWLA
     PostController,
     UsersController,
     CommentsController,
+    AuthController
   ],
   providers: [
     AppService,
