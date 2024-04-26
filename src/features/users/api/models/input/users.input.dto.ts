@@ -1,16 +1,16 @@
-import {IsString, Length, Matches} from "class-validator";
+import {buildMessage, IsString, Length, Matches} from "class-validator";
 
 export class UsersInputDto {
-  @IsString()
-  @Length(3, 10)
   @Matches(/^[a-zA-Z0-9_-]*$/)
+  @Length(3, 10)
+  @IsString()
   login: string;
 
-  @IsString()
   @Length(6, 20)
+  @IsString()
   password: string;
 
-  @IsString()
   @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+  @IsString()
   email: string;
 }
