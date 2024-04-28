@@ -29,10 +29,7 @@ export class bodyPipe implements PipeTransform {
   constructor(private readonly blogsQueryRepository: BlogsQueryRepository) {}
 
   async transform(value: any, metadata: ArgumentMetadata) {
-
     if (metadata.type !== 'body') return value;
-
-
 
     return value;
   }

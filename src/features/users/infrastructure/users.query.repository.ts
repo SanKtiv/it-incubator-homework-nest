@@ -15,14 +15,17 @@ export class UsersQueryRepository {
       return null;
     }
   }
+async findByEmail(email: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({'accountData.email': email})
+}
 
   async countDocument(query: UsersQuery): Promise<number> {
-    const filter = this.filterForSearchTerm(query);
+    const filter = this.filterForSearchTerm(query.searchLoginTerm, query.searchEmailTerm);
     return this.UserModel.countDocuments(filter);
   }
 
   async findPaging(query: UsersQuery): Promise<UserDocument[]> {
-    const filter = this.filterForSearchTerm(query);
+    const filter = this.filterForSearchTerm(query.searchLoginTerm, query.searchEmailTerm);
     const sortBy = `accountData.${query.sortBy}`;
     return this.UserModel.find(filter)
       .sort({ [sortBy]: query.sortDirection })
@@ -30,17 +33,17 @@ export class UsersQueryRepository {
       .limit(+query.pageSize);
   }
 
-  private filterForSearchTerm(query: UsersQuery): {} {
+  private filterForSearchTerm(searchLogin, searchEmail: string | null): {} {
     let filter = {};
     const findArray: {}[] = [];
 
-    if (query.searchLoginTerm) {
-      const login = new RegExp(query.searchLoginTerm, 'i');
+    if (searchLogin) {
+      const login = new RegExp(searchLogin, 'i');
       findArray.push({ 'accountData.login': login });
       filter = { $or: findArray };
     }
-    if (query.searchEmailTerm) {
-      const email = new RegExp(query.searchEmailTerm, 'i');
+    if (searchEmail) {
+      const email = new RegExp(searchEmail, 'i');
       findArray.push({ 'accountData.email': email });
       filter = { $or: findArray };
     }

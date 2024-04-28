@@ -22,9 +22,7 @@ import {
   BlogsViewPagingDto,
 } from './models/output/blogs.view.dto';
 import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
-import {
-  PostQuery,
-} from '../../posts/api/models/input/posts.input.dto';
+import { PostQuery } from '../../posts/api/models/input/posts.input.dto';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 import {
   postsOutputDto,

@@ -1,4 +1,4 @@
-import {buildMessage, IsString, Length, Matches} from "class-validator";
+import { buildMessage, IsString, Length, Matches } from 'class-validator';
 
 export class UsersInputDto {
   @Matches(/^[a-zA-Z0-9_-]*$/)
@@ -10,7 +10,7 @@ export class UsersInputDto {
   @IsString()
   password: string;
 
-  @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+  @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, {message: 'This email can not exist'})
   @IsString()
   email: string;
 }
