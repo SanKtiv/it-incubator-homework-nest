@@ -18,15 +18,14 @@ export class ErrorsFilter implements ExceptionFilter {
     catch(exception: HttpException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
-        const request = ctx.getRequest<Request>();
+        //const request = ctx.getRequest<Request>();
         const status = exception.getStatus()
         if (status === 400) {
             const messageArray: any = exception.getResponse()
-            const errorsArray: Errors[] = []
-            messageArray.message.forEach(e => errorsArray.push({message: e, field: ''}))
-            response
+            return response
                 .status(status)
-                .send(new ErrorsMessages(errorsArray))
+                .send(new ErrorsMessages(messageArray.message))
         }
+        return response.status(status).send({exception})
     }
 }
