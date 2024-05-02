@@ -15,17 +15,30 @@ export class UsersQueryRepository {
       return null;
     }
   }
-async findByEmail(email: string): Promise<UserDocument | null> {
-    return this.UserModel.findOne({'accountData.email': email})
-}
+
+  async findByEmail(email: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({ 'accountData.email': email });
+  }
+
+  async findByCode(code: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({
+      'emailConfirmation.confirmationCode': code,
+    });
+  }
 
   async countDocument(query: UsersQuery): Promise<number> {
-    const filter = this.filterForSearchTerm(query.searchLoginTerm, query.searchEmailTerm);
+    const filter = this.filterForSearchTerm(
+      query.searchLoginTerm,
+      query.searchEmailTerm,
+    );
     return this.UserModel.countDocuments(filter);
   }
 
   async findPaging(query: UsersQuery): Promise<UserDocument[]> {
-    const filter = this.filterForSearchTerm(query.searchLoginTerm, query.searchEmailTerm);
+    const filter = this.filterForSearchTerm(
+      query.searchLoginTerm,
+      query.searchEmailTerm,
+    );
     const sortBy = `accountData.${query.sortBy}`;
     return this.UserModel.find(filter)
       .sort({ [sortBy]: query.sortDirection })

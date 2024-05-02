@@ -10,7 +10,9 @@ export class UsersInputDto {
   @IsString()
   password: string;
 
-  @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, {message: 'This email can not exist'})
+  @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, {
+    message: 'This email can not exist',
+  })
   @IsString()
   email: string;
 }

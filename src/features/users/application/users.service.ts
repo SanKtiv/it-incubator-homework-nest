@@ -8,16 +8,14 @@ import { UserDocument } from '../domain/users.schema';
 
 @Injectable()
 export class UsersService {
-
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async createUser(dto: UsersInputDto): Promise<UserDocument> {
-
     const passwordHash = await this.genHash(dto.password);
 
-    const confirmationCode = uuidv4();
+    const confirmationCode: string = uuidv4();
 
-    const expirationDate = add(new Date(), { hours: 1, minutes: 5 });
+    const expirationDate: Date = add(new Date(), { hours: 1, minutes: 5 });
 
     const userDocument = await this.usersRepository.create(
       dto,
@@ -30,12 +28,10 @@ export class UsersService {
   }
 
   async deleteUserById(id: string): Promise<void> {
-
     await this.usersRepository.remove(id);
   }
 
   async genHash(password: string): Promise<string> {
-
     const salt = await bcrypt.genSalt(10);
 
     return bcrypt.hash(password, salt);
