@@ -16,8 +16,9 @@ export class UsersQueryRepository {
     }
   }
 
-  async findByEmail(email: string): Promise<UserDocument | null> {
-    return this.UserModel.findOne({ 'accountData.email': email });
+  async findByLoginOrEmail(loginOrEmail: string): Promise<UserDocument | null> {
+    const filter = this.filterForSearchTerm(loginOrEmail, loginOrEmail)
+    return this.UserModel.findOne(filter);
   }
 
   async findByCode(code: string): Promise<UserDocument | null> {
@@ -27,39 +28,45 @@ export class UsersQueryRepository {
   }
 
   async countDocument(query: UsersQuery): Promise<number> {
-    const filter = this.filterForSearchTerm(
-      query.searchLoginTerm,
-      query.searchEmailTerm,
-    );
+    const term = this.loginAndEmailToRegExp(query.searchLoginTerm, query.searchEmailTerm)
+
+    const filter = this.filterForSearchTerm(term.login, term.email);
+
     return this.UserModel.countDocuments(filter);
   }
 
   async findPaging(query: UsersQuery): Promise<UserDocument[]> {
-    const filter = this.filterForSearchTerm(
-      query.searchLoginTerm,
-      query.searchEmailTerm,
-    );
+    const term = this.loginAndEmailToRegExp(query.searchLoginTerm, query.searchEmailTerm)
+
+    const filter = this.filterForSearchTerm(term.login, term.email);
+
     const sortBy = `accountData.${query.sortBy}`;
+
     return this.UserModel.find(filter)
       .sort({ [sortBy]: query.sortDirection })
       .skip((+query.pageNumber - 1) * +query.pageSize)
       .limit(+query.pageSize);
   }
 
-  private filterForSearchTerm(searchLogin, searchEmail: string | null): {} {
+  private filterForSearchTerm(login, email: string | RegExp | null): {} {
     let filter = {};
     const findArray: {}[] = [];
 
-    if (searchLogin) {
-      const login = new RegExp(searchLogin, 'i');
+    if (login) {
       findArray.push({ 'accountData.login': login });
       filter = { $or: findArray };
     }
-    if (searchEmail) {
-      const email = new RegExp(searchEmail, 'i');
+    if (email) {
       findArray.push({ 'accountData.email': email });
       filter = { $or: findArray };
     }
     return filter;
+  }
+
+  private loginAndEmailToRegExp(login, email: string | null) {
+    return {
+      login: login ? new RegExp(login, 'i') : null,
+      email: email ? new RegExp(email, 'i') : null,
+    }
   }
 }

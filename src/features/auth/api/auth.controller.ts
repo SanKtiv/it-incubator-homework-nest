@@ -8,6 +8,7 @@ import {
 import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
 import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
 import { AuthService } from '../application/auth.service';
+import {UserLoginDto} from "./models/input/input.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -18,8 +19,8 @@ export class AuthController {
 
   @Post('registration')
   @HttpCode(204)
-  async authCreateUser(@Body() dto: UsersInputDto) {
-    const userDocument = await this.usersQueryRepository.findByEmail(dto.email);
+  async authCreateUser(@Body() dto: UsersInputDto): Promise<void> {
+    const userDocument = await this.usersQueryRepository.findByLoginOrEmail(dto.email);
     if (userDocument)
       throw new BadRequestException([
         {
@@ -32,7 +33,7 @@ export class AuthController {
 
   @Post('registration-confirmation')
   @HttpCode(204)
-  async registrationConfirmation(@Body() code: string) {
+  async registrationConfirmation(@Body() code: string): Promise<void> {
     const userDocument = await this.usersQueryRepository.findByCode(code);
     if (
       !userDocument ||
@@ -46,5 +47,10 @@ export class AuthController {
         },
       ]);
     await this.authService.registrationConfirmation(userDocument)
+  }
+
+  @Post('login')
+  async userLogin(@Body() dto: UserLoginDto) {
+    const userDocument = await this.usersQueryRepository.findByLoginOrEmail(dto.loginOrEmail)
   }
 }

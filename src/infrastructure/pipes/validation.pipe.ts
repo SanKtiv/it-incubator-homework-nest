@@ -8,21 +8,8 @@ import { BlogsQueryRepository } from '../../features/blogs/infrastructure/blogs.
 import { UsersQueryRepository } from '../../features/users/infrastructure/users.query.repository';
 import { PostsQueryRepository } from '../../features/posts/infrastructure/posts.query.repository';
 import { CommentsQueryRepository } from '../../features/comments/infrastructure/comments.query.repository';
+import {Types} from "mongoose";
 
-@Injectable()
-export class ValidationPipe implements PipeTransform {
-  // constructor(
-  //     private readonly blogsQueryRepository: BlogsQueryRepository
-  // ) {}
-  async transform(value: any, metadata: ArgumentMetadata) {
-    console.log('ValidationPipe start');
-    // const blog = await this.blogsQueryRepository.findById(value);
-    //
-    // if (!blog) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-
-    return value;
-  }
-}
 
 @Injectable()
 export class bodyPipe implements PipeTransform {
@@ -44,21 +31,31 @@ export class paramIdPipe implements PipeTransform {
     private readonly commentsQueryRepository: CommentsQueryRepository,
   ) {}
   async transform(value: any, metadata: ArgumentMetadata) {
+    console.log('new Types.ObjectId(value)')
     let result: any = undefined;
 
-    if (metadata.data === 'blogId')
-      result = await this.blogsQueryRepository.findById(value);
+    try{
+      new Types.ObjectId(value)
+    }
+    catch (e) {
+      throw new NotFoundException()
+    }
+    console.log('new Types.ObjectId(value)')
+    //value = new Types.ObjectId(value)
 
-    if (metadata.data === 'userId')
-      result = await this.usersQueryRepository.findById(value);
+    // if (metadata.data === 'blogId')
+    //   result = await this.blogsQueryRepository.findById(value);
 
-    if (metadata.data === 'postId')
-      result = await this.postsQueryRepository.findById(value);
+    // if (metadata.data === 'userId')
+    //   result = await this.usersQueryRepository.findById(value);
 
-    if (metadata.data === 'commentId')
-      result = await this.commentsQueryRepository.findById(value);
+    // if (metadata.data === 'postId')
+    //   result = await this.postsQueryRepository.findById(value);
+    //
+    // if (metadata.data === 'commentId')
+    //   result = await this.commentsQueryRepository.findById(value);
 
-    if (!result) throw new NotFoundException();
+    //if (!new Types.ObjectId(value)) throw new NotFoundException();
 
     return value;
   }

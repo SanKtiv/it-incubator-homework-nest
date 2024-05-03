@@ -30,6 +30,7 @@ export class ErrorsFilter implements ExceptionFilter {
         .status(status)
         .send(new ErrorsMessages(messageArray.message));
     }
+    if (status === 404) return response.sendStatus(status)
     return response.status(status).send({ exception });
   }
 }

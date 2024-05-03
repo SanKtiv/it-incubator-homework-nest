@@ -27,6 +27,11 @@ export class UsersService {
     return this.usersRepository.save(userDocument);
   }
 
+  async existUserWithId(id: string): Promise<boolean> {
+    const result = await this.usersRepository.findById(id)
+    return !!result;
+  }
+
   async deleteUserById(id: string): Promise<void> {
     await this.usersRepository.remove(id);
   }

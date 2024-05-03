@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument, UsersModelType } from '../domain/users.schema';
 import { UsersInputDto } from '../api/models/input/users.input.dto';
-import { Model } from 'mongoose';
+import {Model, Types} from 'mongoose';
 
 @Injectable()
 export class UsersRepository {
@@ -25,6 +25,14 @@ export class UsersRepository {
 
   async save(userDocument: UserDocument): Promise<UserDocument> {
     return userDocument.save();
+  }
+
+  async findById(id: string): Promise<UserDocument | null> {
+    try {
+      return this.UserModel.findById(id);
+    } catch (e) {
+      return null;
+    }
   }
 
   async remove(id: string): Promise<void> {

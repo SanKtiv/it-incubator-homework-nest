@@ -6,7 +6,7 @@ import {
   HttpCode,
   Param,
   Post,
-  Query,
+  Query, UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -19,6 +19,7 @@ import {
 import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
+import {UserGuard} from "../../../infrastructure/guards/notfound.guard";
 
 @Controller('users')
 @UsePipes(new ValidationPipe({ transform: true }))
@@ -41,10 +42,11 @@ export class UsersController {
     return usersPagingDto(totalUsers, query, usersPaging);
   }
 
-  @Delete(':userId')
+  @Delete(':id')
   @HttpCode(204)
+  @UseGuards(UserGuard)
   @UsePipes(paramIdPipe)
-  async deleteUserById(@Param('userId') id: string) {
+  async deleteUserById(@Param('id') id: string) {
     await this.usersService.deleteUserById(id);
   }
 }
