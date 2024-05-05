@@ -42,11 +42,11 @@ export class UsersController {
     return usersPagingDto(totalUsers, query, usersPaging);
   }
 
-  @Delete(':id')
+  @Delete(':userId')
   @HttpCode(204)
-  @UseGuards(UserGuard)
+  //@UseGuards(UserGuard)
   @UsePipes(paramIdPipe)
-  async deleteUserById(@Param('id') id: string) {
+  async deleteUserById(@Param('userId') id: string) {
     await this.usersService.deleteUserById(id);
   }
 }
