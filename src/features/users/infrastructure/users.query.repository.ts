@@ -16,7 +16,12 @@ export class UsersQueryRepository {
     }
   }
 
-  async findByLoginOrEmail(loginOrEmail: string): Promise<UserDocument | null> {
+  async existLoginOrEmail(login, email: string): Promise<UserDocument | null> {
+    const filter = this.filterForSearchTerm(login, email)
+    return this.UserModel.countDocuments(filter);
+  }
+
+  async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserDocument | null> {
     const filter = this.filterForSearchTerm(loginOrEmail, loginOrEmail)
     return this.UserModel.findOne(filter);
   }

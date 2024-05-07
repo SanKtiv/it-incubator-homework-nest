@@ -20,7 +20,7 @@ export class AuthController {
   @Post('registration')
   @HttpCode(204)
   async authCreateUser(@Body() dto: UsersInputDto): Promise<void> {
-    const userDocument = await this.usersQueryRepository.findByLoginOrEmail(dto.email);
+    const userDocument = await this.usersQueryRepository.findUserByLoginOrEmail(dto.email);
     if (userDocument)
       throw new BadRequestException([
         {
@@ -51,6 +51,6 @@ export class AuthController {
 
   @Post('login')
   async userLogin(@Body() dto: UserLoginDto) {
-    const userDocument = await this.usersQueryRepository.findByLoginOrEmail(dto.loginOrEmail)
+    const userDocument = await this.usersQueryRepository.findUserByLoginOrEmail(dto.loginOrEmail)
   }
 }
