@@ -31,6 +31,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './features/auth/api/auth.controller';
 import {AuthService} from "./features/auth/application/auth.service";
 import {EmailAdapter} from "./features/auth/infrastructure/mail.adapter";
+import {LoginIsExistConstraint} from "./infrastructure/decorators/login-is-exist.decorator";
+import {EmailIsExistConstraint} from "./infrastructure/decorators/email-is-exist.decorator";
 
 dotenv.config();
 
@@ -57,6 +59,8 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     AuthController,
   ],
   providers: [
+    LoginIsExistConstraint,
+    EmailIsExistConstraint,
     AppService,
     BlogsQueryRepository,
     BlogsRepository,
@@ -70,8 +74,8 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     CommentsRepository,
     CommentsService,
     CommentsQueryRepository,
-      EmailAdapter,
-      AuthService
+    EmailAdapter,
+    AuthService,
   ],
 })
 export class AppModule {}

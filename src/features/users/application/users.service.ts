@@ -11,6 +11,7 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async createUser(dto: UsersInputDto): Promise<UserDocument> {
+
     const passwordHash = await this.genHash(dto.password);
 
     const confirmationCode: string = uuidv4();

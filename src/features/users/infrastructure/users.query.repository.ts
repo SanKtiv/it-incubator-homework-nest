@@ -16,7 +16,15 @@ export class UsersQueryRepository {
     }
   }
 
-  async existLoginOrEmail(login, email: string): Promise<UserDocument | null> {
+  async loginIsExist(login: string): Promise<number> {
+    return this.UserModel.countDocuments({ 'accountData.login': login });
+  }
+
+  async emailIsExist(email: string): Promise<number> {
+    return this.UserModel.countDocuments({ 'accountData.login': email });
+  }
+
+  async existLoginOrEmail(login, email: string): Promise<number> {
     const filter = this.filterForSearchTerm(login, email)
     return this.UserModel.countDocuments(filter);
   }

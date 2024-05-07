@@ -8,13 +8,14 @@ import {
 import {Injectable} from "@nestjs/common";
 import {UsersQueryRepository} from "../../features/users/infrastructure/users.query.repository";
 
-@ValidatorConstraint({ name: 'LoginOrEmailIsExist', async: false })
+@ValidatorConstraint({ name: 'LoginIsExist', async: false })
 @Injectable()
 export class LoginIsExistConstraint implements ValidatorConstraintInterface {
     constructor(private readonly usersQueryRepository: UsersQueryRepository) {}
     async validate(value: any, args: ValidationArguments) {
-        const result = await this.usersQueryRepository.existLoginOrEmail(value.login, value.mail);
-        return !result;
+        const result = await this.usersQueryRepository.loginIsExist(value);
+        console.log(result)
+        return !(result === 1);
     }
 
     defaultMessage(validationArguments?: ValidationArguments): string {
@@ -22,7 +23,7 @@ export class LoginIsExistConstraint implements ValidatorConstraintInterface {
     }
 }
 
-export function LoginOrEmailIsExist(
+export function LoginIsExist(
     property?: string,
     validationOptions?: ValidationOptions,
 ) {

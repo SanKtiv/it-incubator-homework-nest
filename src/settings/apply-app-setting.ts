@@ -9,7 +9,7 @@ import { useContainer } from 'class-validator';
 import {ErrorsFilter} from "../infrastructure/filters/exception.filter";
 
 // Префикс нашего приложения (http://site.com/api)
-const APP_PREFIX = '/api';
+//const APP_PREFIX = '/api';
 
 // Используем данную функцию в main.ts и в e2e тестах
 export const applyAppSettings = (app: INestApplication) => {
@@ -31,7 +31,7 @@ export const applyAppSettings = (app: INestApplication) => {
     app.enableCors();
 
     // Установка префикса
-    setAppPrefix(app);
+    //setAppPrefix(app);
 
     // Конфигурация swagger документации
     //setSwagger(app);
@@ -43,12 +43,12 @@ export const applyAppSettings = (app: INestApplication) => {
     setAppExceptionsFilters(app);
 };
 
-const setAppPrefix = (app: INestApplication) => {
-    // Устанавливается для разворачивания front-end и back-end на одном домене
-    // https://site.com - front-end
-    // https://site.com/api - backend-end
-    app.setGlobalPrefix(APP_PREFIX);
-};
+// const setAppPrefix = (app: INestApplication) => {
+//     // Устанавливается для разворачивания front-end и back-end на одном домене
+//     // https://site.com - front-end
+//     // https://site.com/api - backend-end
+//     app.setGlobalPrefix(APP_PREFIX);
+// };
 
 // const setSwagger = (app: INestApplication) => {
 //     if (!appSettings.env.isProduction()) {

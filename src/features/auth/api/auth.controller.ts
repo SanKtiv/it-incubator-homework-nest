@@ -20,14 +20,7 @@ export class AuthController {
   @Post('registration')
   @HttpCode(204)
   async authCreateUser(@Body() dto: UsersInputDto): Promise<void> {
-    const userDocument = await this.usersQueryRepository.findUserByLoginOrEmail(dto.email);
-    if (userDocument)
-      throw new BadRequestException([
-        {
-          message: 'User with the given email or login already exists',
-          field: 'login or email',
-        },
-      ]);
+
     await this.authService.createAuthUser(dto);
   }
 
