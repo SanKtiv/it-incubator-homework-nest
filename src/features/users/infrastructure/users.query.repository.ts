@@ -21,7 +21,7 @@ export class UsersQueryRepository {
   }
 
   async emailIsExist(email: string): Promise<number> {
-    return this.UserModel.countDocuments({ 'accountData.login': email });
+    return this.UserModel.countDocuments({ 'accountData.email': email });
   }
 
   async existLoginOrEmail(login, email: string): Promise<number> {

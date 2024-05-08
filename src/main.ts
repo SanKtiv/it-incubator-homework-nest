@@ -1,15 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { ErrorsFilter } from './infrastructure/filters/exception.filter';
 import {applyAppSettings} from "./settings/apply-app-setting";
 
 const port = process.env.PORT || 3000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  //app.enableCors();
 
     applyAppSettings(app)
   // app.useGlobalPipes(

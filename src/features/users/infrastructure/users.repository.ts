@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument, UsersModelType } from '../domain/users.schema';
 import { UsersInputDto } from '../api/models/input/users.input.dto';
-import {Model, Types} from 'mongoose';
 
 @Injectable()
 export class UsersRepository {
@@ -33,6 +32,10 @@ export class UsersRepository {
     } catch (e) {
       return null;
     }
+  }
+
+  async findByEmail(email: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({'accountData.email': email})
   }
 
   async remove(id: string): Promise<void> {

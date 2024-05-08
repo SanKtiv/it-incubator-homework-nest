@@ -46,4 +46,6 @@ export class UsersService {
 
     return bcrypt.hash(password, salt);
   }
+
+
 }

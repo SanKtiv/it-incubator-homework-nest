@@ -33,6 +33,7 @@ import {AuthService} from "./features/auth/application/auth.service";
 import {EmailAdapter} from "./features/auth/infrastructure/mail.adapter";
 import {LoginIsExistConstraint} from "./infrastructure/decorators/login-is-exist.decorator";
 import {EmailIsExistConstraint} from "./infrastructure/decorators/email-is-exist.decorator";
+import {EmailIsConfirmedConstraint} from "./infrastructure/decorators/email-is-confimed.decorator";
 
 dotenv.config();
 
@@ -61,6 +62,7 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
   providers: [
     LoginIsExistConstraint,
     EmailIsExistConstraint,
+    EmailIsConfirmedConstraint,
     AppService,
     BlogsQueryRepository,
     BlogsRepository,
