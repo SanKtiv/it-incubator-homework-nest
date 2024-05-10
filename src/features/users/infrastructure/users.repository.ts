@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument, UsersModelType } from '../domain/users.schema';
 import { UsersInputDto } from '../api/models/input/users.input.dto';
+import { filterByLoginAndEmail } from './utils.repositories';
 
 @Injectable()
 export class UsersRepository {
@@ -34,8 +35,19 @@ export class UsersRepository {
     }
   }
 
+  async findByConfirmationCode(code: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({
+      'emailConfirmation.confirmationCode': code,
+    });
+  }
+
   async findByEmail(email: string): Promise<UserDocument | null> {
-    return this.UserModel.findOne({'accountData.email': email})
+    return this.UserModel.findOne({ 'accountData.email': email });
+  }
+
+  async findByLoginOrEmail(loginOrEmail: string): Promise<UserDocument | null> {
+    const filter = filterByLoginAndEmail(loginOrEmail, loginOrEmail);
+    return this.UserModel.findOne(filter);
   }
 
   async remove(id: string): Promise<void> {

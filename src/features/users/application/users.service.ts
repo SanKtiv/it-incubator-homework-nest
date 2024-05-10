@@ -11,7 +11,6 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async createUser(dto: UsersInputDto): Promise<UserDocument> {
-
     const passwordHash = await this.genHash(dto.password);
 
     const confirmationCode: string = uuidv4();
@@ -29,23 +28,18 @@ export class UsersService {
   }
 
   async existUserWithId(id: string): Promise<boolean> {
-
-    const result = await this.usersRepository.findById(id)
+    const result = await this.usersRepository.findById(id);
 
     return !!result;
   }
 
   async deleteUserById(id: string): Promise<void> {
-
     await this.usersRepository.remove(id);
   }
 
   async genHash(password: string): Promise<string> {
-
     const salt = await bcrypt.genSalt(10);
 
     return bcrypt.hash(password, salt);
   }
-
-
 }
