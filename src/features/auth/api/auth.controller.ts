@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
 import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
 import { AuthService } from '../application/auth.service';
@@ -6,6 +13,8 @@ import { UserLoginDto } from './models/input/input.dto';
 import { EmailResendingDto } from './models/input/email-resending.input.dto';
 import { ConfirmationCodeDto } from './models/input/confirmation-code.input.dto';
 import { LocalAuthGuard } from '../../../infrastructure/guards/local.auth.guard';
+import { Response } from 'express';
+import {EmailRecoveryDto} from "./models/input/email-recovery.input.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -38,7 +47,24 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async userLogin(@Body() dto: UserLoginDto) {
-    return { accessToken: '123456789' };
+  @HttpCode(200)
+  async userLogin(@Body() dto: UserLoginDto, @Res() res: Response) {
+    const accessToken = await this.authService.createAccessToken(
+      dto.loginOrEmail,
+    );
+
+    const refreshToken = await this.authService.createRefreshToken(
+      dto.loginOrEmail,
+    );
+
+    return res
+      .cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })
+      .send(accessToken);
+  }
+
+  @Post('password-recovery')
+  @HttpCode(204)
+  async passwordRecovery(@Body() dto: EmailRecoveryDto) {
+    await this.authService.passwordRecovery(dto.email)
   }
 }

@@ -36,6 +36,7 @@ import { EmailIsExistConstraint } from './infrastructure/decorators/email-is-exi
 import { EmailIsConfirmedConstraint } from './infrastructure/decorators/email-is-confimed.decorator';
 import { CodeIsConfirmedConstraint } from './infrastructure/decorators/code-is-valid.decorator';
 import { LocalStrategy } from './features/auth/infrastructure/local.strategy';
+import { JwtModule } from '@nestjs/jwt';
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    JwtModule.register({ global: true, secret: process.env.SECRET_KEY }),
     MongooseModule.forRoot(mongoURI),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },

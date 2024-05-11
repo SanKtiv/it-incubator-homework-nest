@@ -6,6 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     private readonly emailAdapter: EmailAdapter,
     private readonly usersRepository: UsersRepository,
     private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async registrationUser(dto: UsersInputDto) {
@@ -81,5 +83,49 @@ export class AuthService {
     if (!compareHash) return null;
 
     return userDocument;
+  }
+
+  async createAccessToken(loginOrEmail: string) {
+    const userDocument =
+      await this.usersRepository.findByLoginOrEmail(loginOrEmail);
+
+    const payload = { userId: userDocument!._id.toString() };
+
+    const accessToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '7m',
+    });
+
+    return { accessToken: accessToken };
+  }
+
+  async getPayloadAccessToken(accessToken: string) {
+    try {
+      return this.jwtService.verifyAsync(accessToken);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async createRefreshToken(loginOrEmail: string) {
+    const userDocument =
+      await this.usersRepository.findByLoginOrEmail(loginOrEmail);
+
+    const payload = { userId: userDocument!._id.toString() };
+
+    return this.jwtService.signAsync(payload, { expiresIn: '1h' });
+  }
+
+  async passwordRecovery(email: string) {
+    const code = this.usersService.createCodeWithExpireDate()
+
+    const userDocument = await this.usersRepository.findByEmail(email)
+
+    if (userDocument) {
+      userDocument.emailConfirmation.confirmationCode = code.confirmationCode
+
+      userDocument.emailConfirmation.expirationDate = code.expirationDate
+    }
+
+    await this.emailAdapter.sendRecoveryConfirmationCode(email, code.confirmationCode)
   }
 }

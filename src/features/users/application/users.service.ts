@@ -13,18 +13,27 @@ export class UsersService {
   async createUser(dto: UsersInputDto): Promise<UserDocument> {
     const passwordHash = await this.genHash(dto.password);
 
-    const confirmationCode: string = uuidv4();
-
-    const expirationDate: Date = add(new Date(), { hours: 1, minutes: 5 });
+    const code = this.createCodeWithExpireDate()
 
     const userDocument = await this.usersRepository.create(
-      dto,
-      passwordHash,
-      confirmationCode,
-      expirationDate,
+        dto,
+        passwordHash,
+        code.confirmationCode,
+        code.expirationDate,
     );
 
-    return this.usersRepository.save(userDocument);
+    return this.saveUser(userDocument);
+  }
+
+  async saveUser(userDocument: UserDocument) {
+    return this.usersRepository.save(userDocument)
+  }
+
+  createCodeWithExpireDate() {
+    return {
+      confirmationCode: uuidv4(),
+      expirationDate: add(new Date(), { hours: 1, minutes: 5 })
+    }
   }
 
   async existUserWithId(id: string): Promise<boolean> {
