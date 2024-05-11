@@ -6,7 +6,8 @@ import {
   HttpCode,
   Param,
   Post,
-  Query, UseGuards,
+  Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -19,7 +20,7 @@ import {
 import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
-import {UserGuard} from "../../../infrastructure/guards/notfound.guard";
+import { UserGuard } from '../../../infrastructure/guards/notfound.guard';
 
 @Controller('users')
 @UsePipes(new ValidationPipe({ transform: true }))

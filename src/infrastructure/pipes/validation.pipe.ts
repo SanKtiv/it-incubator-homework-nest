@@ -8,9 +8,8 @@ import { BlogsQueryRepository } from '../../features/blogs/infrastructure/blogs.
 import { UsersQueryRepository } from '../../features/users/infrastructure/users.query.repository';
 import { PostsQueryRepository } from '../../features/posts/infrastructure/posts.query.repository';
 import { CommentsQueryRepository } from '../../features/comments/infrastructure/comments.query.repository';
-import {Types} from "mongoose";
-import {UsersService} from "../../features/users/application/users.service";
-
+import { Types } from 'mongoose';
+import { UsersService } from '../../features/users/application/users.service';
 
 @Injectable()
 export class bodyPipe implements PipeTransform {
@@ -32,15 +31,14 @@ export class paramIdPipe implements PipeTransform {
     private readonly commentsQueryRepository: CommentsQueryRepository,
   ) {}
   async transform(value: any, metadata: ArgumentMetadata) {
-    console.log(value)
-    console.log(metadata)
+    console.log(value);
+    console.log(metadata);
     let result: any = undefined;
 
-    try{
-      new Types.ObjectId(value)
-    }
-    catch (e) {
-      throw new NotFoundException()
+    try {
+      new Types.ObjectId(value);
+    } catch (e) {
+      throw new NotFoundException();
     }
     //value = new Types.ObjectId(value)
 

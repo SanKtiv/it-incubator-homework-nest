@@ -1,13 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import {applyAppSettings} from "./settings/apply-app-setting";
+import { applyAppSettings } from './settings/apply-app-setting';
 
 const port = process.env.PORT || 3000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-    applyAppSettings(app)
+  applyAppSettings(app);
   // app.useGlobalPipes(
   //   new ValidationPipe({
   //     transform: true,
