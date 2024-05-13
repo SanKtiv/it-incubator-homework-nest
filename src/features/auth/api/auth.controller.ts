@@ -15,6 +15,7 @@ import { ConfirmationCodeDto } from './models/input/confirmation-code.input.dto'
 import { LocalAuthGuard } from '../../../infrastructure/guards/local.auth.guard';
 import { Response } from 'express';
 import {EmailRecoveryDto} from "./models/input/email-recovery.input.dto";
+import {NewPasswordInputDto} from "./models/input/new-password.input.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -66,5 +67,11 @@ export class AuthController {
   @HttpCode(204)
   async passwordRecovery(@Body() dto: EmailRecoveryDto) {
     await this.authService.passwordRecovery(dto.email)
+  }
+
+  @Post('new-password')
+  @HttpCode(204)
+  async createNewPassword(@Body() dto: NewPasswordInputDto) {
+    await this.authService.saveNewPassword(dto)
   }
 }

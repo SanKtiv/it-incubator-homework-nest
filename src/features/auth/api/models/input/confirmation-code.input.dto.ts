@@ -1,8 +1,8 @@
 import { IsString } from 'class-validator';
-import { CodeIsConfirmed } from '../../../../../infrastructure/decorators/code-is-valid.decorator';
+import { ConfirmationCodeIsValid } from '../../../../../infrastructure/decorators/confirmation-code-is-valid.decorator';
 
 export class ConfirmationCodeDto {
-  @CodeIsConfirmed()
+  @ConfirmationCodeIsValid()
   @IsString()
   code: string;
 }

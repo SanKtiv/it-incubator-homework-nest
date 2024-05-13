@@ -34,7 +34,7 @@ import { EmailAdapter } from './features/auth/infrastructure/mail.adapter';
 import { LoginIsExistConstraint } from './infrastructure/decorators/login-is-exist.decorator';
 import { EmailIsExistConstraint } from './infrastructure/decorators/email-is-exist.decorator';
 import { EmailIsConfirmedConstraint } from './infrastructure/decorators/email-is-confimed.decorator';
-import { CodeIsConfirmedConstraint } from './infrastructure/decorators/code-is-valid.decorator';
+import { ConfirmationCodeIsValidConstraint } from './infrastructure/decorators/confirmation-code-is-valid.decorator';
 import { LocalStrategy } from './features/auth/infrastructure/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -67,7 +67,7 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     LoginIsExistConstraint,
     EmailIsExistConstraint,
     EmailIsConfirmedConstraint,
-    CodeIsConfirmedConstraint,
+    ConfirmationCodeIsValidConstraint,
     AppService,
     BlogsQueryRepository,
     BlogsRepository,

@@ -32,7 +32,7 @@ export class UsersService {
   createCodeWithExpireDate() {
     return {
       confirmationCode: uuidv4(),
-      expirationDate: add(new Date(), { hours: 1, minutes: 5 })
+      expirationDate: (add(new Date(), { hours: 1, minutes: 5 })) as Date
     }
   }
 

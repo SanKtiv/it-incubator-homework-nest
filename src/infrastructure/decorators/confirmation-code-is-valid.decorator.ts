@@ -8,9 +8,9 @@ import {
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../../features/auth/application/auth.service';
 
-@ValidatorConstraint({ name: 'CodeIsConfirmed', async: false })
+@ValidatorConstraint({ name: 'ConfirmationCodeIsValid', async: false })
 @Injectable()
-export class CodeIsConfirmedConstraint implements ValidatorConstraintInterface {
+export class ConfirmationCodeIsValidConstraint implements ValidatorConstraintInterface {
   constructor(private readonly authService: AuthService) {}
 
   async validate(value: any, args: ValidationArguments) {
@@ -22,7 +22,7 @@ export class CodeIsConfirmedConstraint implements ValidatorConstraintInterface {
   }
 }
 
-export function CodeIsConfirmed(
+export function ConfirmationCodeIsValid(
   property?: string,
   validationOptions?: ValidationOptions,
 ) {
@@ -32,7 +32,7 @@ export function CodeIsConfirmed(
       propertyName: propertyName,
       options: validationOptions,
       constraints: [property],
-      validator: CodeIsConfirmedConstraint,
+      validator: ConfirmationCodeIsValidConstraint,
     });
   };
 }
