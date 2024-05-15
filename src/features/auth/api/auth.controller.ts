@@ -16,6 +16,7 @@ import { LocalAuthGuard } from '../../../infrastructure/guards/local.auth.guard'
 import { Response } from 'express';
 import {EmailRecoveryDto} from "./models/input/email-recovery.input.dto";
 import {NewPasswordInputDto} from "./models/input/new-password.input.dto";
+import Cookies from "nodemailer/lib/fetch/cookies";
 
 @Controller('auth')
 export class AuthController {
@@ -43,7 +44,7 @@ export class AuthController {
   async resendingConfirmationCode(
     @Body() emailResendingDto: EmailResendingDto,
   ): Promise<void> {
-    await this.authService.resendingCode(emailResendingDto.email);
+    await this.authService.resendConfirmCode(emailResendingDto.email);
   }
 
   @UseGuards(LocalAuthGuard)
@@ -73,5 +74,11 @@ export class AuthController {
   @HttpCode(204)
   async createNewPassword(@Body() dto: NewPasswordInputDto) {
     await this.authService.saveNewPassword(dto)
+  }
+
+  @Post('logout')
+  @HttpCode(204)
+  async logout() {
+
   }
 }

@@ -37,7 +37,7 @@ export class AuthService {
     await this.usersRepository.save(userDocument!);
   }
 
-  async resendingCode(email: string): Promise<void> {
+  async resendConfirmCode(email: string): Promise<void> {
     const userDocument = await this.usersRepository.findByEmail(email);
 
     const confirmationCode: string = uuidv4();
