@@ -1,14 +1,14 @@
 import {Injectable} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import {RequestToApi, RequestToApiDocument, RequestToApiModelType} from "../domain/request.schema";
-import {RequestToApiInputDto} from "../api/models/input.dto";
+import {RequestApiInputDto} from "../api/models/input.dto";
 
 @Injectable()
-export class RequestRepository {
+export class RequestApiRepository {
     constructor(@InjectModel(RequestToApi.name) private RequestToApiModel: RequestToApiModelType) {
     }
 
-    async create(dto: RequestToApiInputDto) {
+    async create(dto: RequestApiInputDto) {
         return this.RequestToApiModel.createRequest(
             dto,
             this.RequestToApiModel
