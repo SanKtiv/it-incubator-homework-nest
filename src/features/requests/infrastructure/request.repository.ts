@@ -9,10 +9,11 @@ export class RequestApiRepository {
     }
 
     async create(dto: RequestApiInputDto) {
-        return this.RequestToApiModel.createRequest(
+        const document = await this.RequestToApiModel.createRequest(
             dto,
             this.RequestToApiModel
         )
+        await document.save()
     }
 
     async findByIp(ip: string) {
