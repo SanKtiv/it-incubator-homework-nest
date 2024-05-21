@@ -37,6 +37,9 @@ import { EmailIsConfirmedConstraint } from './infrastructure/decorators/email-is
 import { ConfirmationCodeIsValidConstraint } from './infrastructure/decorators/confirmation-code-is-valid.decorator';
 import { LocalStrategy } from './features/auth/infrastructure/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
+import {TooManyRequestsMiddleware} from "./infrastructure/middlewares/count-requests-api.middleware";
+import {RequestApiService} from "./features/requests/application/request-api.service";
+import {RequestToApi, RequestToApiSchema} from "./features/requests/domain/request.schema";
 
 dotenv.config();
 
@@ -52,6 +55,7 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
       { name: Post.name, schema: PostSchema },
       { name: User.name, schema: UsersSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: RequestToApi.name, schema: RequestToApiSchema },
     ]),
   ],
   controllers: [
@@ -64,6 +68,8 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     AuthController,
   ],
   providers: [
+    RequestApiService,
+    TooManyRequestsMiddleware,
     LoginIsExistConstraint,
     EmailIsExistConstraint,
     EmailIsConfirmedConstraint,

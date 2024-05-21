@@ -16,8 +16,8 @@ export class RequestApiRepository {
         await document.save()
     }
 
-    async findByIp(ip: string) {
-        return this.RequestToApiModel.findOne({ip: ip})
+    async findByIp(ip: string, date: Date): Promise<number> {
+        return this.RequestToApiModel.countDocuments({ip: ip, date: {$gte: date}})
     }
 
     async save(document: RequestToApiDocument) {
