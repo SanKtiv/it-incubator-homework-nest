@@ -94,3 +94,6 @@ const setAppPipes = (app: INestApplication) => {
 const setAppExceptionsFilters = (app: INestApplication) => {
   app.useGlobalFilters(new ErrorsFilter());
 };
+
+const setAppMiddleware = (app: INestApplication) => {
+}

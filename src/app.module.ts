@@ -40,6 +40,7 @@ import { JwtModule } from '@nestjs/jwt';
 import {TooManyRequestsMiddleware} from "./infrastructure/middlewares/count-requests-api.middleware";
 import {RequestApiService} from "./features/requests/application/request-api.service";
 import {RequestToApi, RequestToApiSchema} from "./features/requests/domain/request.schema";
+import {RequestApiRepository} from "./features/requests/infrastructure/request.repository";
 
 dotenv.config();
 
@@ -69,6 +70,7 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
   ],
   providers: [
     RequestApiService,
+    RequestApiRepository,
     TooManyRequestsMiddleware,
     LoginIsExistConstraint,
     EmailIsExistConstraint,
