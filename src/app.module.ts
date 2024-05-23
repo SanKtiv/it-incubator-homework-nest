@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BlogsController } from './features/blogs/api/blogs.controller';
@@ -94,5 +94,18 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     LocalStrategy,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+        .apply(TooManyRequestsMiddleware)
+        .forRoutes(
+            '/auth/registration',
+            '/auth/login',
+            '/auth/password-recovery',
+            '/auth/new-password',
+            '/auth/registration-confirmation',
+            '/auth/registration-email-resending'
+        )
+  }
+}
 //

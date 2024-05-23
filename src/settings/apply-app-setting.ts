@@ -7,6 +7,8 @@ import {
 import { AppModule } from '../app.module';
 import { useContainer } from 'class-validator';
 import { ErrorsFilter } from '../infrastructure/filters/exception.filter';
+import {TooManyRequestsMiddleware} from "../infrastructure/middlewares/count-requests-api.middleware";
+import {RequestApiService} from "../features/requests/application/request-api.service";
 
 // Префикс нашего приложения (http://site.com/api)
 //const APP_PREFIX = '/api';
@@ -26,7 +28,7 @@ export const applyAppSettings = (app: INestApplication) => {
 
   // Применить middleware глобально
   //app.use(LoggerMiddlewareFunc);
-
+  //app.use('/auth/registration', TooManyRequestsMiddleware);
   // Cors
   app.enableCors();
 
@@ -95,5 +97,6 @@ const setAppExceptionsFilters = (app: INestApplication) => {
   app.useGlobalFilters(new ErrorsFilter());
 };
 
-const setAppMiddleware = (app: INestApplication) => {
-}
+// const setAppMiddleware = (app: INestApplication) => {
+//   app.use('/auth/registration', TooManyRequestsMiddleware)
+// }
