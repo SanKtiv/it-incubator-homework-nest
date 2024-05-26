@@ -41,6 +41,7 @@ import {TooManyRequestsMiddleware} from "./infrastructure/middlewares/count-requ
 import {RequestApiService} from "./features/requests/application/request-api.service";
 import {RequestToApi, RequestToApiSchema} from "./features/requests/domain/request.schema";
 import {RequestApiRepository} from "./features/requests/infrastructure/request.repository";
+import {JwtStrategyAccess} from "./features/auth/infrastructure/jwt.strategy";
 
 dotenv.config();
 
@@ -49,7 +50,11 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    JwtModule.register({ global: true, secret: process.env.SECRET_KEY }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.SECRET_KEY,
+      //signOptions: {expiresIn: '10m'}
+    }),
     MongooseModule.forRoot(mongoURI),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
@@ -92,6 +97,7 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     EmailAdapter,
     AuthService,
     LocalStrategy,
+    JwtStrategyAccess,
   ],
 })
 export class AppModule implements NestModule {

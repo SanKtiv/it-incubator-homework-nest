@@ -8,6 +8,7 @@ import add from 'date-fns/add';
 import bcrypt from 'bcrypt';
 import {JwtService} from '@nestjs/jwt';
 import {NewPasswordInputDto} from "../api/models/input/new-password.input.dto";
+import objectContaining = jasmine.objectContaining;
 
 @Injectable()
 export class AuthService {
@@ -90,10 +91,10 @@ export class AuthService {
     const userDocument =
       await this.usersRepository.findByLoginOrEmail(loginOrEmail);
 
-    const payload = { userId: userDocument!._id.toString() };
+    const payload = { sub: userDocument!._id.toString() };
 
-    const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '7m',
+    const accessToken = await this.jwtService.signAsync(payload , {
+      expiresIn: '10m',
     });
 
     return { accessToken: accessToken };
@@ -111,7 +112,7 @@ export class AuthService {
     const userDocument =
       await this.usersRepository.findByLoginOrEmail(loginOrEmail);
 
-    const payload = { userId: userDocument!._id.toString() };
+    const payload = { sub: userDocument!._id.toString() };
 
     return this.jwtService.signAsync(payload, { expiresIn: '1h' });
   }
