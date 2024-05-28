@@ -41,7 +41,8 @@ import {TooManyRequestsMiddleware} from "./infrastructure/middlewares/count-requ
 import {RequestApiService} from "./features/requests/application/request-api.service";
 import {RequestToApi, RequestToApiSchema} from "./features/requests/domain/request.schema";
 import {RequestApiRepository} from "./features/requests/infrastructure/request.repository";
-import {JwtStrategyAccess} from "./features/auth/infrastructure/jwt.strategy";
+import {JwtAccessStrategy, JwtRefreshStrategy} from "./features/auth/infrastructure/jwt.strategy";
+import {BasicStrategy} from "./features/auth/infrastructure/basic.strategy";
 
 dotenv.config();
 
@@ -97,7 +98,9 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     EmailAdapter,
     AuthService,
     LocalStrategy,
-    JwtStrategyAccess,
+    JwtAccessStrategy,
+    JwtRefreshStrategy,
+    BasicStrategy,
   ],
 })
 export class AppModule implements NestModule {

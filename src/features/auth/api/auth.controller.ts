@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller,
+  Controller, Get,
   HttpCode,
   Post,
   Res,
@@ -79,6 +79,10 @@ export class AuthController {
   @Post('logout')
   @HttpCode(204)
   async logout() {
+  }
 
+  @Get('me')
+  @HttpCode(200)
+  async getInfoCurrentUser() {
   }
 }

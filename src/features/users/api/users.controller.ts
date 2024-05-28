@@ -21,9 +21,11 @@ import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 import { UserGuard } from '../../../infrastructure/guards/notfound.guard';
+import {BasicAuthGuard} from "../../../infrastructure/guards/basic.guard";
 
 @Controller('users')
-@UsePipes(new ValidationPipe({ transform: true }))
+@UseGuards(BasicAuthGuard)
+// @UsePipes(new ValidationPipe({ transform: true }))
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,

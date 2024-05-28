@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 
 @Injectable()
-export class JwtStrategyAccess extends PassportStrategy(Strategy, 'accessToken') {
+export class JwtAccessStrategy extends PassportStrategy(Strategy, 'accessToken') {
     constructor() {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -19,7 +19,7 @@ export class JwtStrategyAccess extends PassportStrategy(Strategy, 'accessToken')
 }
 
 @Injectable()
-export class JwtStrategyRefresh extends PassportStrategy(Strategy, 'refreshToken') {
+export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refreshToken') {
     constructor() {
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([(req: Request) => {
