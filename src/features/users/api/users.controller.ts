@@ -47,7 +47,7 @@ export class UsersController {
   @HttpCode(204)
   //@UseGuards(UserGuard)
   @UsePipes(paramIdPipe)
-  async deleteUserById(@Param('userId') id: string) {
+  async deleteUserById(@Param() id: string) {
     await this.usersService.deleteUserById(id);
   }
 }
