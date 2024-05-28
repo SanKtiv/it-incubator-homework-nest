@@ -3,6 +3,7 @@ import {
   INestApplication,
   ValidationPipe,
 } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 //import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from '../app.module';
 import { useContainer } from 'class-validator';
@@ -20,6 +21,7 @@ export const applyAppSettings = (app: INestApplication) => {
   // когда DI не имеет необходимого класса.
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
+  app.use(cookieParser())
   // Применение глобальных Interceptors
   // app.useGlobalInterceptors()
 

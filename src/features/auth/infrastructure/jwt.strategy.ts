@@ -18,19 +18,17 @@ export class JwtStrategyAccess extends PassportStrategy(Strategy, 'accessToken')
     }
 }
 
-// const cookieExtractor = function(req: Request) {
-//     let token = null;
-//     if (req && req.cookies) {
-//         token = req.cookies['jwt'];
-//     }
-//     return token;
-// }
-
 @Injectable()
 export class JwtStrategyRefresh extends PassportStrategy(Strategy, 'refreshToken') {
     constructor() {
         super({
-            //jwtFromRequest: cookieExtractor(),
+            jwtFromRequest: ExtractJwt.fromExtractors([(req: Request) => {
+                let token = null;
+                if (req && req.cookies) {
+                    token = req.cookies.refreshToken;// or req.cookies['refreshToken']
+    }
+        return token;
+    }]),
             ignoreExpiration: false,
             secretOrKey: process.env.SECRET_KEY || '',
         });
