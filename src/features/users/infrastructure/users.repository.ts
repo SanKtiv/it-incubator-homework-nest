@@ -56,9 +56,9 @@ export class UsersRepository {
     return this.UserModel.findOne(filter);
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string): Promise<UserDocument | null> {
     try {
-      await this.UserModel.findByIdAndDelete(id);
+      return this.UserModel.findByIdAndDelete(id);
     } catch (e) {
       throw new Error('Error DB');
     }

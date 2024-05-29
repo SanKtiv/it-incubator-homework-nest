@@ -42,8 +42,10 @@ export class UsersService {
     return !!result;
   }
 
-  async deleteUserById(id: string): Promise<void> {
-    await this.usersRepository.remove(id);
+  async deleteUserById(id: string): Promise<boolean> {
+    const result = await this.usersRepository.remove(id);
+
+    return !!result;
   }
 
   async genHash(password: string): Promise<string> {

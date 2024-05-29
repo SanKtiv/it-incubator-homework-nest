@@ -43,6 +43,8 @@ import {RequestToApi, RequestToApiSchema} from "./features/requests/domain/reque
 import {RequestApiRepository} from "./features/requests/infrastructure/request.repository";
 import {JwtAccessStrategy, JwtRefreshStrategy} from "./features/auth/infrastructure/jwt.strategy";
 import {BasicStrategy} from "./features/auth/infrastructure/basic.strategy";
+import {DevicesRepository} from "./features/security/infrastructure/devices.repository";
+import {Device, DeviceSchema} from "./features/security/domain/device.schema";
 
 dotenv.config();
 
@@ -63,6 +65,7 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
       { name: User.name, schema: UsersSchema },
       { name: Comment.name, schema: CommentSchema },
       { name: RequestToApi.name, schema: RequestToApiSchema },
+      { name: Device.name, schema: DeviceSchema },
     ]),
   ],
   controllers: [
@@ -75,6 +78,7 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     AuthController,
   ],
   providers: [
+    DevicesRepository,
     RequestApiService,
     RequestApiRepository,
     TooManyRequestsMiddleware,
@@ -101,6 +105,7 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     JwtAccessStrategy,
     JwtRefreshStrategy,
     BasicStrategy,
+
   ],
 })
 export class AppModule implements NestModule {

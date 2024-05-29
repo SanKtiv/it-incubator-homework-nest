@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
+  HttpCode, NotFoundException,
   Param,
   Post,
   Query,
@@ -17,7 +17,7 @@ import {
   usersOutputDto,
   usersPagingDto,
 } from './models/output/users.output.dto';
-import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import {paramIdIsMongoIdPipe, paramIdPipe} from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 import { UserGuard } from '../../../infrastructure/guards/notfound.guard';
@@ -48,8 +48,10 @@ export class UsersController {
   @Delete(':userId')
   @HttpCode(204)
   //@UseGuards(UserGuard)
-  @UsePipes(paramIdPipe)
-  async deleteUserById(@Param() id: string) {
-    await this.usersService.deleteUserById(id);
+  @UsePipes(paramIdIsMongoIdPipe)
+  async deleteUserById(@Param('userId') id: string) {
+    const result = await this.usersService.deleteUserById(id);
+
+    if (!result) throw new NotFoundException();
   }
 }

@@ -17,6 +17,8 @@ import { Response } from 'express';
 import {EmailRecoveryDto} from "./models/input/email-recovery.input.dto";
 import {NewPasswordInputDto} from "./models/input/new-password.input.dto";
 import Cookies from "nodemailer/lib/fetch/cookies";
+import {JWTRefreshAuthGuard} from "../../../infrastructure/guards/jwt-refresh-auth.guard";
+import {CurrentUserId} from "../infrastructure/decorators/current-user-id.param.decorator";
 
 @Controller('auth')
 export class AuthController {
@@ -50,14 +52,14 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(200)
-  async userLogin(@Body() dto: UserLoginDto, @Res() res: Response) {
-    const accessToken = await this.authService.createAccessToken(
-      dto.loginOrEmail,
-    );
+  async userLogin(
+      @Body() dto: UserLoginDto,
+      @CurrentUserId() userId: string,
+      @Res() res: Response
+  ) {
+    const accessToken = await this.authService.createAccessToken(userId);
 
-    const refreshToken = await this.authService.createRefreshToken(
-      dto.loginOrEmail,
-    );
+    const refreshToken = await this.authService.createRefreshToken(userId);
 
     return res
       .cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })
@@ -74,6 +76,19 @@ export class AuthController {
   @HttpCode(204)
   async createNewPassword(@Body() dto: NewPasswordInputDto) {
     await this.authService.saveNewPassword(dto)
+  }
+
+  @Post('refresh-token')
+  @HttpCode(200)
+  @UseGuards(JWTRefreshAuthGuard)
+  async createNewRefreshToken(@CurrentUserId() userId: string, @Res() res: Response) {
+    const accessToken = await this.authService.createAccessToken(userId);
+
+    const refreshToken = await this.authService.createRefreshToken(userId);
+
+    return res
+        .cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })
+        .send(accessToken);
   }
 
   @Post('logout')

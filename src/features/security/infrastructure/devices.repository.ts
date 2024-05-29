@@ -23,4 +23,8 @@ export class DevicesRepository {
     async findBy() {
 
     }
+
+    async removeAll(): Promise<void> {
+        await this.DeviceModel.deleteMany()
+    }
 }

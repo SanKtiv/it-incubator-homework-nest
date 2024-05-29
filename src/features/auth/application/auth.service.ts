@@ -9,6 +9,7 @@ import bcrypt from 'bcrypt';
 import {JwtService} from '@nestjs/jwt';
 import {NewPasswordInputDto} from "../api/models/input/new-password.input.dto";
 import objectContaining = jasmine.objectContaining;
+import {UserDocument} from "../../users/domain/users.schema";
 
 @Injectable()
 export class AuthService {
@@ -71,7 +72,7 @@ export class AuthService {
     );
   }
 
-  async validateUser(loginOrEmail: string, password: string) {
+  async validateUser(loginOrEmail: string, password: string): Promise<UserDocument | null> {
     const userDocument =
       await this.usersRepository.findByLoginOrEmail(loginOrEmail);
 
@@ -87,13 +88,10 @@ export class AuthService {
     return userDocument;
   }
 
-  async createAccessToken(loginOrEmail: string) {
-    const userDocument =
-      await this.usersRepository.findByLoginOrEmail(loginOrEmail);
+  async createAccessToken(userId: string) {
+    const payload = { sub: userId };
 
-    const payload = { sub: userDocument!._id.toString() };
-
-    const accessToken = await this.jwtService.signAsync(payload , {
+    const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '10m',
     });
 
@@ -108,11 +106,8 @@ export class AuthService {
     }
   }
 
-  async createRefreshToken(loginOrEmail: string) {
-    const userDocument =
-      await this.usersRepository.findByLoginOrEmail(loginOrEmail);
-
-    const payload = { sub: userDocument!._id.toString() };
+  async createRefreshToken(userId: string) {
+    const payload = { sub: userId };
 
     return this.jwtService.signAsync(payload, { expiresIn: '1h' });
   }

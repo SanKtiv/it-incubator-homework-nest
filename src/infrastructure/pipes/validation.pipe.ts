@@ -23,6 +23,16 @@ export class bodyPipe implements PipeTransform {
 }
 
 @Injectable()
+export class paramIdIsMongoIdPipe implements PipeTransform {
+  constructor() {}
+
+  async transform(value: any, metadata: ArgumentMetadata) {
+    if (Types.ObjectId.isValid(value)) return value
+    throw new NotFoundException();
+  }
+}
+
+@Injectable()
 export class paramIdPipe implements PipeTransform {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
