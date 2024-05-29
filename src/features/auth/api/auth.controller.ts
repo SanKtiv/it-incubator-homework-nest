@@ -16,7 +16,6 @@ import { LocalAuthGuard } from '../../../infrastructure/guards/local.auth.guard'
 import { Response } from 'express';
 import {EmailRecoveryDto} from "./models/input/email-recovery.input.dto";
 import {NewPasswordInputDto} from "./models/input/new-password.input.dto";
-import Cookies from "nodemailer/lib/fetch/cookies";
 import {JWTRefreshAuthGuard} from "../../../infrastructure/guards/jwt-refresh-auth.guard";
 import {CurrentUserId} from "../infrastructure/decorators/current-user-id.param.decorator";
 
@@ -93,7 +92,8 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(204)
-  async logout() {
+  @UseGuards(JWTRefreshAuthGuard)
+  async logout(@CurrentUserId() userId: string) {
   }
 
   @Get('me')
