@@ -2,7 +2,7 @@ import {
   Body,
   Controller, Get,
   HttpCode,
-  Post,
+  Post, Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -13,7 +13,7 @@ import { UserLoginDto } from './models/input/input.dto';
 import { EmailResendingDto } from './models/input/email-resending.input.dto';
 import { ConfirmationCodeDto } from './models/input/confirmation-code.input.dto';
 import { LocalAuthGuard } from '../../../infrastructure/guards/local.auth.guard';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import {EmailRecoveryDto} from "./models/input/email-recovery.input.dto";
 import {NewPasswordInputDto} from "./models/input/new-password.input.dto";
 import {JWTRefreshAuthGuard} from "../../../infrastructure/guards/jwt-refresh-auth.guard";
@@ -54,8 +54,14 @@ export class AuthController {
   async userLogin(
       @Body() dto: UserLoginDto,
       @CurrentUserId() userId: string,
+      @Req() reg: Request,
       @Res() res: Response
   ) {
+    const deviceDto = {
+      ip: req.header('x-forwarded-for') || req.ip || '',
+      title: req.headers["user-agent"] || 'chrome 105'
+    }
+
     const accessToken = await this.authService.createAccessToken(userId);
 
     const refreshToken = await this.authService.createRefreshToken(userId);
