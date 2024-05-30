@@ -13,8 +13,8 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'accessToken')
         });
     }
 
-    async validate(payload: { sub: string }) {
-        return { id: payload.sub };
+    async validate(payload: any) {
+        return payload;
     }
 }
 
@@ -35,7 +35,8 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refreshToken
         });
     }
 
-    async validate(payload: { sub: string }) {
-        return {id: payload.sub};
+    async validate(payload: any) {
+        console.log('payloadRefresh', payload)
+        return payload;
     }
 }

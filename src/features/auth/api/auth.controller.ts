@@ -18,6 +18,7 @@ import {EmailRecoveryDto} from "./models/input/email-recovery.input.dto";
 import {NewPasswordInputDto} from "./models/input/new-password.input.dto";
 import {JWTRefreshAuthGuard} from "../../../infrastructure/guards/jwt-refresh-auth.guard";
 import {CurrentUserId} from "../infrastructure/decorators/current-user-id.param.decorator";
+import {RefreshTokenPayload} from "../../../infrastructure/decorators/refresh-token-payload.decorator";
 
 @Controller('auth')
 export class AuthController {
@@ -54,12 +55,13 @@ export class AuthController {
   async userLogin(
       @Body() dto: UserLoginDto,
       @CurrentUserId() userId: string,
-      @Req() reg: Request,
+      @Req() req: Request,
       @Res() res: Response
   ) {
     const deviceDto = {
       ip: req.header('x-forwarded-for') || req.ip || '',
-      title: req.headers["user-agent"] || 'chrome 105'
+      title: req.headers["user-agent"] || 'chrome 105',
+      userId: userId
     }
 
     const accessToken = await this.authService.createAccessToken(userId);
@@ -86,7 +88,11 @@ export class AuthController {
   @Post('refresh-token')
   @HttpCode(200)
   @UseGuards(JWTRefreshAuthGuard)
-  async createNewRefreshToken(@CurrentUserId() userId: string, @Res() res: Response) {
+  async createNewRefreshToken(
+      @CurrentUserId() userId: string,
+      @RefreshTokenPayload() payload: any,
+      @Res() res: Response
+  ) {
     const accessToken = await this.authService.createAccessToken(userId);
 
     const refreshToken = await this.authService.createRefreshToken(userId);
