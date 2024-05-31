@@ -1,7 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import {Device, DeviceDocument, DeviceModelType} from "../domain/device.schema";
-import {DeviceDto} from "../api/device.dto";
+import {DeviceDto} from "../api/models/device.dto";
 
 @Injectable()
 export class DevicesRepository {
@@ -20,8 +20,8 @@ export class DevicesRepository {
         await document.save()
     }
 
-    async findBy() {
-
+    async findById(deviceId: string) {
+        return this.DeviceModel.findById(deviceId)
     }
 
     async removeAll(): Promise<void> {

@@ -1,6 +1,6 @@
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 import {HydratedDocument, Model} from "mongoose";
-import {DeviceDto} from "../api/device.dto";
+import {DeviceDto} from "../api/models/device.dto";
 
 @Schema()
 export class Device {

@@ -45,6 +45,7 @@ import {JwtAccessStrategy, JwtRefreshStrategy} from "./features/auth/infrastruct
 import {BasicStrategy} from "./features/auth/infrastructure/basic.strategy";
 import {DevicesRepository} from "./features/security/infrastructure/devices.repository";
 import {Device, DeviceSchema} from "./features/security/domain/device.schema";
+import {DevicesService} from "./features/security/application/devices.service";
 
 dotenv.config();
 
@@ -105,7 +106,7 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     JwtAccessStrategy,
     JwtRefreshStrategy,
     BasicStrategy,
-
+    DevicesService,
   ],
 })
 export class AppModule implements NestModule {

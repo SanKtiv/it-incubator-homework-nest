@@ -19,12 +19,15 @@ import {NewPasswordInputDto} from "./models/input/new-password.input.dto";
 import {JWTRefreshAuthGuard} from "../../../infrastructure/guards/jwt-refresh-auth.guard";
 import {CurrentUserId} from "../infrastructure/decorators/current-user-id.param.decorator";
 import {RefreshTokenPayload} from "../../../infrastructure/decorators/refresh-token-payload.decorator";
+import {DevicesService} from "../../security/application/devices.service";
+import {DeviceDto} from "../../security/api/models/device.dto";
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly authService: AuthService,
+    private readonly devicesService: DevicesService,
   ) {}
 
   @Post('registration')
@@ -58,15 +61,17 @@ export class AuthController {
       @Req() req: Request,
       @Res() res: Response
   ) {
-    const deviceDto = {
+    const deviceDto: DeviceDto = {
       ip: req.header('x-forwarded-for') || req.ip || '',
       title: req.headers["user-agent"] || 'chrome 105',
       userId: userId
     }
 
+    const deviceId = await this.devicesService.create(deviceDto)
     const accessToken = await this.authService.createAccessToken(userId);
+    const refreshToken = await this.authService.createRefreshToken(userId, deviceId);
 
-    const refreshToken = await this.authService.createRefreshToken(userId);
+
 
     return res
       .cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })
