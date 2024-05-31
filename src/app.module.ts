@@ -1,4 +1,4 @@
-import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BlogsController } from './features/blogs/api/blogs.controller';
@@ -37,15 +37,21 @@ import { EmailIsConfirmedConstraint } from './infrastructure/decorators/email-is
 import { ConfirmationCodeIsValidConstraint } from './infrastructure/decorators/confirmation-code-is-valid.decorator';
 import { LocalStrategy } from './features/auth/infrastructure/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
-import {TooManyRequestsMiddleware} from "./infrastructure/middlewares/count-requests-api.middleware";
-import {RequestApiService} from "./features/requests/application/request-api.service";
-import {RequestToApi, RequestToApiSchema} from "./features/requests/domain/request.schema";
-import {RequestApiRepository} from "./features/requests/infrastructure/request.repository";
-import {JwtAccessStrategy, JwtRefreshStrategy} from "./features/auth/infrastructure/jwt.strategy";
-import {BasicStrategy} from "./features/auth/infrastructure/basic.strategy";
-import {DevicesRepository} from "./features/security/infrastructure/devices.repository";
-import {Device, DeviceSchema} from "./features/security/domain/device.schema";
-import {DevicesService} from "./features/security/application/devices.service";
+import { TooManyRequestsMiddleware } from './infrastructure/middlewares/count-requests-api.middleware';
+import { RequestApiService } from './features/requests/application/request-api.service';
+import {
+  RequestToApi,
+  RequestToApiSchema,
+} from './features/requests/domain/request.schema';
+import { RequestApiRepository } from './features/requests/infrastructure/request.repository';
+import {
+  JwtAccessStrategy,
+  JwtRefreshStrategy,
+} from './features/auth/infrastructure/jwt.strategy';
+import { BasicStrategy } from './features/auth/infrastructure/basic.strategy';
+import { DevicesRepository } from './features/security/infrastructure/devices.repository';
+import { Device, DeviceSchema } from './features/security/domain/device.schema';
+import { DevicesService } from './features/security/application/devices.service';
 
 dotenv.config();
 
@@ -112,15 +118,15 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-        .apply(TooManyRequestsMiddleware)
-        .forRoutes(
-            '/auth/registration',
-            '/auth/login',
-            '/auth/password-recovery',
-            '/auth/new-password',
-            '/auth/registration-confirmation',
-            '/auth/registration-email-resending'
-        )
+      .apply(TooManyRequestsMiddleware)
+      .forRoutes(
+        '/auth/registration',
+        '/auth/login',
+        '/auth/password-recovery',
+        '/auth/new-password',
+        '/auth/registration-confirmation',
+        '/auth/registration-email-resending',
+      );
   }
 }
 //

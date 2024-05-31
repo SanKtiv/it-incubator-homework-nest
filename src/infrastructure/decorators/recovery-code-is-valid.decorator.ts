@@ -10,7 +10,9 @@ import { AuthService } from '../../features/auth/application/auth.service';
 
 @ValidatorConstraint({ name: 'RecoveryCodeIsValid', async: false })
 @Injectable()
-export class RecoveryCodeIsValidConstraint implements ValidatorConstraintInterface {
+export class RecoveryCodeIsValidConstraint
+  implements ValidatorConstraintInterface
+{
   constructor(private readonly authService: AuthService) {}
 
   async validate(value: any, args: ValidationArguments) {

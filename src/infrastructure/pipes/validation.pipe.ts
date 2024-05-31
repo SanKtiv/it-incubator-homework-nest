@@ -27,7 +27,7 @@ export class paramIdIsMongoIdPipe implements PipeTransform {
   constructor() {}
 
   async transform(value: any, metadata: ArgumentMetadata) {
-    if (Types.ObjectId.isValid(value)) return value
+    if (Types.ObjectId.isValid(value)) return value;
     throw new NotFoundException();
   }
 }

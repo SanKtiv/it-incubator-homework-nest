@@ -8,8 +8,8 @@ import cookieParser from 'cookie-parser';
 import { AppModule } from '../app.module';
 import { useContainer } from 'class-validator';
 import { ErrorsFilter } from '../infrastructure/filters/exception.filter';
-import {TooManyRequestsMiddleware} from "../infrastructure/middlewares/count-requests-api.middleware";
-import {RequestApiService} from "../features/requests/application/request-api.service";
+import { TooManyRequestsMiddleware } from '../infrastructure/middlewares/count-requests-api.middleware';
+import { RequestApiService } from '../features/requests/application/request-api.service';
 
 // Префикс нашего приложения (http://site.com/api)
 //const APP_PREFIX = '/api';
@@ -21,7 +21,7 @@ export const applyAppSettings = (app: INestApplication) => {
   // когда DI не имеет необходимого класса.
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  app.use(cookieParser())
+  app.use(cookieParser());
   // Применение глобальных Interceptors
   // app.useGlobalInterceptors()
 

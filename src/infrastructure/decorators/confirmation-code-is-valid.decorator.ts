@@ -10,7 +10,9 @@ import { AuthService } from '../../features/auth/application/auth.service';
 
 @ValidatorConstraint({ name: 'ConfirmationCodeIsValid', async: false })
 @Injectable()
-export class ConfirmationCodeIsValidConstraint implements ValidatorConstraintInterface {
+export class ConfirmationCodeIsValidConstraint
+  implements ValidatorConstraintInterface
+{
   constructor(private readonly authService: AuthService) {}
 
   async validate(value: any, args: ValidationArguments) {

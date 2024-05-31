@@ -1,4 +1,4 @@
 export class RequestApiInputDto {
-    ip: string
-    url: string
+  ip: string;
+  url: string;
 }

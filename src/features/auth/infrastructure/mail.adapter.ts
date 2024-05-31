@@ -4,15 +4,15 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class EmailAdapter {
   async sendConfirmationCode(email: string, code: string) {
-    const message = this.messageRegistration(code)
+    const message = this.messageRegistration(code);
 
-    await this.mailTransporter(email, message)
+    await this.mailTransporter(email, message);
   }
 
   async sendRecoveryConfirmationCode(email: string, code: string) {
-    const message = this.messageRecovery(code)
+    const message = this.messageRecovery(code);
 
-    await this.mailTransporter(email, message)
+    await this.mailTransporter(email, message);
   }
 
   messageRegistration(code: string) {
@@ -25,10 +25,12 @@ export class EmailAdapter {
   }
 
   messageRecovery(code: string) {
-    return '<h1>Password recovery</h1>\n' +
-        ' <p>To finish password recovery please follow the link below:\n' +
-        `     <a href=https://somesite.com/password-recovery?recoveryCode=${code}>recovery password</a>\n` +
-        ' </p>'
+    return (
+      '<h1>Password recovery</h1>\n' +
+      ' <p>To finish password recovery please follow the link below:\n' +
+      `     <a href=https://somesite.com/password-recovery?recoveryCode=${code}>recovery password</a>\n` +
+      ' </p>'
+    );
   }
 
   async mailTransporter(email: string, message: string) {
@@ -37,18 +39,18 @@ export class EmailAdapter {
       to: email,
       subject: 'confirmation registration',
       html: message,
-    }
+    };
 
     const transport = {
       service: 'gmail',
       auth: {
         user: 'aleksandr.mail.test@gmail.com',
         pass: 'rglgkegtcyunuxds',
-      }
-    }
+      },
+    };
 
-    const transporter = nodemailer.createTransport(transport)
+    const transporter = nodemailer.createTransport(transport);
 
-    await transporter.sendMail(options)
+    await transporter.sendMail(options);
   }
 }

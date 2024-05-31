@@ -1,15 +1,15 @@
-import {EmailAdapter} from '../infrastructure/mail.adapter';
-import {UsersInputDto} from '../../users/api/models/input/users.input.dto';
-import {UsersRepository} from '../../users/infrastructure/users.repository';
-import {UsersService} from '../../users/application/users.service';
-import {Injectable} from '@nestjs/common';
-import {v4 as uuidv4} from 'uuid';
+import { EmailAdapter } from '../infrastructure/mail.adapter';
+import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
+import { UsersRepository } from '../../users/infrastructure/users.repository';
+import { UsersService } from '../../users/application/users.service';
+import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import bcrypt from 'bcrypt';
-import {JwtService} from '@nestjs/jwt';
-import {NewPasswordInputDto} from "../api/models/input/new-password.input.dto";
+import { JwtService } from '@nestjs/jwt';
+import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
 import objectContaining = jasmine.objectContaining;
-import {UserDocument} from "../../users/domain/users.schema";
+import { UserDocument } from '../../users/domain/users.schema';
 
 @Injectable()
 export class AuthService {
@@ -72,7 +72,10 @@ export class AuthService {
     );
   }
 
-  async validateUser(loginOrEmail: string, password: string): Promise<UserDocument | null> {
+  async validateUser(
+    loginOrEmail: string,
+    password: string,
+  ): Promise<UserDocument | null> {
     const userDocument =
       await this.usersRepository.findByLoginOrEmail(loginOrEmail);
 
@@ -107,32 +110,39 @@ export class AuthService {
   }
 
   async createRefreshToken(userId: string, deviceId: string) {
-    const payload = { sub: userId };
+    const payload = { sub: userId, deviceId: deviceId };
 
     return this.jwtService.signAsync(payload, { expiresIn: '1h' });
   }
 
   async passwordRecovery(email: string) {
-    const code = this.usersService.createCodeWithExpireDate()
+    const code = this.usersService.createCodeWithExpireDate();
 
-    const userDocument = await this.usersRepository.findByEmail(email)
+    const userDocument = await this.usersRepository.findByEmail(email);
 
     if (userDocument) {
-      userDocument.passwordRecovery!.recoveryCode = code.confirmationCode
+      userDocument.passwordRecovery!.recoveryCode = code.confirmationCode;
 
-      userDocument.passwordRecovery!.expirationDate = code.expirationDate
+      userDocument.passwordRecovery!.expirationDate = code.expirationDate;
 
-      await this.usersService.saveUser(userDocument)
+      await this.usersService.saveUser(userDocument);
     }
 
-    await this.emailAdapter.sendRecoveryConfirmationCode(email, code.confirmationCode)
+    await this.emailAdapter.sendRecoveryConfirmationCode(
+      email,
+      code.confirmationCode,
+    );
   }
 
   async saveNewPassword(dto: NewPasswordInputDto) {
-    const userDocument = await this.usersRepository.findByRecoveryCode(dto.recoveryCode)
+    const userDocument = await this.usersRepository.findByRecoveryCode(
+      dto.recoveryCode,
+    );
 
-    userDocument!.accountData.passwordHash = await this.usersService.genHash(dto.newPassword)
+    userDocument!.accountData.passwordHash = await this.usersService.genHash(
+      dto.newPassword,
+    );
 
-    await this.usersService.saveUser(userDocument!)
+    await this.usersService.saveUser(userDocument!);
   }
 }

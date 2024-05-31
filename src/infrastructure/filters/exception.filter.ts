@@ -37,7 +37,7 @@ export class ErrorsFilter implements ExceptionFilter {
 
     if (status === 404) return response.sendStatus(status);
 
-    if (status === 429) return response.sendStatus(status)
+    if (status === 429) return response.sendStatus(status);
 
     return response.status(status).send({ exception });
   }

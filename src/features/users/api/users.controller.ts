@@ -3,7 +3,8 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode, NotFoundException,
+  HttpCode,
+  NotFoundException,
   Param,
   Post,
   Query,
@@ -17,11 +18,14 @@ import {
   usersOutputDto,
   usersPagingDto,
 } from './models/output/users.output.dto';
-import {paramIdIsMongoIdPipe, paramIdPipe} from '../../../infrastructure/pipes/validation.pipe';
+import {
+  paramIdIsMongoIdPipe,
+  paramIdPipe,
+} from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 import { UserGuard } from '../../../infrastructure/guards/notfound.guard';
-import {BasicAuthGuard} from "../../../infrastructure/guards/basic.guard";
+import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 
 @Controller('users')
 @UseGuards(BasicAuthGuard)

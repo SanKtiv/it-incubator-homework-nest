@@ -1,21 +1,20 @@
-import {Injectable} from "@nestjs/common";
-import {RequestApiInputDto} from "../api/models/input.dto";
-import {RequestApiRepository} from "../infrastructure/request.repository";
+import { Injectable } from '@nestjs/common';
+import { RequestApiInputDto } from '../api/models/input.dto';
+import { RequestApiRepository } from '../infrastructure/request.repository';
 
 @Injectable()
 export class RequestApiService {
-    constructor(private readonly requestApiRepository: RequestApiRepository) {
-    }
+  constructor(private readonly requestApiRepository: RequestApiRepository) {}
 
-    async createReq(dto: RequestApiInputDto) {
-        return this.requestApiRepository.create(dto)
-    }
+  async createReq(dto: RequestApiInputDto) {
+    return this.requestApiRepository.create(dto);
+  }
 
-    async tooManyAttempts(ip: string) {
-        const date = new Date(Number(new Date()) - 10000)
+  async tooManyAttempts(ip: string) {
+    const date = new Date(Number(new Date()) - 10000);
 
-        const documents = await this.requestApiRepository.findByIp(ip, date)
+    const documents = await this.requestApiRepository.findByIp(ip, date);
 
-        return documents > 5
-    }
+    return documents > 5;
+  }
 }

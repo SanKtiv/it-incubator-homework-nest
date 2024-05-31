@@ -1,5 +1,5 @@
-import {IsMongoId, IsString, MaxLength, MinLength} from 'class-validator';
-import {NotFoundException} from "@nestjs/common";
+import { IsMongoId, IsString, MaxLength, MinLength } from 'class-validator';
+import { NotFoundException } from '@nestjs/common';
 
 export class InputDto {
   @IsString()
