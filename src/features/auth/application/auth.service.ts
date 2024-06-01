@@ -44,13 +44,15 @@ export class AuthService {
 
     const confirmationCode: string = uuidv4();
 
-    const expirationDate: Date = add(new Date(), { hours: 1, minutes: 5 });
+    if (userDocument) {
+      const expirationDate: Date = add(new Date(), {hours: 1, minutes: 5});
 
-    userDocument!.emailConfirmation.confirmationCode = confirmationCode;
+      userDocument.emailConfirmation.confirmationCode = confirmationCode;
 
-    userDocument!.emailConfirmation.expirationDate = expirationDate;
+      userDocument.emailConfirmation.expirationDate = expirationDate;
 
-    await this.usersRepository.save(userDocument!);
+      await this.usersRepository.save(userDocument);
+    }
 
     await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
   }
