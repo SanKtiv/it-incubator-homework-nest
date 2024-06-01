@@ -12,13 +12,9 @@ import {
 export class UsersQueryRepository {
   constructor(@InjectModel(User.name) private UserModel: UsersModelType) {}
 
-  // async findById(id: string): Promise<UserDocument | null> {
-  //   try {
-  //     return this.UserModel.findById(new Types.ObjectId(id));
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
+  async findById(id: string): Promise<UserDocument | null> {
+    return this.UserModel.findById(id);
+  }
 
   async loginIsExist(login: string): Promise<number> {
     return this.UserModel.countDocuments({ 'accountData.login': login });

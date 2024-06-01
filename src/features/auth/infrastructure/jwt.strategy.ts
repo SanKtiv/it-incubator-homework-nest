@@ -2,7 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
-import {DevicesService} from "../../security/application/devices.service";
+import { DevicesService } from '../../security/application/devices.service';
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(
@@ -45,7 +45,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
   }
 
   async validate(payload: any) {
-    const deviceDocument = await this.devicesService.findById(payload.deviceId)
+    const deviceDocument = await this.devicesService.findById(payload.deviceId);
 
     return payload;
   }

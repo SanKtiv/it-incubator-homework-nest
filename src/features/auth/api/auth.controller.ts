@@ -23,6 +23,8 @@ import { CurrentUserId } from '../infrastructure/decorators/current-user-id.para
 import { RefreshTokenPayload } from '../../../infrastructure/decorators/refresh-token-payload.decorator';
 import { DevicesService } from '../../security/application/devices.service';
 import { DeviceDto } from '../../security/api/models/device.dto';
+import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
+import {infoCurrentUserDto} from "./models/output/info-current-user.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -123,5 +125,10 @@ export class AuthController {
 
   @Get('me')
   @HttpCode(200)
-  async getInfoCurrentUser() {}
+  @UseGuards(JWTAccessAuthGuard)
+  async getInfoCurrentUser(@CurrentUserId() userId: string) {
+    const userDocument = await this.usersQueryRepository.findById(userId);
+
+    return infoCurrentUserDto(userDocument!)
+  }
 }

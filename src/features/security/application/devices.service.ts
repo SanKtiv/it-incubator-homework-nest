@@ -22,7 +22,5 @@ export class DevicesService {
     await this.devicesRepository.save(document);
   }
 
-  async findById(deviceId: string) {
-
-  }
+  async findById(deviceId: string) {}
 }
