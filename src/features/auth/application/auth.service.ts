@@ -2,7 +2,7 @@ import { EmailAdapter } from '../infrastructure/mail.adapter';
 import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { UsersService } from '../../users/application/users.service';
-import { Injectable } from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import bcrypt from 'bcrypt';
@@ -44,15 +44,25 @@ export class AuthService {
 
     const confirmationCode: string = uuidv4();
 
-    if (userDocument) {
-      const expirationDate: Date = add(new Date(), {hours: 1, minutes: 5});
+    if (!userDocument) return await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
 
-      userDocument.emailConfirmation.confirmationCode = confirmationCode;
-
-      userDocument.emailConfirmation.expirationDate = expirationDate;
-
-      await this.usersRepository.save(userDocument);
+    if (
+        userDocument.emailConfirmation.expirationDate < new Date() ||
+        userDocument.emailConfirmation.isConfirmed
+    ) {
+      throw new HttpException(
+          { errorsMessages: [{ message: 'email already confirmed', field: 'email' }] },
+          HttpStatus.BAD_REQUEST,
+      );
     }
+
+    const expirationDate: Date = add(new Date(), {hours: 1, minutes: 5});
+
+    userDocument.emailConfirmation.confirmationCode = confirmationCode;
+
+    userDocument.emailConfirmation.expirationDate = expirationDate;
+
+    await this.usersRepository.save(userDocument);
 
     await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
   }
