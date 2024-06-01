@@ -22,9 +22,10 @@ export class RequestApiRepository {
     await document.save();
   }
 
-  async findByIp(ip: string, date: Date): Promise<number> {
+  async findByIp(dto: RequestApiInputDto, date: Date): Promise<number> {
     return this.RequestToApiModel.countDocuments({
-      ip: ip,
+      ip: dto.ip,
+      url: dto.url,
       date: { $gte: date },
     });
   }

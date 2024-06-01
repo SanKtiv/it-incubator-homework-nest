@@ -10,10 +10,10 @@ export class RequestApiService {
     return this.requestApiRepository.create(dto);
   }
 
-  async tooManyAttempts(ip: string) {
+  async tooManyAttempts(dto: RequestApiInputDto) {
     const date = new Date(Number(new Date()) - 10000);
 
-    const documents = await this.requestApiRepository.findByIp(ip, date);
+    const documents = await this.requestApiRepository.findByIp(dto, date);
 
     return documents > 5;
   }

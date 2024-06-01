@@ -20,7 +20,7 @@ export class TooManyRequestsMiddleware implements NestMiddleware {
 
     await this.requestApiService.createReq(dto);
 
-    const countAttempts = await this.requestApiService.tooManyAttempts(dto.ip);
+    const countAttempts = await this.requestApiService.tooManyAttempts(dto);
 
     if (countAttempts)
       throw new HttpException(
