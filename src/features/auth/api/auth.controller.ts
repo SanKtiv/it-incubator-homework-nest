@@ -68,12 +68,15 @@ export class AuthController {
     const deviceDto: DeviceDto = {
       ip: req.header('x-forwarded-for') || req.ip || '',
       title: req.headers['user-agent'] || 'chrome 105',
-      userId: userId,
+      userId: userId
     };
 
     const deviceDocument = await this.devicesService.create(deviceDto);
+
     const deviceId = deviceDocument._id.toString();
+
     const accessToken = await this.authService.createAccessToken(userId);
+
     const refreshToken = await this.authService.createRefreshToken(
       userId,
       deviceId,

@@ -13,10 +13,10 @@ export class Device {
   @Prop({ required: true })
   userId: string;
 
-  @Prop({ required: true })
+  @Prop()
   lastActiveDate: string;
 
-  @Prop({ required: true })
+  @Prop()
   expirationDate: string;
 
   static createDevice(dto: DeviceDto, DeviceModel: Model<Device>) {
