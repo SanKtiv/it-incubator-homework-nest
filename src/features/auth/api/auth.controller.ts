@@ -1,8 +1,9 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
-  HttpCode,
+  HttpCode, HttpException, HttpStatus,
   Post,
   Req,
   Res,
@@ -133,5 +134,13 @@ export class AuthController {
     const userDocument = await this.usersQueryRepository.findById(userId);
 
     return infoCurrentUserDto(userDocument!)
+  }
+
+  @Post('test')
+  @HttpCode(204)
+  async test(): Promise<void> {
+    throw new BadRequestException(
+        { message: [{ message: 'email already confirmed', field: 'email' }] }
+    );
   }
 }
