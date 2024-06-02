@@ -4358,6 +4358,11 @@ node-releases@^2.0.14:
   resolved "https://registry.npmjs.org/node-releases/-/node-releases-2.0.14.tgz"
   integrity sha512-y10wOWt8yZpqXmOgRo77WaHEmhYQYGNA6y421PKsKYWEK8aW+cqAphborZDhqfyKrbZEN92CN1X2KbafY2s7Yw==
 
+nodejs-latest@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/nodejs-latest/-/nodejs-latest-1.1.0.tgz#49138e406f867b54a99cdd88d15fec3662f37335"
+  integrity sha512-ckdSRcnW1qordOki6cGYx8yfGyOl8aTg4cBjIIpjTjJSsZb7uWrg7skUZuziQUHxfZehQcUAkJmFXYmKVCskaw==
+
 nodemailer@^6.9.13:
   version "6.9.13"
   resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.9.13.tgz#5b292bf1e92645f4852ca872c56a6ba6c4a3d3d6"
