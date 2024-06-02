@@ -62,9 +62,9 @@ export class AuthService {
 
     await this.usersRepository.save(userDocument);
 
-    console.log('Запуск отправки письма')
+    console.log(`Запуск отправки письма на почту: ${email}`)
     await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
-    console.log('Письмо отправлено')
+    console.log(`Письмо отправлено на почту: ${email}`)
   }
 
   async emailIsConfirmed(email: string) {
