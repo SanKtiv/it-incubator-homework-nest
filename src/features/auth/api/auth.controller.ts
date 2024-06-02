@@ -56,7 +56,7 @@ export class AuthController {
   async resendingConfirmationCode(
     @Body() emailResendingDto: EmailResendingDto,
   ): Promise<void> {
-    await this.emailAdapter.sendConfirmationCode(emailResendingDto.email, '1234567890')
+    return this.emailAdapter.sendConfirmationCode(emailResendingDto.email, '1234567890')
     //await this.authService.resendConfirmCode(emailResendingDto.email);
   }
 
