@@ -3,7 +3,7 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode, HttpException, HttpStatus,
+  HttpCode,
   Post,
   Req,
   Res,
@@ -57,10 +57,8 @@ export class AuthController {
   async resendingConfirmationCode(
     @Body() emailResendingDto: EmailResendingDto,
   ): Promise<void> {
-    //const confirmationCode: string = uuidv4();
-    console.log('2056')
-    await this.emailAdapter.sendConfirmationCode(emailResendingDto.email, 'confirmationCode')
-    // return this.authService.resendConfirmCode(emailResendingDto.email);
+    //await this.emailAdapter.sendConfirmationCode(emailResendingDto.email, 'confirmationCode')
+    await this.authService.resendConfirmCode(emailResendingDto.email);
     //await this.authService.send(emailResendingDto.email);
   }
 
