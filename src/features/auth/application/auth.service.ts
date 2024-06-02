@@ -2,13 +2,12 @@ import { EmailAdapter } from '../infrastructure/mail.adapter';
 import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { UsersService } from '../../users/application/users.service';
-import {BadRequestException, HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {BadRequestException, Injectable} from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
-import objectContaining = jasmine.objectContaining;
 import { UserDocument } from '../../users/domain/users.schema';
 
 @Injectable()
@@ -47,6 +46,7 @@ export class AuthService {
         userDocument.emailConfirmation.expirationDate < new Date() ||
         userDocument.emailConfirmation.isConfirmed
     ) {
+        console.log('Письмо не отправлено')
       throw new BadRequestException(
           { message: [{ message: 'email already confirmed', field: 'email' }] }
       );
@@ -62,7 +62,9 @@ export class AuthService {
 
     await this.usersRepository.save(userDocument);
 
+    console.log('Запуск отправки письма')
     await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
+    console.log('Письмо не отправлено')
   }
 
   async emailIsConfirmed(email: string) {
