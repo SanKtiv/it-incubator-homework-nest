@@ -15,6 +15,8 @@ export class UsersService {
 
     const code = this.createCodeWithExpireDate();
 
+    console.log(`create confirmationCode: ${code.confirmationCode}`)
+
     const userDocument = await this.usersRepository.create(
       dto,
       passwordHash,
