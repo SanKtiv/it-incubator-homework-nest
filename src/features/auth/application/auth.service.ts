@@ -40,7 +40,7 @@ export class AuthService {
 
   async send(email: string) {
     const confirmationCode: string = uuidv4();
-    await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
+    return this.emailAdapter.sendConfirmationCode(email, confirmationCode);
   }
 
   async resendConfirmCode(email: string): Promise<void> {
