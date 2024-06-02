@@ -61,7 +61,7 @@ export class AuthService {
           { message: [{ message: 'email already confirmed', field: 'email' }] }
       );
     }
-    console.log('2106')
+    console.log('21016')
     const confirmationCode: string = '12345678901234567890'//uuidv4();
 
     //console.log(`Запуск отправки письма на почту: ${email}, с кодом: ${confirmationCode}`)
