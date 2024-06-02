@@ -38,6 +38,11 @@ export class AuthService {
     await this.usersRepository.save(userDocument!);
   }
 
+  async send(email: string) {
+    const confirmationCode: string = uuidv4();
+    await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
+  }
+
   async resendConfirmCode(email: string): Promise<void> {
 
     // const confirmationCode: string = uuidv4();

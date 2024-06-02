@@ -57,7 +57,8 @@ export class AuthController {
     @Body() emailResendingDto: EmailResendingDto,
   ): Promise<void> {
     //return this.emailAdapter.sendConfirmationCode(emailResendingDto.email, '1234567890')
-    return this.authService.resendConfirmCode(emailResendingDto.email);
+    // return this.authService.resendConfirmCode(emailResendingDto.email);
+    await this.authService.send(emailResendingDto.email);
   }
 
   @UseGuards(LocalAuthGuard)
