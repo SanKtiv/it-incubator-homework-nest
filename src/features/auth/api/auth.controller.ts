@@ -57,8 +57,8 @@ export class AuthController {
   async resendingConfirmationCode(
     @Body() emailResendingDto: EmailResendingDto,
   ): Promise<void> {
-    const confirmationCode: string = uuidv4();
-    await this.emailAdapter.sendConfirmationCode(emailResendingDto.email, confirmationCode)
+    //const confirmationCode: string = uuidv4();
+    await this.emailAdapter.sendConfirmationCode(emailResendingDto.email, 'confirmationCode')
     // return this.authService.resendConfirmCode(emailResendingDto.email);
     //await this.authService.send(emailResendingDto.email);
   }
