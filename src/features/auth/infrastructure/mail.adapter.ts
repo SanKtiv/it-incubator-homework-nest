@@ -3,16 +3,16 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class EmailAdapter {
-  async sendConfirmationCode(email: string, code: string) {
+  sendConfirmationCode(email: string, code: string) {
     const message = this.messageRegistration(code);
 
-    await this.mailTransporter(email, message);
+    return this.mailTransporter(email, message);
   }
 
-  async sendRecoveryConfirmationCode(email: string, code: string) {
+  sendRecoveryConfirmationCode(email: string, code: string) {
     const message = this.messageRecovery(code);
 
-    await this.mailTransporter(email, message);
+    return this.mailTransporter(email, message);
   }
 
   messageRegistration(code: string) {
@@ -33,7 +33,7 @@ export class EmailAdapter {
     );
   }
 
-  async mailTransporter(email: string, message: string) {
+  mailTransporter(email: string, message: string) {
     const options = {
       from: 'Aleksandr <aleksandr.mail.test@gmail.com>',
       to: email,
@@ -51,6 +51,6 @@ export class EmailAdapter {
 
     const transporter = nodemailer.createTransport(transport);
 
-    await transporter.sendMail(options);
+    return transporter.sendMail(options);
   }
 }
