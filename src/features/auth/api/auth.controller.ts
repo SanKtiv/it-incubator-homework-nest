@@ -26,6 +26,7 @@ import { DevicesService } from '../../security/application/devices.service';
 import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 import {infoCurrentUserDto} from "./models/output/info-current-user.dto";
+import {EmailAdapter} from "../infrastructure/mail.adapter";
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +34,7 @@ export class AuthController {
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly authService: AuthService,
     private readonly devicesService: DevicesService,
+    private readonly emailAdapter: EmailAdapter,
   ) {}
 
   @Post('registration')
@@ -54,7 +56,8 @@ export class AuthController {
   async resendingConfirmationCode(
     @Body() emailResendingDto: EmailResendingDto,
   ): Promise<void> {
-    await this.authService.resendConfirmCode(emailResendingDto.email);
+    await this.emailAdapter.sendConfirmationCode(emailResendingDto.email, '1234567890')
+    //await this.authService.resendConfirmCode(emailResendingDto.email);
   }
 
   @UseGuards(LocalAuthGuard)
