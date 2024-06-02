@@ -62,7 +62,7 @@ export class AuthService {
       );
     }
     console.log('2106')
-    const confirmationCode: string = uuidv4();
+    const confirmationCode: string = '12345678901234567890'//uuidv4();
 
     //console.log(`Запуск отправки письма на почту: ${email}, с кодом: ${confirmationCode}`)
     await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
