@@ -14,7 +14,6 @@ export class LoginIsExistConstraint implements ValidatorConstraintInterface {
   constructor(private readonly usersQueryRepository: UsersQueryRepository) {}
   async validate(value: any, args: ValidationArguments) {
     const result = await this.usersQueryRepository.loginIsExist(value);
-    console.log(result);
     return !(result === 1);
   }
 

@@ -43,7 +43,7 @@ export class AuthService {
 
     if (
         !userDocument ||
-        userDocument.emailConfirmation.expirationDate < new Date() ||
+        //userDocument.emailConfirmation.expirationDate < new Date() ||
         userDocument.emailConfirmation.isConfirmed
     ) {
         console.log('Письмо не отправлено')
@@ -64,7 +64,7 @@ export class AuthService {
 
     console.log('Запуск отправки письма')
     await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
-    console.log('Письмо не отправлено')
+    console.log('Письмо отправлено')
   }
 
   async emailIsConfirmed(email: string) {
