@@ -40,11 +40,11 @@ export class AuthService {
 
   async resendConfirmCode(email: string): Promise<void> {
 
-    const confirmationCode: string = uuidv4();
-
-    console.log(`Запуск отправки письма на почту: ${email}, с кодом: ${confirmationCode}`)
-    await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
-    console.log(`Письмо отправлено на почту: ${email}, с кодом: ${confirmationCode}`)
+    // const confirmationCode: string = uuidv4();
+    //
+    // console.log(`Запуск отправки письма на почту: ${email}, с кодом: ${confirmationCode}`)
+    // await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
+    // console.log(`Письмо отправлено на почту: ${email}, с кодом: ${confirmationCode}`)
 
     const userDocument = await this.usersRepository.findByEmail(email);
 
@@ -59,11 +59,11 @@ export class AuthService {
       );
     }
 
-    // const confirmationCode: string = uuidv4();
-    //
-    // console.log(`Запуск отправки письма на почту: ${email}, с кодом: ${confirmationCode}`)
-    // await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
-    // console.log(`Письмо отправлено на почту: ${email}, с кодом: ${confirmationCode}`)
+    const confirmationCode: string = uuidv4();
+
+    console.log(`Запуск отправки письма на почту: ${email}, с кодом: ${confirmationCode}`)
+    await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
+    console.log(`Письмо отправлено на почту: ${email}, с кодом: ${confirmationCode}`)
 
     const expirationDate: Date = add(new Date(), {hours: 1, minutes: 5});
 
