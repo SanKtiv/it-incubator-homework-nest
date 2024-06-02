@@ -27,6 +27,7 @@ import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 import {infoCurrentUserDto} from "./models/output/info-current-user.dto";
 import {EmailAdapter} from "../infrastructure/mail.adapter";
+import { v4 as uuidv4 } from 'uuid';
 
 @Controller('auth')
 export class AuthController {
@@ -56,9 +57,10 @@ export class AuthController {
   async resendingConfirmationCode(
     @Body() emailResendingDto: EmailResendingDto,
   ): Promise<void> {
-    //return this.emailAdapter.sendConfirmationCode(emailResendingDto.email, '1234567890')
+    const confirmationCode: string = uuidv4();
+    await this.emailAdapter.sendConfirmationCode(emailResendingDto.email, confirmationCode)
     // return this.authService.resendConfirmCode(emailResendingDto.email);
-    await this.authService.send(emailResendingDto.email);
+    //await this.authService.send(emailResendingDto.email);
   }
 
   @UseGuards(LocalAuthGuard)
