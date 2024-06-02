@@ -61,8 +61,8 @@ export class AuthService {
           { message: [{ message: 'email already confirmed', field: 'email' }] }
       );
     }
-    console.log('2103')
-    const confirmationCode: string = 'uuidv4()';
+    console.log('2106')
+    const confirmationCode: string = uuidv4();
 
     //console.log(`Запуск отправки письма на почту: ${email}, с кодом: ${confirmationCode}`)
     await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
