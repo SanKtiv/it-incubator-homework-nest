@@ -24,7 +24,7 @@ export class AuthService {
 
     const confirmationCode = userDocument.emailConfirmation.confirmationCode;
 console.log(`email: ${dto.email}, confirmationCode: ${confirmationCode}`)
-    await this.emailAdapter.sendConfirmationCode(dto.email, confirmationCode);
+    //await this.emailAdapter.sendConfirmationCode(dto.email, confirmationCode);
 
     await this.usersRepository.save(userDocument);
   }
