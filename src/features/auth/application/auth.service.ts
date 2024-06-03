@@ -3,7 +3,6 @@ import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { UsersService } from '../../users/application/users.service';
 import {BadRequestException, Injectable} from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -23,7 +22,7 @@ export class AuthService {
     const userDocument = await this.usersService.createUser(dto);
 
     const confirmationCode = userDocument.emailConfirmation.confirmationCode;
-//console.log(`email: ${dto.email}, confirmationCode: ${confirmationCode}`)
+
     await this.emailAdapter.sendConfirmationCode(dto.email, confirmationCode);
 
     await this.usersRepository.save(userDocument);

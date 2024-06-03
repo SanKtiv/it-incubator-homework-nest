@@ -35,7 +35,6 @@ export class AuthController {
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly authService: AuthService,
     private readonly devicesService: DevicesService,
-    private readonly emailAdapter: EmailAdapter,
   ) {}
 
   @Post('registration')
