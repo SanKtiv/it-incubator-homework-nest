@@ -21,7 +21,7 @@ import {
   BlogsViewDto,
   BlogsViewPagingDto,
 } from './models/output/blogs.view.dto';
-import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import {paramIdIsMongoIdPipe, paramIdPipe} from '../../../infrastructure/pipes/validation.pipe';
 import { PostQuery } from '../../posts/api/models/input/posts.input.dto';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 import {
@@ -50,10 +50,12 @@ export class BlogsController {
   }
 
   @Post(':blogId/posts')
+  //@UsePipes(paramIdIsMongoIdPipe)
   async createPostForBlog(
-    @Param('blogId', paramIdPipe) id: string,
+    @Param('blogId', paramIdIsMongoIdPipe) id: string,
     @Body() inputDto: InputDto,
   ) {
+    await this.blogsService.existBlog(id)
     const blogDocument = await this.blogsQueryRepository.findById(id);
     const postDocument = await this.postsService.createPost(
       { ...inputDto, blogId: id },

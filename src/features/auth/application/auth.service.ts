@@ -3,7 +3,6 @@ import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { UsersService } from '../../users/application/users.service';
 import {BadRequestException, Injectable} from '@nestjs/common';
-import add from 'date-fns/add';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
@@ -25,7 +24,7 @@ export class AuthService {
 
     await this.emailAdapter.sendConfirmationCode(dto.email, confirmationCode);
 
-    await this.usersRepository.save(userDocument);
+    await this.usersService.saveUser(userDocument);
   }
 
   async registrationConfirmation(code: string) {
@@ -37,43 +36,28 @@ export class AuthService {
     await this.usersRepository.save(userDocument!);
   }
 
-  async send(email: string) {
-    //const confirmationCode: string = uuidv4();
-    await this.emailAdapter.sendConfirmationCode(email, 'confirmationCode');
-  }
-
   async resendConfirmCode(email: string): Promise<void> {
-
-    // const confirmationCode: string = uuidv4();
-    //
-    // return this.emailAdapter.sendConfirmationCode(email, confirmationCode);
-
     const userDocument = await this.usersRepository.findByEmail(email);
 
     if (
         !userDocument ||
-        //userDocument.emailConfirmation.expirationDate < new Date() ||
         userDocument.emailConfirmation.isConfirmed
     ) {
-        console.log('Письмо не отправлено')
+
       throw new BadRequestException(
           { message: [{ message: 'email already confirmed', field: 'email' }] }
       );
     }
-    console.log('21016')
-    const confirmationCode: string = 'uuidv4()';
 
-    //console.log(`Запуск отправки письма на почту: ${email}, с кодом: ${confirmationCode}`)
-    await this.emailAdapter.sendConfirmationCode(email, confirmationCode);
-    //console.log(`Письмо отправлено на почту: ${email}, с кодом: ${confirmationCode}`)
+    const emailConfirmation = this.usersService.createCodeWithExpireDate()
 
-    const expirationDate: Date = add(new Date(), {hours: 1, minutes: 5});
+    await this.emailAdapter.sendConfirmationCode(email, emailConfirmation.confirmationCode);
 
-    userDocument.emailConfirmation.confirmationCode = confirmationCode;
+    userDocument.emailConfirmation.confirmationCode = emailConfirmation.confirmationCode;
 
-    userDocument.emailConfirmation.expirationDate = expirationDate;
+    userDocument.emailConfirmation.expirationDate = emailConfirmation.expirationDate;
 
-    await this.usersRepository.save(userDocument);
+    await this.usersService.saveUser(userDocument);
   }
 
   async emailIsConfirmed(email: string) {
@@ -93,10 +77,7 @@ export class AuthService {
     );
   }
 
-  async validateUser(
-    loginOrEmail: string,
-    password: string,
-  ): Promise<UserDocument | null> {
+  async validateUser(loginOrEmail: string, password: string): Promise<UserDocument | null> {
     const userDocument =
       await this.usersRepository.findByLoginOrEmail(loginOrEmail);
 

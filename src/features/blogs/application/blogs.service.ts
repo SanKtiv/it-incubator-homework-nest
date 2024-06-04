@@ -1,10 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import {
-  BlogsInputDto,
-  CreatingBlogDto,
-} from '../api/models/input/blogs.input.dto';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {BlogsInputDto} from '../api/models/input/blogs.input.dto';
 import { BlogsRepository } from '../infrastructure/blogs.repository';
-import { BlogsViewDto } from '../api/models/output/blogs.view.dto';
 import { BlogDocument } from '../domain/blogs.schema';
 
 @Injectable()
@@ -18,10 +14,12 @@ export class BlogsService {
 
   async updateBlog(blog: BlogDocument, inputUpdate: BlogsInputDto) {
     Object.assign(blog, inputUpdate);
-    // blog.name = inputUpdate.name
-    // blog.description = inputUpdate.description
-    // blog.websiteUrl = inputUpdate.websiteUrl
     await this.blogsRepository.save(blog);
+  }
+
+  async existBlog(id: string) {
+    const blogDocument = await this.blogsRepository.findById(id)
+    if (!blogDocument) throw new NotFoundException()
   }
 
   async deleteBlog(id: string): Promise<void> {

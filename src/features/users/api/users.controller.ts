@@ -10,7 +10,6 @@ import {
   Query,
   UseGuards,
   UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { UsersInputDto } from './models/input/users.input.dto';
 import { UsersService } from '../application/users.service';
@@ -20,16 +19,13 @@ import {
 } from './models/output/users.output.dto';
 import {
   paramIdIsMongoIdPipe,
-  paramIdPipe,
 } from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
-import { UserGuard } from '../../../infrastructure/guards/notfound.guard';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 
 @Controller('users')
 @UseGuards(BasicAuthGuard)
-// @UsePipes(new ValidationPipe({ transform: true }))
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -37,8 +33,10 @@ export class UsersController {
   ) {}
 
   @Post()
-  async createUser(@Body() userInputDto: UsersInputDto) {
-    const userDocument = await this.usersService.createUser(userInputDto);
+  async createUser(@Body() dto: UsersInputDto) {
+    await this.usersService.existLogin(dto.login)
+    await this.usersService.existEmail(dto.email)
+    const userDocument = await this.usersService.createUser(dto);
     return usersOutputDto(userDocument);
   }
 
@@ -51,11 +49,9 @@ export class UsersController {
 
   @Delete(':userId')
   @HttpCode(204)
-  //@UseGuards(UserGuard)
   @UsePipes(paramIdIsMongoIdPipe)
   async deleteUserById(@Param('userId') id: string) {
     const result = await this.usersService.deleteUserById(id);
-
     if (!result) throw new NotFoundException();
   }
 }

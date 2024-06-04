@@ -26,20 +26,22 @@ import { DevicesService } from '../../security/application/devices.service';
 import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 import {infoCurrentUserDto} from "./models/output/info-current-user.dto";
-import {EmailAdapter} from "../infrastructure/mail.adapter";
-import { v4 as uuidv4 } from 'uuid';
+import {UsersService} from "../../users/application/users.service";
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly authService: AuthService,
+    private readonly usersService: UsersService,
     private readonly devicesService: DevicesService,
   ) {}
 
   @Post('registration')
   @HttpCode(204)
   async authCreateUser(@Body() dto: UsersInputDto): Promise<void> {
+    await this.usersService.existLogin(dto.login)
+    await this.usersService.existEmail(dto.email)
     await this.authService.registrationUser(dto);
   }
 
@@ -56,9 +58,7 @@ export class AuthController {
   async resendingConfirmationCode(
     @Body() emailResendingDto: EmailResendingDto,
   ): Promise<void> {
-    //await this.emailAdapter.sendConfirmationCode(emailResendingDto.email, 'confirmationCode')
     await this.authService.resendConfirmCode(emailResendingDto.email);
-    //await this.authService.send(emailResendingDto.email);
   }
 
   @UseGuards(LocalAuthGuard)

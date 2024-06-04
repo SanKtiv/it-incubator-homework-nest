@@ -19,6 +19,10 @@ export class BlogsRepository {
     return blogDto.save();
   }
 
+  async findById(id: string): Promise<BlogDocument | null> {
+    return this.BlogModel.findById(id)
+  }
+
   async remove(id: string): Promise<void> {
     try {
       await this.BlogModel.findByIdAndDelete(id);
