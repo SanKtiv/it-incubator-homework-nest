@@ -50,7 +50,6 @@ export class BlogsController {
   }
 
   @Post(':blogId/posts')
-  //@UsePipes(paramIdIsMongoIdPipe)
   async createPostForBlog(
     @Param('blogId', paramIdIsMongoIdPipe) id: string,
     @Body() inputDto: InputDto,
@@ -66,19 +65,11 @@ export class BlogsController {
 
   @Get()
   async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto> {
-    const totalBlogs = await this.blogsQueryRepository.getTotalBlogsByName(
-      query.searchNameTerm,
-    );
-
-    const blogsPaging =
-      await this.blogsQueryRepository.getBlogsWithPaging(query);
-
-    return blogPagingViewModel(query, totalBlogs as number, blogsPaging);
+    return this.blogsQueryRepository.getBlogsWithPaging(query);
   }
 
   @Get(':blogId')
-  @UsePipes(paramIdPipe)
-  async getBlogById(@Param('blogId') id: string): Promise<BlogsViewDto> {
+  async getBlogById(@Param('blogId', paramIdIsMongoIdPipe) id: string): Promise<BlogsViewDto> {
     const blog = await this.blogsQueryRepository.findById(id);
     return blogsViewDto(blog!);
   }
