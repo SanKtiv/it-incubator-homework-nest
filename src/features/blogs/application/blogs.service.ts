@@ -1,5 +1,9 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
-import {BlogsInputDto} from '../api/models/input/blogs.input.dto';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { BlogsInputDto } from '../api/models/input/blogs.input.dto';
 import { BlogsRepository } from '../infrastructure/blogs.repository';
 import { BlogDocument } from '../domain/blogs.schema';
 
@@ -18,8 +22,8 @@ export class BlogsService {
   }
 
   async existBlog(id: string) {
-    const blogDocument = await this.blogsRepository.findById(id)
-    if (!blogDocument) throw new NotFoundException()
+    const blogDocument = await this.blogsRepository.findById(id);
+    if (!blogDocument) throw new NotFoundException();
   }
 
   async deleteBlog(id: string): Promise<void> {

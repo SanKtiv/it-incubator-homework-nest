@@ -25,8 +25,8 @@ import { RefreshTokenPayload } from '../../../infrastructure/decorators/refresh-
 import { DevicesService } from '../../security/application/devices.service';
 import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
-import {infoCurrentUserDto} from "./models/output/info-current-user.dto";
-import {UsersService} from "../../users/application/users.service";
+import { infoCurrentUserDto } from './models/output/info-current-user.dto';
+import { UsersService } from '../../users/application/users.service';
 
 @Controller('auth')
 export class AuthController {
@@ -40,8 +40,8 @@ export class AuthController {
   @Post('registration')
   @HttpCode(204)
   async authCreateUser(@Body() dto: UsersInputDto): Promise<void> {
-    await this.usersService.existLogin(dto.login)
-    await this.usersService.existEmail(dto.email)
+    await this.usersService.existLogin(dto.login);
+    await this.usersService.existEmail(dto.email);
     await this.authService.registrationUser(dto);
   }
 
@@ -73,7 +73,7 @@ export class AuthController {
     const deviceDto: DeviceDto = {
       ip: req.header('x-forwarded-for') || req.ip || '',
       title: req.headers['user-agent'] || 'chrome 105',
-      userId: userId
+      userId: userId,
     };
 
     const deviceDocument = await this.devicesService.create(deviceDto);
@@ -137,14 +137,14 @@ export class AuthController {
   async getInfoCurrentUser(@CurrentUserId() userId: string) {
     const userDocument = await this.usersQueryRepository.findById(userId);
 
-    return infoCurrentUserDto(userDocument!)
+    return infoCurrentUserDto(userDocument!);
   }
 
   @Post('test')
   @HttpCode(204)
   async test(): Promise<void> {
-    throw new BadRequestException(
-        { message: [{ message: 'email already confirmed', field: 'email' }] }
-    );
+    throw new BadRequestException({
+      message: [{ message: 'email already confirmed', field: 'email' }],
+    });
   }
 }

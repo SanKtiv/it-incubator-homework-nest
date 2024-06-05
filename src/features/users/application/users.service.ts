@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersInputDto } from '../api/models/input/users.input.dto';
 import bcrypt from 'bcrypt';
 import { UsersRepository } from '../infrastructure/users.repository';
@@ -37,20 +37,20 @@ export class UsersService {
   }
 
   async existLogin(login: string): Promise<BadRequestException | void> {
-    const userDocument = await this.usersRepository.findByLogin(login)
+    const userDocument = await this.usersRepository.findByLogin(login);
     if (userDocument) {
-      throw new BadRequestException(
-          { message: [{ message: 'login is already exist', field: 'login' }] }
-      );
+      throw new BadRequestException({
+        message: [{ message: 'login is already exist', field: 'login' }],
+      });
     }
   }
 
   async existEmail(email: string): Promise<BadRequestException | void> {
-    const userDocument = await this.usersRepository.findByEmail(email)
+    const userDocument = await this.usersRepository.findByEmail(email);
     if (userDocument) {
-      throw new BadRequestException(
-          { message: [{ message: 'email is already exist', field: 'email' }] }
-      );
+      throw new BadRequestException({
+        message: [{ message: 'email is already exist', field: 'email' }],
+      });
     }
   }
 

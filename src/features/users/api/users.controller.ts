@@ -17,9 +17,7 @@ import {
   usersOutputDto,
   usersPagingDto,
 } from './models/output/users.output.dto';
-import {
-  paramIdIsMongoIdPipe,
-} from '../../../infrastructure/pipes/validation.pipe';
+import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
@@ -34,8 +32,8 @@ export class UsersController {
 
   @Post()
   async createUser(@Body() dto: UsersInputDto) {
-    await this.usersService.existLogin(dto.login)
-    await this.usersService.existEmail(dto.email)
+    await this.usersService.existLogin(dto.login);
+    await this.usersService.existEmail(dto.email);
     const userDocument = await this.usersService.createUser(dto);
     return usersOutputDto(userDocument);
   }

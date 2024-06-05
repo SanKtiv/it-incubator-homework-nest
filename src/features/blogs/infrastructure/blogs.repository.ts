@@ -20,7 +20,7 @@ export class BlogsRepository {
   }
 
   async findById(id: string): Promise<BlogDocument | null> {
-    return this.BlogModel.findById(id)
+    return this.BlogModel.findById(id);
   }
 
   async remove(id: string): Promise<void> {

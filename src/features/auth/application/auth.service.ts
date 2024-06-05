@@ -2,7 +2,7 @@ import { EmailAdapter } from '../infrastructure/mail.adapter';
 import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { UsersService } from '../../users/application/users.service';
-import {BadRequestException, Injectable} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
@@ -39,23 +39,24 @@ export class AuthService {
   async resendConfirmCode(email: string): Promise<void> {
     const userDocument = await this.usersRepository.findByEmail(email);
 
-    if (
-        !userDocument ||
-        userDocument.emailConfirmation.isConfirmed
-    ) {
-
-      throw new BadRequestException(
-          { message: [{ message: 'email already confirmed', field: 'email' }] }
-      );
+    if (!userDocument || userDocument.emailConfirmation.isConfirmed) {
+      throw new BadRequestException({
+        message: [{ message: 'email already confirmed', field: 'email' }],
+      });
     }
 
-    const emailConfirmation = this.usersService.createCodeWithExpireDate()
+    const emailConfirmation = this.usersService.createCodeWithExpireDate();
 
-    await this.emailAdapter.sendConfirmationCode(email, emailConfirmation.confirmationCode);
+    await this.emailAdapter.sendConfirmationCode(
+      email,
+      emailConfirmation.confirmationCode,
+    );
 
-    userDocument.emailConfirmation.confirmationCode = emailConfirmation.confirmationCode;
+    userDocument.emailConfirmation.confirmationCode =
+      emailConfirmation.confirmationCode;
 
-    userDocument.emailConfirmation.expirationDate = emailConfirmation.expirationDate;
+    userDocument.emailConfirmation.expirationDate =
+      emailConfirmation.expirationDate;
 
     await this.usersService.saveUser(userDocument);
   }
@@ -77,7 +78,10 @@ export class AuthService {
     );
   }
 
-  async validateUser(loginOrEmail: string, password: string): Promise<UserDocument | null> {
+  async validateUser(
+    loginOrEmail: string,
+    password: string,
+  ): Promise<UserDocument | null> {
     const userDocument =
       await this.usersRepository.findByLoginOrEmail(loginOrEmail);
 
