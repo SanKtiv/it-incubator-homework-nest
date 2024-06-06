@@ -52,6 +52,7 @@ import { BasicStrategy } from './features/auth/infrastructure/basic.strategy';
 import { DevicesRepository } from './features/security/infrastructure/devices.repository';
 import { Device, DeviceSchema } from './features/security/domain/device.schema';
 import { DevicesService } from './features/security/application/devices.service';
+import {appSettings} from "./settings/app-settings";
 
 dotenv.config();
 
@@ -65,7 +66,9 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
       secret: process.env.SECRET_KEY,
       //signOptions: {expiresIn: '10m'}
     }),
-    MongooseModule.forRoot(mongoURI),
+    MongooseModule.forRoot(appSettings.env.isTesting()
+        ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
+        : appSettings.api.MONGO_CONNECTION_URI,),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostSchema },

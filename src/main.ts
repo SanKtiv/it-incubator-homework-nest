@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { applyAppSettings } from './settings/apply-app-setting';
 import { SessionBuilder } from '@ngrok/ngrok';
 import { Logger } from '@nestjs/common';
+import {appSettings} from "./settings/app-settings";
 
 const port = process.env.PORT || 3000;
 
@@ -27,7 +28,10 @@ async function bootstrap() {
   //   }),
   // );
   // app.useGlobalFilters(new ErrorsFilter());
-  await app.listen(port);
+  await app.listen(appSettings.api.APP_PORT, () => {
+    console.log('App starting listen port: ', appSettings.api.APP_PORT);
+    console.log('ENV: ', appSettings.env.getEnv());
+  });
 
   // Setup ngrok ingress
   // const session = await new SessionBuilder().authtokenFromEnv().connect();
