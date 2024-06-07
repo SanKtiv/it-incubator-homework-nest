@@ -1,16 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import {HttpException, Injectable, NotFoundException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument, PostModelType } from '../domain/posts.schema';
-import { Types } from 'mongoose';
 import { PostQuery } from '../api/models/input/posts.input.dto';
+import {PostsOutputDto, postsOutputDto} from "../api/models/output/posts.output.dto";
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
 
-  async findById(id: string): Promise<PostDocument | null> {
+  async findById(id: string): Promise<PostsOutputDto | HttpException | null> {
     try {
-      return this.PostModel.findById(new Types.ObjectId(id));
+      const postDocument = await this.PostModel.findById(id);
+      if (!postDocument) throw new NotFoundException();
+      return postsOutputDto(postDocument);
     } catch (e) {
       return null;
     }

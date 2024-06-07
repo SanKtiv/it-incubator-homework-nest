@@ -8,7 +8,7 @@ import {
   Param,
   Post,
   Put,
-  Query,
+  Query, UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { PostsService } from '../application/posts.service';
@@ -21,7 +21,7 @@ import {
 } from './models/output/posts.output.dto';
 import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
-import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import {paramIdIsMongoIdPipe, paramIdPipe} from '../../../infrastructure/pipes/validation.pipe';
 import { CommentInputDto } from '../../comments/api/models/comment.input.dto';
 import { CommentsService } from '../../comments/application/comments.service';
 import {
@@ -30,6 +30,7 @@ import {
 } from '../../comments/api/models/comment.output.dto';
 import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query.repository';
 import { QueryDto } from '../../../infrastructure/models/query.dto';
+import {BasicAuthGuard} from "../../../infrastructure/guards/basic.guard";
 
 @Controller('posts')
 export class PostController {
@@ -42,6 +43,7 @@ export class PostController {
   ) {}
 
   @Post()
+  @UseGuards(BasicAuthGuard)
   async createPost(@Body() inputDto: PostsInputDto): Promise<PostsOutputDto> {
     const blog = await this.blogsQueryRepository.findById(inputDto.blogId);
     if (!blog) throw new NotFoundException();
@@ -51,10 +53,8 @@ export class PostController {
   }
 
   @Get(':postId')
-  @UsePipes(paramIdPipe)
-  async getPostById(@Param('postId') id: string): Promise<PostsOutputDto> {
-    const postDocument = await this.postsQueryRepository.findById(id);
-    return postsOutputDto(postDocument!);
+  async getPostById(@Param('postId', paramIdIsMongoIdPipe) id: string): Promise<PostsOutputDto> {
+    return this.postsQueryRepository.findById(id);
   }
 
   @Post(':postId/comments')
@@ -94,18 +94,18 @@ export class PostController {
 
   @Put(':postId')
   @HttpCode(204)
+  @UseGuards(BasicAuthGuard)
   async updatePostById(
-    @Param('postId', paramIdPipe) id: string,
+    @Param('postId', paramIdIsMongoIdPipe) id: string,
     @Body() postUpdateDto: PostsInputDto,
-  ) {
-    const postDocument = await this.postsQueryRepository.findById(id);
-    await this.postsService.updatePost(postDocument!, postUpdateDto);
+  ): Promise<void> {
+    await this.postsService.updatePost(id, postUpdateDto);
   }
 
   @Delete(':postId')
   @HttpCode(204)
-  @UsePipes(paramIdPipe)
-  async deletePostById(@Param('postId') id: string): Promise<void> {
+  @UseGuards(BasicAuthGuard)
+  async deletePostById(@Param('postId', paramIdIsMongoIdPipe) id: string): Promise<void> {
     await this.postsService.deletePost(id);
   }
 }

@@ -14,12 +14,16 @@ export class PostsRepository {
     return this.PostModel.createPost(inputDto, blogName, this.PostModel);
   }
 
+  async findById(id: string): Promise<PostDocument | null> {
+    return this.PostModel.findById(id);
+  }
+
   async save(postDocument: PostDocument): Promise<PostDocument> {
     return postDocument.save();
   }
 
-  async remove(id: string): Promise<void> {
-    await this.PostModel.findByIdAndDelete(id);
+  async remove(id: string): Promise<PostDocument | null> {
+    return this.PostModel.findByIdAndDelete(id);
   }
 
   async deleteAll(): Promise<void> {

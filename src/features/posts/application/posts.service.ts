@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {HttpException, Injectable, NotFoundException} from '@nestjs/common';
 import { PostsRepository } from '../infrastructure/posts.repository';
 import { PostsInputDto } from '../api/models/input/posts.input.dto';
 import { PostDocument } from '../domain/posts.schema';
@@ -19,12 +19,15 @@ export class PostsService {
     return this.postsRepository.save(postDocument);
   }
 
-  async updatePost(postDocument: PostDocument, postUpdateDto: PostsInputDto) {
+  async updatePost(id: string, postUpdateDto: PostsInputDto) {
+    const postDocument = await this.postsRepository.findById(id)
+    if (!postDocument) throw new NotFoundException();
     Object.assign(postDocument, postUpdateDto);
     await this.postsRepository.save(postDocument);
   }
 
-  async deletePost(id: string): Promise<void> {
-    await this.postsRepository.remove(id);
+  async deletePost(id: string): Promise<void | HttpException> {
+    const result = await this.postsRepository.remove(id);
+    if (!result) throw new NotFoundException();
   }
 }
