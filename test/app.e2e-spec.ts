@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import {applyAppSettings} from "../src/settings/apply-app-setting";
-import {UsersTestManager} from "./utils/users-test-manager";
-import {initSettings} from "./utils/init-settings";
+import { applyAppSettings } from '../src/settings/apply-app-setting';
+import { UsersTestManager } from './utils/users-test-manager';
+import { initSettings } from './utils/init-settings';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -12,8 +12,8 @@ describe('AppController (e2e)', () => {
 
   beforeAll(async () => {
     const result = await initSettings((moduleBuilder) =>
-        //override UsersService еще раз
-        moduleBuilder.overrideProvider(UsersService).useClass(UserServiceMock),
+      //override UsersService еще раз
+      moduleBuilder.overrideProvider(UsersService).useClass(UserServiceMock),
     );
     app = result.app;
     userTestManger = result.userTestManger;
@@ -23,10 +23,10 @@ describe('AppController (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-        .overrideProvider(UsersService)
-        //.useValue(UserServiceMockObject)
-        .useClass(UserServiceMock)
-        .compile();
+      .overrideProvider(UsersService)
+      //.useValue(UserServiceMockObject)
+      .useClass(UserServiceMock)
+      .compile();
 
     app = moduleFixture.createNestApplication();
 

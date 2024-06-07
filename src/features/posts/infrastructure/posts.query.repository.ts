@@ -1,30 +1,40 @@
-import {HttpException, Injectable, NotFoundException} from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument, PostModelType } from '../domain/posts.schema';
+import { Post, PostModelType } from '../domain/posts.schema';
 import { PostQuery } from '../api/models/input/posts.input.dto';
-import {PostsOutputDto, postsOutputDto} from "../api/models/output/posts.output.dto";
+import {
+  PostsOutputDto,
+  postsOutputDto,
+  PostsPaging,
+  postsPaging,
+} from '../api/models/output/posts.output.dto';
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
 
-  async findById(id: string): Promise<PostsOutputDto | HttpException | null> {
+  async findById(id: string): Promise<PostsOutputDto | HttpException> {
     try {
       const postDocument = await this.PostModel.findById(id);
-      if (!postDocument) throw new NotFoundException();
+      if (!postDocument) return new NotFoundException();
       return postsOutputDto(postDocument);
     } catch (e) {
-      return null;
+      throw new Error('Error finding post by postId');
     }
   }
 
-  async findPaging(query: PostQuery, id?: string): Promise<PostDocument[]> {
+  async findPaging(query: PostQuery, id?: string): Promise<PostsPaging> {
     //const filter = id ? {blogId: id} : {}
     const filter = this.filter(id);
-    return this.PostModel.find(filter)
+
+    const totalPosts = await this.PostModel.countDocuments(filter);
+
+    const posts = await this.PostModel.find(filter)
       .sort({ [query.sortBy]: query.sortDirection })
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize);
+
+    return postsPaging(query, totalPosts, posts);
   }
 
   async countDocuments(id?: string): Promise<number> {
@@ -33,7 +43,7 @@ export class PostsQueryRepository {
     return this.PostModel.countDocuments(filter);
   }
 
-  private filter(id: string | undefined): {} {
+  private filter(id: string | undefined): object {
     return id ? { blogId: id } : {};
   }
 }

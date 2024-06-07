@@ -1,40 +1,40 @@
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
-import {AppModule} from "../../src/app.module";
+import { AppModule } from '../../src/app.module';
 
 export const initSettings = async (
-    //передаем callback, который получает ModuleBuilder,
-    // если хотим изменить настройку тестового модуля
-    addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
+  //передаем callback, который получает ModuleBuilder,
+  // если хотим изменить настройку тестового модуля
+  addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
 ) => {
-    const testingModuleBuilder: TestingModuleBuilder = Test.createTestingModule({
-        imports: [AppModule],
-    })
-        .overrideProvider(UsersService)
-        .useValue(UserServiceMockObject);
+  const testingModuleBuilder: TestingModuleBuilder = Test.createTestingModule({
+    imports: [AppModule],
+  })
+    .overrideProvider(UsersService)
+    .useValue(UserServiceMockObject);
 
-    if (addSettingsToModuleBuilder) {
-        addSettingsToModuleBuilder(testingModuleBuilder);
-    }
+  if (addSettingsToModuleBuilder) {
+    addSettingsToModuleBuilder(testingModuleBuilder);
+  }
 
-    const testingAppModule = await testingModuleBuilder.compile();
+  const testingAppModule = await testingModuleBuilder.compile();
 
-    const app = testingAppModule.createNestApplication();
+  const app = testingAppModule.createNestApplication();
 
-    applyAppSettings(app);
+  applyAppSettings(app);
 
-    await app.init();
+  await app.init();
 
-    const databaseConnection = app.get<Connection>(getConnectionToken());
-    const httpServer = app.getHttpServer();
-    const userTestManger = new UsersTestManager(app);
+  const databaseConnection = app.get<Connection>(getConnectionToken());
+  const httpServer = app.getHttpServer();
+  const userTestManger = new UsersTestManager(app);
 
-    //чистим БД
-    await deleteAllData(databaseConnection);
+  //чистим БД
+  await deleteAllData(databaseConnection);
 
-    return {
-        app,
-        databaseConnection,
-        httpServer,
-        userTestManger,
-    };
+  return {
+    app,
+    databaseConnection,
+    httpServer,
+    userTestManger,
+  };
 };

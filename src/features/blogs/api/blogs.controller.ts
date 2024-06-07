@@ -7,7 +7,8 @@ import {
   Param,
   Post,
   Put,
-  Query, UseGuards,
+  Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -33,7 +34,7 @@ import {
 } from '../../posts/api/models/output/posts.output.dto';
 import { PostsService } from '../../posts/application/posts.service';
 import { InputDto } from '../../../infrastructure/models/input.dto';
-import {BasicAuthGuard} from "../../../infrastructure/guards/basic.guard";
+import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 
 @Controller('blogs')
 @UsePipes(new ValidationPipe({ transform: true, disableErrorMessages: true }))

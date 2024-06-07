@@ -1,4 +1,4 @@
-import {HttpException, Injectable, NotFoundException} from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { PostsRepository } from '../infrastructure/posts.repository';
 import { PostsInputDto } from '../api/models/input/posts.input.dto';
 import { PostDocument } from '../domain/posts.schema';
@@ -20,7 +20,7 @@ export class PostsService {
   }
 
   async updatePost(id: string, postUpdateDto: PostsInputDto) {
-    const postDocument = await this.postsRepository.findById(id)
+    const postDocument = await this.postsRepository.findById(id);
     if (!postDocument) throw new NotFoundException();
     Object.assign(postDocument, postUpdateDto);
     await this.postsRepository.save(postDocument);

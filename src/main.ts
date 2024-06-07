@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { applyAppSettings } from './settings/apply-app-setting';
 import { SessionBuilder } from '@ngrok/ngrok';
 import { Logger } from '@nestjs/common';
-import {appSettings} from "./settings/app-settings";
+import { appSettings } from './settings/app-settings';
 
 const port = process.env.PORT || 3000;
 

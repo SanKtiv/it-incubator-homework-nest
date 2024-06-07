@@ -4,11 +4,13 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
   NotFoundException,
   Param,
   Post,
   Put,
-  Query, UseGuards,
+  Query,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { PostsService } from '../application/posts.service';
@@ -21,16 +23,21 @@ import {
 } from './models/output/posts.output.dto';
 import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
-import {paramIdIsMongoIdPipe, paramIdPipe} from '../../../infrastructure/pipes/validation.pipe';
+import {
+  paramIdIsMongoIdPipe,
+  paramIdPipe,
+} from '../../../infrastructure/pipes/validation.pipe';
 import { CommentInputDto } from '../../comments/api/models/comment.input.dto';
 import { CommentsService } from '../../comments/application/comments.service';
 import {
+  CommentOutputDto,
   commentOutputDto,
   commentsPagingDto,
 } from '../../comments/api/models/comment.output.dto';
 import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query.repository';
 import { QueryDto } from '../../../infrastructure/models/query.dto';
-import {BasicAuthGuard} from "../../../infrastructure/guards/basic.guard";
+import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
+import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 
 @Controller('posts')
 export class PostController {
@@ -53,15 +60,18 @@ export class PostController {
   }
 
   @Get(':postId')
-  async getPostById(@Param('postId', paramIdIsMongoIdPipe) id: string): Promise<PostsOutputDto> {
+  async getPostById(
+    @Param('postId', paramIdIsMongoIdPipe) id: string,
+  ): Promise<PostsOutputDto | HttpException> {
     return this.postsQueryRepository.findById(id);
   }
 
   @Post(':postId/comments')
+  @UseGuards(JWTAccessAuthGuard)
   async createCommentForPost(
-    @Param('postId', paramIdPipe) id: string,
+    @Param('postId', paramIdIsMongoIdPipe) id: string,
     @Body() inputDto: CommentInputDto,
-  ) {
+  ): Promise<CommentOutputDto> {
     const dto = {
       content: inputDto.content,
       userId: 'userId',
@@ -74,9 +84,7 @@ export class PostController {
 
   @Get()
   async getPostsPaging(@Query() query: PostQuery): Promise<PostsPaging> {
-    const totalPosts = await this.postsQueryRepository.countDocuments();
-    const posts = await this.postsQueryRepository.findPaging(query);
-    return postsPaging(query, totalPosts, posts);
+    return this.postsQueryRepository.findPaging(query);
   }
 
   @Get(':postId/comments')
@@ -105,7 +113,9 @@ export class PostController {
   @Delete(':postId')
   @HttpCode(204)
   @UseGuards(BasicAuthGuard)
-  async deletePostById(@Param('postId', paramIdIsMongoIdPipe) id: string): Promise<void> {
+  async deletePostById(
+    @Param('postId', paramIdIsMongoIdPipe) id: string,
+  ): Promise<void> {
     await this.postsService.deletePost(id);
   }
 }
