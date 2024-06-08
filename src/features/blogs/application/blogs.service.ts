@@ -6,19 +6,23 @@ import {
 import { BlogsInputDto } from '../api/models/input/blogs.input.dto';
 import { BlogsRepository } from '../infrastructure/blogs.repository';
 import { BlogDocument } from '../domain/blogs.schema';
+import {
+  BlogsViewDto,
+  blogsViewDto,
+} from '../api/models/output/blogs.view.dto';
 
 @Injectable()
 export class BlogsService {
   constructor(private readonly blogsRepository: BlogsRepository) {}
 
-  async createBlog(dto: BlogsInputDto): Promise<BlogDocument> {
+  async createBlog(dto: BlogsInputDto): Promise<BlogsViewDto> {
     const blogDocument = await this.blogsRepository.create(dto);
 
-    return this.blogsRepository.save(blogDocument);
+    return blogsViewDto(blogDocument);
   }
 
   async updateBlog(id: string, inputUpdate: BlogsInputDto) {
-    const blogDocument = await this.existBlog(id)
+    const blogDocument = await this.existBlog(id);
 
     Object.assign(blogDocument, inputUpdate);
 

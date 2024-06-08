@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Comment,
@@ -6,6 +6,10 @@ import {
   CommentModelType,
 } from '../domain/comment.schema';
 import { QueryDto } from '../../../infrastructure/models/query.dto';
+import {
+  CommentOutputDto,
+  commentOutputDto,
+} from '../api/models/output/comment.output.dto';
 
 @Injectable()
 export class CommentsQueryRepository {
@@ -13,8 +17,10 @@ export class CommentsQueryRepository {
     @InjectModel(Comment.name) private CommentModel: CommentModelType,
   ) {}
 
-  async findById(id: string): Promise<CommentDocument | null> {
-    return this.CommentModel.findById(id);
+  async findById(id: string): Promise<CommentOutputDto> {
+    const commentDocument = await this.CommentModel.findById(id);
+    if (!commentDocument) throw new NotFoundException();
+    return commentOutputDto(commentDocument);
   }
 
   async countDocuments(id: string): Promise<number> {

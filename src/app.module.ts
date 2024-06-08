@@ -59,18 +59,21 @@ dotenv.config();
 const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/nest-db?retryWrites=true&w=majority';
 
 @Module({
-  imports: [ConfigModule.forRoot(
-  //     {
-  //   isGlobal: true,
-  //   load: [configuration],
-  // }
-  ),
+  imports: [
+    ConfigModule
+      .forRoot
+      //     {
+      //   isGlobal: true,
+      //   load: [configuration],
+      // }
+      (),
     JwtModule.register({
       global: true,
       secret: process.env.SECRET_KEY,
       //signOptions: {expiresIn: '10m'}
     }),
-    MongooseModule.forRoot( mongoURI
+    MongooseModule.forRoot(
+      mongoURI,
       // appSettings.env.isTesting()
       //   ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
       //   : appSettings.api.MONGO_CONNECTION_URI,

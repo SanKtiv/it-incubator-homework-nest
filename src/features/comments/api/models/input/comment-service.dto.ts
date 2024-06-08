@@ -1,6 +1,6 @@
-export class ServiceDto {
-    content: string
-    userId: string
-    userLogin: string
-    postId: string
+export class CommentServiceDto {
+  content: string;
+  userId: string;
+  userLogin: string;
+  postId: string;
 }

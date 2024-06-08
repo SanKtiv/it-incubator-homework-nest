@@ -14,7 +14,11 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { PostsService } from '../application/posts.service';
-import { PostQuery, PostsInputDto } from './models/input/posts.input.dto';
+import {
+  PostLikeStatus,
+  PostQuery,
+  PostsInputDto,
+} from './models/input/posts.input.dto';
 import {
   PostsOutputDto,
   postsOutputDto,
@@ -38,8 +42,8 @@ import { CommentsQueryRepository } from '../../comments/infrastructure/comments.
 import { QueryDto } from '../../../infrastructure/models/query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
-import {CurrentUserId} from "../../auth/infrastructure/decorators/current-user-id.param.decorator";
-import {ServiceDto} from "../../comments/api/models/input/comment-service.dto";
+import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
+import { CommentServiceDto } from '../../comments/api/models/input/comment-service.dto';
 
 @Controller('posts')
 export class PostController {
@@ -54,11 +58,7 @@ export class PostController {
   @Post()
   @UseGuards(BasicAuthGuard)
   async createPost(@Body() inputDto: PostsInputDto): Promise<PostsOutputDto> {
-    const blog = await this.blogsQueryRepository.findById(inputDto.blogId);
-    if (!blog) throw new NotFoundException();
-    const blogName = blog.name;
-    const postDocument = await this.postsService.createPost(inputDto, blogName);
-    return postsOutputDto(postDocument);
+    return this.postsService.createPost(inputDto);
   }
 
   @Get(':postId')
@@ -68,6 +68,13 @@ export class PostController {
     return this.postsQueryRepository.findById(id);
   }
 
+  @Put(':postId/like-status')
+  @UseGuards(JWTAccessAuthGuard)
+  async createStatus(
+    @Param('postId', paramIdIsMongoIdPipe) id: string,
+    @Body() dto: PostLikeStatus,
+  ) {await this.commentsService.}
+
   @Post(':postId/comments')
   @UseGuards(JWTAccessAuthGuard)
   async createCommentForPost(
@@ -75,7 +82,7 @@ export class PostController {
     @Body() inputDto: CommentInputDto,
     @CurrentUserId() userId: string,
   ): Promise<CommentOutputDto> {
-    const dto: ServiceDto = {
+    const dto: CommentServiceDto = {
       content: inputDto.content,
       userId: userId,
       userLogin: 'userLogin',

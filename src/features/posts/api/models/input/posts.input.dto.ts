@@ -8,3 +8,8 @@ export class PostsInputDto extends InputDto {
 }
 
 export class PostQuery extends QueryDto {}
+
+export class PostLikeStatus {
+  @IsString()
+  likeStatus: string = 'None' || 'Like' || 'Dislike';
+}

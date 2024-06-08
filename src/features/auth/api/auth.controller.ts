@@ -25,7 +25,10 @@ import { RefreshTokenPayload } from '../../../infrastructure/decorators/refresh-
 import { DevicesService } from '../../security/application/devices.service';
 import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
-import { infoCurrentUserDto } from './models/output/info-current-user.dto';
+import {
+  InfoCurrentUserDto,
+  infoCurrentUserDto,
+} from './models/output/info-current-user.dto';
 import { UsersService } from '../../users/application/users.service';
 
 @Controller('auth')
@@ -134,10 +137,10 @@ export class AuthController {
   @Get('me')
   @HttpCode(200)
   @UseGuards(JWTAccessAuthGuard)
-  async getInfoCurrentUser(@CurrentUserId() userId: string) {
-    const userDocument = await this.usersQueryRepository.findById(userId);
-
-    return infoCurrentUserDto(userDocument!);
+  async getInfoCurrentUser(
+    @CurrentUserId() userId: string,
+  ): Promise<InfoCurrentUserDto> {
+    return this.usersQueryRepository.infoCurrentUser(userId);
   }
 
   @Post('test')

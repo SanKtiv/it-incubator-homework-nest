@@ -5,7 +5,7 @@ import {
   CommentDocument,
   CommentModelType,
 } from '../domain/comment.schema';
-import {ServiceDto} from "../api/models/input/comment-service.dto";
+import { CommentServiceDto } from '../api/models/input/comment-service.dto';
 
 @Injectable()
 export class CommentsRepository {
@@ -13,8 +13,11 @@ export class CommentsRepository {
     @InjectModel(Comment.name) private CommentModel: CommentModelType,
   ) {}
 
-  async create(dto: ServiceDto): Promise<CommentDocument> {
-    const commentDocument = await this.CommentModel.createComment(dto, this.CommentModel);
+  async create(dto: CommentServiceDto): Promise<CommentDocument> {
+    const commentDocument = await this.CommentModel.createComment(
+      dto,
+      this.CommentModel,
+    );
     return commentDocument.save();
   }
 

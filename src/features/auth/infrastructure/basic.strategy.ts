@@ -8,7 +8,7 @@ export class BasicStrategy extends PassportStrategy(Strategy) {
     super({});
   }
 
-  async validate(username, password) {
+  async validate(username: string, password: string) {
     if (
       process.env.SUPER_USER_NAME === username &&
       process.env.SUPER_USER_PASS === password

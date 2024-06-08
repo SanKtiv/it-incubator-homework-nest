@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument, BlogsModelType } from '../domain/blogs.schema';
 import { BlogsInputDto } from '../api/models/input/blogs.input.dto';
-import { Types } from 'mongoose';
 
 @Injectable()
 export class BlogsRepository {
@@ -11,20 +10,21 @@ export class BlogsRepository {
     private BlogModel: BlogsModelType,
   ) {}
 
-  async create(blogDto: BlogsInputDto): Promise<BlogDocument> {
-    return this.BlogModel.createBlog(blogDto, this.BlogModel);
+  async create(dto: BlogsInputDto): Promise<BlogDocument> {
+    const blogDocument = this.BlogModel.createBlog(dto, this.BlogModel);
+    return blogDocument.save();
   }
 
-  async save(blogDto: BlogDocument): Promise<BlogDocument> {
-    return blogDto.save();
+  async save(blogDocument: BlogDocument): Promise<BlogDocument> {
+    return blogDocument.save();
   }
 
   async findById(id: string): Promise<BlogDocument | null> {
     try {
       return this.BlogModel.findById(id);
     } catch (e) {
-    throw new Error('Error finding blog by blogId');
-  }
+      throw new Error('Error finding blog by blogId');
+    }
   }
 
   async remove(id: string): Promise<BlogDocument | null> {

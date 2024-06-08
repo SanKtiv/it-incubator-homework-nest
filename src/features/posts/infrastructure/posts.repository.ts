@@ -11,7 +11,12 @@ export class PostsRepository {
     inputDto: PostsInputDto,
     blogName: string,
   ): Promise<PostDocument> {
-    return this.PostModel.createPost(inputDto, blogName, this.PostModel);
+    const postDocument = await this.PostModel.createPost(
+      inputDto,
+      blogName,
+      this.PostModel,
+    );
+    return postDocument.save();
   }
 
   async findById(id: string): Promise<PostDocument | null> {

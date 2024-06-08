@@ -1,7 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { CommentsQueryRepository } from '../infrastructure/comments.query.repository';
-import { commentOutputDto } from './models/output/comment.output.dto';
-import { paramIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 
 @Controller('comments')
 export class CommentsController {
@@ -10,8 +9,7 @@ export class CommentsController {
   ) {}
 
   @Get(':commentId')
-  async getCommentById(@Param('commentId', paramIdPipe) id: string) {
-    const commentDocument = await this.commentsQueryRepository.findById(id);
-    return commentOutputDto(commentDocument!);
+  async getCommentById(@Param('commentId', paramIdIsMongoIdPipe) id: string) {
+    return this.commentsQueryRepository.findById(id);
   }
 }

@@ -7,6 +7,10 @@ import {
   filterByLoginAndEmail,
   loginAndEmailToRegExp,
 } from './utils.repositories';
+import {
+  infoCurrentUserDto,
+  InfoCurrentUserDto,
+} from '../../auth/api/models/output/info-current-user.dto';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -14,6 +18,11 @@ export class UsersQueryRepository {
 
   async findById(id: string): Promise<UserDocument | null> {
     return this.UserModel.findById(id);
+  }
+
+  async infoCurrentUser(id: string): Promise<InfoCurrentUserDto> {
+    const userDocument = await this.findById(id);
+    return infoCurrentUserDto(userDocument!);
   }
 
   async loginIsExist(login: string): Promise<number> {

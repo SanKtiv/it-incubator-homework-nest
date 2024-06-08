@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
+import { CommentServiceDto } from '../api/models/input/comment-service.dto';
 
 @Schema()
 class UsersStatuses {
@@ -30,7 +31,7 @@ export class Comment {
   @Prop({ type: UsersStatusesSchema })
   usersStatuses: UsersStatuses;
   static createComment(
-    dto: {},
+    dto: CommentServiceDto,
     CommentModel: CommentModelType,
   ): CommentDocument {
     const commentDocument = new CommentModel(dto);
