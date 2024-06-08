@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {HttpException, Injectable, NotFoundException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument, BlogsModelType } from '../domain/blogs.schema';
 import { Types } from 'mongoose';
 import { BlogQuery } from '../api/models/input/blogs.input.dto';
 import {
-  blogPagingViewModel,
+  blogPagingViewModel, BlogsViewDto, blogsViewDto,
   BlogsViewPagingDto,
 } from '../api/models/output/blogs.view.dto';
 
@@ -12,11 +12,13 @@ import {
 export class BlogsQueryRepository {
   constructor(@InjectModel(Blog.name) private BlogModel: BlogsModelType) {}
 
-  async findById(id: string): Promise<BlogDocument | null> {
+  async findById(id: string): Promise<BlogsViewDto | HttpException> {
     try {
-      return this.BlogModel.findById(new Types.ObjectId(id));
+      const blogDocument = await this.BlogModel.findById(id);
+      if (!blogDocument) return new NotFoundException();
+      return blogsViewDto(blogDocument);
     } catch (e) {
-      return null;
+      throw new Error('Error finding blog by blogId');
     }
   }
 

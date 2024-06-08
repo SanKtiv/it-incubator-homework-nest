@@ -16,7 +16,9 @@ export class PostsQueryRepository {
   async findById(id: string): Promise<PostsOutputDto | HttpException> {
     try {
       const postDocument = await this.PostModel.findById(id);
+
       if (!postDocument) return new NotFoundException();
+
       return postsOutputDto(postDocument);
     } catch (e) {
       throw new Error('Error finding post by postId');

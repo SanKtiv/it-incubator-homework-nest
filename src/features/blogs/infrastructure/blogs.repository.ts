@@ -20,12 +20,16 @@ export class BlogsRepository {
   }
 
   async findById(id: string): Promise<BlogDocument | null> {
-    return this.BlogModel.findById(id);
+    try {
+      return this.BlogModel.findById(id);
+    } catch (e) {
+    throw new Error('Error finding blog by blogId');
+  }
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string): Promise<BlogDocument | null> {
     try {
-      await this.BlogModel.findByIdAndDelete(id);
+      return this.BlogModel.findByIdAndDelete(id);
     } catch (e) {
       throw new Error('Error DB');
     }

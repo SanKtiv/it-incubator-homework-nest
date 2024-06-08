@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
+  HttpCode, HttpException,
   Param,
   Post,
   Put,
@@ -77,40 +77,36 @@ export class BlogsController {
   @Get(':blogId')
   async getBlogById(
     @Param('blogId', paramIdIsMongoIdPipe) id: string,
-  ): Promise<BlogsViewDto> {
-    const blog = await this.blogsQueryRepository.findById(id);
-    return blogsViewDto(blog!);
+  ): Promise<BlogsViewDto | HttpException> {
+    return this.blogsQueryRepository.findById(id);
   }
 
   @Get(':blogId/posts')
   async getPostsByBlogId(
-    @Param('blogId', paramIdPipe) blogId: string,
+    @Param('blogId', paramIdIsMongoIdPipe) blogId: string,
     @Query() query: PostQuery,
   ): Promise<PostsPaging> {
-    const totalPosts = await this.postsQueryRepository.countDocuments(blogId);
-    const postDocuments = await this.postsQueryRepository.findPaging(
+    await this.blogsQueryRepository.findById(blogId);
+    return this.postsQueryRepository.findPaging(
       query,
       blogId,
     );
-    return postsPaging(query, totalPosts, postDocuments);
   }
 
   @Put(':blogId')
   @HttpCode(204)
   @UseGuards(BasicAuthGuard)
   async updateBlogById(
-    @Param('blogId', paramIdPipe) id: string,
+    @Param('blogId', paramIdIsMongoIdPipe) id: string,
     @Body() inputUpdate: BlogsInputDto,
   ): Promise<void> {
-    const blog = await this.blogsQueryRepository.findById(id);
-    await this.blogsService.updateBlog(blog!, inputUpdate);
+    await this.blogsService.updateBlog(id, inputUpdate);
   }
 
   @Delete(':blogId')
   @UseGuards(BasicAuthGuard)
   @HttpCode(204)
-  @UsePipes(paramIdPipe)
-  async deleteBlogById(@Param('blogId') id: string): Promise<void> {
+  async deleteBlogById(@Param('blogId', paramIdIsMongoIdPipe) id: string): Promise<void> {
     await this.blogsService.deleteBlog(id);
   }
 }

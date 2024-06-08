@@ -1,5 +1,5 @@
-import { CommentDocument } from '../../domain/comment.schema';
-import { QueryDto } from '../../../../infrastructure/models/query.dto';
+import { CommentDocument } from '../../../domain/comment.schema';
+import { QueryDto } from '../../../../../infrastructure/models/query.dto';
 
 export class CommentOutputDto {
   constructor(

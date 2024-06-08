@@ -13,20 +13,28 @@ export class BlogsService {
 
   async createBlog(dto: BlogsInputDto): Promise<BlogDocument> {
     const blogDocument = await this.blogsRepository.create(dto);
+
     return this.blogsRepository.save(blogDocument);
   }
 
-  async updateBlog(blog: BlogDocument, inputUpdate: BlogsInputDto) {
-    Object.assign(blog, inputUpdate);
-    await this.blogsRepository.save(blog);
+  async updateBlog(id: string, inputUpdate: BlogsInputDto) {
+    const blogDocument = await this.existBlog(id)
+
+    Object.assign(blogDocument, inputUpdate);
+
+    await this.blogsRepository.save(blogDocument);
   }
 
-  async existBlog(id: string) {
+  async existBlog(id: string): Promise<BlogDocument> {
     const blogDocument = await this.blogsRepository.findById(id);
+
     if (!blogDocument) throw new NotFoundException();
+
+    return blogDocument;
   }
 
   async deleteBlog(id: string): Promise<void> {
-    await this.blogsRepository.remove(id);
+    const blogDocument = await this.blogsRepository.remove(id);
+    if (!blogDocument) throw new NotFoundException();
   }
 }

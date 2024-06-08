@@ -27,17 +27,19 @@ import {
   paramIdIsMongoIdPipe,
   paramIdPipe,
 } from '../../../infrastructure/pipes/validation.pipe';
-import { CommentInputDto } from '../../comments/api/models/comment.input.dto';
+import { CommentInputDto } from '../../comments/api/models/input/comment.input.dto';
 import { CommentsService } from '../../comments/application/comments.service';
 import {
   CommentOutputDto,
   commentOutputDto,
   commentsPagingDto,
-} from '../../comments/api/models/comment.output.dto';
+} from '../../comments/api/models/output/comment.output.dto';
 import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query.repository';
 import { QueryDto } from '../../../infrastructure/models/query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
+import {CurrentUserId} from "../../auth/infrastructure/decorators/current-user-id.param.decorator";
+import {ServiceDto} from "../../comments/api/models/input/comment-service.dto";
 
 @Controller('posts')
 export class PostController {
@@ -71,15 +73,15 @@ export class PostController {
   async createCommentForPost(
     @Param('postId', paramIdIsMongoIdPipe) id: string,
     @Body() inputDto: CommentInputDto,
+    @CurrentUserId() userId: string,
   ): Promise<CommentOutputDto> {
-    const dto = {
+    const dto: ServiceDto = {
       content: inputDto.content,
-      userId: 'userId',
+      userId: userId,
       userLogin: 'userLogin',
       postId: id,
     };
-    const commentDocument = await this.commentsService.createComment(dto);
-    return commentOutputDto(commentDocument);
+    return this.commentsService.createComment(dto);
   }
 
   @Get()
