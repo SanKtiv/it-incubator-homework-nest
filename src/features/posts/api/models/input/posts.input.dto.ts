@@ -9,7 +9,7 @@ export class PostsInputDto extends InputDto {
 
 export class PostQuery extends QueryDto {}
 
-export class PostLikeStatus {
+export class PostLikeStatusDto {
   @IsString()
-  likeStatus: string = 'None' || 'Like' || 'Dislike';
+  likeStatus: 'None' | 'Like' | 'Dislike';
 }

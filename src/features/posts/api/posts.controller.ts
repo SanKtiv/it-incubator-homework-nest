@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { PostsService } from '../application/posts.service';
 import {
-  PostLikeStatus,
+  PostLikeStatusDto,
   PostQuery,
   PostsInputDto,
 } from './models/input/posts.input.dto';
@@ -72,8 +72,11 @@ export class PostController {
   @UseGuards(JWTAccessAuthGuard)
   async createStatus(
     @Param('postId', paramIdIsMongoIdPipe) id: string,
-    @Body() dto: PostLikeStatus,
-  ) {await this.commentsService.}
+    @Body() dto: PostLikeStatusDto,
+    @CurrentUserId() userId: string,
+  ) {
+    await this.postsService.updateLikeStatus(id, dto, userId);
+  }
 
   @Post(':postId/comments')
   @UseGuards(JWTAccessAuthGuard)

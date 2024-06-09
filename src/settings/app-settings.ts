@@ -53,7 +53,7 @@ class APISettings {
     // Application
     this.APP_PORT = this.getNumberOrDefault(
       envVariables.APP_PORT as string,
-      7840,
+      3000,
     );
 
     // Database
