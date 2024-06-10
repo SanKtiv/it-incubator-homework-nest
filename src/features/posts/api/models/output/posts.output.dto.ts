@@ -46,7 +46,7 @@ export const postsOutputDto = (
     new ExtendedLikesInfo(
       postDocument.likesCount,
       postDocument.dislikesCount,
-      likesUsers?.userStatus,
+        postDocument.likesUsers.find(e => e.userId === )
       [
         new NewestLikes(
           likesUsers?.addedAt,
