@@ -53,10 +53,44 @@ import { DevicesRepository } from './features/security/infrastructure/devices.re
 import { Device, DeviceSchema } from './features/security/domain/device.schema';
 import { DevicesService } from './features/security/application/devices.service';
 import { appSettings } from './settings/app-settings';
+import { AccessJwtToken } from './features/auth/application/use-cases/access-jwt-token';
+import {RefreshJwtToken} from "./features/auth/application/use-cases/refresh-jwt-token";
 
 dotenv.config();
 
 const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/nest-db?retryWrites=true&w=majority';
+
+const cases = [AccessJwtToken, RefreshJwtToken];
+
+const services = [
+  BlogsService,
+  PostsService,
+  CommentsService,
+  UsersService,
+  AuthService,
+  DevicesService,
+  RequestApiService,
+];
+
+const repositories = [
+  BlogsRepository,
+  BlogsQueryRepository,
+  PostsRepository,
+  PostsQueryRepository,
+  CommentsRepository,
+  CommentsQueryRepository,
+  UsersRepository,
+  UsersQueryRepository,
+  DevicesRepository,
+  RequestApiRepository,
+];
+
+const strategies = [
+  LocalStrategy,
+  BasicStrategy,
+  JwtAccessStrategy,
+  JwtRefreshStrategy,
+];
 
 @Module({
   imports: [
@@ -97,34 +131,17 @@ const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uW
     AuthController,
   ],
   providers: [
-    DevicesRepository,
-    RequestApiService,
-    RequestApiRepository,
+    ...services,
+    ...repositories,
+    ...strategies,
+      ...cases,
     TooManyRequestsMiddleware,
     LoginIsExistConstraint,
     EmailIsExistConstraint,
     EmailIsConfirmedConstraint,
     ConfirmationCodeIsValidConstraint,
     AppService,
-    BlogsQueryRepository,
-    BlogsRepository,
-    BlogsService,
-    PostsService,
-    PostsRepository,
-    PostsQueryRepository,
-    UsersService,
-    UsersRepository,
-    UsersQueryRepository,
-    CommentsRepository,
-    CommentsService,
-    CommentsQueryRepository,
     EmailAdapter,
-    AuthService,
-    LocalStrategy,
-    JwtAccessStrategy,
-    JwtRefreshStrategy,
-    BasicStrategy,
-    DevicesService,
   ],
 })
 export class AppModule implements NestModule {

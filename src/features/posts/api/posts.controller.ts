@@ -5,13 +5,11 @@ import {
   Get,
   HttpCode,
   HttpException,
-  NotFoundException,
   Param,
   Post,
   Put,
-  Query,
+  Query, Req,
   UseGuards,
-  UsePipes,
 } from '@nestjs/common';
 import { PostsService } from '../application/posts.service';
 import {
@@ -21,21 +19,17 @@ import {
 } from './models/input/posts.input.dto';
 import {
   PostsOutputDto,
-  postsOutputDto,
   PostsPaging,
-  postsPaging,
 } from './models/output/posts.output.dto';
 import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 import {
   paramIdIsMongoIdPipe,
-  paramIdPipe,
 } from '../../../infrastructure/pipes/validation.pipe';
 import { CommentInputDto } from '../../comments/api/models/input/comment.input.dto';
 import { CommentsService } from '../../comments/application/comments.service';
 import {
   CommentOutputDto,
-  commentOutputDto,
   commentsPagingDto,
 } from '../../comments/api/models/output/comment.output.dto';
 import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query.repository';
@@ -44,6 +38,8 @@ import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
 import { CommentServiceDto } from '../../comments/api/models/input/comment-service.dto';
+import {Request} from "express";
+import {AccessJwtToken} from "../../auth/application/use-cases/access-jwt-token";
 
 @Controller('posts')
 export class PostController {
@@ -53,6 +49,7 @@ export class PostController {
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsService: CommentsService,
     private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly accessJwtToken: AccessJwtToken
   ) {}
 
   @Post()
@@ -64,8 +61,15 @@ export class PostController {
   @Get(':postId')
   async getPostById(
     @Param('postId', paramIdIsMongoIdPipe) id: string,
+    @Req() req: Request,
   ): Promise<PostsOutputDto | HttpException> {
-    return this.postsQueryRepository.findById(id);
+    const headerToken = req.headers.authorization || '';
+    console.log('req.headers.authorization =', req.headers.authorization)
+    //const accessToken = headerToken ? headerToken.split(' ')[1] : '';
+    //console.log('accessToken =', accessToken)
+    const payload = await this.accessJwtToken.verify(headerToken)
+    console.log('payload =', payload)
+    return this.postsQueryRepository.findById(id, payload.sub);
   }
 
   @Put(':postId/like-status')

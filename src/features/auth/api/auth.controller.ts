@@ -27,7 +27,6 @@ import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 import {
   InfoCurrentUserDto,
-  infoCurrentUserDto,
 } from './models/output/info-current-user.dto';
 import { UsersService } from '../../users/application/users.service';
 

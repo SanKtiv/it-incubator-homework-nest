@@ -13,13 +13,13 @@ import {
 export class PostsQueryRepository {
   constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
 
-  async findById(id: string): Promise<PostsOutputDto | HttpException> {
+  async findById(id: string, userId?: string): Promise<PostsOutputDto | HttpException> {
     try {
       const postDocument = await this.PostModel.findById(id);
 
       if (!postDocument) return new NotFoundException();
 
-      return postsOutputDto(postDocument);
+      return postsOutputDto(postDocument, userId);
     } catch (e) {
       throw new Error('Error finding post by postId');
     }
