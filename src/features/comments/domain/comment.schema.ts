@@ -28,8 +28,9 @@ export class Comment {
   likesCount: number;
   @Prop({ required: true, default: 0 })
   dislikesCount: number;
-  @Prop({ type: UsersStatusesSchema })
-  usersStatuses: UsersStatuses;
+  @Prop({ type: [UsersStatusesSchema], _id: false })
+  usersStatuses: UsersStatuses[];
+
   static createComment(
     dto: CommentServiceDto,
     CommentModel: CommentModelType,

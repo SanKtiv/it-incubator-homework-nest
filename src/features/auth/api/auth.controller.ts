@@ -21,7 +21,7 @@ import { EmailRecoveryDto } from './models/input/email-recovery.input.dto';
 import { NewPasswordInputDto } from './models/input/new-password.input.dto';
 import { JWTRefreshAuthGuard } from '../../../infrastructure/guards/jwt-refresh-auth.guard';
 import { CurrentUserId } from '../infrastructure/decorators/current-user-id.param.decorator';
-import { RefreshTokenPayload } from '../../../infrastructure/decorators/refresh-token-payload.decorator';
+import { RefreshTokenPayload } from '../infrastructure/decorators/refresh-token-payload.decorator';
 import { DevicesService } from '../../security/application/devices.service';
 import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';

@@ -1,7 +1,8 @@
-import { IsString, MinLength } from 'class-validator';
+import {IsString, MaxLength, MinLength} from 'class-validator';
 
 export class CommentInputDto {
   @IsString()
-  @MinLength(1)
+  @MaxLength(300)
+  @MinLength(20)
   content: string;
 }

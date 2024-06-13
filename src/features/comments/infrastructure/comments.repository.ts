@@ -21,8 +21,16 @@ export class CommentsRepository {
     return commentDocument.save();
   }
 
+  async findById(id: string): Promise<CommentDocument | null> {
+    return this.CommentModel.findById(id)
+  }
+
   async save(commentDocument: CommentDocument): Promise<CommentDocument> {
     return commentDocument.save();
+  }
+
+  async deleteById(id: string) {
+    return this.CommentModel.findByIdAndDelete(id)
   }
 
   async deleteAll() {
