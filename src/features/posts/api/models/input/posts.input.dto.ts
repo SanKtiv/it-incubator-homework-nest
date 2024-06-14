@@ -13,7 +13,7 @@ export class PostsInputDto extends InputDto {
 export class PostQuery extends QueryDto {}
 
 export class PostLikeStatusDto {
-  @Matches('None' || 'Like' || 'Dislike')
+  @Matches(/\b(None|Like|Dislike)\b/)
   @Trim()
   @IsString()
   likeStatus: 'None' | 'Like' | 'Dislike';
