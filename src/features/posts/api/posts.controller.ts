@@ -71,6 +71,7 @@ export class PostController {
   }
 
   @Put(':postId/like-status')
+  @HttpCode(204)
   @UseGuards(JWTAccessAuthGuard)
   async createStatus(
     @Param('postId', paramIdIsMongoIdPipe) id: string,
