@@ -64,6 +64,7 @@ export class PostController {
     @Req() req: Request,
   ): Promise<PostsOutputDto | HttpException> {
     const headerToken = req.headers.authorization || '';
+    console.log('req.headers.authorization =', req.headers.authorization)
     const payload = await this.accessJwtToken.verify(headerToken)
     return this.postsQueryRepository.findById(id, payload.sub);
   }

@@ -28,7 +28,6 @@ export class PostsService {
       dto,
       blogDocument.name,
     );
-    console.log('postDocument =', postDocument);
     return postsOutputDto(postDocument);
   }
 
