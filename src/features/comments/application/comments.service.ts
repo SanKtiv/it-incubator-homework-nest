@@ -9,7 +9,6 @@ import {
 import { CommentServiceDto } from '../api/models/input/comment-service.dto';
 import {CommentInputDto} from "../api/models/input/comment.input.dto";
 import {PostLikeStatusDto} from "../../posts/api/models/input/posts.input.dto";
-import {CommentDocument} from "../domain/comment.schema";
 
 @Injectable()
 export class CommentsService {
@@ -66,9 +65,50 @@ export class CommentsService {
 
       commentDocument.usersStatuses =
           commentDocument.usersStatuses.filter(e => e.userId !== userId)
+
+      await this.commentsRepository.save(commentDocument)
+
+      return;
     }
 
+    const userStatus = {
+      userId: userId,
+      userStatus: dto.likeStatus
+    }
 
+    const newStatusIsLike = newStatus === 'Like';
+
+    const newStatusIsDislike = newStatus === 'Dislike';
+
+    if (!currentUser) {
+      if (newStatusIsLike) commentDocument.likesCount++;
+
+      if (newStatusIsDislike) commentDocument.dislikesCount++;
+
+      commentDocument.usersStatuses.push(userStatus);
+
+      await this.commentsRepository.save(commentDocument);
+
+      return;
+    }
+
+    if (newStatusIsLike && currentUser.userStatus === 'Dislike') {
+      commentDocument.likesCount++;
+      commentDocument.dislikesCount--;
+    }
+
+    if (newStatusIsDislike && currentUser.userStatus === 'Like') {
+      commentDocument.likesCount--;
+      commentDocument.dislikesCount++;
+    }
+
+    commentDocument.usersStatuses = commentDocument.usersStatuses.map((e) =>
+        e.userId === userId ? userStatus : e,
+    );
+
+    await this.commentsRepository.save(commentDocument);
+
+    return;
   }
 
   // async existComment(id: string): Promise<CommentDocument | void> {

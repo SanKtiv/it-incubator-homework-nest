@@ -26,7 +26,7 @@ export class CommentsController {
       @CurrentUserId() userId: string,
       @Body() dto: PostLikeStatusDto
   ) {
-
+    await this.commentsService.createLikeStatus(id, userId, dto);
   }
 
   @Put(':commentId')
