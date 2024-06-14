@@ -1,17 +1,25 @@
-import {Body, Controller, Delete, Get, Param, Put, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { CommentsQueryRepository } from '../infrastructure/comments.query.repository';
 import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
-import {CommentsService} from "../application/comments.service";
-import {JWTAccessAuthGuard} from "../../../infrastructure/guards/jwt-access-auth.guard";
-import {CurrentUserId} from "../../auth/infrastructure/decorators/current-user-id.param.decorator";
-import {CommentInputDto} from "./models/input/comment.input.dto";
-import {PostLikeStatusDto} from "../../posts/api/models/input/posts.input.dto";
+import { CommentsService } from '../application/comments.service';
+import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
+import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
+import { CommentInputDto } from './models/input/comment.input.dto';
+import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
 
 @Controller('comments')
 export class CommentsController {
   constructor(
     private readonly commentsQueryRepository: CommentsQueryRepository,
-    private readonly commentsService: CommentsService
+    private readonly commentsService: CommentsService,
   ) {}
 
   @Get(':commentId')
@@ -22,9 +30,9 @@ export class CommentsController {
   @Put(':commentId')
   @UseGuards(JWTAccessAuthGuard)
   async createLikeStatusForComment(
-      @Param('commentId', paramIdIsMongoIdPipe) id: string,
-      @CurrentUserId() userId: string,
-      @Body() dto: PostLikeStatusDto
+    @Param('commentId', paramIdIsMongoIdPipe) id: string,
+    @CurrentUserId() userId: string,
+    @Body() dto: PostLikeStatusDto,
   ) {
     await this.commentsService.createLikeStatus(id, userId, dto);
   }
@@ -32,9 +40,9 @@ export class CommentsController {
   @Put(':commentId')
   @UseGuards(JWTAccessAuthGuard)
   async updateCommentById(
-      @Param('commentId', paramIdIsMongoIdPipe) id: string,
-      @CurrentUserId() userId: string,
-      @Body() dto: CommentInputDto
+    @Param('commentId', paramIdIsMongoIdPipe) id: string,
+    @CurrentUserId() userId: string,
+    @Body() dto: CommentInputDto,
   ) {
     await this.commentsService.updateCommentById(id, userId, dto);
   }
@@ -42,8 +50,8 @@ export class CommentsController {
   @Delete(':commentId')
   @UseGuards(JWTAccessAuthGuard)
   async removeCommentById(
-      @Param('commentId', paramIdIsMongoIdPipe) id: string,
-      @CurrentUserId() userId: string
+    @Param('commentId', paramIdIsMongoIdPipe) id: string,
+    @CurrentUserId() userId: string,
   ) {
     await this.commentsService.removeCommentById(id, userId);
   }

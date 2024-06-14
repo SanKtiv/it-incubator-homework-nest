@@ -13,12 +13,15 @@ import {
 export class PostsQueryRepository {
   constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
 
-  async findById(id: string, userId?: string): Promise<PostsOutputDto | HttpException> {
-      const postDocument = await this.PostModel.findById(id);
+  async findById(
+    id: string,
+    userId?: string,
+  ): Promise<PostsOutputDto | HttpException> {
+    const postDocument = await this.PostModel.findById(id);
 
-      if (!postDocument) throw new NotFoundException();
+    if (!postDocument) throw new NotFoundException();
 
-      return postsOutputDto(postDocument, userId);
+    return postsOutputDto(postDocument, userId);
   }
 
   async findPaging(query: PostQuery, id?: string): Promise<PostsPaging> {

@@ -1,4 +1,8 @@
-import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CommentsRepository } from '../infrastructure/comments.repository';
 import { PostsRepository } from '../../posts/infrastructure/posts.repository';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
@@ -7,8 +11,8 @@ import {
   commentOutputDto,
 } from '../api/models/output/comment.output.dto';
 import { CommentServiceDto } from '../api/models/input/comment-service.dto';
-import {CommentInputDto} from "../api/models/input/comment.input.dto";
-import {PostLikeStatusDto} from "../../posts/api/models/input/posts.input.dto";
+import { CommentInputDto } from '../api/models/input/comment.input.dto';
+import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
 
 @Injectable()
 export class CommentsService {
@@ -36,8 +40,8 @@ export class CommentsService {
     const commentDocument = await this.commentsRepository.findById(id);
     if (!commentDocument) throw new NotFoundException();
     if (commentDocument.userId !== userId) throw new ForbiddenException();
-    commentDocument.content = dto.content
-    await this.commentsRepository.save(commentDocument)
+    commentDocument.content = dto.content;
+    await this.commentsRepository.save(commentDocument);
   }
 
   async removeCommentById(id: string, userId: string) {
@@ -54,27 +58,30 @@ export class CommentsService {
 
     const newStatus = dto.likeStatus;
 
-    const currentUser = commentDocument.usersStatuses.find(e => e.userId === userId)
+    const currentUser = commentDocument.usersStatuses.find(
+      (e) => e.userId === userId,
+    );
 
-    if (newStatus === 'None' && !currentUser) return
+    if (newStatus === 'None' && !currentUser) return;
 
     if (newStatus === 'None' && currentUser) {
       if (currentUser.userStatus === 'Like') commentDocument.likesCount--;
 
       if (currentUser.userStatus === 'Dislike') commentDocument.dislikesCount--;
 
-      commentDocument.usersStatuses =
-          commentDocument.usersStatuses.filter(e => e.userId !== userId)
+      commentDocument.usersStatuses = commentDocument.usersStatuses.filter(
+        (e) => e.userId !== userId,
+      );
 
-      await this.commentsRepository.save(commentDocument)
+      await this.commentsRepository.save(commentDocument);
 
       return;
     }
 
     const userStatus = {
       userId: userId,
-      userStatus: dto.likeStatus
-    }
+      userStatus: dto.likeStatus,
+    };
 
     const newStatusIsLike = newStatus === 'Like';
 
@@ -103,7 +110,7 @@ export class CommentsService {
     }
 
     commentDocument.usersStatuses = commentDocument.usersStatuses.map((e) =>
-        e.userId === userId ? userStatus : e,
+      e.userId === userId ? userStatus : e,
     );
 
     await this.commentsRepository.save(commentDocument);

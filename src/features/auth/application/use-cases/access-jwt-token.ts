@@ -8,7 +8,7 @@ export class AccessJwtToken {
   async create(userId: string) {
     const payload = { sub: userId };
 
-    const accessToken = await this.jwtService.signAsync( payload,{
+    const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '10m',
     });
 
@@ -17,10 +17,9 @@ export class AccessJwtToken {
 
   async verify(accessToken: string) {
     try {
-      return this.jwtService.verify(accessToken)
+      return this.jwtService.verify(accessToken);
+    } catch (e) {
+      return undefined;
     }
-      catch (e) {
-        return undefined
-      }
   }
 }

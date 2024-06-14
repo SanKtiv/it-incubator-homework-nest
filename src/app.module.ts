@@ -54,7 +54,7 @@ import { Device, DeviceSchema } from './features/security/domain/device.schema';
 import { DevicesService } from './features/security/application/devices.service';
 import { appSettings } from './settings/app-settings';
 import { AccessJwtToken } from './features/auth/application/use-cases/access-jwt-token';
-import {RefreshJwtToken} from "./features/auth/application/use-cases/refresh-jwt-token";
+import { RefreshJwtToken } from './features/auth/application/use-cases/refresh-jwt-token';
 
 dotenv.config();
 
@@ -134,7 +134,7 @@ const strategies = [
     ...services,
     ...repositories,
     ...strategies,
-      ...cases,
+    ...cases,
     TooManyRequestsMiddleware,
     LoginIsExistConstraint,
     EmailIsExistConstraint,

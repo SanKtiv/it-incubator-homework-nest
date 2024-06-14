@@ -1,5 +1,5 @@
-import {IsString, Length} from 'class-validator';
-import {Trim} from "../decorators/transform/trim-custom.decorator";
+import { IsString, Length } from 'class-validator';
+import { Trim } from '../decorators/transform/trim-custom.decorator';
 
 export class InputDto {
   @Length(1, 30)

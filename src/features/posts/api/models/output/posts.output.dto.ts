@@ -32,22 +32,22 @@ export class NewestLikes {
 }
 
 const myStatus = (postDocument: PostDocument, userId?: string) => {
-  const likesUser = postDocument.likesUsers.find(e => e.userId === userId)
-  return likesUser ? likesUser.userStatus : 'None'
-}
+  const likesUser = postDocument.likesUsers.find((e) => e.userId === userId);
+  return likesUser ? likesUser.userStatus : 'None';
+};
 
 const newestLikes = (postDocument: PostDocument): NewestLikes[] => {
   return postDocument.likesUsers
-      .filter(e => e.userStatus === 'Like')
-      .sort((a: LikesUsers, b: LikesUsers) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
-      .slice(0, 3)
-      .map( e => ({userId: e.userId, login: e.login, addedAt: e.addedAt}))
-}
+    .filter((e) => e.userStatus === 'Like')
+    .sort(
+      (a: LikesUsers, b: LikesUsers) =>
+        new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime(),
+    )
+    .slice(0, 3)
+    .map((e) => ({ userId: e.userId, login: e.login, addedAt: e.addedAt }));
+};
 
-export const postsOutputDto = (
-  postDocument: PostDocument,
-  userId?: string,
-) =>
+export const postsOutputDto = (postDocument: PostDocument, userId?: string) =>
   new PostsOutputDto(
     postDocument._id.toString(),
     postDocument.title,
@@ -59,8 +59,8 @@ export const postsOutputDto = (
     new ExtendedLikesInfo(
       postDocument.likesCount,
       postDocument.dislikesCount,
-        myStatus(postDocument, userId),
-        newestLikes(postDocument),
+      myStatus(postDocument, userId),
+      newestLikes(postDocument),
     ),
   );
 

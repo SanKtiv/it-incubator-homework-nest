@@ -1,27 +1,39 @@
-import {IsString, IsOptional, IsNumber, Min, MinLength, MaxLength, Matches, Length} from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  Min,
+  MinLength,
+  MaxLength,
+  Matches,
+  Length,
+} from 'class-validator';
 import { Type } from 'class-transformer';
-import {Trim} from "../../../../../infrastructure/decorators/transform/trim-custom.decorator";
+import { Trim } from '../../../../../infrastructure/decorators/transform/trim-custom.decorator';
 
 export class BlogsInputDto {
   @Length(1, 15)
   @Trim()
   @IsString()
-  name: string
+  name: string;
 
   @Length(1, 300)
   @Trim()
   @IsString()
-  description: string
+  description: string;
 
   @Matches(
-      new RegExp('\^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$'),
-      {
-        message: 'This email can not exist',
-      })
+    new RegExp(
+      '^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$',
+    ),
+    {
+      message: 'This email can not exist',
+    },
+  )
   @Length(1, 100)
   @Trim()
   @IsString()
-  websiteUrl: string
+  websiteUrl: string;
 }
 
 export class CreatingBlogDto {

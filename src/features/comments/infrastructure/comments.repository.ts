@@ -22,7 +22,7 @@ export class CommentsRepository {
   }
 
   async findById(id: string): Promise<CommentDocument | null> {
-    return this.CommentModel.findById(id)
+    return this.CommentModel.findById(id);
   }
 
   async save(commentDocument: CommentDocument): Promise<CommentDocument> {
@@ -30,7 +30,7 @@ export class CommentsRepository {
   }
 
   async deleteById(id: string) {
-    return this.CommentModel.findByIdAndDelete(id)
+    return this.CommentModel.findByIdAndDelete(id);
   }
 
   async deleteAll() {

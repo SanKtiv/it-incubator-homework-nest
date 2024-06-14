@@ -1,10 +1,10 @@
-import {IsMongoId, IsString, Matches} from 'class-validator';
+import { IsMongoId, IsString, Matches } from 'class-validator';
 import { QueryDto } from '../../../../../infrastructure/models/query.dto';
 import { InputDto } from '../../../../../infrastructure/models/input.dto';
-import {Trim} from "../../../../../infrastructure/decorators/transform/trim-custom.decorator";
+import { Trim } from '../../../../../infrastructure/decorators/transform/trim-custom.decorator';
 
 export class PostsInputDto extends InputDto {
-  @IsMongoId({message: 'incorrect id'})
+  @IsMongoId({ message: 'incorrect id' })
   @Trim()
   @IsString()
   blogId: string;

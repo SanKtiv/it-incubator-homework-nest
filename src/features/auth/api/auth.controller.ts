@@ -25,9 +25,7 @@ import { RefreshTokenPayload } from '../infrastructure/decorators/refresh-token-
 import { DevicesService } from '../../security/application/devices.service';
 import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
-import {
-  InfoCurrentUserDto,
-} from './models/output/info-current-user.dto';
+import { InfoCurrentUserDto } from './models/output/info-current-user.dto';
 import { UsersService } from '../../users/application/users.service';
 
 @Controller('auth')
