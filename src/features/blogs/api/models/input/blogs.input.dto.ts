@@ -1,12 +1,15 @@
 import {IsString, IsOptional, IsNumber, Min, MinLength, MaxLength, Matches, Length} from 'class-validator';
 import { Type } from 'class-transformer';
+import {Trim} from "../../../../../infrastructure/decorators/transform/trim-custom.decorator";
 
 export class BlogsInputDto {
   @Length(1, 15)
+  @Trim()
   @IsString()
   name: string
 
   @Length(1, 300)
+  @Trim()
   @IsString()
   description: string
 
@@ -16,6 +19,7 @@ export class BlogsInputDto {
         message: 'This email can not exist',
       })
   @Length(1, 100)
+  @Trim()
   @IsString()
   websiteUrl: string
 }
