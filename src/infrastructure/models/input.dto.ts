@@ -1,17 +1,16 @@
-import { IsMongoId, IsString, MaxLength, MinLength } from 'class-validator';
+import {IsMongoId, IsString, Length, MaxLength, MinLength} from 'class-validator';
 import { NotFoundException } from '@nestjs/common';
 
 export class InputDto {
+  @Length(1, 30)
   @IsString()
-  @MinLength(1)
-  @MaxLength(30)
   title: string;
+
+  @Length(1, 100)
   @IsString()
-  @MinLength(1)
-  @MaxLength(100)
   shortDescription: string;
+
+  @Length(1, 1000)
   @IsString()
-  @MinLength(1)
-  @MaxLength(1000)
   content: string;
 }
