@@ -14,14 +14,10 @@ import {
 export class BlogsQueryRepository {
   constructor(@InjectModel(Blog.name) private BlogModel: BlogsModelType) {}
 
-  async findById(id: string): Promise<BlogsViewDto | HttpException> {
-    try {
-      const blogDocument = await this.BlogModel.findById(id);
-      if (!blogDocument) return new NotFoundException();
-      return blogsViewDto(blogDocument);
-    } catch (e) {
-      throw new Error('Error finding blog by blogId');
-    }
+  async findById(id: string): Promise<BlogsViewDto | HttpException > {
+    const blogDocument = await this.BlogModel.findById(id);
+    if (!blogDocument) throw new NotFoundException();
+    return blogsViewDto(blogDocument);
   }
 
   async getTotalBlogsByName(searchNameTerm: string | null) {
