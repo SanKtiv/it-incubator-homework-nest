@@ -62,7 +62,8 @@ export class PostController {
     const headerToken = req.headers.authorization;
     console.log('headerToken =', headerToken);
     if (!headerToken) return this.postsQueryRepository.findById(id);
-    const payload = await this.accessJwtToken.verify(headerToken);
+    const accessJwtToken = headerToken.split(' ')[1];
+    const payload = await this.accessJwtToken.verify(accessJwtToken);
     if (!payload) return this.postsQueryRepository.findById(id);
     return this.postsQueryRepository.findById(id, payload.sub);
   }
