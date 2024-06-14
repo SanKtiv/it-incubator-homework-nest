@@ -63,9 +63,10 @@ export class PostController {
     @Param('postId', paramIdIsMongoIdPipe) id: string,
     @Req() req: Request,
   ): Promise<PostsOutputDto | HttpException> {
-    const headerToken = req.headers.authorization || '';
-    console.log('req.headers.authorization =', req.headers.authorization)
+    const headerToken = req.headers.authorization
+    if (!headerToken) return this.postsQueryRepository.findById(id);
     const payload = await this.accessJwtToken.verify(headerToken)
+    if (!payload) return this.postsQueryRepository.findById(id);
     return this.postsQueryRepository.findById(id, payload.sub);
   }
 

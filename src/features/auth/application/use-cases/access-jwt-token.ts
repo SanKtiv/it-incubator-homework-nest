@@ -17,9 +17,10 @@ export class AccessJwtToken {
 
   async verify(accessToken: string) {
     try {
-      return this.jwtService.verifyAsync(accessToken);
-    } catch (e) {
-      return null;
+      return this.jwtService.verify(accessToken)
     }
+      catch (e) {
+        return undefined
+      }
   }
 }
