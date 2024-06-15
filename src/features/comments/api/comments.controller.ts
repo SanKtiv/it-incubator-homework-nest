@@ -50,6 +50,7 @@ export class CommentsController {
   }
 
   @Put(':commentId')
+  @HttpCode(204)
   @UseGuards(JWTAccessAuthGuard)
   async updateCommentById(
     @Param('commentId', paramIdIsMongoIdPipe) id: string,
@@ -60,6 +61,7 @@ export class CommentsController {
   }
 
   @Delete(':commentId')
+  @HttpCode(204)
   @UseGuards(JWTAccessAuthGuard)
   async removeCommentById(
     @Param('commentId', paramIdIsMongoIdPipe) id: string,
