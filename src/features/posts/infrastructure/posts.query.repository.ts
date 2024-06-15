@@ -24,9 +24,9 @@ export class PostsQueryRepository {
     return postsOutputDto(postDocument, userId);
   }
 
-  async findPaging(query: PostQuery, id?: string): Promise<PostsPaging> {
+  async findPaging(query: PostQuery, dto: {userId?: string, blogId?: string}): Promise<PostsPaging> {
     //const filter = id ? {blogId: id} : {}
-    const filter = this.filter(id);
+    const filter = this.filter(dto.blogId);
 
     const totalPosts = await this.PostModel.countDocuments(filter);
 
@@ -35,7 +35,7 @@ export class PostsQueryRepository {
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize);
 
-    return postsPaging(query, totalPosts, posts);
+    return postsPaging(query, totalPosts, posts, dto.userId);
   }
 
   async countDocuments(id?: string): Promise<number> {

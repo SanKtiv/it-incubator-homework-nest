@@ -8,7 +8,7 @@ import {
   Param,
   Post,
   Put,
-  Query,
+  Query, Req,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -30,6 +30,8 @@ import { PostsPaging } from '../../posts/api/models/output/posts.output.dto';
 import { PostsService } from '../../posts/application/posts.service';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
+import {Request} from "express";
+import {AccessJwtToken} from "../../auth/application/use-cases/access-jwt-token";
 
 @Controller('blogs')
 @UsePipes(new ValidationPipe({ transform: true, disableErrorMessages: true }))
@@ -39,6 +41,7 @@ export class BlogsController {
     private readonly blogsService: BlogsService,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly postsService: PostsService,
+    private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
   @Post()
@@ -77,9 +80,17 @@ export class BlogsController {
   async getPostsByBlogId(
     @Param('blogId', paramIdIsMongoIdPipe) blogId: string,
     @Query() query: PostQuery,
+    @Req() req: Request,
   ): Promise<PostsPaging> {
     await this.blogsQueryRepository.findById(blogId);
-    return this.postsQueryRepository.findPaging(query, blogId);
+    const  dto: {userId?: string, blogId?: string} = {blogId: blogId}
+    const headerToken = req.headers.authorization;
+    if (!headerToken) return this.postsQueryRepository.findPaging(query, dto);
+    const accessJwtToken = headerToken.split(' ')[1];
+    const payload = await this.accessJwtToken.verify(accessJwtToken);
+    if (!payload) return this.postsQueryRepository.findPaging(query, dto);
+    dto.userId = payload.sub;
+    return this.postsQueryRepository.findPaging(query, dto);
   }
 
   @Put(':blogId')

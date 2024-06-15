@@ -77,11 +77,12 @@ export const postsPaging = (
   query: PostQuery,
   totalPosts: number,
   postDocuments: PostDocument[],
+  userId?: string
 ) =>
   new PostsPaging(
     Math.ceil(totalPosts / +query.pageSize),
     +query.pageNumber,
     +query.pageSize,
     totalPosts,
-    postDocuments.map((document) => postsOutputDto(document)),
+    postDocuments.map((document) => postsOutputDto(document, userId)),
   );

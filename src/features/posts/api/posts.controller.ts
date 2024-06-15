@@ -60,7 +60,6 @@ export class PostController {
     @Req() req: Request,
   ): Promise<PostsOutputDto | HttpException> {
     const headerToken = req.headers.authorization;
-    console.log('headerToken =', headerToken);
     if (!headerToken) return this.postsQueryRepository.findById(id);
     const accessJwtToken = headerToken.split(' ')[1];
     const payload = await this.accessJwtToken.verify(accessJwtToken);
@@ -96,8 +95,18 @@ export class PostController {
   }
 
   @Get()
-  async getPostsPaging(@Query() query: PostQuery): Promise<PostsPaging> {
-    return this.postsQueryRepository.findPaging(query);
+  async getPostsPaging(
+      @Query() query: PostQuery,
+      @Req() req: Request,
+      ): Promise<PostsPaging> {
+    const headerToken = req.headers.authorization;
+    const  dto: {userId?: string, blogId?: string} = {}
+    if (!headerToken) return this.postsQueryRepository.findPaging(query, dto);
+    const accessJwtToken = headerToken.split(' ')[1];
+    const payload = await this.accessJwtToken.verify(accessJwtToken);
+    if (!payload) return this.postsQueryRepository.findPaging(query, dto);
+    dto.userId = payload.sub
+    return this.postsQueryRepository.findPaging(query, dto);
   }
 
   @Get(':postId/comments')
