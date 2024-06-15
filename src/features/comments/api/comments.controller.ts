@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpCode,
   Param,
   Put,
   UseGuards,
@@ -28,6 +28,7 @@ export class CommentsController {
   }
 
   @Put(':commentId/like-status')
+  @HttpCode(204)
   @UseGuards(JWTAccessAuthGuard)
   async createLikeStatusForComment(
     @Param('commentId', paramIdIsMongoIdPipe) id: string,
