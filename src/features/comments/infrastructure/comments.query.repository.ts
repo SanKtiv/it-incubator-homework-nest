@@ -8,7 +8,7 @@ import {
 import { QueryDto } from '../../../infrastructure/models/query.dto';
 import {
   CommentOutputDto,
-  commentOutputDto,
+  commentOutputDto, CommentsPagingDto, commentsPagingDto,
 } from '../api/models/output/comment.output.dto';
 
 @Injectable()
@@ -27,9 +27,12 @@ export class CommentsQueryRepository {
     return this.CommentModel.countDocuments({ postId: id });
   }
 
-  async findPaging(id: string, query: QueryDto): Promise<CommentDocument[]> {
-    return this.CommentModel.find({ postId: id })
+  async findPaging(postId: string, query: QueryDto, userId?: string): Promise<CommentsPagingDto> {
+    const totalComments = await this.CommentModel.countDocuments({ postId: postId });
+    if (totalComments === 0) throw new NotFoundException()
+    const commentPaging = await this.CommentModel.find({ postId: postId })
       .sort({ [query.sortBy]: query.sortDirection })
       .skip((query.pageNumber - 1) * query.pageSize);
+    return commentsPagingDto(query, totalComments, commentPaging, userId);
   }
 }

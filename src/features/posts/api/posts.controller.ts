@@ -111,21 +111,16 @@ export class PostController {
 
   @Get(':postId/comments')
   async getCommentsByPostId(
-    @Param('postId') id: string,
+    @Param('postId', paramIdIsMongoIdPipe) postId: string,
     @Query() query: QueryDto,
     @Req() req: Request,
   ) {
     const headerToken = req.headers.authorization;
-    const totalComments = await this.commentsQueryRepository.countDocuments(id);
-    const commentDocument = await this.commentsQueryRepository.findPaging(
-      id,
-      query,
-    );
-    if (!headerToken) return commentsPagingDto(query, totalComments, commentDocument);
+    if (!headerToken) return this.commentsQueryRepository.findPaging(postId, query);
     const accessJwtToken = headerToken.split(' ')[1];
     const payload = await this.accessJwtToken.verify(accessJwtToken);
-    if (!payload) return commentsPagingDto(query, totalComments, commentDocument);
-    return commentsPagingDto(query, totalComments, commentDocument, payload.sub);
+    if (!payload) return this.commentsQueryRepository.findPaging(postId, query);
+    return this.commentsQueryRepository.findPaging(postId, query, payload.sub);
   }
 
   @Put(':postId')
