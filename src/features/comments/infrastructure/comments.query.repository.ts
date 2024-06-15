@@ -17,10 +17,10 @@ export class CommentsQueryRepository {
     @InjectModel(Comment.name) private CommentModel: CommentModelType,
   ) {}
 
-  async findById(id: string): Promise<CommentOutputDto> {
+  async findById(id: string, userId?: string): Promise<CommentOutputDto> {
     const commentDocument = await this.CommentModel.findById(id);
     if (!commentDocument) throw new NotFoundException();
-    return commentOutputDto(commentDocument);
+    return commentOutputDto(commentDocument, userId);
   }
 
   async countDocuments(id: string): Promise<number> {

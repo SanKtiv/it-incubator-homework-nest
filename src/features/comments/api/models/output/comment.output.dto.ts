@@ -1,5 +1,6 @@
 import { CommentDocument } from '../../../domain/comment.schema';
 import { QueryDto } from '../../../../../infrastructure/models/query.dto';
+import {PostDocument} from "../../../../posts/domain/posts.schema";
 
 export class CommentOutputDto {
   constructor(
@@ -26,9 +27,14 @@ class LikesInfo {
   ) {}
 }
 
+const myStatus = (commentDocument: CommentDocument, userId?: string) => {
+  const userStatus = commentDocument.usersStatuses.find((e) => e.userId === userId);
+  return userStatus ? userStatus.userStatus : 'None';
+};
+
 export const commentOutputDto = (
   commentDocument: CommentDocument,
-  userStatus: string = 'None',
+  userId?: string
 ) =>
   new CommentOutputDto(
     commentDocument._id.toString(),
@@ -36,9 +42,9 @@ export const commentOutputDto = (
     commentDocument.createdAt,
     new CommentatorInfo(commentDocument.userId, commentDocument.userLogin),
     new LikesInfo(
-      commentDocument.likesCount,
-      commentDocument.dislikesCount,
-      userStatus,
+        commentDocument.likesCount,
+        commentDocument.dislikesCount,
+        myStatus(commentDocument, userId),
     ),
   );
 
@@ -55,13 +61,13 @@ export class CommentsPagingDto {
 export const commentsPagingDto = (
   query: QueryDto,
   totalComments: number,
-  userStatus: string = 'None',
   commentsDocument: CommentDocument[],
+  userId?: string,
 ) =>
   new CommentsPagingDto(
     Math.ceil(totalComments / query.pageSize),
     query.pageNumber,
     query.pageSize,
     totalComments,
-    commentsDocument.map((document) => commentOutputDto(document, userStatus)),
+    commentsDocument.map((document) => commentOutputDto(document, userId)),
   );

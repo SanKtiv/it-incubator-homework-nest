@@ -113,13 +113,19 @@ export class PostController {
   async getCommentsByPostId(
     @Param('postId') id: string,
     @Query() query: QueryDto,
+    @Req() req: Request,
   ) {
+    const headerToken = req.headers.authorization;
     const totalComments = await this.commentsQueryRepository.countDocuments(id);
     const commentDocument = await this.commentsQueryRepository.findPaging(
       id,
       query,
     );
-    return commentsPagingDto(query, totalComments, 'None', commentDocument);
+    if (!headerToken) return commentsPagingDto(query, totalComments, commentDocument);
+    const accessJwtToken = headerToken.split(' ')[1];
+    const payload = await this.accessJwtToken.verify(accessJwtToken);
+    if (!payload) return commentsPagingDto(query, totalComments, commentDocument);
+    return commentsPagingDto(query, totalComments, commentDocument, payload.sub);
   }
 
   @Put(':postId')
