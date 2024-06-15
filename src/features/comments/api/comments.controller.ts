@@ -27,7 +27,7 @@ export class CommentsController {
     return this.commentsQueryRepository.findById(id);
   }
 
-  @Put(':commentId')
+  @Put(':commentId/like-status')
   @UseGuards(JWTAccessAuthGuard)
   async createLikeStatusForComment(
     @Param('commentId', paramIdIsMongoIdPipe) id: string,
