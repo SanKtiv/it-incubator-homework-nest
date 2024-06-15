@@ -55,6 +55,7 @@ import { DevicesService } from './features/security/application/devices.service'
 import { appSettings } from './settings/app-settings';
 import { AccessJwtToken } from './features/auth/application/use-cases/access-jwt-token';
 import { RefreshJwtToken } from './features/auth/application/use-cases/refresh-jwt-token';
+import {BlogIdIsExistConstraint} from "./infrastructure/decorators/validation/blogId-is-exist.decorator";
 
 dotenv.config();
 
@@ -135,6 +136,7 @@ const strategies = [
     ...repositories,
     ...strategies,
     ...cases,
+    BlogIdIsExistConstraint,
     TooManyRequestsMiddleware,
     LoginIsExistConstraint,
     EmailIsExistConstraint,
