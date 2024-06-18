@@ -9,9 +9,7 @@ import {
   Post,
   Put,
   Query, Req,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
+  UseGuards
 } from '@nestjs/common';
 import { BlogQuery, BlogsInputDto } from './models/input/blogs.input.dto';
 import { BlogsService } from '../application/blogs.service';
@@ -34,7 +32,6 @@ import {Request} from "express";
 import {AccessJwtToken} from "../../auth/application/use-cases/access-jwt-token";
 
 @Controller('blogs')
-@UsePipes(new ValidationPipe({ transform: true, disableErrorMessages: true }))
 export class BlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,

@@ -11,6 +11,7 @@ import {
   postsOutputDto,
 } from '../api/models/output/posts.output.dto';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
+import {BlogsService} from "../../blogs/application/blogs.service";
 
 @Injectable()
 export class PostsService {
@@ -18,16 +19,17 @@ export class PostsService {
     private readonly postsRepository: PostsRepository,
     private readonly blogsRepository: BlogsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly blogsService: BlogsService
   ) {}
-  async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
-    const blogDocument = await this.blogsRepository.findById(dto.blogId);
 
-    if (!blogDocument) throw new NotFoundException();
+  async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
+    const blogDocument = await this.blogsService.existBlog(dto.blogId);
 
     const postDocument = await this.postsRepository.create(
       dto,
       blogDocument.name,
     );
+
     return postsOutputDto(postDocument);
   }
 
