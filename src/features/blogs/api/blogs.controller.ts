@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
   Param,
   Post,
   Put,
@@ -63,13 +62,13 @@ export class BlogsController {
 
   @Get()
   async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto> {
-    return this.blogsQueryRepository.getBlogsWithPaging(query);
+    return this.blogsQueryRepository.getBlogsPaging(query);
   }
 
   @Get(':blogId')
   async getBlogById(
     @Param('blogId', paramIdIsMongoIdPipe) id: string,
-  ): Promise<BlogsViewDto | HttpException> {
+  ): Promise<BlogsViewDto> {
     return this.blogsQueryRepository.findById(id);
   }
 
@@ -80,13 +79,21 @@ export class BlogsController {
     @Req() req: Request,
   ): Promise<PostsPaging> {
     await this.blogsQueryRepository.findById(blogId);
+
     const  dto: {userId?: string, blogId?: string} = {blogId: blogId}
+
     const headerToken = req.headers.authorization;
+
     if (!headerToken) return this.postsQueryRepository.findPaging(query, dto);
+
     const accessJwtToken = headerToken.split(' ')[1];
+
     const payload = await this.accessJwtToken.verify(accessJwtToken);
+
     if (!payload) return this.postsQueryRepository.findPaging(query, dto);
+
     dto.userId = payload.sub;
+
     return this.postsQueryRepository.findPaging(query, dto);
   }
 

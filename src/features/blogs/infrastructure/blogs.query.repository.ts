@@ -1,7 +1,6 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument, BlogsModelType } from '../domain/blogs.schema';
-import { Types } from 'mongoose';
+import { Blog, BlogsModelType } from '../domain/blogs.schema';
 import { BlogQuery } from '../api/models/input/blogs.input.dto';
 import {
   blogPagingViewModel,
@@ -14,20 +13,15 @@ import {
 export class BlogsQueryRepository {
   constructor(@InjectModel(Blog.name) private BlogModel: BlogsModelType) {}
 
-  async findById(id: string): Promise<BlogsViewDto | HttpException> {
+  async findById(id: string): Promise<BlogsViewDto> {
     const blogDocument = await this.BlogModel.findById(id);
+
     if (!blogDocument) throw new NotFoundException();
+
     return blogsViewDto(blogDocument);
   }
 
-  async getTotalBlogsByName(searchNameTerm: string | null) {
-    let filter = {};
-    if (searchNameTerm)
-      filter = { name: { $regex: searchNameTerm, $options: 'i' } };
-    return this.BlogModel.countDocuments(filter);
-  }
-
-  async getBlogsWithPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
+  async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
     let filter = {};
 
     if (query.searchNameTerm)

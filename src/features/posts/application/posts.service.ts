@@ -56,11 +56,7 @@ export class PostsService {
     await this.postsRepository.save(postDocument);
   }
 
-  async updateLikeStatus(
-    id: string,
-    dto: PostLikeStatusDto,
-    userId: string,
-  ): Promise<void> {
+  async updateLikeStatus(id: string, dto: PostLikeStatusDto, userId: string,): Promise<void> {
     const postDocument = await this.existPost(id);
 
     const userDocument = await this.usersRepository.findById(userId);

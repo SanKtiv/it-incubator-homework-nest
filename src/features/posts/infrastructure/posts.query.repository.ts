@@ -1,4 +1,4 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostModelType } from '../domain/posts.schema';
 import { PostQuery } from '../api/models/input/posts.input.dto';
@@ -13,10 +13,7 @@ import {
 export class PostsQueryRepository {
   constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
 
-  async findById(
-    id: string,
-    userId?: string,
-  ): Promise<PostsOutputDto | HttpException> {
+  async findById(id: string, userId?: string,): Promise<PostsOutputDto> {
     const postDocument = await this.PostModel.findById(id);
 
     if (!postDocument) throw new NotFoundException();
@@ -25,8 +22,7 @@ export class PostsQueryRepository {
   }
 
   async findPaging(query: PostQuery, dto: {userId?: string, blogId?: string}): Promise<PostsPaging> {
-    //const filter = id ? {blogId: id} : {}
-    const filter = this.filter(dto.blogId);
+    const filter = dto.blogId ? { blogId: dto.blogId } : {};
 
     const totalPosts = await this.PostModel.countDocuments(filter);
 
@@ -36,15 +32,5 @@ export class PostsQueryRepository {
       .limit(query.pageSize);
 
     return postsPaging(query, totalPosts, posts, dto.userId);
-  }
-
-  async countDocuments(id?: string): Promise<number> {
-    //const filter = id ? {blogId: id} : {}
-    const filter = this.filter(id);
-    return this.PostModel.countDocuments(filter);
-  }
-
-  private filter(id: string | undefined): object {
-    return id ? { blogId: id } : {};
   }
 }

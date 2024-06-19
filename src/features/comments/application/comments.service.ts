@@ -13,6 +13,8 @@ import {
 import { CommentServiceDto } from '../api/models/input/comment-service.dto';
 import { CommentInputDto } from '../api/models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
+import {CommentDocument} from "../domain/comment.schema";
+import {PostsService} from "../../posts/application/posts.service";
 
 @Injectable()
 export class CommentsService {
@@ -20,12 +22,11 @@ export class CommentsService {
     private readonly commentsRepository: CommentsRepository,
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly postsService: PostsService
   ) {}
 
   async createComment(dto: CommentServiceDto): Promise<CommentOutputDto> {
-    const postDocument = await this.postsRepository.findById(dto.postId);
-
-    if (!postDocument) throw new NotFoundException();
+    await this.postsService.existPost(dto.postId)
 
     const userDocument = await this.usersRepository.findById(dto.userId);
 
@@ -37,17 +38,20 @@ export class CommentsService {
   }
 
   async updateCommentById(id: string, userId: string, dto: CommentInputDto) {
-    const commentDocument = await this.commentsRepository.findById(id);
-    if (!commentDocument) throw new NotFoundException();
+    const commentDocument = await this.existComment(id)
+
     if (commentDocument.userId !== userId) throw new ForbiddenException();
+
     commentDocument.content = dto.content;
+
     await this.commentsRepository.save(commentDocument);
   }
 
   async removeCommentById(id: string, userId: string) {
-    const commentDocument = await this.commentsRepository.findById(id);
-    if (!commentDocument) throw new NotFoundException();
+    const commentDocument = await this.existComment(id)
+
     if (commentDocument.userId !== userId) throw new ForbiddenException();
+
     await this.commentsRepository.deleteById(id);
   }
 
@@ -118,13 +122,11 @@ export class CommentsService {
     return;
   }
 
-  // async existComment(id: string): Promise<CommentDocument | void> {
-  //   const commentDocument = await this.commentsRepository.findById(id);
-  //   if (!commentDocument) throw new NotFoundException();
-  //   return commentDocument;
-  // }
-  //
-  // async ownComment(id: string, userId: string): Promise<CommentDocument> {
-  //
-  // }
+  async existComment(id: string): Promise<CommentDocument> {
+    const commentDocument = await this.commentsRepository.findById(id);
+
+    if (!commentDocument) throw new NotFoundException();
+
+    return commentDocument;
+  }
 }
