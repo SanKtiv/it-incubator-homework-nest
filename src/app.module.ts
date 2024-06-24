@@ -56,10 +56,9 @@ import { appSettings } from './settings/app-settings';
 import { AccessJwtToken } from './features/auth/application/use-cases/access-jwt-token';
 import { RefreshJwtToken } from './features/auth/application/use-cases/refresh-jwt-token';
 import {BlogIdIsExistConstraint} from "./infrastructure/decorators/validation/blogId-is-exist.decorator";
+import configuration from "./settings/configuration";
 
 dotenv.config();
-
-const mongoURI = process.env.MONGO_URL || ''; //'mongodb+srv://aktitorov:eNCT8uWLAFpvV11U@cluster0.fjbyymj.mongodb.net/nest-db?retryWrites=true&w=majority';
 
 const cases = [AccessJwtToken, RefreshJwtToken];
 
@@ -96,22 +95,21 @@ const strategies = [
 @Module({
   imports: [
     ConfigModule
-      .forRoot
-      //     {
-      //   isGlobal: true,
-      //   load: [configuration],
-      // }
-      (),
+      .forRoot(
+          {
+            isGlobal: true,
+            load: [configuration],
+      }
+      ),
     JwtModule.register({
       global: true,
       secret: process.env.SECRET_KEY,
       //signOptions: {expiresIn: '10m'}
     }),
     MongooseModule.forRoot(
-      mongoURI,
-      // appSettings.env.isTesting()
-      //   ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
-      //   : appSettings.api.MONGO_CONNECTION_URI,
+      appSettings.env.isTesting()
+        ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
+        : appSettings.api.MONGO_CONNECTION_URI,
     ),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
