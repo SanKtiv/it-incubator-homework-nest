@@ -94,8 +94,7 @@ const strategies = [
 
 @Module({
   imports: [
-    ConfigModule
-      .forRoot(
+    ConfigModule.forRoot(
           {
             isGlobal: true,
             load: [configuration],
