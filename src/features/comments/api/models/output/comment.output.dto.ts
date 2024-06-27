@@ -1,6 +1,6 @@
 import { CommentDocument } from '../../../domain/comment.schema';
 import { QueryDto } from '../../../../../infrastructure/models/query.dto';
-import {PostDocument} from "../../../../posts/domain/posts.schema";
+import { PostDocument } from '../../../../posts/domain/posts.schema';
 
 export class CommentOutputDto {
   constructor(
@@ -28,13 +28,15 @@ class LikesInfo {
 }
 
 const myStatus = (commentDocument: CommentDocument, userId?: string) => {
-  const userStatus = commentDocument.usersStatuses.find((e) => e.userId === userId);
+  const userStatus = commentDocument.usersStatuses.find(
+    (e) => e.userId === userId,
+  );
   return userStatus ? userStatus.userStatus : 'None';
 };
 
 export const commentOutputDto = (
   commentDocument: CommentDocument,
-  userId?: string
+  userId?: string,
 ) =>
   new CommentOutputDto(
     commentDocument._id.toString(),
@@ -42,9 +44,9 @@ export const commentOutputDto = (
     commentDocument.createdAt,
     new CommentatorInfo(commentDocument.userId, commentDocument.userLogin),
     new LikesInfo(
-        commentDocument.likesCount,
-        commentDocument.dislikesCount,
-        myStatus(commentDocument, userId),
+      commentDocument.likesCount,
+      commentDocument.dislikesCount,
+      myStatus(commentDocument, userId),
     ),
   );
 

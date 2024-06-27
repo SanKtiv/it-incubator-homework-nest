@@ -7,8 +7,9 @@ import {
   Param,
   Post,
   Put,
-  Query, Req,
-  UseGuards
+  Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogQuery, BlogsInputDto } from './models/input/blogs.input.dto';
 import { BlogsService } from '../application/blogs.service';
@@ -27,8 +28,8 @@ import { PostsPaging } from '../../posts/api/models/output/posts.output.dto';
 import { PostsService } from '../../posts/application/posts.service';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
-import {Request} from "express";
-import {AccessJwtToken} from "../../auth/application/use-cases/access-jwt-token";
+import { Request } from 'express';
+import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 
 @Controller('blogs')
 export class BlogsController {
@@ -80,7 +81,7 @@ export class BlogsController {
   ): Promise<PostsPaging> {
     await this.blogsQueryRepository.findById(blogId);
 
-    const  dto: {userId?: string, blogId?: string} = {blogId: blogId}
+    const dto: { userId?: string; blogId?: string } = { blogId: blogId };
 
     const headerToken = req.headers.authorization;
 

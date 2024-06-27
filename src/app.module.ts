@@ -55,8 +55,8 @@ import { DevicesService } from './features/security/application/devices.service'
 import { appSettings } from './settings/app-settings';
 import { AccessJwtToken } from './features/auth/application/use-cases/access-jwt-token';
 import { RefreshJwtToken } from './features/auth/application/use-cases/refresh-jwt-token';
-import {BlogIdIsExistConstraint} from "./infrastructure/decorators/validation/blogId-is-exist.decorator";
-import configuration from "./settings/configuration";
+import { BlogIdIsExistConstraint } from './infrastructure/decorators/validation/blogId-is-exist.decorator';
+import configuration from './settings/configuration';
 
 dotenv.config();
 
@@ -94,12 +94,10 @@ const strategies = [
 
 @Module({
   imports: [
-    ConfigModule.forRoot(
-          {
-            isGlobal: true,
-            load: [configuration],
-      }
-      ),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
+    }),
     JwtModule.register({
       global: true,
       secret: process.env.SECRET_KEY,

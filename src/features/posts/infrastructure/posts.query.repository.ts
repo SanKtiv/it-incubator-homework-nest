@@ -13,7 +13,7 @@ import {
 export class PostsQueryRepository {
   constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
 
-  async findById(id: string, userId?: string,): Promise<PostsOutputDto> {
+  async findById(id: string, userId?: string): Promise<PostsOutputDto> {
     const postDocument = await this.PostModel.findById(id);
 
     if (!postDocument) throw new NotFoundException();
@@ -21,7 +21,10 @@ export class PostsQueryRepository {
     return postsOutputDto(postDocument, userId);
   }
 
-  async findPaging(query: PostQuery, dto: {userId?: string, blogId?: string}): Promise<PostsPaging> {
+  async findPaging(
+    query: PostQuery,
+    dto: { userId?: string; blogId?: string },
+  ): Promise<PostsPaging> {
     const filter = dto.blogId ? { blogId: dto.blogId } : {};
 
     const totalPosts = await this.PostModel.countDocuments(filter);

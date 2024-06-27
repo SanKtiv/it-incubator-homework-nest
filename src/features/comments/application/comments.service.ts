@@ -13,8 +13,8 @@ import {
 import { CommentServiceDto } from '../api/models/input/comment-service.dto';
 import { CommentInputDto } from '../api/models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
-import {CommentDocument} from "../domain/comment.schema";
-import {PostsService} from "../../posts/application/posts.service";
+import { CommentDocument } from '../domain/comment.schema';
+import { PostsService } from '../../posts/application/posts.service';
 
 @Injectable()
 export class CommentsService {
@@ -22,11 +22,11 @@ export class CommentsService {
     private readonly commentsRepository: CommentsRepository,
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
-    private readonly postsService: PostsService
+    private readonly postsService: PostsService,
   ) {}
 
   async createComment(dto: CommentServiceDto): Promise<CommentOutputDto> {
-    await this.postsService.existPost(dto.postId)
+    await this.postsService.existPost(dto.postId);
 
     const userDocument = await this.usersRepository.findById(dto.userId);
 
@@ -38,7 +38,7 @@ export class CommentsService {
   }
 
   async updateCommentById(id: string, userId: string, dto: CommentInputDto) {
-    const commentDocument = await this.existComment(id)
+    const commentDocument = await this.existComment(id);
 
     if (commentDocument.userId !== userId) throw new ForbiddenException();
 
@@ -48,7 +48,7 @@ export class CommentsService {
   }
 
   async removeCommentById(id: string, userId: string) {
-    const commentDocument = await this.existComment(id)
+    const commentDocument = await this.existComment(id);
 
     if (commentDocument.userId !== userId) throw new ForbiddenException();
 

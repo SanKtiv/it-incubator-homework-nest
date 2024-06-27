@@ -36,7 +36,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
           if (req && req.cookies) {
             token = req.cookies.refreshToken; // or req.cookies['refreshToken']
           }
-          console.log('refresh token from cookie =',token )
+          console.log('refresh token from cookie =', token);
           return token;
         },
       ]),
@@ -47,7 +47,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
 
   async validate(payload: any) {
     //const deviceDocument = await this.devicesService.findById(payload.deviceId);
-console.log('payload refresh token =', payload)
+    console.log('payload refresh token =', payload);
     return payload;
   }
 }

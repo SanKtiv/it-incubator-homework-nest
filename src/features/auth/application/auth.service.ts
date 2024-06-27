@@ -78,8 +78,10 @@ export class AuthService {
     );
   }
 
-  async validateUser(loginOrEmail: string, password: string)
-      : Promise<UserDocument | null> {
+  async validateUser(
+    loginOrEmail: string,
+    password: string,
+  ): Promise<UserDocument | null> {
     const userDocument =
       await this.usersRepository.findByLoginOrEmail(loginOrEmail);
 

@@ -11,10 +11,9 @@ describe('AppController (e2e)', () => {
   //let userTestManger: UsersTestManager;
 
   beforeAll(async () => {
-    const result = await initSettings(//(moduleBuilder) =>
-      //override UsersService еще раз
-      //moduleBuilder.overrideProvider(UsersService).useClass(UserServiceMock),
-    );
+    const result = await initSettings(); //(moduleBuilder) =>
+    //override UsersService еще раз
+    //moduleBuilder.overrideProvider(UsersService).useClass(UserServiceMock),
     app = result.app;
     //userTestManger = result.userTestManger;
   });
@@ -39,6 +38,6 @@ describe('AppController (e2e)', () => {
     //   .get('/')
     //   .expect(200)
     //   .expect('Hello World!');
-    expect('Hi').toBe('Hi')
+    expect('Hi').toBe('Hi');
   });
 });

@@ -11,7 +11,7 @@ import {
   postsOutputDto,
 } from '../api/models/output/posts.output.dto';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
-import {BlogsService} from "../../blogs/application/blogs.service";
+import { BlogsService } from '../../blogs/application/blogs.service';
 
 @Injectable()
 export class PostsService {
@@ -19,7 +19,7 @@ export class PostsService {
     private readonly postsRepository: PostsRepository,
     private readonly blogsRepository: BlogsRepository,
     private readonly usersRepository: UsersRepository,
-    private readonly blogsService: BlogsService
+    private readonly blogsService: BlogsService,
   ) {}
 
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
@@ -56,7 +56,11 @@ export class PostsService {
     await this.postsRepository.save(postDocument);
   }
 
-  async updateLikeStatus(id: string, dto: PostLikeStatusDto, userId: string,): Promise<void> {
+  async updateLikeStatus(
+    id: string,
+    dto: PostLikeStatusDto,
+    userId: string,
+  ): Promise<void> {
     const postDocument = await this.existPost(id);
 
     const userDocument = await this.usersRepository.findById(userId);

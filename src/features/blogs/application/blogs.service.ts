@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BlogsInputDto } from '../api/models/input/blogs.input.dto';
 import { BlogsRepository } from '../infrastructure/blogs.repository';
 import { BlogDocument } from '../domain/blogs.schema';

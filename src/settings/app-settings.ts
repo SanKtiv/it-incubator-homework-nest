@@ -51,10 +51,7 @@ class APISettings {
 
   constructor(private readonly envVariables: EnvironmentVariable) {
     // Application
-    this.APP_PORT = this.getNumberOrDefault(
-      envVariables.PORT as string,
-      3000,
-    );
+    this.APP_PORT = this.getNumberOrDefault(envVariables.PORT as string, 3000);
 
     // Database
     this.MONGO_CONNECTION_URI =

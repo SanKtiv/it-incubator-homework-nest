@@ -26,15 +26,18 @@ export class DevicesRepository {
   }
 
   async findByUserId(userId: string): Promise<DeviceDocument[]> {
-    return this.DeviceModel.find({userId: userId});
+    return this.DeviceModel.find({ userId: userId });
   }
 
   async deleteDeviceById(id: string) {
-    return this.DeviceModel.findByIdAndDelete(id)
+    return this.DeviceModel.findByIdAndDelete(id);
   }
 
   async deleteDevices(userId: string, deviceId: string) {
-    await this.DeviceModel.deleteMany({userId: userId, _id: {$ne: deviceId}})
+    await this.DeviceModel.deleteMany({
+      userId: userId,
+      _id: { $ne: deviceId },
+    });
   }
 
   async removeAll(): Promise<void> {

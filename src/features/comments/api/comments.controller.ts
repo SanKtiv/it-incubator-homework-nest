@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Delete,
-  Get, HttpCode,
+  Get,
+  HttpCode,
   Param,
-  Put, Req,
+  Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CommentsQueryRepository } from '../infrastructure/comments.query.repository';
@@ -14,8 +16,8 @@ import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-au
 import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
 import { CommentInputDto } from './models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
-import {Request} from "express";
-import {AccessJwtToken} from "../../auth/application/use-cases/access-jwt-token";
+import { Request } from 'express';
+import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 
 @Controller('comments')
 export class CommentsController {
@@ -27,8 +29,8 @@ export class CommentsController {
 
   @Get(':commentId')
   async getCommentById(
-      @Param('commentId', paramIdIsMongoIdPipe) id: string,
-      @Req() req: Request
+    @Param('commentId', paramIdIsMongoIdPipe) id: string,
+    @Req() req: Request,
   ) {
     const headerToken = req.headers.authorization;
     if (!headerToken) return this.commentsQueryRepository.findById(id);
