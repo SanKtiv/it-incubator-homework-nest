@@ -52,7 +52,7 @@ class APISettings {
   constructor(private readonly envVariables: EnvironmentVariable) {
     // Application
     this.APP_PORT = this.getNumberOrDefault(
-      envVariables.APP_PORT as string,
+      envVariables.PORT as string,
       3000,
     );
 

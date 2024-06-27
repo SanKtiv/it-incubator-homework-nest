@@ -38,8 +38,6 @@ const getConfig = (
 
 export default () => {
   const environmentVariables = process.env;
-
-  console.log('process.env.ENV =', environmentVariables.ENV);
   const currentEnvironment: Environments =
     environmentVariables.ENV as Environments;
 
