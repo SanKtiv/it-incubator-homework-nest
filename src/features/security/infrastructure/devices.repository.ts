@@ -13,9 +13,7 @@ export class DevicesRepository {
 
   async create(dto: DeviceDto): Promise<DeviceDocument> {
     const document = await this.DeviceModel.createDevice(dto, this.DeviceModel);
-
     await document.save();
-
     return document;
   }
 
@@ -23,8 +21,20 @@ export class DevicesRepository {
     await document.save();
   }
 
-  async findById(deviceId: string) {
-    return this.DeviceModel.findById(deviceId);
+  async findById(id: string): Promise<DeviceDocument | null> {
+    return this.DeviceModel.findById(id);
+  }
+
+  async findByUserId(userId: string): Promise<DeviceDocument[]> {
+    return this.DeviceModel.find({userId: userId});
+  }
+
+  async deleteDeviceById(id: string) {
+    return this.DeviceModel.findByIdAndDelete(id)
+  }
+
+  async deleteDevices(userId: string, deviceId: string) {
+    await this.DeviceModel.deleteMany({userId: userId, _id: {$ne: deviceId}})
   }
 
   async removeAll(): Promise<void> {

@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import { DevicesRepository } from '../infrastructure/devices.repository';
 import { DeviceDto } from '../api/models/device.dto';
 import { DeviceDocument } from '../domain/device.schema';
 import { JwtService } from '@nestjs/jwt';
+import {devicesViewModel, OutputDeviceDto} from "../api/models/output-device.dto";
 
 @Injectable()
 export class DevicesService {
@@ -22,5 +23,19 @@ export class DevicesService {
     await this.devicesRepository.save(document);
   }
 
-  async findById(deviceId: string) {}
+  async findByUserId(userId: string): Promise<OutputDeviceDto[]> {
+    const deviceDocumentsArray = await this.devicesRepository.findByUserId(userId)
+    return devicesViewModel(deviceDocumentsArray)
+  }
+
+  async deleteDeviceCurrentUserByDeviceId(deviceId: string, userId: string) {
+    const deviceDocument = await this.devicesRepository.findById(deviceId)
+    if (!deviceDocument) throw new NotFoundException()
+    if (deviceDocument.userId !== userId) throw new ForbiddenException()
+    await this.devicesRepository.deleteDeviceById(deviceId)
+  }
+
+  async deleteAllDevicesWithoutCurrent(payload: any) {
+    await this.devicesRepository.deleteDevices(payload.sub, payload.deviceId)
+  }
 }
