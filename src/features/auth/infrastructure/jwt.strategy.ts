@@ -45,7 +45,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
   }
 
   async validate(payload: any) {
-    const deviceDocument = await this.devicesService.findById(payload.deviceId);
+    //const deviceDocument = await this.devicesService.findById(payload.deviceId);
 
     return payload;
   }
