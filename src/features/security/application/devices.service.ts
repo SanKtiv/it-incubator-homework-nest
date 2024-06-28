@@ -41,18 +41,19 @@ export class DevicesService {
       payload.deviceId,
     );
     if (
-        !deviceDocument ||
-        !deviceDocument.expirationDate ||
-        deviceDocument.expirationDate !== new Date(payload.exp * 1000).toISOString()
+      !deviceDocument ||
+      !deviceDocument.expirationDate ||
+      deviceDocument.expirationDate !==
+        new Date(payload.exp * 1000).toISOString()
     )
       throw new UnauthorizedException();
   }
 
   async findByUserId(userId: string): Promise<OutputDeviceDto[]> {
-    console.log('findByUserId start')
+    console.log('findByUserId start');
     const deviceDocumentsArray =
       await this.devicesRepository.findByUserId(userId);
-    console.log('deviceDocumentsArray =',deviceDocumentsArray)
+    console.log('deviceDocumentsArray =', deviceDocumentsArray);
     return devicesViewModel(deviceDocumentsArray);
   }
 

@@ -57,7 +57,7 @@ import { AccessJwtToken } from './features/auth/application/use-cases/access-jwt
 import { RefreshJwtToken } from './features/auth/application/use-cases/refresh-jwt-token';
 import { BlogIdIsExistConstraint } from './infrastructure/decorators/validation/blogId-is-exist.decorator';
 import configuration from './settings/configuration';
-import {DevicesController} from "./features/security/api/devices.controller";
+import { DevicesController } from './features/security/api/devices.controller';
 
 dotenv.config();
 
@@ -126,7 +126,7 @@ const strategies = [
     UsersController,
     CommentsController,
     AuthController,
-    DevicesController
+    DevicesController,
   ],
   providers: [
     ...services,

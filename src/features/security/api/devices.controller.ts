@@ -20,8 +20,8 @@ export class DevicesController {
   @HttpCode(200)
   @UseGuards(JWTRefreshAuthGuard)
   async getDevices(@CurrentUserId() userId: string) {
-    console.log('security/devices start')
-    console.log('userId =',userId)
+    console.log('security/devices start');
+    console.log('userId =', userId);
     return this.devicesService.findByUserId(userId);
   }
 

@@ -114,7 +114,6 @@ export class AuthController {
     @RefreshTokenPayload() payload: any,
     @Res() res: Response,
   ) {
-
     await this.devicesService.checkExpirationDate(payload);
 
     const accessToken = await this.authService.createAccessToken(userId);
@@ -134,9 +133,7 @@ export class AuthController {
   @Post('logout')
   @HttpCode(204)
   @UseGuards(JWTRefreshAuthGuard)
-  async logout(
-      @RefreshTokenPayload() payload: any,
-  ) {
+  async logout(@RefreshTokenPayload() payload: any) {
     await this.devicesService.checkExpirationDate(payload);
     await this.devicesService.deleteDeviceById(payload.deviceId);
   }
