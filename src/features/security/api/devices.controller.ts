@@ -20,6 +20,8 @@ export class DevicesController {
   @Get()
   @HttpCode(200)
   async getDevices(@CurrentUserId() userId: string) {
+    console.log('security/devices start')
+    console.log('userId =',userId)
     return this.devicesService.findByUserId(userId);
   }
 
