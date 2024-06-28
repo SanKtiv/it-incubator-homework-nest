@@ -13,12 +13,12 @@ import { DevicesService } from '../application/devices.service';
 import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 
 @Controller('security')
-@UseGuards(JWTRefreshAuthGuard)
 export class DevicesController {
   constructor(private readonly devicesService: DevicesService) {}
 
   @Get('devices')
   @HttpCode(200)
+  @UseGuards(JWTRefreshAuthGuard)
   async getDevices(@CurrentUserId() userId: string) {
     console.log('security/devices start')
     console.log('userId =',userId)
@@ -27,6 +27,7 @@ export class DevicesController {
 
   @Delete('devices/:deviceId')
   @HttpCode(204)
+  @UseGuards(JWTRefreshAuthGuard)
   async deleteDeviceById(
     @Param(':deviceId', paramIdIsMongoIdPipe) id: string,
     @CurrentUserId() userId: string,
@@ -36,6 +37,7 @@ export class DevicesController {
 
   @Delete('devices')
   @HttpCode(204)
+  @UseGuards(JWTRefreshAuthGuard)
   async deleteDevices(@RefreshTokenPayload() payload: any) {
     await this.devicesService.deleteAllDevicesWithoutCurrent(payload);
   }
