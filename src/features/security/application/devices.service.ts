@@ -49,8 +49,10 @@ export class DevicesService {
   }
 
   async findByUserId(userId: string): Promise<OutputDeviceDto[]> {
+    console.log('userId =',userId)
     const deviceDocumentsArray =
       await this.devicesRepository.findByUserId(userId);
+    console.log('deviceDocumentsArray =',deviceDocumentsArray)
     return devicesViewModel(deviceDocumentsArray);
   }
 
