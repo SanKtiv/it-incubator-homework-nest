@@ -133,7 +133,12 @@ export class AuthController {
   @Post('logout')
   @HttpCode(204)
   @UseGuards(JWTRefreshAuthGuard)
-  async logout(@CurrentUserId() userId: string) {}
+  async logout(
+      @RefreshTokenPayload() payload: any,
+  ) {
+    await this.devicesService.checkExpirationDate(payload);
+    await this.devicesService.deleteDeviceById(payload.deviceId);
+  }
 
   @Get('me')
   @HttpCode(200)

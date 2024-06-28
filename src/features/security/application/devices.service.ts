@@ -60,6 +60,10 @@ export class DevicesService {
     await this.devicesRepository.deleteDeviceById(deviceId);
   }
 
+  async deleteDeviceById(id: string) {
+    await this.devicesRepository.deleteDeviceById(id);
+  }
+
   async deleteAllDevicesWithoutCurrent(payload: any) {
     await this.devicesRepository.deleteDevices(payload.sub, payload.deviceId);
   }
