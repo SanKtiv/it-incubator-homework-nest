@@ -41,8 +41,9 @@ export class DevicesService {
       payload.deviceId,
     );
     if (
-      deviceDocument!.expirationDate !==
-      new Date(payload.exp * 1000).toISOString()
+        !deviceDocument ||
+        !deviceDocument.expirationDate ||
+        deviceDocument.expirationDate !== new Date(payload.exp * 1000).toISOString()
     )
       throw new UnauthorizedException();
   }

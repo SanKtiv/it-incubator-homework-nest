@@ -114,17 +114,18 @@ export class AuthController {
     @RefreshTokenPayload() payload: any,
     @Res() res: Response,
   ) {
+    console.log('refresh-token start')
     await this.devicesService.checkExpirationDate(payload);
-
+    console.log('refresh-token devicesService.checkExpirationDate is work')
     const accessToken = await this.authService.createAccessToken(userId);
-
+    console.log('refresh-token authService.createAccessToken is work')
     const refreshToken = await this.authService.createRefreshToken(
       userId,
       payload.deviceId,
     );
-
+    console.log('refresh-token authService.createRefreshToken is work')
     await this.devicesService.updateDates(payload.deviceId, refreshToken);
-
+    console.log('refresh-token devicesService.updateDates is work')
     return res
       .cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })
       .send(accessToken);
