@@ -29,7 +29,6 @@ export class DevicesController {
     @Param('deviceId', paramIdIsMongoIdPipe) id: string,
     @CurrentUserId() userId: string,
   ) {
-    console.log('deleteDeviceById start')
     await this.devicesService.deleteDeviceCurrentUserByDeviceId(id, userId);
   }
 
