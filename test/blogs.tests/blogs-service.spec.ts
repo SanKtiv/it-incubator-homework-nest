@@ -31,15 +31,14 @@ describe('integration tests for BlogsService', () => {
       websiteUrl: 'qwerty@qwerty.com',
     };
 
-    // const BlogModel: BlogsModelType
-    //
-    // const blogsRepository = new BlogsRepository(BlogModel)
-    // const blogsService = new BlogsService(blogsRepository)
+    const blogModel = new Blog() //as BlogsModelType
+    const blogsRepository = new BlogsRepository(blogModel)
+    const blogsService = new BlogsService(blogsRepository)
 
     it('should return created blog', async () => {
-      // const result = await blogsService.createBlog(dto)
+      const result = await blogsService.createBlog(dto)
 
-      expect(5).toBe(5);
+      expect(result.name).toBe('Qwerty1');
     });
   });
 });
