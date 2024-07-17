@@ -4,6 +4,7 @@ import { applyAppSettings } from '../../src/settings/apply-app-setting';
 import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { deleteAllData } from './delete-all-data';
+import {BlogsTestManager} from "./blogs-test-manager";
 
 export const initSettings = async (
   //передаем callback, который получает ModuleBuilder,
@@ -31,6 +32,7 @@ export const initSettings = async (
   const databaseConnection = app.get<Connection>(getConnectionToken());
 
   const httpServer = app.getHttpServer();
+  const blogsTestManager = new BlogsTestManager(app);
   //const userTestManger = new UsersTestManager(app);
 
   //чистим БД
@@ -41,6 +43,7 @@ export const initSettings = async (
     app,
     databaseConnection,
     httpServer,
+    blogsTestManager,
     //userTestManger,
   };
 };

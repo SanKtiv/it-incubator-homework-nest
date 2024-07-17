@@ -23,7 +23,7 @@ export class ErrorsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     //const request = ctx.getRequest<Request>();
-
+console.log('exception =', exception)
     const status = exception.getStatus();
 
     if (status === 400) {

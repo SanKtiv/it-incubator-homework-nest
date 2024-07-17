@@ -1,13 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { applyAppSettings } from '../src/settings/apply-app-setting';
 import { UsersTestManager } from './utils/users-test-manager';
 import { initSettings } from './utils/init-settings';
+import {BlogsTestManager} from "./utils/blogs-test-manager";
+import {blogCreateModel} from "./utils/blogs-options";
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+  let blogsTestManager: BlogsTestManager;
   //let userTestManger: UsersTestManager;
 
   beforeAll(async () => {
@@ -15,29 +18,39 @@ describe('AppController (e2e)', () => {
     //override UsersService еще раз
     //moduleBuilder.overrideProvider(UsersService).useClass(UserServiceMock),
     app = result.app;
+    blogsTestManager = result.blogsTestManager;
     //userTestManger = result.userTestManger;
   });
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      //.overrideProvider(UsersService)
-      //.useValue(UserServiceMockObject)
-      //.useClass(UserServiceMock)
-      .compile();
-
-    app = moduleFixture.createNestApplication();
-
-    applyAppSettings(app);
-    await app.init();
+  afterAll(async () => {
+    await app.close();
   });
+
+  // beforeEach(async () => {
+  //   const moduleFixture: TestingModule = await Test.createTestingModule({
+  //     imports: [AppModule],
+  //   })
+  //     //.overrideProvider(UsersService)
+  //     //.useValue(UserServiceMockObject)
+  //     //.useClass(UserServiceMock)
+  //     .compile();
+  //
+  //   app = moduleFixture.createNestApplication();
+  //
+  //   applyAppSettings(app);
+  //   await app.init();
+  // });
 
   it('/ (GET)', () => {
-    // return request(app.getHttpServer())
-    //   .get('/')
-    //   .expect(200)
-    //   .expect('Hello World!');
-    expect('Hi').toBe('Hi');
+    return request(app.getHttpServer())
+      .get('/')
+      .expect(200)
+      .expect('Hello World!');
   });
+
+  // it('/blogs (POST)', async () => {
+  //   const responseCreateBlog = await blogsTestManager.createBlog(blogCreateModel)
+  //   blogsTestManager.expectViewModel(blogCreateModel, responseCreateBlog.body)
+  //   //console.log(responseCreateBlog.body)
+  // });
 });
