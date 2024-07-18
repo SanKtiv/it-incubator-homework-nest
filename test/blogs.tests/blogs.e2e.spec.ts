@@ -48,6 +48,7 @@ describe('BLOGS (e2e)', () => {
 
     it('/blogs (POST), should returned status 400 with correct error', async () => {
         const responseCreateBlog = await blogsTestManager.createBlog(blogCreateModelWrongName, authBasic)
+        console.log(responseCreateBlog.body)
         await expect(responseCreateBlog.statusCode).toBe(400)
     });
 
