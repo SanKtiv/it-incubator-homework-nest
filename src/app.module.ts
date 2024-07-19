@@ -58,6 +58,8 @@ import { RefreshJwtToken } from './features/auth/application/use-cases/refresh-j
 import { BlogIdIsExistConstraint } from './infrastructure/decorators/validation/blogId-is-exist.decorator';
 import configuration from './settings/configuration';
 import { DevicesController } from './features/security/api/devices.controller';
+import {TypeOrmModule} from "@nestjs/typeorm";
+import {BlogsSqlRepository} from "./features/blogs/infrastructure/blogs.sql.repository";
 
 dotenv.config();
 
@@ -84,6 +86,7 @@ const repositories = [
   UsersQueryRepository,
   DevicesRepository,
   RequestApiRepository,
+  BlogsSqlRepository,
 ];
 
 const strategies = [
@@ -104,6 +107,18 @@ const strategies = [
       secret: process.env.SECRET_KEY,
       //signOptions: {expiresIn: '10m'}
     }),
+      TypeOrmModule.forRoot({
+        type: 'postgres',
+        url: 'postgresql://neondb_owner:gnyfzHjQ0T9J@ep-damp-morning-a2vbq6mf.eu-central-1.aws.neon.tech/neondb?sslmode=require',
+        // host: 'ep-damp-morning-a2vbq6mf.eu-central-1.aws.neon.tech',
+        // port: 5432,
+        // username: 'neondb_owner',
+        // password: 'gnyfzHjQ0T9J',
+        // database: 'neondb',
+        ssl: true,
+        autoLoadEntities: false,
+        synchronize: false
+      }),
     MongooseModule.forRoot(
       appSettings.env.isTesting()
         ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
