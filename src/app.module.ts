@@ -60,6 +60,7 @@ import configuration from './settings/configuration';
 import { DevicesController } from './features/security/api/devices.controller';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {BlogsSqlRepository} from "./features/blogs/infrastructure/blogs.sql.repository";
+import {BlogsTable} from "./features/blogs/domain/blog.entity";
 
 dotenv.config();
 
@@ -115,10 +116,12 @@ const strategies = [
         // username: 'neondb_owner',
         // password: 'gnyfzHjQ0T9J',
         // database: 'neondb',
+        entities: [BlogsTable],
         ssl: true,
         autoLoadEntities: false,
         synchronize: false
       }),
+    TypeOrmModule.forFeature([BlogsTable]),
     MongooseModule.forRoot(
       appSettings.env.isTesting()
         ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
