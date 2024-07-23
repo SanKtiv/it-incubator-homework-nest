@@ -31,6 +31,7 @@ import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import {BlogsSqlRepository} from "../infrastructure/blogs.sql.repository";
+import {UsersSqlRepository} from "../../users/infrastructure/users.sql.repository";
 
 @Controller('blogs')
 export class BlogsController {
@@ -40,17 +41,17 @@ export class BlogsController {
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
-    private readonly blogsSqlRepository: BlogsSqlRepository
+    private readonly usersSqlRepository: UsersSqlRepository
   ) {}
 
-  @Get('blogs')
+  @Get('/blogs')
   async createBlogInSql() {
     const dto = {
       name: 'Qwerty1',
       description: 'Description',
       websiteUrl: 'http://qwerty.com'
     }
-    await this.blogsSqlRepository.create(dto)
+    return this.usersSqlRepository.create(dto)
   }
 
   @Post()

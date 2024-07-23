@@ -6,20 +6,18 @@ import {BlogsTable} from "../domain/blog.entity";
 @Injectable()
 export class BlogsSqlRepository {
     constructor(
-        protected dataSource: DataSource,
-        @InjectRepository(BlogsTable) protected blogsRepository: Repository<BlogsTable>) {
-    }
+        //protected dataSource: DataSource,
+        @InjectRepository(BlogsTable) protected blogsRepository: Repository<BlogsTable>) {}
 
     async create(dto) {
         const blog: BlogsTable = {
             ...dto,
-            id: 1,
             createdAt: 'Date',
             isMembership: true
         }
-        await this.blogsRepository.create(blog)
-        // await this.dataSource.transaction(async manager => {
-        //     console.log('Hello')
+        return this.blogsRepository.save(blog)
+
+        // return this.dataSource.transaction(async manager => {
         //     await manager.save(blog)
         // });
         // return this.dataSource.manager.save(BlogsTable, {
