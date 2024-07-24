@@ -5,8 +5,8 @@ import { AppModule } from '../src/app.module';
 import { applyAppSettings } from '../src/settings/apply-app-setting';
 import { UsersTestManager } from './utils/users-test-manager';
 import { initSettings } from './utils/init-settings';
-import {BlogsTestManager} from "./utils/blogs-test-manager";
-import {blogCreateModel} from "./utils/blogs-options";
+import { BlogsTestManager } from './utils/blogs-test-manager';
+import { blogCreateModel } from './utils/blogs-options';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;

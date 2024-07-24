@@ -4,7 +4,7 @@ import { applyAppSettings } from '../../src/settings/apply-app-setting';
 import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { deleteAllData } from './delete-all-data';
-import {BlogsTestManager} from "./blogs-test-manager";
+import { BlogsTestManager } from './blogs-test-manager';
 
 export const initSettings = async (
   //передаем callback, который получает ModuleBuilder,
