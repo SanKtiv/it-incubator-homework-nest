@@ -1,4 +1,14 @@
-import {Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToMany, ManyToOne,
+    OneToOne,
+    PrimaryColumn,
+    PrimaryGeneratedColumn,
+    Tree,
+    TreeParent
+} from "typeorm";
 
 @Entity('account_data')
 export class AccountData {
@@ -19,11 +29,13 @@ export class AccountData {
 }
 
 @Entity('users')
+// @Tree("closure-table")
 export class UsersTable {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @OneToOne(() => AccountData)
     @JoinColumn()
+    // @TreeParent()
     accountData: AccountData;
 }

@@ -7,7 +7,7 @@ import {AccountData, UsersTable} from "../domain/users.table";
 @Injectable()
 export class UsersSqlRepository {
     constructor(
-        //protected dataSource: DataSource,
+        @InjectDataSource() protected dataSource: DataSource,
         @InjectRepository(UsersTable) protected usersRepository: Repository<UsersTable>,
         @InjectRepository(AccountData) protected usersAccRepository: Repository<AccountData>,
         ) {}
@@ -19,11 +19,12 @@ export class UsersSqlRepository {
             createdAt: 'string',
             passwordHash: 'string',
         };
-        await this.usersAccRepository.save(accountData)
+        await this.dataSource.getRepository(AccountData).save(accountData)
+        //await this.usersAccRepository.save(accountData)
         const user = new UsersTable()
         user.accountData = accountData
-        return this.usersRepository.save(user)
-
+        const result = await this.usersRepository.save(user)
+        return this.dataSource.getRepository(UsersTable).find({relations: {accountData: true}})
         // return this.dataSource.transaction(async manager => {
         //     await manager.save(blog)
         // });
