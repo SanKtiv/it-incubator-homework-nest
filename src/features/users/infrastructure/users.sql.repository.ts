@@ -7,27 +7,35 @@ import { AccountData, UsersTable } from '../domain/users.table';
 export class UsersSqlRepository {
   constructor(
     @InjectDataSource() protected dataSource: DataSource,
-    @InjectRepository(UsersTable)
-    protected usersRepository: Repository<UsersTable>,
-    @InjectRepository(AccountData)
-    protected usersAccRepository: Repository<AccountData>,
+    // @InjectRepository(UsersTable)
+    // protected usersRepository: Repository<UsersTable>,
+    // @InjectRepository(AccountData)
+    // protected usersAccRepository: Repository<AccountData>,
   ) {}
 
   async create(dto) {
     const accountData: AccountData = {
-      login: 'string',
+      login: 'string1',
       email: 'string',
       createdAt: 'string',
       passwordHash: 'string',
     };
-    await this.dataSource.getRepository(AccountData).save(accountData);
-    //await this.usersAccRepository.save(accountData)
-    const user = new UsersTable();
-    user.accountData = accountData;
-    const result = await this.usersRepository.save(user);
-    return this.dataSource
-      .getRepository(UsersTable)
-      .find({ relations: { accountData: true } });
+    try {
+      await this.dataSource.getRepository(AccountData).save(accountData);
+      //await this.usersAccRepository.save(accountData)
+      const user = new UsersTable();
+      user.accountData = accountData;
+      const result = await this.dataSource.getRepository(UsersTable).save(user);
+    } catch (e) {
+      return this.dataSource.getRepository(UsersTable).find({
+        where: { id: 'aee48b5e-4f03-430d-9611-e31679a420d3' },
+        relations: { accountData: true },
+      });
+    }
+    return this.dataSource.getRepository(UsersTable).findOne({
+      where: { id: 'aee48b5e-4f03-430d-9611-e31679a420d3' },
+      relations: { accountData: true },
+    });
 
     // return this.dataSource.transaction(async manager => {
     //     await manager.save(blog)
