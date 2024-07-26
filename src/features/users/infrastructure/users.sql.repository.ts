@@ -20,10 +20,11 @@ export class UsersSqlRepository {
       createdAt: 'string',
       passwordHash: 'string',
     };
+    const user = new UsersTable();
     try {
       await this.dataSource.getRepository(AccountData).save(accountData);
       //await this.usersAccRepository.save(accountData)
-      const user = new UsersTable();
+
       user.accountData = accountData;
       const result = await this.dataSource.getRepository(UsersTable).save(user);
     } catch (e) {
@@ -32,10 +33,7 @@ export class UsersSqlRepository {
         relations: { accountData: true },
       });
     }
-    return this.dataSource.getRepository(UsersTable).findOne({
-      where: { id: 'aee48b5e-4f03-430d-9611-e31679a420d3' },
-      relations: { accountData: true },
-    });
+    return this.dataSource.getRepository(UsersTable).remove(user);
 
     // return this.dataSource.transaction(async manager => {
     //     await manager.save(blog)
