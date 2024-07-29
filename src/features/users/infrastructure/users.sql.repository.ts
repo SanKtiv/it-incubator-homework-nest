@@ -14,26 +14,26 @@ export class UsersSqlRepository {
   ) {}
 
   async create(dto) {
-    const accountData: AccountData = {
-      login: 'string1',
-      email: 'string',
-      createdAt: 'string',
-      passwordHash: 'string',
-    };
-    const user = new UsersTable();
-    try {
-      await this.dataSource.getRepository(AccountData).save(accountData);
-      //await this.usersAccRepository.save(accountData)
-
-      user.accountData = accountData;
-      const result = await this.dataSource.getRepository(UsersTable).save(user);
-    } catch (e) {
-      return this.dataSource.getRepository(UsersTable).find({
-        where: { id: 'aee48b5e-4f03-430d-9611-e31679a420d3' },
-        relations: { accountData: true },
-      });
+    // const accountData: AccountData = {
+    //   login: 'string1',
+    //   email: 'string',
+    //   createdAt: 'string',
+    //   passwordHash: 'string',
+    // };
+    // const user = new UsersTable();
+    // try {
+    //   await this.dataSource.getRepository(AccountData).save(accountData);
+    //   //await this.usersAccRepository.save(accountData)
+    //
+    //   user.accountData = accountData;
+    //   const result = await this.dataSource.getRepository(UsersTable).save(user);
+    // } catch (e) {
+    //   return this.dataSource.getRepository(UsersTable).find({
+    //     where: { id: 'aee48b5e-4f03-430d-9611-e31679a420d3' },
+    //     relations: { accountData: true },
+    //   });
     }
-    return this.dataSource.getRepository(UsersTable).remove(user);
+    // return this.dataSource.getRepository(UsersTable).remove(user);
 
     // return this.dataSource.transaction(async manager => {
     //     await manager.save(blog)
@@ -43,7 +43,7 @@ export class UsersSqlRepository {
     //     createdAt: 'Date',
     //     isMembership: true
     // })
-  }
+  // }
 
   // async create() {
   //     return this.dataSource.query(`
