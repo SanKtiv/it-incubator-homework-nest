@@ -49,10 +49,10 @@ export class BlogsController {
   async createBlogInSql() {
     const dto = {
         ip: '12345',
-        title: 'Chrome1',
-        userId: '098761',
+        title: 'Chrome3',
+        userId: '098761333',
     };
-    return this.usersSqlRepository.removeAll();
+    return this.usersSqlRepository.deleteDevices('098761', '34d0e905-a49b-4a9b-99d1-e398d6f5c00d');
   }
 
   @Post()

@@ -65,6 +65,8 @@ import { AccountData, UsersTable } from './features/users/domain/users.table';
 import { UsersSqlRepository } from './features/users/infrastructure/users.sql.repository';
 import {DeviceTable} from "./features/security/domain/device.table";
 import {DevicesSqlRepository} from "./features/security/infrastructure/devices.sql.repository";
+import {RequestApiSqlRepository} from "./features/requests/infrastructure/request.sql.repository";
+import {RequestTable} from "./features/requests/domain/request.table";
 
 dotenv.config();
 
@@ -93,7 +95,8 @@ const repositories = [
   RequestApiRepository,
   BlogsSqlRepository,
   UsersSqlRepository,
-  DevicesSqlRepository
+  DevicesSqlRepository,
+  RequestApiSqlRepository
 ];
 
 const strategies = [
@@ -122,12 +125,12 @@ const strategies = [
       // username: 'neondb_owner',
       // password: 'gnyfzHjQ0T9J',
       // database: 'neondb',
-      entities: [BlogsTable, DeviceTable],
+      entities: [BlogsTable, DeviceTable, RequestTable],
       ssl: true,
       //autoLoadEntities: false,
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([BlogsTable, DeviceTable]),
+    TypeOrmModule.forFeature([BlogsTable, DeviceTable, RequestTable]),
     MongooseModule.forRoot(
       appSettings.env.isTesting()
         ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
