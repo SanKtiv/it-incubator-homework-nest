@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { Column, DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { AccountData, UsersTable } from '../domain/users.table';
+import {UsersInputDto} from "../api/models/input/users.input.dto";
+import {UserDocument} from "../domain/users.schema";
+import {filterByLoginAndEmail} from "./utils.repositories";
 
 @Injectable()
 export class UsersSqlRepository {
@@ -13,26 +16,77 @@ export class UsersSqlRepository {
     // protected usersAccRepository: Repository<AccountData>,
   ) {}
 
-  async create(dto) {
-    // const accountData: AccountData = {
-    //   login: 'string1',
-    //   email: 'string',
-    //   createdAt: 'string',
-    //   passwordHash: 'string',
-    // };
-    // const user = new UsersTable();
-    // try {
-    //   await this.dataSource.getRepository(AccountData).save(accountData);
-    //   //await this.usersAccRepository.save(accountData)
-    //
-    //   user.accountData = accountData;
-    //   const result = await this.dataSource.getRepository(UsersTable).save(user);
-    // } catch (e) {
-    //   return this.dataSource.getRepository(UsersTable).find({
-    //     where: { id: 'aee48b5e-4f03-430d-9611-e31679a420d3' },
-    //     relations: { accountData: true },
-    //   });
+  async create(
+      dto: UsersInputDto,
+      passwordHash: string,
+      confirmationCode: string,
+      expirationDate: Date,
+  ): Promise<any> {
+    return this.dataSource
+        .getRepository(UsersTable)
+        .save(
+            {
+              ...dto,
+              createdAt: new Date().toISOString(),
+              passwordHash: passwordHash,
+              confirmationCode: confirmationCode,
+              expirationDate: expirationDate,
+            }
+    );
+  }
+
+  async save(userDocument: UserDocument): Promise<UserDocument> {
+    return userDocument.save();
+  }
+
+  async findById(id: string): Promise<UsersTable | null> {
+    try {
+      return this.dataSource
+          .getRepository(UsersTable)
+          .findOneBy({id: id});
+    } catch (e) {
+      return null;
     }
+  }
+
+  async findByConfirmationCode(code: string): Promise<UsersTable | null> {
+    return this.dataSource
+        .getRepository(UsersTable)
+        .findOneBy({
+      confirmationCode: code,
+    });
+  }
+
+  async findByRecoveryCode(code: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({
+      'passwordRecovery.recoveryCode': code,
+    });
+  }
+
+  async findByLogin(login: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({ 'accountData.login': login });
+  }
+
+  async findByEmail(email: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({ 'accountData.email': email });
+  }
+
+  async findByLoginOrEmail(loginOrEmail: string): Promise<UserDocument | null> {
+    const filter = filterByLoginAndEmail(loginOrEmail, loginOrEmail);
+    return this.UserModel.findOne(filter);
+  }
+
+  async remove(id: string): Promise<UserDocument | null> {
+    try {
+      return this.UserModel.findByIdAndDelete(id);
+    } catch (e) {
+      throw new Error('Error DB');
+    }
+  }
+
+  async removeAll() {
+    await this.UserModel.deleteMany();
+  }
     // return this.dataSource.getRepository(UsersTable).remove(user);
 
     // return this.dataSource.transaction(async manager => {

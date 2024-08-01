@@ -33,6 +33,7 @@ import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-toke
 import { BlogsSqlRepository } from '../infrastructure/blogs.sql.repository';
 import { UsersSqlRepository } from '../../users/infrastructure/users.sql.repository';
 import {DevicesSqlRepository} from "../../security/infrastructure/devices.sql.repository";
+import {RequestApiSqlRepository} from "../../requests/infrastructure/request.sql.repository";
 
 @Controller('blogs')
 export class BlogsController {
@@ -42,17 +43,17 @@ export class BlogsController {
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
-    private readonly usersSqlRepository: DevicesSqlRepository,
+    private readonly usersSqlRepository: RequestApiSqlRepository,
   ) {}
 
   @Get('/blogs')
   async createBlogInSql() {
     const dto = {
         ip: '12345',
-        title: 'Chrome3',
-        userId: '098761333',
+      url: 'Chrome3',
+      date: '098761333',
     };
-    return this.usersSqlRepository.deleteDevices('098761', '34d0e905-a49b-4a9b-99d1-e398d6f5c00d');
+    return this.usersSqlRepository.create(dto);
   }
 
   @Post()

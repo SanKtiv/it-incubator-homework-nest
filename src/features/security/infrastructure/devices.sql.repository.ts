@@ -1,10 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import {
-    Device,
-    DeviceDocument,
-    DeviceModelType,
-} from '../domain/device.schema';
 import { DeviceDto } from '../api/models/device.dto';
 import {InjectDataSource} from "@nestjs/typeorm";
 import {DataSource, Not} from "typeorm";
@@ -20,9 +14,9 @@ export class DevicesSqlRepository {
             .save(dto);
     }
 
-    async save(document: DeviceDocument): Promise<void> {
-        await document.save();
-    }
+    // async save(document: DeviceDocument): Promise<void> {
+    //     await document.save();
+    // }
 
     async findById(id: string): Promise<DeviceTable | null> {
         return this.dataSource

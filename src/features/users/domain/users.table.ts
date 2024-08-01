@@ -50,10 +50,10 @@ export class UsersTable {
     @Column({type: "boolean", default: false})
     isConfirmed: boolean;
 
-    @Column('text')
+    @Column({type: "text", nullable: true})
     recoveryCode: string;
 
-    @Column('date')
+    @Column({type: "date", nullable: true})
     expirationDateRecovery: Date;
 
     // @OneToOne(() => AccountData)

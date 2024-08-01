@@ -1,39 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import {
-    RequestToApi,
-    RequestToApiDocument,
-    RequestToApiModelType,
-} from '../domain/request.schema';
 import { RequestApiInputDto } from '../api/models/input.dto';
 import {InjectDataSource} from "@nestjs/typeorm";
-import {DataSource} from "typeorm";
+import {DataSource, MoreThanOrEqual} from "typeorm";
+import {RequestTable} from "../domain/request.table";
 
 @Injectable()
 export class RequestApiSqlRepository {
     constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
-    async create(dto: RequestApiInputDto) {
-        const document = await this.RequestToApiModel.createRequest(
-            dto,
-            this.RequestToApiModel,
-        );
-        await document.save();
+    async create(dto: RequestTable) {
+        await this.dataSource
+            .getRepository(RequestTable)
+            .save(dto)
     }
 
-    async findByIp(dto: RequestApiInputDto, date: Date): Promise<number> {
-        return this.RequestToApiModel.countDocuments({
+    async findByIp(dto: RequestApiInputDto, date: Date) {
+        return this.dataSource
+            .getRepository(RequestTable)
+            .findBy({
             ip: dto.ip,
             url: dto.url,
-            date: { $gte: date },
+            date: MoreThanOrEqual(date),
         });
     }
 
-    async save(document: RequestToApiDocument) {
-        return document.save();
-    }
-
     async removeAll() {
-        await this.RequestToApiModel.deleteMany();
+        await this.dataSource
+            .getRepository(RequestTable)
+            .clear();
     }
 }
