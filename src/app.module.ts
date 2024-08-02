@@ -96,7 +96,7 @@ const repositories = [
   BlogsSqlRepository,
   UsersSqlRepository,
   DevicesSqlRepository,
-  RequestApiSqlRepository
+  RequestApiSqlRepository,
 ];
 
 const strategies = [

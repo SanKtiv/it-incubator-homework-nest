@@ -1,19 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Column, DataSource, Repository } from 'typeorm';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { AccountData, UsersTable } from '../domain/users.table';
+import { DataSource } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { UsersTable } from '../domain/users.table';
 import {UsersInputDto} from "../api/models/input/users.input.dto";
-import {UserDocument} from "../domain/users.schema";
-import {filterByLoginAndEmail} from "./utils.repositories";
 
 @Injectable()
 export class UsersSqlRepository {
   constructor(
     @InjectDataSource() protected dataSource: DataSource,
-    // @InjectRepository(UsersTable)
-    // protected usersRepository: Repository<UsersTable>,
-    // @InjectRepository(AccountData)
-    // protected usersAccRepository: Repository<AccountData>,
   ) {}
 
   async create(
@@ -35,10 +29,6 @@ export class UsersSqlRepository {
     );
   }
 
-  async save(userDocument: UserDocument): Promise<UserDocument> {
-    return userDocument.save();
-  }
-
   async findById(id: string): Promise<UsersTable | null> {
     try {
       return this.dataSource
@@ -57,35 +47,55 @@ export class UsersSqlRepository {
     });
   }
 
-  async findByRecoveryCode(code: string): Promise<UserDocument | null> {
-    return this.UserModel.findOne({
-      'passwordRecovery.recoveryCode': code,
+  async findByRecoveryCode(code: string): Promise<UsersTable | null> {
+    return this.dataSource
+        .getRepository(UsersTable)
+        .findOneBy({
+      recoveryCode: code
     });
   }
 
-  async findByLogin(login: string): Promise<UserDocument | null> {
-    return this.UserModel.findOne({ 'accountData.login': login });
+  async findByLogin(login: string): Promise<UsersTable | null> {
+    return this.dataSource
+        .getRepository(UsersTable)
+        .findOneBy({ login: login });
   }
 
-  async findByEmail(email: string): Promise<UserDocument | null> {
-    return this.UserModel.findOne({ 'accountData.email': email });
+  async findByEmail(email: string): Promise<UsersTable | null> {
+    return this.dataSource
+        .getRepository(UsersTable)
+        .findOneBy({ email: email });
   }
 
-  async findByLoginOrEmail(loginOrEmail: string): Promise<UserDocument | null> {
-    const filter = filterByLoginAndEmail(loginOrEmail, loginOrEmail);
-    return this.UserModel.findOne(filter);
+  async findByLoginOrEmail(loginOrEmail: string): Promise<UsersTable | null> {
+    return this.dataSource
+        .getRepository(UsersTable)
+        .findOneBy([
+          {email: loginOrEmail},
+          {login: loginOrEmail}
+        ]);
   }
 
-  async remove(id: string): Promise<UserDocument | null> {
+  async remove(id: string): Promise<UsersTable | null> {
     try {
-      return this.UserModel.findByIdAndDelete(id);
+      const user = await this.dataSource
+          .getRepository(UsersTable)
+          .findOneBy({id: id});
+
+      if (user) await this.dataSource
+          .getRepository(UsersTable)
+          .remove(user);
+
+      return user;
     } catch (e) {
       throw new Error('Error DB');
     }
   }
 
   async removeAll() {
-    await this.UserModel.deleteMany();
+    await this.dataSource
+        .getRepository(UsersTable)
+        .clear();
   }
     // return this.dataSource.getRepository(UsersTable).remove(user);
 
