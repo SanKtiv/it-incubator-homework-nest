@@ -1,18 +1,20 @@
 import { EmailAdapter } from '../infrastructure/mail.adapter';
 import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
-import { UsersRepository } from '../../users/infrastructure/users.repository';
+import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
 import { UsersService } from '../../users/application/users.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
 import { UserDocument } from '../../users/domain/users.schema';
+import {UsersSqlRepository} from "../../users/infrastructure/postgresqldb/users.sql.repository";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly emailAdapter: EmailAdapter,
     private readonly usersRepository: UsersRepository,
+    private readonly usersSqlRepository: UsersSqlRepository,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
@@ -20,26 +22,35 @@ export class AuthService {
   async registrationUser(dto: UsersInputDto) {
     const userDocument = await this.usersService.createUser(dto);
 
-    const confirmationCode = userDocument.emailConfirmation.confirmationCode;
+    //const confirmationCode = userDocument.emailConfirmation.confirmationCode; for mongo
+
+    const confirmationCode = userDocument.confirmationCode;
 
     await this.emailAdapter.sendConfirmationCode(dto.email, confirmationCode);
 
-    await this.usersService.saveUser(userDocument);
+    //await this.usersService.saveUser(userDocument);
   }
 
   async registrationConfirmation(code: string) {
     const userDocument =
-      await this.usersRepository.findByConfirmationCode(code);
+      await this.usersSqlRepository.findByConfirmationCode(code);
 
-    userDocument!.emailConfirmation.isConfirmed = true;
+    // userDocument!.emailConfirmation.isConfirmed = true; for mongo
+    userDocument!.isConfirmed = true;
 
-    await this.usersRepository.save(userDocument!);
+    await this.usersSqlRepository.save(userDocument!);
   }
 
   async resendConfirmCode(email: string): Promise<void> {
-    const userDocument = await this.usersRepository.findByEmail(email);
+    const userDocument = await this.usersSqlRepository.findByEmail(email);
 
-    if (!userDocument || userDocument.emailConfirmation.isConfirmed) {
+    // if (!userDocument || userDocument.emailConfirmation.isConfirmed) {
+    //   throw new BadRequestException({
+    //     message: [{ message: 'email already confirmed', field: 'email' }],
+    //   });
+    // } for mongo
+
+    if (!userDocument || userDocument.isConfirmed) {
       throw new BadRequestException({
         message: [{ message: 'email already confirmed', field: 'email' }],
       });
@@ -52,13 +63,17 @@ export class AuthService {
       emailConfirmation.confirmationCode,
     );
 
-    userDocument.emailConfirmation.confirmationCode =
-      emailConfirmation.confirmationCode;
+    // userDocument.emailConfirmation.confirmationCode =
+    //   emailConfirmation.confirmationCode;
+    //
+    // userDocument.emailConfirmation.expirationDate =
+    //   emailConfirmation.expirationDate;
 
-    userDocument.emailConfirmation.expirationDate =
-      emailConfirmation.expirationDate;
+    userDocument.confirmationCode = emailConfirmation.confirmationCode;
 
-    await this.usersService.saveUser(userDocument);
+    userDocument.expirationDate = emailConfirmation.expirationDate;
+
+    await this.usersSqlRepository.save(userDocument);
   }
 
   async emailIsConfirmed(email: string) {

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { UsersTable } from '../domain/users.table';
-import {UsersInputDto} from "../api/models/input/users.input.dto";
+import { UsersTable } from '../../domain/users.table';
+import {UsersInputDto} from "../../api/models/input/users.input.dto";
 
 @Injectable()
 export class UsersSqlRepository {
@@ -15,7 +15,7 @@ export class UsersSqlRepository {
       passwordHash: string,
       confirmationCode: string,
       expirationDate: Date,
-  ): Promise<any> {
+  ): Promise<UsersTable> {
     return this.dataSource
         .getRepository(UsersTable)
         .save(
@@ -27,6 +27,12 @@ export class UsersSqlRepository {
               expirationDate: expirationDate,
             }
     );
+  }
+
+  async save(user: UsersTable): Promise<UsersTable> {
+    return this.dataSource
+        .getRepository(UsersTable)
+        .save(user)
   }
 
   async findById(id: string): Promise<UsersTable | null> {

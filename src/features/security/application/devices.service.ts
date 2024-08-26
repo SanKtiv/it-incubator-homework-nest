@@ -12,23 +12,26 @@ import {
   devicesViewModel,
   OutputDeviceDto,
 } from '../api/models/output-device.dto';
+import {DevicesSqlRepository} from "../infrastructure/devices.sql.repository";
+import {DeviceTable} from "../domain/device.table";
 
 @Injectable()
 export class DevicesService {
   constructor(
     private readonly devicesRepository: DevicesRepository,
+    private readonly devicesSqlRepository: DevicesSqlRepository,
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(dto: DeviceDto): Promise<DeviceDocument> {
-    return this.devicesRepository.create(dto);
+  async create(dto: DeviceDto): Promise<DeviceTable> {
+    return this.devicesSqlRepository.create(dto);
   }
 
-  async save(document: DeviceDocument, token: string): Promise<void> {
+  async save(device: DeviceTable, token: string): Promise<void> {
     const payload = await this.jwtService.verifyAsync(token);
-    document.expirationDate = new Date(payload.exp * 1000).toISOString();
-    document.lastActiveDate = new Date(payload.iat * 1000).toISOString();
-    await this.devicesRepository.save(document);
+    device.expirationDate = new Date(payload.exp * 1000).toISOString();
+    device.lastActiveDate = new Date(payload.iat * 1000).toISOString();
+    await this.devicesSqlRepository.save(device);
   }
 
   async updateDates(deviceId: string, refreshToken: string) {

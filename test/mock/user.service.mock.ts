@@ -1,4 +1,4 @@
-import { UsersRepository } from '../../src/features/users/infrastructure/users.repository';
+import { UsersRepository } from '../../src/features/users/infrastructure/mongodb/users.repository';
 import { UsersService } from '../../src/features/users/application/users.service';
 
 export const UserServiceMockObject = {

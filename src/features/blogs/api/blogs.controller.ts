@@ -31,7 +31,7 @@ import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { BlogsSqlRepository } from '../infrastructure/blogs.sql.repository';
-import { UsersSqlRepository } from '../../users/infrastructure/users.sql.repository';
+import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
 import {DevicesSqlRepository} from "../../security/infrastructure/devices.sql.repository";
 import {RequestApiSqlRepository} from "../../requests/infrastructure/request.sql.repository";
 
@@ -53,7 +53,7 @@ export class BlogsController {
       url: 'Chrome3',
       date: '098761333',
     };
-    return this.usersSqlRepository.create(dto);
+    //return this.usersSqlRepository.create(dto);
   }
 
   @Post()

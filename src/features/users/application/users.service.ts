@@ -1,28 +1,33 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersInputDto } from '../api/models/input/users.input.dto';
 import bcrypt from 'bcrypt';
-import { UsersRepository } from '../infrastructure/users.repository';
+import { UsersRepository } from '../infrastructure/mongodb/users.repository';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import { UserDocument } from '../domain/users.schema';
+import {UsersSqlRepository} from "../infrastructure/postgresqldb/users.sql.repository";
+import {UsersTable} from "../domain/users.table";
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+      private readonly usersRepository: UsersRepository,
+      private readonly usersSqlRepository: UsersSqlRepository
+  ) {}
 
-  async createUser(dto: UsersInputDto): Promise<UserDocument> {
+  async createUser(dto: UsersInputDto): Promise<UsersTable> {
     const passwordHash = await this.genHash(dto.password);
 
     const code = this.createCodeWithExpireDate();
 
-    const userDocument = await this.usersRepository.create(
+    return this.usersSqlRepository.create(
       dto,
       passwordHash,
       code.confirmationCode,
       code.expirationDate,
     );
 
-    return this.saveUser(userDocument);
+    //return this.saveUser(userDocument); for mongo
   }
 
   async saveUser(userDocument: UserDocument) {

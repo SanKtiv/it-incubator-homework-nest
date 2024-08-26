@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
-import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
+import { UsersQueryRepository } from '../../users/infrastructure/mongodb/users.query.repository';
 import { AuthService } from '../application/auth.service';
 import { UserLoginDto } from './models/input/input.dto';
 import { EmailResendingDto } from './models/input/email-resending.input.dto';
@@ -78,7 +78,8 @@ export class AuthController {
 
     const deviceDocument = await this.devicesService.create(deviceDto);
 
-    const deviceId = deviceDocument._id.toString();
+    // const deviceId = deviceDocument._id.toString(); for mongo
+    const deviceId = deviceDocument.id;
 
     const accessToken = await this.authService.createAccessToken(userId);
 

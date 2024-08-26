@@ -10,7 +10,7 @@ import {
   PostsOutputDto,
   postsOutputDto,
 } from '../api/models/output/posts.output.dto';
-import { UsersRepository } from '../../users/infrastructure/users.repository';
+import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
 import { BlogsService } from '../../blogs/application/blogs.service';
 
 @Injectable()

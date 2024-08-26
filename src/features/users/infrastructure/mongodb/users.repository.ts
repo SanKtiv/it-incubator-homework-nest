@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument, UsersModelType } from '../domain/users.schema';
-import { UsersInputDto } from '../api/models/input/users.input.dto';
-import { filterByLoginAndEmail } from './utils.repositories';
+import { User, UserDocument, UsersModelType } from '../../domain/users.schema';
+import { UsersInputDto } from '../../api/models/input/users.input.dto';
+import { filterByLoginAndEmail } from '../utils.repositories';
 
 @Injectable()
 export class UsersRepository {

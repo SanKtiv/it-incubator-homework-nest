@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument, UsersModelType } from '../domain/users.schema';
+import { User, UserDocument, UsersModelType } from '../../domain/users.schema';
 import { Types } from 'mongoose';
-import { UsersQuery } from '../api/models/input/users.query.dto';
+import { UsersQuery } from '../../api/models/input/users.query.dto';
 import {
   filterByLoginAndEmail,
   loginAndEmailToRegExp,
-} from './utils.repositories';
+} from '../utils.repositories';
 import {
   infoCurrentUserDto,
   InfoCurrentUserDto,
-} from '../../auth/api/models/output/info-current-user.dto';
+} from '../../../auth/api/models/output/info-current-user.dto';
 
 @Injectable()
 export class UsersQueryRepository {

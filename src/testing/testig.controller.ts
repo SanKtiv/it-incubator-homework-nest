@@ -1,6 +1,6 @@
 import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { BlogsRepository } from '../features/blogs/infrastructure/blogs.repository';
-import { UsersRepository } from '../features/users/infrastructure/users.repository';
+import { UsersRepository } from '../features/users/infrastructure/mongodb/users.repository';
 import { PostsRepository } from '../features/posts/infrastructure/posts.repository';
 import { CommentsRepository } from '../features/comments/infrastructure/comments.repository';
 import { RequestApiRepository } from '../features/requests/infrastructure/request.repository';

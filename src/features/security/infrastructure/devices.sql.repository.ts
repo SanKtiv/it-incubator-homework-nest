@@ -14,9 +14,11 @@ export class DevicesSqlRepository {
             .save(dto);
     }
 
-    // async save(document: DeviceDocument): Promise<void> {
-    //     await document.save();
-    // }
+    async save(device: DeviceTable): Promise<void> {
+        await this.dataSource
+            .getRepository(DeviceTable)
+            .save(device);
+    }
 
     async findById(id: string): Promise<DeviceTable | null> {
         return this.dataSource

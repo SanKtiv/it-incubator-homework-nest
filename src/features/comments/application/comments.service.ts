@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { CommentsRepository } from '../infrastructure/comments.repository';
 import { PostsRepository } from '../../posts/infrastructure/posts.repository';
-import { UsersRepository } from '../../users/infrastructure/users.repository';
+import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
 import {
   CommentOutputDto,
   commentOutputDto,
