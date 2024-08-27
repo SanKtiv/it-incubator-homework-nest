@@ -73,7 +73,7 @@ export class UsersQueryRepository {
     const sortBy = `accountData.${query.sortBy}`;
 
     return this.UserModel.find(filter)
-      .sort({ [sortBy]: query.sortDirection })
+      //.sort({ [sortBy]: query.sortDirection }) dont work with lower case
       .skip((+query.pageNumber - 1) * +query.pageSize)
       .limit(+query.pageSize);
   }

@@ -21,6 +21,7 @@ import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.p
 import { UsersQuery } from './models/input/users.query.dto';
 import { UsersQueryRepository } from '../infrastructure/mongodb/users.query.repository';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
+import {UsersSqlQueryRepository} from "../infrastructure/postgresqldb/users.sql.query.repository";
 
 @Controller('users')
 @UseGuards(BasicAuthGuard)
@@ -28,6 +29,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly usersSqlQueryRepository: UsersSqlQueryRepository,
   ) {}
 
   @Post()
@@ -40,8 +42,8 @@ export class UsersController {
 
   @Get()
   async getUsersPaging(@Query() query: UsersQuery) {
-    const totalUsers = await this.usersQueryRepository.countDocument(query);
-    const usersPaging = await this.usersQueryRepository.findPaging(query);
+    const totalUsers = await this.usersSqlQueryRepository.countDocument(query);
+    const usersPaging = await this.usersSqlQueryRepository.findPaging(query);
     return usersPagingDto(totalUsers, query, usersPaging as any);// dont use any
   }
 

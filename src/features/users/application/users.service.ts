@@ -42,7 +42,7 @@ export class UsersService {
   }
 
   async existLogin(login: string): Promise<BadRequestException | void> {
-    const userDocument = await this.usersRepository.findByLogin(login);
+    const userDocument = await this.usersSqlRepository.findByLogin(login);
     if (userDocument) {
       throw new BadRequestException({
         message: [{ message: 'login is already exist', field: 'login' }],
@@ -51,7 +51,7 @@ export class UsersService {
   }
 
   async existEmail(email: string): Promise<BadRequestException | void> {
-    const userDocument = await this.usersRepository.findByEmail(email);
+    const userDocument = await this.usersSqlRepository.findByEmail(email);
     if (userDocument) {
       throw new BadRequestException({
         message: [{ message: 'email is already exist', field: 'email' }],
@@ -66,7 +66,7 @@ export class UsersService {
   }
 
   async deleteUserById(id: string): Promise<boolean> {
-    const result = await this.usersRepository.remove(id);
+    const result = await this.usersSqlRepository.remove(id);
 
     return !!result;
   }

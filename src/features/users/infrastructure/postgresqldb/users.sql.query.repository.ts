@@ -47,30 +47,36 @@ export class UsersSqlQueryRepository {
     //     return this.UserModel.findOne(filter);
     // }
     //
-    // async countDocument(query: UsersQuery): Promise<number> {
-    //     const term = loginAndEmailToRegExp(
-    //         query.searchLoginTerm,
-    //         query.searchEmailTerm,
-    //     );
-    //
-    //     const filter = filterByLoginAndEmail(term.login, term.email);
-    //
-    //     return this.UserModel.countDocuments(filter);
-    // }
-    //
-    // async findPaging(query: UsersQuery): Promise<UserDocument[]> {
-    //     const term = loginAndEmailToRegExp(
-    //         query.searchLoginTerm,
-    //         query.searchEmailTerm,
-    //     );
-    //
-    //     const filter = filterByLoginAndEmail(term.login, term.email);
-    //
-    //     const sortBy = `accountData.${query.sortBy}`;
-    //
-    //     return this.UserModel.find(filter)
-    //         .sort({ [sortBy]: query.sortDirection })
-    //         .skip((+query.pageNumber - 1) * +query.pageSize)
-    //         .limit(+query.pageSize);
-    // }
+    async countDocument(query: UsersQuery): Promise<number> {
+        const term = loginAndEmailToRegExp(
+            query.searchLoginTerm,
+            query.searchEmailTerm,
+        );
+
+        const filter = filterByLoginAndEmail(term.login, term.email);
+
+        return this.dataSource
+            .getRepository(UsersTable)
+            .count(filter);
+    }
+
+    async findPaging(query: UsersQuery): Promise<UsersTable[]> {
+        const term = loginAndEmailToRegExp(
+            query.searchLoginTerm,
+            query.searchEmailTerm,
+        );
+
+        const filter = filterByLoginAndEmail(term.login, term.email);
+
+        //const sortBy = `accountData.${query.sortBy}`; for mongo
+
+        return this.dataSource
+            .getRepository(UsersTable)
+            .createQueryBuilder("user")
+            .where(filter)
+            .orderBy(query.sortBy, query.sortDirection)
+            .skip((+query.pageNumber - 1) * +query.pageSize)
+            .take(+query.pageSize)
+            .getMany();
+    }
 }
