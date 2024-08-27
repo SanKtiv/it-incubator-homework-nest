@@ -66,7 +66,10 @@ export class UsersSqlQueryRepository {
             query.searchEmailTerm,
         );
 
-        const filter = filterByLoginAndEmail(term.login, term.email);
+        //const filter = filterByLoginAndEmail(term.login, term.email);for mongo
+console.log(term.login)
+        console.log(term.email)
+        const filter = "user.login ~ :login OR user.email ~ :email";
 
         //const sortBy = `accountData.${query.sortBy}`; for mongo
 
@@ -74,7 +77,7 @@ export class UsersSqlQueryRepository {
             return this.dataSource
                 .getRepository(UsersTable)
                 .createQueryBuilder("user")
-                .where(filter)
+                .where("user.login ~ :login OR user.email ~ :email", {login: term.login, email: term.email})
                 .orderBy(query.sortBy, query.sortDirection)
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .take(+query.pageSize)
