@@ -1,6 +1,6 @@
 import { DeviceDocument } from '../../domain/device.schema';
 import { map } from 'rxjs/operators';
-import {DeviceTable} from "../../domain/device.table";
+import { DeviceTable } from '../../domain/device.table';
 
 export class OutputDeviceDto {
   constructor(
@@ -18,7 +18,6 @@ export class OutputDeviceDto {
 //   ); for mongo
 
 export const devicesViewModel = (deviceDocuments: DeviceTable[]) =>
-    deviceDocuments.map(
-        (e) =>
-            new OutputDeviceDto(e.ip, e.title, e.lastActiveDate, e.id),
-    );
+  deviceDocuments.map(
+    (e) => new OutputDeviceDto(e.ip, e.title, e.lastActiveDate, e.id),
+  );

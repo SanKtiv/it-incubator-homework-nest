@@ -1,22 +1,22 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('devices')
 export class DeviceTable {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column('text')
-    ip: string;
+  @Column('text')
+  ip: string;
 
-    @Column('text')
-    title: string;
+  @Column('text')
+  title: string;
 
-    @Column('text')
-    userId: string;
+  @Column('text')
+  userId: string;
 
-    @Column({type: 'text', nullable: true})
-    lastActiveDate: string;
+  @Column({ type: 'text', nullable: true })
+  lastActiveDate: string;
 
-    @Column({type: 'text', nullable: true})
-    expirationDate: string;
+  @Column({ type: 'text', nullable: true })
+  expirationDate: string;
 }

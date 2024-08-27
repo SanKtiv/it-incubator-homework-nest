@@ -63,11 +63,11 @@ import { BlogsSqlRepository } from './features/blogs/infrastructure/blogs.sql.re
 import { BlogsTable } from './features/blogs/domain/blog.entity';
 import { AccountData, UsersTable } from './features/users/domain/users.table';
 import { UsersSqlRepository } from './features/users/infrastructure/postgresqldb/users.sql.repository';
-import {DeviceTable} from "./features/security/domain/device.table";
-import {DevicesSqlRepository} from "./features/security/infrastructure/devices.sql.repository";
-import {RequestApiSqlRepository} from "./features/requests/infrastructure/request.sql.repository";
-import {RequestTable} from "./features/requests/domain/request.table";
-import {UsersSqlQueryRepository} from "./features/users/infrastructure/postgresqldb/users.sql.query.repository";
+import { DeviceTable } from './features/security/domain/device.table';
+import { DevicesSqlRepository } from './features/security/infrastructure/devices.sql.repository';
+import { RequestApiSqlRepository } from './features/requests/infrastructure/request.sql.repository';
+import { RequestTable } from './features/requests/domain/request.table';
+import { UsersSqlQueryRepository } from './features/users/infrastructure/postgresqldb/users.sql.query.repository';
 
 dotenv.config();
 
@@ -96,7 +96,7 @@ const repositories = [
   RequestApiRepository,
   BlogsSqlRepository,
   UsersSqlRepository,
-    UsersSqlQueryRepository,
+  UsersSqlQueryRepository,
   DevicesSqlRepository,
   RequestApiSqlRepository,
 ];
@@ -132,7 +132,12 @@ const strategies = [
       //autoLoadEntities: false,
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([BlogsTable, DeviceTable, RequestTable, UsersTable]),
+    TypeOrmModule.forFeature([
+      BlogsTable,
+      DeviceTable,
+      RequestTable,
+      UsersTable,
+    ]),
     MongooseModule.forRoot(
       appSettings.env.isTesting()
         ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS

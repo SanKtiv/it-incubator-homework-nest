@@ -27,7 +27,7 @@ import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 import { InfoCurrentUserDto } from './models/output/info-current-user.dto';
 import { UsersService } from '../../users/application/users.service';
-import {UsersSqlQueryRepository} from "../../users/infrastructure/postgresqldb/users.sql.query.repository";
+import { UsersSqlQueryRepository } from '../../users/infrastructure/postgresqldb/users.sql.query.repository';
 
 @Controller('auth')
 export class AuthController {

@@ -12,8 +12,8 @@ import {
   devicesViewModel,
   OutputDeviceDto,
 } from '../api/models/output-device.dto';
-import {DevicesSqlRepository} from "../infrastructure/devices.sql.repository";
-import {DeviceTable} from "../domain/device.table";
+import { DevicesSqlRepository } from '../infrastructure/devices.sql.repository';
+import { DeviceTable } from '../domain/device.table';
 
 @Injectable()
 export class DevicesService {
@@ -70,6 +70,9 @@ export class DevicesService {
   }
 
   async deleteAllDevicesWithoutCurrent(payload: any) {
-    await this.devicesSqlRepository.deleteDevices(payload.sub, payload.deviceId);
+    await this.devicesSqlRepository.deleteDevices(
+      payload.sub,
+      payload.deviceId,
+    );
   }
 }

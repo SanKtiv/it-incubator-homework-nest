@@ -5,9 +5,9 @@ import { PostsRepository } from '../features/posts/infrastructure/posts.reposito
 import { CommentsRepository } from '../features/comments/infrastructure/comments.repository';
 import { RequestApiRepository } from '../features/requests/infrastructure/request.repository';
 import { DevicesRepository } from '../features/security/infrastructure/devices.repository';
-import {UsersSqlRepository} from "../features/users/infrastructure/postgresqldb/users.sql.repository";
-import {RequestApiSqlRepository} from "../features/requests/infrastructure/request.sql.repository";
-import {DevicesSqlRepository} from "../features/security/infrastructure/devices.sql.repository";
+import { UsersSqlRepository } from '../features/users/infrastructure/postgresqldb/users.sql.repository';
+import { RequestApiSqlRepository } from '../features/requests/infrastructure/request.sql.repository';
+import { DevicesSqlRepository } from '../features/security/infrastructure/devices.sql.repository';
 
 @Controller('testing/all-data')
 export class TestingController {

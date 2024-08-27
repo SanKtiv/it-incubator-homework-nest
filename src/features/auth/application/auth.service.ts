@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
 import { UserDocument } from '../../users/domain/users.schema';
-import {UsersSqlRepository} from "../../users/infrastructure/postgresqldb/users.sql.repository";
+import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
 
 @Injectable()
 export class AuthService {
@@ -169,7 +169,7 @@ export class AuthService {
     // );for mongo
 
     userDocument!.passwordHash = await this.usersService.genHash(
-        dto.newPassword,
+      dto.newPassword,
     );
 
     await this.usersSqlRepository.save(userDocument!);

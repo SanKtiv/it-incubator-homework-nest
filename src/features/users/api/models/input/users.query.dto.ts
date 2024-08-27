@@ -13,7 +13,7 @@ export class UsersQuery {
   sortBy: string = 'createdAt';
   @IsOptional()
   @IsString()
-  sortDirection: "ASC" | "DESC" = "DESC";
+  sortDirection: 'ASC' | 'DESC' = 'DESC';
   @IsOptional()
   @Type(() => Number)
   @IsNumber()

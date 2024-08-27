@@ -5,14 +5,14 @@ import { UsersRepository } from '../infrastructure/mongodb/users.repository';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import { UserDocument } from '../domain/users.schema';
-import {UsersSqlRepository} from "../infrastructure/postgresqldb/users.sql.repository";
-import {UsersTable} from "../domain/users.table";
+import { UsersSqlRepository } from '../infrastructure/postgresqldb/users.sql.repository';
+import { UsersTable } from '../domain/users.table';
 
 @Injectable()
 export class UsersService {
   constructor(
-      private readonly usersRepository: UsersRepository,
-      private readonly usersSqlRepository: UsersSqlRepository
+    private readonly usersRepository: UsersRepository,
+    private readonly usersSqlRepository: UsersSqlRepository,
   ) {}
 
   async createUser(dto: UsersInputDto): Promise<UsersTable> {

@@ -1,9 +1,4 @@
-import {
-  Column,
-  Entity,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('account_data')
 export class AccountData {
@@ -26,38 +21,38 @@ export class AccountData {
 @Entity('users')
 // @Tree("closure-table")
 export class UsersTable {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column('text')
-    login: string;
+  @Column('text')
+  login: string;
 
-    @Column('text')
-    email: string;
+  @Column('text')
+  email: string;
 
-    @Column('text')
-    createdAt: string;
+  @Column('text')
+  createdAt: string;
 
-    @Column('text')
-    passwordHash: string;
+  @Column('text')
+  passwordHash: string;
 
-    @Column('text')
-    confirmationCode: string;
+  @Column('text')
+  confirmationCode: string;
 
-    @Column('date')
-    expirationDate: Date;
+  @Column('date')
+  expirationDate: Date;
 
-    @Column({type: "boolean", default: false})
-    isConfirmed: boolean;
+  @Column({ type: 'boolean', default: false })
+  isConfirmed: boolean;
 
-    @Column({type: "text", nullable: true})
-    recoveryCode: string;
+  @Column({ type: 'text', nullable: true })
+  recoveryCode: string;
 
-    @Column({type: "date", nullable: true})
-    expirationDateRecovery: Date;
+  @Column({ type: 'date', nullable: true })
+  expirationDateRecovery: Date;
 
-    // @OneToOne(() => AccountData)
-    // @JoinColumn()
-    // @TreeParent()
-    // accountData: AccountData;
+  // @OneToOne(() => AccountData)
+  // @JoinColumn()
+  // @TreeParent()
+  // accountData: AccountData;
 }

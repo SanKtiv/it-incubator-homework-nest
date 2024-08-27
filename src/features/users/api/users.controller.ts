@@ -21,7 +21,7 @@ import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.p
 import { UsersQuery } from './models/input/users.query.dto';
 import { UsersQueryRepository } from '../infrastructure/mongodb/users.query.repository';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
-import {UsersSqlQueryRepository} from "../infrastructure/postgresqldb/users.sql.query.repository";
+import { UsersSqlQueryRepository } from '../infrastructure/postgresqldb/users.sql.query.repository';
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
@@ -44,7 +44,7 @@ export class UsersController {
   async getUsersPaging(@Query() query: UsersQuery) {
     const totalUsers = await this.usersSqlQueryRepository.countDocument(query);
     const usersPaging = await this.usersSqlQueryRepository.findPaging(query);
-    return usersPagingDto(totalUsers, query, usersPaging as any);// dont use any
+    return usersPagingDto(totalUsers, query, usersPaging as any); // dont use any
   }
 
   @Delete(':userId')

@@ -32,8 +32,8 @@ import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { BlogsSqlRepository } from '../infrastructure/blogs.sql.repository';
 import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
-import {DevicesSqlRepository} from "../../security/infrastructure/devices.sql.repository";
-import {RequestApiSqlRepository} from "../../requests/infrastructure/request.sql.repository";
+import { DevicesSqlRepository } from '../../security/infrastructure/devices.sql.repository';
+import { RequestApiSqlRepository } from '../../requests/infrastructure/request.sql.repository';
 
 @Controller('blogs')
 export class BlogsController {
@@ -49,7 +49,7 @@ export class BlogsController {
   @Get('/blogs')
   async createBlogInSql() {
     const dto = {
-        ip: '12345',
+      ip: '12345',
       url: 'Chrome3',
       date: '098761333',
     };

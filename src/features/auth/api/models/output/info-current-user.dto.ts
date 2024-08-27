@@ -1,5 +1,5 @@
 import { UserDocument } from '../../../../users/domain/users.schema';
-import {UsersTable} from "../../../../users/domain/users.table";
+import { UsersTable } from '../../../../users/domain/users.table';
 
 export class InfoCurrentUserDto {
   constructor(
@@ -17,8 +17,4 @@ export class InfoCurrentUserDto {
 //   ); for mongo
 
 export const infoCurrentUserDto = (document: UsersTable) =>
-    new InfoCurrentUserDto(
-        document.email,
-        document.login,
-        document.id,
-    );
+  new InfoCurrentUserDto(document.email, document.login, document.id);

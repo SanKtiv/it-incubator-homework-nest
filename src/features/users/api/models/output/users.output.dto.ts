@@ -1,6 +1,6 @@
 import { UserDocument } from '../../../domain/users.schema';
 import { UsersQuery } from '../input/users.query.dto';
-import {UsersTable} from "../../../domain/users.table";
+import { UsersTable } from '../../../domain/users.table';
 
 export class UsersOutputDto {
   constructor(
@@ -20,12 +20,12 @@ export class UsersOutputDto {
 //   ); for mongo
 
 export const usersOutputDto = (userDocument: UsersTable): UsersOutputDto =>
-    new UsersOutputDto(
-        userDocument.id,
-        userDocument.login,
-        userDocument.email,
-        userDocument.createdAt,
-    );
+  new UsersOutputDto(
+    userDocument.id,
+    userDocument.login,
+    userDocument.email,
+    userDocument.createdAt,
+  );
 
 export class UsersPagingDto {
   constructor(
@@ -51,14 +51,14 @@ export class UsersPagingDto {
 //   ); for mongo
 
 export const usersPagingDto = (
-    totalUsers: number,
-    query: UsersQuery,
-    usersPaging: UsersTable[],
+  totalUsers: number,
+  query: UsersQuery,
+  usersPaging: UsersTable[],
 ): UsersPagingDto =>
-    new UsersPagingDto(
-        Math.ceil(totalUsers / +query.pageSize),
-        +query.pageNumber,
-        +query.pageSize,
-        totalUsers,
-        usersPaging.map((user) => usersOutputDto(user)),
-    );
+  new UsersPagingDto(
+    Math.ceil(totalUsers / +query.pageSize),
+    +query.pageNumber,
+    +query.pageSize,
+    totalUsers,
+    usersPaging.map((user) => usersOutputDto(user)),
+  );
