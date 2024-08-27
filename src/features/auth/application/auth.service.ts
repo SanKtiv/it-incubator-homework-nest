@@ -116,7 +116,7 @@ export class AuthService {
     const payload = { sub: userId };
 
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '10s',
+      expiresIn: '5m',
     });
 
     return { accessToken: accessToken };
@@ -133,20 +133,24 @@ export class AuthService {
   async createRefreshToken(userId: string, deviceId: string) {
     const payload = { sub: userId, deviceId: deviceId };
 
-    return this.jwtService.signAsync(payload, { expiresIn: '20s' });
+    return this.jwtService.signAsync(payload, { expiresIn: '20m' });
   }
 
   async passwordRecovery(email: string) {
     const code = this.usersService.createCodeWithExpireDate();
 
-    const userDocument = await this.usersRepository.findByEmail(email);
+    const userDocument = await this.usersSqlRepository.findByEmail(email);
 
     if (userDocument) {
-      userDocument.passwordRecovery!.recoveryCode = code.confirmationCode;
+      // userDocument.passwordRecovery!.recoveryCode = code.confirmationCode;
+      //
+      // userDocument.passwordRecovery!.expirationDate = code.expirationDate; for mongo
 
-      userDocument.passwordRecovery!.expirationDate = code.expirationDate;
+      userDocument.recoveryCode = code.confirmationCode;
 
-      await this.usersService.saveUser(userDocument);
+      userDocument.expirationDate = code.expirationDate;
+
+      await this.usersSqlRepository.save(userDocument);
     }
 
     await this.emailAdapter.sendRecoveryConfirmationCode(
@@ -156,14 +160,18 @@ export class AuthService {
   }
 
   async saveNewPassword(dto: NewPasswordInputDto) {
-    const userDocument = await this.usersRepository.findByRecoveryCode(
+    const userDocument = await this.usersSqlRepository.findByRecoveryCode(
       dto.recoveryCode,
     );
 
-    userDocument!.accountData.passwordHash = await this.usersService.genHash(
-      dto.newPassword,
+    // userDocument!.accountData.passwordHash = await this.usersService.genHash(
+    //   dto.newPassword,
+    // );for mongo
+
+    userDocument!.passwordHash = await this.usersService.genHash(
+        dto.newPassword,
     );
 
-    await this.usersService.saveUser(userDocument!);
+    await this.usersSqlRepository.save(userDocument!);
   }
 }

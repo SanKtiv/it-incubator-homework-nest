@@ -22,7 +22,7 @@ export class UsersQueryRepository {
 
   async infoCurrentUser(id: string): Promise<InfoCurrentUserDto> {
     const userDocument = await this.findById(id);
-    return infoCurrentUserDto(userDocument!);
+    return infoCurrentUserDto(userDocument! as any); // as any delete
   }
 
   async loginIsExist(login: string): Promise<number> {

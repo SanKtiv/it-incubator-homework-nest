@@ -67,6 +67,7 @@ import {DeviceTable} from "./features/security/domain/device.table";
 import {DevicesSqlRepository} from "./features/security/infrastructure/devices.sql.repository";
 import {RequestApiSqlRepository} from "./features/requests/infrastructure/request.sql.repository";
 import {RequestTable} from "./features/requests/domain/request.table";
+import {UsersSqlQueryRepository} from "./features/users/infrastructure/postgresqldb/users.sql.query.repository";
 
 dotenv.config();
 
@@ -95,6 +96,7 @@ const repositories = [
   RequestApiRepository,
   BlogsSqlRepository,
   UsersSqlRepository,
+    UsersSqlQueryRepository,
   DevicesSqlRepository,
   RequestApiSqlRepository,
 ];

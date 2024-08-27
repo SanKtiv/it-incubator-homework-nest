@@ -48,7 +48,7 @@ export class UsersPagingDto {
 //     +query.pageSize,
 //     totalUsers,
 //     usersPaging.map((user) => usersOutputDto(user)),
-//   );
+//   ); for mongo
 
 export const usersPagingDto = (
     totalUsers: number,

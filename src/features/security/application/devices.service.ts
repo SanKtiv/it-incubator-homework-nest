@@ -35,12 +35,12 @@ export class DevicesService {
   }
 
   async updateDates(deviceId: string, refreshToken: string) {
-    const deviceDocument = await this.devicesRepository.findById(deviceId);
+    const deviceDocument = await this.devicesSqlRepository.findById(deviceId);
     await this.save(deviceDocument!, refreshToken);
   }
 
   async checkExpirationDate(payload: any) {
-    const deviceDocument = await this.devicesRepository.findById(
+    const deviceDocument = await this.devicesSqlRepository.findById(
       payload.deviceId,
     );
     if (
@@ -54,22 +54,22 @@ export class DevicesService {
 
   async findByUserId(userId: string): Promise<OutputDeviceDto[]> {
     const deviceDocumentsArray =
-      await this.devicesRepository.findByUserId(userId);
+      await this.devicesSqlRepository.findByUserId(userId);
     return devicesViewModel(deviceDocumentsArray);
   }
 
   async deleteDeviceCurrentUserByDeviceId(deviceId: string, userId: string) {
-    const deviceDocument = await this.devicesRepository.findById(deviceId);
+    const deviceDocument = await this.devicesSqlRepository.findById(deviceId);
     if (!deviceDocument) throw new NotFoundException();
     if (deviceDocument.userId !== userId) throw new ForbiddenException();
-    await this.devicesRepository.deleteDeviceById(deviceId);
+    await this.devicesSqlRepository.deleteDeviceById(deviceId);
   }
 
   async deleteDeviceById(id: string) {
-    await this.devicesRepository.deleteDeviceById(id);
+    await this.devicesSqlRepository.deleteDeviceById(id);
   }
 
   async deleteAllDevicesWithoutCurrent(payload: any) {
-    await this.devicesRepository.deleteDevices(payload.sub, payload.deviceId);
+    await this.devicesSqlRepository.deleteDevices(payload.sub, payload.deviceId);
   }
 }

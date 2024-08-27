@@ -13,6 +13,7 @@ import {
 } from '../../../auth/api/models/output/info-current-user.dto';
 import {InjectDataSource} from "@nestjs/typeorm";
 import {DataSource} from "typeorm";
+import {UsersTable} from "../../domain/users.table";
 
 @Injectable()
 export class UsersSqlQueryRepository {
@@ -24,10 +25,12 @@ export class UsersSqlQueryRepository {
     //     return this.UserModel.findById(id);
     // }
     //
-    // async infoCurrentUser(id: string): Promise<InfoCurrentUserDto> {
-    //     const userDocument = await this.findById(id);
-    //     return infoCurrentUserDto(userDocument!);
-    // }
+    async infoCurrentUser(id: string): Promise<InfoCurrentUserDto> {
+        const userDocument = await this.dataSource
+            .getRepository(UsersTable)
+            .findOneBy({id: id});
+        return infoCurrentUserDto(userDocument!);
+    }
     //
     // async loginIsExist(login: string): Promise<number> {
     //     return this.UserModel.countDocuments({ 'accountData.login': login });
