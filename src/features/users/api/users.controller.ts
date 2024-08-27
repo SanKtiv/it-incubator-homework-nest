@@ -23,7 +23,7 @@ import { UsersQueryRepository } from '../infrastructure/mongodb/users.query.repo
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import {UsersSqlQueryRepository} from "../infrastructure/postgresqldb/users.sql.query.repository";
 
-@Controller('users')
+@Controller('sa/users')
 @UseGuards(BasicAuthGuard)
 export class UsersController {
   constructor(
