@@ -70,13 +70,19 @@ export class UsersSqlQueryRepository {
 
         //const sortBy = `accountData.${query.sortBy}`; for mongo
 
-        return this.dataSource
-            .getRepository(UsersTable)
-            .createQueryBuilder("user")
-            .where(filter)
-            .orderBy(query.sortBy, query.sortDirection)
-            .skip((+query.pageNumber - 1) * +query.pageSize)
-            .take(+query.pageSize)
-            .getMany();
+        try {
+            return this.dataSource
+                .getRepository(UsersTable)
+                .createQueryBuilder("user")
+                .where(filter)
+                .orderBy(query.sortBy, query.sortDirection)
+                .skip((+query.pageNumber - 1) * +query.pageSize)
+                .take(+query.pageSize)
+                .getMany();
+        }
+        catch (e) {
+            throw new Error('Error DB');
+        }
+
     }
 }
