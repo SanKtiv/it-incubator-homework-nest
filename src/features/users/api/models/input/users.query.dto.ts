@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import {IsNumber, IsOptional, IsString, IsUppercase, Min} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UsersQuery {
@@ -13,6 +13,7 @@ export class UsersQuery {
   sortBy: string = 'createdAt';
   @IsOptional()
   @IsString()
+  @IsUppercase()
   sortDirection: 'ASC' | 'DESC' = 'DESC';
   @IsOptional()
   @Type(() => Number)
