@@ -177,18 +177,20 @@ const strategies = [
     EmailAdapter,
   ],
 })
-// export class AppModule implements NestModule {
-//   configure(consumer: MiddlewareConsumer) {
-//     consumer
-//       .apply(TooManyRequestsMiddleware)
-//       .forRoutes(
-//         '/auth/registration',
-//         '/auth/login',
-//         '/auth/password-recovery',
-//         '/auth/new-password',
-//         '/auth/registration-confirmation',
-//         '/auth/registration-email-resending',
-//       );
-//   }
-// }
-//
+
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      // .apply(TooManyRequestsMiddleware)
+        .apply()
+      .forRoutes(
+        '/auth/registration',
+        '/auth/login',
+        '/auth/password-recovery',
+        '/auth/new-password',
+        '/auth/registration-confirmation',
+        '/auth/registration-email-resending',
+      );
+  }
+}
+
