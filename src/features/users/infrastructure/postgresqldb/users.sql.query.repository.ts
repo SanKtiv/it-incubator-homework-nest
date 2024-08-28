@@ -57,16 +57,23 @@ export class UsersSqlQueryRepository {
   }
 
   async findPaging(query: UsersQuery): Promise<UsersTable[]> {
+    const loginTerm = query.searchLoginTerm;
+    const emailTerm = query.searchEmailTerm;
 
-    const filter = 'user.login ~* :login OR user.email ~* :email';
+    const usersPaging = this.dataSource
+        .getRepository(UsersTable)
+        .createQueryBuilder('user')
 
-    const paramFilter = {login: query.searchLoginTerm, email: query.searchEmailTerm}
+    if (loginTerm || emailTerm) {
+      const filter = 'user.login ~* :login OR user.email ~* :email';
+      const paramFilter = {login: loginTerm, email: emailTerm}
+
+      usersPaging.where(filter, paramFilter)
+    }
+
 
     try {
-      return this.dataSource
-          .getRepository(UsersTable)
-          .createQueryBuilder('user')
-          .where(filter, paramFilter)
+      return usersPaging
           .orderBy(`user.${query.sortBy}`, query.sortDirection)
           .skip((query.pageNumber - 1) * query.pageSize)
           .take(query.pageSize)
