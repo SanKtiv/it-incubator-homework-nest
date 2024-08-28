@@ -12,7 +12,7 @@ import {
   InfoCurrentUserDto,
 } from '../../../auth/api/models/output/info-current-user.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+import {Brackets, DataSource} from 'typeorm';
 import { UsersTable } from '../../domain/users.table';
 
 @Injectable()
@@ -57,30 +57,20 @@ export class UsersSqlQueryRepository {
   }
 
   async findPaging(query: UsersQuery): Promise<UsersTable[]> {
-    const term = loginAndEmailToRegExp(
-      query.searchLoginTerm,
-      query.searchEmailTerm,
-    );
 
-    //const filter = filterByLoginAndEmail(term.login, term.email);for mongo
-    console.log(term.login);
-    console.log(term.email);
-    const filter = 'user.login ~ :login OR user.email ~ :email';
+    const filter = 'user.login ~* :login OR user.email ~* :email';
 
-    //const sortBy = `accountData.${query.sortBy}`; for mongo
+    const paramFilter = {login: query.searchLoginTerm, email: query.searchEmailTerm}
 
     try {
       return this.dataSource
-        .getRepository(UsersTable)
-        .createQueryBuilder('user')
-        .where('user.login ~ :login OR user.email ~ :email', {
-          login: term.login,
-          email: term.email,
-        })
-        .orderBy(query.sortBy, query.sortDirection)
-        .skip((+query.pageNumber - 1) * +query.pageSize)
-        .take(+query.pageSize)
-        .getMany();
+          .getRepository(UsersTable)
+          .createQueryBuilder('user')
+          .where(filter, paramFilter)
+          .orderBy(`user.${query.sortBy}`, query.sortDirection)
+          .skip((query.pageNumber - 1) * query.pageSize)
+          .take(query.pageSize)
+          .getMany();
     } catch (e) {
       throw new Error('Error DB');
     }
