@@ -42,6 +42,7 @@ export class UsersController {
 
   @Get()
   async getUsersPaging(@Query() query: UsersQuery) {
+    console.log(query)
     const totalUsers = await this.usersSqlQueryRepository.countDocument(query);
     const usersPaging = await this.usersSqlQueryRepository.findPaging(query);
     return usersPagingDto(totalUsers, query, usersPaging as any); // dont use any
