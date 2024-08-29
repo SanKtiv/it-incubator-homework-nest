@@ -43,9 +43,9 @@ export class UsersController {
   @Get()
   async getUsersPaging(@Query() query: UsersQuery) {
     //console.log(query)
-    //const totalUsers = await this.usersSqlQueryRepository.countDocument(query);
-    //const usersPaging = await this.usersSqlQueryRepository.findPaging(query);
-    //return usersPagingDto(totalUsers, query, usersPaging);
+    //const totalUsers = await this.usersSqlQueryRepository.countDocument(query);for mongo
+    //const usersPaging = await this.usersSqlQueryRepository.findPaging(query);for mongo
+    //return usersPagingDto(totalUsers, query, usersPaging);for mongo
       return await this.usersSqlQueryRepository.findPaging(query)
   }
 
