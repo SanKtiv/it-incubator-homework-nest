@@ -59,7 +59,6 @@ export class UsersSqlQueryRepository {
   async findPaging(query: UsersQuery): Promise<UsersTable[]> {
     const loginTerm = query.searchLoginTerm;
     const emailTerm = query.searchEmailTerm;
-    const sortDirection = query.sortDirection ? query.sortDirection.toUpperCase() : undefined
 
     const usersPaging = this.dataSource
         .getRepository(UsersTable)
@@ -75,7 +74,7 @@ export class UsersSqlQueryRepository {
 
     try {
       return usersPaging
-          .orderBy(`user.${query.sortBy}`, sortDirection)
+          .orderBy(`user.${query.sortBy}`, query.sortDirection)
           .skip((query.pageNumber - 1) * query.pageSize)
           .take(query.pageSize)
           .getMany();
