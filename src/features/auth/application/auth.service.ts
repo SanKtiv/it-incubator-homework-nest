@@ -36,6 +36,13 @@ export class AuthService {
     const userDocument =
       await this.usersSqlRepository.findByConfirmationCode(code);
 
+    if (!userDocument ||
+        userDocument.expirationDate < new Date() ||
+        userDocument.isConfirmed)
+      throw new BadRequestException({
+      message: [{ message: 'code is wrong', field: 'code' }],
+    });
+
     // userDocument!.emailConfirmation.isConfirmed = true; for mongo
     userDocument!.isConfirmed = true;
 

@@ -2,7 +2,7 @@ import { IsString } from 'class-validator';
 import { ConfirmationCodeIsValid } from '../../../../../infrastructure/decorators/confirmation-code-is-valid.decorator';
 
 export class ConfirmationCodeDto {
-  @ConfirmationCodeIsValid()
+  //@ConfirmationCodeIsValid()
   @IsString()
   code: string;
 }
