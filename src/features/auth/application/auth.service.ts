@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
 import { UserDocument } from '../../users/domain/users.schema';
 import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
+import {UsersTable} from "../../users/domain/users.table";
 
 @Injectable()
 export class AuthService {
@@ -96,15 +97,16 @@ export class AuthService {
   async validateUser(
     loginOrEmail: string,
     password: string,
-  ): Promise<UserDocument | null> {
+  ): Promise<UsersTable | null> {
     const userDocument =
-      await this.usersRepository.findByLoginOrEmail(loginOrEmail);
+      await this.usersSqlRepository.findByLoginOrEmail(loginOrEmail);
 
     if (!userDocument) return null;
 
     const compareHash = await bcrypt.compare(
       password,
-      userDocument.accountData.passwordHash,
+      //userDocument.accountData.passwordHash, for mongo
+        userDocument.passwordHash,
     );
 
     if (!compareHash) return null;
