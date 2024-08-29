@@ -181,8 +181,7 @@ const strategies = [
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      // .apply(TooManyRequestsMiddleware)
-        .apply()
+      .apply(TooManyRequestsMiddleware)
       .forRoutes(
         '/auth/registration',
         '/auth/login',
