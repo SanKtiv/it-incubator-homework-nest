@@ -14,6 +14,7 @@ import {
 import { InjectDataSource } from '@nestjs/typeorm';
 import {Brackets, DataSource} from 'typeorm';
 import { UsersTable } from '../../domain/users.table';
+import {UsersPagingDto, usersPagingDto} from "../../api/models/output/users.output.dto";
 
 @Injectable()
 export class UsersSqlQueryRepository {
@@ -56,11 +57,11 @@ export class UsersSqlQueryRepository {
     return this.dataSource.getRepository(UsersTable).count(filter);
   }
 
-  async findPaging(query: UsersQuery): Promise<UsersTable[]> {
+  async findPaging(query: UsersQuery): Promise<UsersPagingDto> {
     const loginTerm = query.searchLoginTerm;
     const emailTerm = query.searchEmailTerm;
 
-    const usersPaging = this.dataSource
+    const users = this.dataSource
         .getRepository(UsersTable)
         .createQueryBuilder('user')
 
@@ -68,18 +69,17 @@ export class UsersSqlQueryRepository {
       const filter = 'user.login ~* :login OR user.email ~* :email';
       const paramFilter = {login: loginTerm, email: emailTerm}
 
-      usersPaging.where(filter, paramFilter)
+      users.where(filter, paramFilter)
     }
 
+    const totalUsers = await users.getCount()
 
-    try {
-      return usersPaging
-          .orderBy(`user.${query.sortBy}`, query.sortDirection)
-          .skip((query.pageNumber - 1) * query.pageSize)
-          .take(query.pageSize)
-          .getMany();
-    } catch (e) {
-      throw new Error('Error DB');
-    }
+    const usersPaging = await users
+        .orderBy(`user.${query.sortBy}`, query.sortDirection)
+        .skip((query.pageNumber - 1) * query.pageSize)
+        .take(query.pageSize)
+        .getMany();
+
+    return usersPagingDto(totalUsers, query, usersPaging)
   }
 }
