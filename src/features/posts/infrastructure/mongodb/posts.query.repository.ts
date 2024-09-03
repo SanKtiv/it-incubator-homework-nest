@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostModelType } from '../domain/posts.schema';
-import { PostQuery } from '../api/models/input/posts.input.dto';
+import { Post, PostModelType } from '../../domain/posts.schema';
+import { PostQuery } from '../../api/models/input/posts.input.dto';
 import {
   PostsOutputDto,
   postsOutputDto,
   PostsPaging,
   postsPaging,
-} from '../api/models/output/posts.output.dto';
+} from '../../api/models/output/posts.output.dto';
 
 @Injectable()
 export class PostsQueryRepository {

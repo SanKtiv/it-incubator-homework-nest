@@ -4,10 +4,10 @@ import { AppService } from './app.service';
 import { BlogsController } from './features/blogs/api/blogs.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogSchema } from './features/blogs/domain/blogs.schema';
-import { BlogsRepository } from './features/blogs/infrastructure/blogs.repository';
+import { BlogsRepository } from './features/blogs/infrastructure/mongodb/blogs.repository';
 import { TestingController } from './testing/testig.controller';
 import { BlogsService } from './features/blogs/application/blogs.service';
-import { BlogsQueryRepository } from './features/blogs/infrastructure/blogs.query.repository';
+import { BlogsQueryRepository } from './features/blogs/infrastructure/mongodb/blogs.query.repository';
 import { UsersService } from './features/users/application/users.service';
 import { UsersRepository } from './features/users/infrastructure/mongodb/users.repository';
 import { UsersController } from './features/users/api/users.controller';
@@ -15,9 +15,9 @@ import { User, UsersSchema } from './features/users/domain/users.schema';
 import { UsersQueryRepository } from './features/users/infrastructure/mongodb/users.query.repository';
 import { PostController } from './features/posts/api/posts.controller';
 import { PostsService } from './features/posts/application/posts.service';
-import { PostsRepository } from './features/posts/infrastructure/posts.repository';
+import { PostsRepository } from './features/posts/infrastructure/mongodb/posts.repository';
 import { Post, PostSchema } from './features/posts/domain/posts.schema';
-import { PostsQueryRepository } from './features/posts/infrastructure/posts.query.repository';
+import { PostsQueryRepository } from './features/posts/infrastructure/mongodb/posts.query.repository';
 import {
   Comment,
   CommentSchema,
@@ -59,7 +59,7 @@ import { BlogIdIsExistConstraint } from './infrastructure/decorators/validation/
 import configuration from './settings/configuration';
 import { DevicesController } from './features/security/api/devices.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BlogsSqlRepository } from './features/blogs/infrastructure/blogs.sql.repository';
+import { BlogsSqlRepository } from './features/blogs/infrastructure/postgresdb/blogs.sql.repository';
 import { BlogsTable } from './features/blogs/domain/blog.entity';
 import { AccountData, UsersTable } from './features/users/domain/users.table';
 import { UsersSqlRepository } from './features/users/infrastructure/postgresqldb/users.sql.repository';
@@ -68,6 +68,7 @@ import { DevicesSqlRepository } from './features/security/infrastructure/devices
 import { RequestApiSqlRepository } from './features/requests/infrastructure/request.sql.repository';
 import { RequestTable } from './features/requests/domain/request.table';
 import { UsersSqlQueryRepository } from './features/users/infrastructure/postgresqldb/users.sql.query.repository';
+import {BlogsSqlQueryRepository} from "./features/blogs/infrastructure/postgresdb/blogs.sql.query.repository";
 
 dotenv.config();
 
@@ -86,6 +87,8 @@ const services = [
 const repositories = [
   BlogsRepository,
   BlogsQueryRepository,
+  BlogsSqlRepository,
+  BlogsSqlQueryRepository,
   PostsRepository,
   PostsQueryRepository,
   CommentsRepository,
@@ -94,7 +97,6 @@ const repositories = [
   UsersQueryRepository,
   DevicesRepository,
   RequestApiRepository,
-  BlogsSqlRepository,
   UsersSqlRepository,
   UsersSqlQueryRepository,
   DevicesSqlRepository,

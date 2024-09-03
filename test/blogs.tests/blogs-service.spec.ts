@@ -1,7 +1,7 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { Model } from 'mongoose';
 import { BlogsService } from '../../src/features/blogs/application/blogs.service';
-import { BlogsRepository } from '../../src/features/blogs/infrastructure/blogs.repository';
+import { BlogsRepository } from '../../src/features/blogs/infrastructure/mongodb/blogs.repository';
 import {
   Blog,
   BlogDocument,

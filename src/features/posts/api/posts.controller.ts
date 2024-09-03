@@ -19,8 +19,8 @@ import {
   PostsInputDto,
 } from './models/input/posts.input.dto';
 import { PostsOutputDto, PostsPaging } from './models/output/posts.output.dto';
-import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
-import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
+import { BlogsQueryRepository } from '../../blogs/infrastructure/mongodb/blogs.query.repository';
+import { PostsQueryRepository } from '../infrastructure/mongodb/posts.query.repository';
 import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { CommentInputDto } from '../../comments/api/models/input/comment.input.dto';
 import { CommentsService } from '../../comments/application/comments.service';

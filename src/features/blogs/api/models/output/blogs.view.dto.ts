@@ -1,5 +1,6 @@
 import { BlogDocument } from '../../../domain/blogs.schema';
 import { BlogQuery } from '../input/blogs.input.dto';
+import {BlogsTable} from "../../../domain/blog.entity";
 
 export class BlogsViewDto {
   constructor(
@@ -32,6 +33,16 @@ export const blogsViewDto = (blogDocument: BlogDocument) =>
     blogDocument.isMembership,
   );
 
+export const sqlBlogsViewDto = (blogDocument: BlogsTable) =>
+    new BlogsViewDto(
+        blogDocument.id,
+        blogDocument.name,
+        blogDocument.description,
+        blogDocument.websiteUrl,
+        blogDocument.createdAt,
+        blogDocument.isMembership,
+    );
+
 export const blogPagingViewModel = (
   query: BlogQuery,
   totalBlogs: number,
@@ -44,3 +55,16 @@ export const blogPagingViewModel = (
     totalBlogs,
     blogsPaging.map((blog) => blogsViewDto(blog)),
   );
+
+export const sqlBlogPagingViewModel = (
+    query: BlogQuery,
+    totalBlogs: number,
+    blogsPaging: BlogsTable[],
+) =>
+    new BlogsViewPagingDto(
+        Math.ceil(totalBlogs / query.pageSize),
+        query.pageNumber,
+        query.pageSize,
+        totalBlogs,
+        blogsPaging.map((blog) => sqlBlogsViewDto(blog)),
+    );

@@ -1,11 +1,11 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
-import { PostsRepository } from '../infrastructure/posts.repository';
+import { PostsRepository } from '../infrastructure/mongodb/posts.repository';
 import {
   PostLikeStatusDto,
   PostsInputDto,
 } from '../api/models/input/posts.input.dto';
 import { PostDocument } from '../domain/posts.schema';
-import { BlogsRepository } from '../../blogs/infrastructure/blogs.repository';
+import { BlogsRepository } from '../../blogs/infrastructure/mongodb/blogs.repository';
 import {
   PostsOutputDto,
   postsOutputDto,

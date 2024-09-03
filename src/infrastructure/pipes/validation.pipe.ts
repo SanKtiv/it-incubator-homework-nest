@@ -4,7 +4,7 @@ import {
   ArgumentMetadata,
   NotFoundException,
 } from '@nestjs/common';
-import { BlogsQueryRepository } from '../../features/blogs/infrastructure/blogs.query.repository';
+import { BlogsQueryRepository } from '../../features/blogs/infrastructure/mongodb/blogs.query.repository';
 import { Types } from 'mongoose';
 
 @Injectable()

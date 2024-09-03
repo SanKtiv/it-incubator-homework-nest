@@ -74,7 +74,7 @@ export class UsersQueryRepository {
 
     return (
       this.UserModel.find(filter)
-        //.sort({ [sortBy]: query.sortDirection }) dont work with lower case
+        //.sort({ [sortBy]: query.sortDirection }) dont work with upper case
         .skip((+query.pageNumber - 1) * +query.pageSize)
         .limit(+query.pageSize)
     );

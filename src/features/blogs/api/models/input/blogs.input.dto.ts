@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Trim } from '../../../../../infrastructure/decorators/transform/trim-custom.decorator';
+import {ToUpperCase} from "../../../../../infrastructure/decorators/transform/toUpperCase.decorator";
 
 export class BlogsInputDto {
   @Length(1, 15)
@@ -54,8 +55,10 @@ export class BlogQuery {
   sortBy: string = 'createdAt';
 
   @IsOptional()
+  @ToUpperCase()
   @IsString()
-  sortDirection: 'asc' | 'desc' = 'desc';
+  sortDirection: 'ASC' | 'DESC' = 'DESC';
+  //sortDirection: 'asc' | 'desc' = 'desc';
 
   @IsOptional()
   @Type(() => Number)

@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogsModelType } from '../domain/blogs.schema';
-import { BlogQuery } from '../api/models/input/blogs.input.dto';
+import { Blog, BlogsModelType } from '../../domain/blogs.schema';
+import { BlogQuery } from '../../api/models/input/blogs.input.dto';
 import {
   blogPagingViewModel,
   BlogsViewDto,
   blogsViewDto,
   BlogsViewPagingDto,
-} from '../api/models/output/blogs.view.dto';
+} from '../../api/models/output/blogs.view.dto';
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -30,7 +30,7 @@ export class BlogsQueryRepository {
     const totalBlogs = await this.BlogModel.countDocuments(filter);
 
     const pagingBlogs = await this.BlogModel.find(filter)
-      .sort({ [query.sortBy]: query.sortDirection })
+      //.sort({ [query.sortBy]: query.sortDirection }) dont work with upper case
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize);
 

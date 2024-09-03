@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument, PostModelType } from '../domain/posts.schema';
-import { PostsInputDto } from '../api/models/input/posts.input.dto';
+import { Post, PostDocument, PostModelType } from '../../domain/posts.schema';
+import {PostsInputDto} from "../../api/models/input/posts.input.dto";
+
 
 @Injectable()
-export class PostsRepository {
+export class PostsSqlRepository {
   constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
 
   async create(

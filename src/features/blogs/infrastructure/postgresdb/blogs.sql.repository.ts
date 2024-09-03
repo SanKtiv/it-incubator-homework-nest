@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { BlogsTable } from '../domain/blog.entity';
+import { BlogsTable } from '../../domain/blog.entity';
 
 @Injectable()
 export class BlogsSqlRepository {
