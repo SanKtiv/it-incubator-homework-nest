@@ -14,8 +14,8 @@ export class BlogsTable {
   @Column()
   websiteUrl: string;
 
-  @Column()
-  createdAt: string;
+  @Column('date')
+  createdAt: Date;
 
   @Column({ default: true })
   isMembership: boolean;

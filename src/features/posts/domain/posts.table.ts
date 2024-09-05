@@ -20,6 +20,6 @@ export class PostsTable {
     @Column('char varying')
     blogName: string;
 
-    @Column('char varying')
-    createdAt: string;
+    @Column('date')
+    createdAt: Date;
 }

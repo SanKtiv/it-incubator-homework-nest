@@ -39,7 +39,7 @@ export const sqlBlogsViewDto = (blogDocument: BlogsTable) =>
         blogDocument.name,
         blogDocument.description,
         blogDocument.websiteUrl,
-        blogDocument.createdAt,
+        blogDocument.createdAt.toISOString(),
         blogDocument.isMembership,
     );
 

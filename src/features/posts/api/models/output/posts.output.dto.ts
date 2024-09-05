@@ -1,5 +1,6 @@
 import { LikesUsers, PostDocument } from '../../../domain/posts.schema';
 import { PostQuery } from '../input/posts.input.dto';
+import {PostsTable} from "../../../domain/posts.table";
 
 export class PostsOutputDto {
   constructor(
@@ -63,6 +64,23 @@ export const postsOutputDto = (postDocument: PostDocument, userId?: string) =>
       newestLikes(postDocument),
     ),
   );
+
+export const postsSqlOutputDto = (postDocument: PostsTable, userId?: string) =>
+    new PostsOutputDto(
+        postDocument.id,
+        postDocument.title,
+        postDocument.shortDescription,
+        postDocument.content,
+        postDocument.blogId,
+        postDocument.blogName,
+        postDocument.createdAt.toISOString(),
+        new ExtendedLikesInfo(
+            0,
+            0,
+            'Like',
+            [],
+        ),
+    );
 
 export class PostsPaging {
   constructor(

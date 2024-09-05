@@ -8,16 +8,22 @@ import { PostDocument } from '../domain/posts.schema';
 import { BlogsRepository } from '../../blogs/infrastructure/mongodb/blogs.repository';
 import {
   PostsOutputDto,
-  postsOutputDto,
+  postsOutputDto, postsSqlOutputDto,
 } from '../api/models/output/posts.output.dto';
 import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
 import { BlogsService } from '../../blogs/application/blogs.service';
+import {PostsSqlRepository} from "../infrastructure/postgresql/posts.sql.repository";
+import {BlogsSqlRepository} from "../../blogs/infrastructure/postgresdb/blogs.sql.repository";
+import {PostsTable} from "../domain/posts.table";
+import {InputDto} from "../../../infrastructure/models/input.dto";
 
 @Injectable()
 export class PostsService {
   constructor(
     private readonly postsRepository: PostsRepository,
+    private readonly postsSqlRepository: PostsSqlRepository,
     private readonly blogsRepository: BlogsRepository,
+    //private readonly blogsSqlRepository: BlogsSqlRepository,
     private readonly usersRepository: UsersRepository,
     private readonly blogsService: BlogsService,
   ) {}
@@ -25,20 +31,16 @@ export class PostsService {
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
     const blogDocument = await this.blogsService.existBlog(dto.blogId);
 
-    const postDocument = await this.postsRepository.create(
+    const postDocument = await this.postsSqlRepository.create(
       dto,
-      blogDocument.name,
+      blogDocument.name,// can use without blogName
     );
 
-    return postsOutputDto(postDocument);
+    return postsSqlOutputDto(postDocument);
   }
 
-  async savePost(postDocument: PostDocument): Promise<PostDocument> {
-    return this.postsRepository.save(postDocument);
-  }
-
-  async existPost(id: string): Promise<PostDocument> {
-    const postDocument = await this.postsRepository.findById(id);
+  async existPost(id: string): Promise<PostsTable> {
+    const postDocument = await this.postsSqlRepository.findById(id);
 
     if (!postDocument) throw new NotFoundException();
 
@@ -53,87 +55,108 @@ export class PostsService {
 
     Object.assign(postDocument, postUpdateDto);
 
-    await this.postsRepository.save(postDocument);
+    await this.postsSqlRepository.savePost(postDocument);
   }
 
-  async updateLikeStatus(
-    id: string,
-    dto: PostLikeStatusDto,
-    userId: string,
-  ): Promise<void> {
-    const postDocument = await this.existPost(id);
+  async updatePostForBlog(postId: string, blogId: string, UpdateDto: InputDto) {
+    // const postDocument = await this.postsRepository.findById(id);
+    //
+    // if (!postDocument) throw new NotFoundException();
+    const post = await this.existPost(postId);
 
-    const userDocument = await this.usersRepository.findById(userId);
+    if (post.blogId !== blogId) throw new NotFoundException();
 
-    const userLogin = userDocument!.accountData.login;
+    Object.assign(post, UpdateDto);
 
-    const newStatus = dto.likeStatus;
-
-    const newStatusIsLike = newStatus === 'Like';
-
-    const newStatusIsDislike = newStatus === 'Dislike';
-
-    const currentUser = postDocument.likesUsers.find(
-      (e) => e.userId === userId,
-    );
-
-    if (newStatus === 'None' && !currentUser) return;
-
-    if (newStatus === 'None' && currentUser) {
-      if (currentUser.userStatus === 'Like') postDocument.likesCount--;
-
-      if (currentUser.userStatus === 'Dislike') postDocument.dislikesCount--;
-
-      postDocument.likesUsers = postDocument.likesUsers.filter(
-        (e) => e.userId !== userId,
-      );
-
-      await this.postsRepository.save(postDocument);
-
-      return;
-    }
-
-    const likeUser = {
-      userStatus: newStatus,
-      addedAt: new Date().toISOString(),
-      userId: userId,
-      login: userLogin,
-    };
-
-    if (!currentUser) {
-      if (newStatusIsLike) postDocument.likesCount++;
-
-      if (newStatusIsDislike) postDocument.dislikesCount++;
-
-      postDocument.likesUsers.push(likeUser);
-
-      await this.postsRepository.save(postDocument);
-
-      return;
-    }
-
-    if (newStatusIsLike && currentUser.userStatus === 'Dislike') {
-      postDocument.likesCount++;
-      postDocument.dislikesCount--;
-    }
-
-    if (newStatusIsDislike && currentUser.userStatus === 'Like') {
-      postDocument.likesCount--;
-      postDocument.dislikesCount++;
-    }
-
-    postDocument.likesUsers = postDocument.likesUsers.map((e) =>
-      e.userId === userId ? likeUser : e,
-    );
-
-    await this.postsRepository.save(postDocument);
-
-    return;
+    await this.postsSqlRepository.savePost(post);
   }
+
+  // async updateLikeStatus(
+  //   id: string,
+  //   dto: PostLikeStatusDto,
+  //   userId: string,
+  // ): Promise<void> {
+  //   const postDocument = await this.existPost(id);
+  //
+  //   const userDocument = await this.usersRepository.findById(userId);
+  //
+  //   const userLogin = userDocument!.accountData.login;
+  //
+  //   const newStatus = dto.likeStatus;
+  //
+  //   const newStatusIsLike = newStatus === 'Like';
+  //
+  //   const newStatusIsDislike = newStatus === 'Dislike';
+  //
+  //   const currentUser = postDocument.likesUsers.find(
+  //     (e) => e.userId === userId,
+  //   );
+  //
+  //   if (newStatus === 'None' && !currentUser) return;
+  //
+  //   if (newStatus === 'None' && currentUser) {
+  //     if (currentUser.userStatus === 'Like') postDocument.likesCount--;
+  //
+  //     if (currentUser.userStatus === 'Dislike') postDocument.dislikesCount--;
+  //
+  //     postDocument.likesUsers = postDocument.likesUsers.filter(
+  //       (e) => e.userId !== userId,
+  //     );
+  //
+  //     await this.postsRepository.save(postDocument);
+  //
+  //     return;
+  //   }
+  //
+  //   const likeUser = {
+  //     userStatus: newStatus,
+  //     addedAt: new Date().toISOString(),
+  //     userId: userId,
+  //     login: userLogin,
+  //   };
+  //
+  //   if (!currentUser) {
+  //     if (newStatusIsLike) postDocument.likesCount++;
+  //
+  //     if (newStatusIsDislike) postDocument.dislikesCount++;
+  //
+  //     postDocument.likesUsers.push(likeUser);
+  //
+  //     await this.postsRepository.save(postDocument);
+  //
+  //     return;
+  //   }
+  //
+  //   if (newStatusIsLike && currentUser.userStatus === 'Dislike') {
+  //     postDocument.likesCount++;
+  //     postDocument.dislikesCount--;
+  //   }
+  //
+  //   if (newStatusIsDislike && currentUser.userStatus === 'Like') {
+  //     postDocument.likesCount--;
+  //     postDocument.dislikesCount++;
+  //   }
+  //
+  //   postDocument.likesUsers = postDocument.likesUsers.map((e) =>
+  //     e.userId === userId ? likeUser : e,
+  //   );
+  //
+  //   await this.postsRepository.save(postDocument);
+  //
+  //   return;
+  // }
 
   async deletePost(id: string): Promise<void | HttpException> {
     const result = await this.postsRepository.remove(id);
 
     if (!result) throw new NotFoundException();
+  }
+
+  async deletePostByIdForBlog(postId: string, blogId: string): Promise<void | HttpException> {
+    const post = await this.existPost(postId)
+
+    if (post.blogId !== blogId) throw new NotFoundException();
+
+    await this.postsSqlRepository.deletePost(post);
   }
 }

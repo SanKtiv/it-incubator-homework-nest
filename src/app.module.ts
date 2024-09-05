@@ -69,6 +69,9 @@ import { RequestApiSqlRepository } from './features/requests/infrastructure/requ
 import { RequestTable } from './features/requests/domain/request.table';
 import { UsersSqlQueryRepository } from './features/users/infrastructure/postgresqldb/users.sql.query.repository';
 import {BlogsSqlQueryRepository} from "./features/blogs/infrastructure/postgresdb/blogs.sql.query.repository";
+import {PostsTable} from "./features/posts/domain/posts.table";
+import {SaBlogsController} from "./features/blogs/api/sa.blogscontroller";
+import {PostsSqlRepository} from "./features/posts/infrastructure/postgresql/posts.sql.repository";
 
 dotenv.config();
 
@@ -90,6 +93,7 @@ const repositories = [
   BlogsSqlRepository,
   BlogsSqlQueryRepository,
   PostsRepository,
+  PostsSqlRepository,
   PostsQueryRepository,
   CommentsRepository,
   CommentsQueryRepository,
@@ -136,6 +140,7 @@ const strategies = [
     }),
     TypeOrmModule.forFeature([
       BlogsTable,
+      PostsTable,
       DeviceTable,
       RequestTable,
       UsersTable,
@@ -158,6 +163,7 @@ const strategies = [
     AppController,
     TestingController,
     BlogsController,
+    SaBlogsController,
     PostController,
     UsersController,
     CommentsController,

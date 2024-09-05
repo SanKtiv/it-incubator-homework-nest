@@ -131,6 +131,6 @@ export class BlogsController {
   async deleteBlogById(
     @Param('blogId', paramIdIsMongoIdPipe) id: string,
   ): Promise<void> {
-    await this.blogsService.deleteBlog(id);
+    await this.blogsService.deleteBlogById(id);
   }
 }
