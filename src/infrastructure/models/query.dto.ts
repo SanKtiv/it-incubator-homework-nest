@@ -1,5 +1,6 @@
 import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
+import {ToUpperCase} from "../decorators/transform/toUpperCase.decorator";
 
 export class QueryDto {
   @IsOptional()
@@ -7,8 +8,9 @@ export class QueryDto {
   sortBy: string = 'createdAt';
 
   @IsOptional()
+  @ToUpperCase()
   @IsString()
-  sortDirection: 'asc' | 'desc' = 'desc';
+  sortDirection: 'ASC' | 'DESC' = 'DESC';
 
   @IsOptional()
   @Type(() => Number)

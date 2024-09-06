@@ -35,6 +35,8 @@ import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/user
 import { DevicesSqlRepository } from '../../security/infrastructure/devices.sql.repository';
 import { RequestApiSqlRepository } from '../../requests/infrastructure/request.sql.repository';
 import {BlogsSqlQueryRepository} from "../infrastructure/postgresdb/blogs.sql.query.repository";
+import {CurrentUserId} from "../../auth/infrastructure/decorators/current-user-id.param.decorator";
+import {PostsSqlQueryRepository} from "../../posts/infrastructure/postgresql/posts.sql.query.repository";
 
 @Controller('sa/blogs')
 @UseGuards(BasicAuthGuard)
@@ -44,29 +46,29 @@ export class SaBlogsController {
         private readonly blogsSqlQueryRepository: BlogsSqlQueryRepository,
         private readonly blogsService: BlogsService,
         private readonly postsQueryRepository: PostsQueryRepository,
+        private readonly postsSqlQueryRepository: PostsSqlQueryRepository,
         private readonly postsService: PostsService,
         private readonly accessJwtToken: AccessJwtToken,
         private readonly usersSqlRepository: RequestApiSqlRepository,
     ) {}
 
     @Get('/blogs')
-    async createBlogInSql() {
-        const dto = {
-            ip: '12345',
-            url: 'Chrome3',
-            date: '098761333',
-        };
+    async createBlogInSql(@CurrentUserId() userName: string) {
+        // const dto = {
+        //     ip: '12345',
+        //     url: 'Chrome3',
+        //     date: '098761333',
+        // };
         //return this.usersSqlRepository.create(dto);
+        return userName
     }
 
     @Post()
-    //@UseGuards(BasicAuthGuard)
     async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {
         return this.blogsService.createBlog(dto);
     }
 
     @Post(':blogId/posts')
-    //@UseGuards(BasicAuthGuard)
     async createPostForBlog(
         @Param('blogId', paramIdIsMongoIdPipe) id: string,
         @Body() dto: InputDto,
@@ -80,7 +82,6 @@ export class SaBlogsController {
     }
 
     @Get()
-    //@UseGuards(BasicAuthGuard)
     async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto> {
         return this.blogsSqlQueryRepository.getBlogsPaging(query);
     }
@@ -98,23 +99,24 @@ export class SaBlogsController {
         @Query() query: PostQuery,
         @Req() req: Request,
     ): Promise<PostsPaging> {
-        await this.blogsQueryRepository.findById(blogId);
+        await this.blogsSqlQueryRepository.findById(blogId);
 
         const dto: { userId?: string; blogId?: string } = { blogId: blogId };
 
-        const headerToken = req.headers.authorization;
+        // const headerToken = req.headers.authorization;
+        //
+        // if (!headerToken) return this.postsQueryRepository.findPaging(query, dto);
+        //
+        // const accessJwtToken = headerToken.split(' ')[1];
+        //
+        // const payload = await this.accessJwtToken.verify(accessJwtToken);
+        //
+        // if (!payload) return this.postsQueryRepository.findPaging(query, dto);
+        //
+        // dto.userId = payload.sub;
 
-        if (!headerToken) return this.postsQueryRepository.findPaging(query, dto);
+        return this.postsSqlQueryRepository.findPaging(query, dto);
 
-        const accessJwtToken = headerToken.split(' ')[1];
-
-        const payload = await this.accessJwtToken.verify(accessJwtToken);
-
-        if (!payload) return this.postsQueryRepository.findPaging(query, dto);
-
-        dto.userId = payload.sub;
-
-        return this.postsQueryRepository.findPaging(query, dto);
     }
 
     @Put(':blogId')

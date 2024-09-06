@@ -72,6 +72,7 @@ import {BlogsSqlQueryRepository} from "./features/blogs/infrastructure/postgresd
 import {PostsTable} from "./features/posts/domain/posts.table";
 import {SaBlogsController} from "./features/blogs/api/sa.blogscontroller";
 import {PostsSqlRepository} from "./features/posts/infrastructure/postgresql/posts.sql.repository";
+import {PostsSqlQueryRepository} from "./features/posts/infrastructure/postgresql/posts.sql.query.repository";
 
 dotenv.config();
 
@@ -95,6 +96,7 @@ const repositories = [
   PostsRepository,
   PostsSqlRepository,
   PostsQueryRepository,
+  PostsSqlQueryRepository,
   CommentsRepository,
   CommentsQueryRepository,
   UsersRepository,

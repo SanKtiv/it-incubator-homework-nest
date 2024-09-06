@@ -125,7 +125,7 @@ export class AuthService {
     const payload = { sub: userId };
 
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '10s',
+      expiresIn: '5m',
     });
 
     return { accessToken: accessToken };
@@ -142,7 +142,7 @@ export class AuthService {
   async createRefreshToken(userId: string, deviceId: string) {
     const payload = { sub: userId, deviceId: deviceId };
 
-    return this.jwtService.signAsync(payload, { expiresIn: '20s' });
+    return this.jwtService.signAsync(payload, { expiresIn: '20m' });
   }
 
   async passwordRecovery(email: string) {

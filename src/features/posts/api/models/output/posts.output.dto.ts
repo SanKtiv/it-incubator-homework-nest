@@ -104,3 +104,17 @@ export const postsPaging = (
     totalPosts,
     postDocuments.map((document) => postsOutputDto(document, userId)),
   );
+
+export const postsSqlPaging = (
+    query: PostQuery,
+    totalPosts: number,
+    postDocuments: PostsTable[],
+    userId?: string,
+) =>
+    new PostsPaging(
+        Math.ceil(totalPosts / +query.pageSize),
+        +query.pageNumber,
+        +query.pageSize,
+        totalPosts,
+        postDocuments.map((document) => postsSqlOutputDto(document, userId)),
+    );

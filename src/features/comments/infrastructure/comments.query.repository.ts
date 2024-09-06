@@ -39,7 +39,7 @@ export class CommentsQueryRepository {
     });
     if (totalComments === 0) throw new NotFoundException();
     const commentPaging = await this.CommentModel.find({ postId: postId })
-      .sort({ [query.sortBy]: query.sortDirection })
+      //.sort({ [query.sortBy]: query.sortDirection }) dont work with upper case
       .skip((query.pageNumber - 1) * query.pageSize);
     return commentsPagingDto(query, totalComments, commentPaging, userId);
   }

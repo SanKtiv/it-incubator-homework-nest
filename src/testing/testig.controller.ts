@@ -9,6 +9,7 @@ import { UsersSqlRepository } from '../features/users/infrastructure/postgresqld
 import { RequestApiSqlRepository } from '../features/requests/infrastructure/request.sql.repository';
 import { DevicesSqlRepository } from '../features/security/infrastructure/devices.sql.repository';
 import {BlogsSqlRepository} from "../features/blogs/infrastructure/postgresdb/blogs.sql.repository";
+import {PostsSqlRepository} from "../features/posts/infrastructure/postgresql/posts.sql.repository";
 
 @Controller('testing/all-data')
 export class TestingController {
@@ -18,6 +19,7 @@ export class TestingController {
     private readonly usersRepository: UsersRepository,
     private readonly usersSqlRepository: UsersSqlRepository,
     private readonly postsRepository: PostsRepository,
+    private readonly postsSqlRepository: PostsSqlRepository,
     private readonly commentsRepository: CommentsRepository,
     private readonly requestApiRepository: RequestApiRepository,
     private readonly requestApiSqlRepository: RequestApiSqlRepository,
@@ -30,7 +32,7 @@ export class TestingController {
   async deleteAllData(): Promise<void> {
     await this.blogsSqlRepository.deleteAll();
     await this.usersSqlRepository.removeAll();
-    //await this.postsRepository.deleteAll();
+    await this.postsSqlRepository.deleteAll();
     //await this.commentsRepository.deleteAll();
     await this.requestApiSqlRepository.removeAll();
     await this.devicesSqlRepository.removeAll();

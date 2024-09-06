@@ -30,7 +30,7 @@ export class PostsQueryRepository {
     const totalPosts = await this.PostModel.countDocuments(filter);
 
     const posts = await this.PostModel.find(filter)
-      .sort({ [query.sortBy]: query.sortDirection })
+      //.sort({ [query.sortBy]: query.sortDirection }) dont work with upper case
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize);
 
