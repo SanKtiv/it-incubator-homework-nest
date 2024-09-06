@@ -44,5 +44,6 @@ export class PostsSqlRepository {
 
   async deleteAll(): Promise<void> {
     await this.repository.clear();
+    //await this.dataSource.getRepository(PostsTable);
   }
 }

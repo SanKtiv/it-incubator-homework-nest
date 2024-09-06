@@ -135,7 +135,7 @@ const strategies = [
       // username: 'neondb_owner',
       // password: 'gnyfzHjQ0T9J',
       // database: 'neondb',
-      entities: [BlogsTable, DeviceTable, RequestTable, UsersTable],
+      entities: [BlogsTable, PostsTable, DeviceTable, RequestTable, UsersTable],
       ssl: true,
       //autoLoadEntities: false,
       synchronize: true,

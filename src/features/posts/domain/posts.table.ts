@@ -5,19 +5,19 @@ export class PostsTable {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('char varying')
+    @Column('character varying')
     title: string;
 
-    @Column('char varying')
+    @Column('character varying')
     shortDescription: string;
 
-    @Column('char varying')
+    @Column('character varying')
     content: string;
 
-    @Column('char varying')
+    @Column('character varying')
     blogId: string;
 
-    @Column('char varying')
+    @Column('character varying')
     blogName: string;
 
     @Column('date')
