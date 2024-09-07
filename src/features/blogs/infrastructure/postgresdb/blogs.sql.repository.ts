@@ -19,7 +19,7 @@ export class BlogsSqlRepository {
     const blog: BlogsTable = {
       ...dto,
       createdAt: new Date(),
-      isMembership: true,
+      isMembership: false,
     };
     return this.save(blog);
   }
