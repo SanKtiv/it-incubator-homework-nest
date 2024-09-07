@@ -5,17 +5,18 @@ export class BlogsTable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('character varying')
   name: string;
 
-  @Column()
+  @Column('character varying')
   description: string;
 
-  @Column()
+  @Column('character varying')
   websiteUrl: string;
 
-  @Column('date')
+  @Column('timestamp with time zone')
   createdAt: Date;
+
 
   @Column({ default: true })
   isMembership: boolean;

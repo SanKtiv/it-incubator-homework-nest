@@ -33,7 +33,7 @@ export const blogsViewDto = (blogDocument: BlogDocument) =>
     blogDocument.isMembership,
   );
 
-export const sqlBlogsViewDto = (blogDocument: BlogsTable) =>
+export const sqlBlogsViewDto = (blogDocument: BlogsTable): BlogsViewDto =>
     new BlogsViewDto(
         blogDocument.id,
         blogDocument.name,

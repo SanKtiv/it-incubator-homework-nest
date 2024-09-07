@@ -18,7 +18,7 @@ export class BlogsSqlQueryRepository {
             .findOneBy({id: id});
 
         if (!blogDocument) throw new NotFoundException();
-
+console.log(typeof blogDocument.createdAt)
         return sqlBlogsViewDto(blogDocument);
     }
 
