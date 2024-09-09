@@ -36,6 +36,7 @@ import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user
 import { CommentServiceDto } from '../../comments/api/models/input/comment-service.dto';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
+import {PostsSqlQueryRepository} from "../infrastructure/postgresql/posts.sql.query.repository";
 
 @Controller('posts')
 export class PostController {
@@ -43,6 +44,7 @@ export class PostController {
     private readonly postsService: PostsService,
     private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly postsSqlQueryRepository: PostsSqlQueryRepository,
     private readonly commentsService: CommentsService,
     private readonly commentsQueryRepository: CommentsQueryRepository,
     private readonly accessJwtToken: AccessJwtToken,
@@ -59,12 +61,14 @@ export class PostController {
     @Param('postId', paramIdIsMongoIdPipe) id: string,
     @Req() req: Request,
   ): Promise<PostsOutputDto | HttpException> {
-    const headerToken = req.headers.authorization;
-    if (!headerToken) return this.postsQueryRepository.findById(id);
-    const accessJwtToken = headerToken.split(' ')[1];
-    const payload = await this.accessJwtToken.verify(accessJwtToken);
-    if (!payload) return this.postsQueryRepository.findById(id);
-    return this.postsQueryRepository.findById(id, payload.sub);
+    // const headerToken = req.headers.authorization;
+    // if (!headerToken) return this.postsQueryRepository.findById(id);
+    // const accessJwtToken = headerToken.split(' ')[1];
+    // const payload = await this.accessJwtToken.verify(accessJwtToken);
+    // if (!payload) return this.postsQueryRepository.findById(id);
+    // return this.postsQueryRepository.findById(id, payload.sub);
+
+    return this.postsSqlQueryRepository.findById(id);
   }
 
   // @Put(':postId/like-status')

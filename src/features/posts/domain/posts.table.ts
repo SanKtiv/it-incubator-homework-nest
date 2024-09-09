@@ -20,6 +20,6 @@ export class PostsTable {
     @Column('character varying')
     blogName: string;
 
-    @Column('date')
+    @Column('timestamp with time zone')
     createdAt: Date;
 }
