@@ -18,7 +18,7 @@ export class BlogsSqlQueryRepository {
             .findOneBy({id: id});
 
         if (!blogDocument) throw new NotFoundException();
-console.log(typeof blogDocument.createdAt)
+
         return sqlBlogsViewDto(blogDocument);
     }
 
@@ -31,7 +31,7 @@ console.log(typeof blogDocument.createdAt)
             .createQueryBuilder('blog')
 
         if (searchName)
-            blogs.where('blog.name ~* nameTerm', {nameTerm: searchName});
+            blogs.where('blog.name ~* :nameTerm', {nameTerm: searchName});
 
         const totalBlogs = await blogs.getCount();
 
