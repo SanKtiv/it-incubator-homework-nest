@@ -35,6 +35,7 @@ import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/user
 import { DevicesSqlRepository } from '../../security/infrastructure/devices.sql.repository';
 import { RequestApiSqlRepository } from '../../requests/infrastructure/request.sql.repository';
 import {BlogsSqlQueryRepository} from "../infrastructure/postgresdb/blogs.sql.query.repository";
+import {PostsSqlQueryRepository} from "../../posts/infrastructure/postgresql/posts.sql.query.repository";
 
 @Controller('blogs')
 export class BlogsController {
@@ -43,6 +44,7 @@ export class BlogsController {
     private readonly blogsSqlQueryRepository: BlogsSqlQueryRepository,
     private readonly blogsService: BlogsService,
     private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly postsSqlQueryRepository: PostsSqlQueryRepository,
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
     private readonly usersSqlRepository: RequestApiSqlRepository,
@@ -112,7 +114,7 @@ export class BlogsController {
 
     dto.userId = payload.sub;
 
-    return this.postsQueryRepository.findPaging(query, dto);
+    return this.postsSqlQueryRepository.findPaging(query, dto);
   }
 
   @Put(':blogId')

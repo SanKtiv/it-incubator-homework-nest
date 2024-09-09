@@ -35,20 +35,22 @@ export class PostsSqlQueryRepository {
   ): Promise<PostsPaging> {
     const filter = dto.blogId ? { blogId: dto.blogId } : {};
 
-    const totalPosts = await this.repository.countBy(filter);
+    //const totalPosts = await this.repository.countBy(filter);
 
     const posts = this.repository.createQueryBuilder('post')
 
     if (dto.blogId) {
-      posts.where('post.blogId = blogId', {blogId: dto.blogId})
+      posts.where('post.blogId = :blogId', {blogId: dto.blogId})
     }
-
+console.log('1')
+    const totalPosts = await posts.getCount();
+    console.log('2')
     const postsPaging = await posts
         .orderBy(`post.${query.sortBy}`, query.sortDirection)
         .skip((query.pageNumber - 1) * query.pageSize)
         .take(query.pageSize)
         .getMany();
-
+    console.log('3')
     return postsSqlPaging(query, totalPosts, postsPaging, dto.userId);
   }
 }
