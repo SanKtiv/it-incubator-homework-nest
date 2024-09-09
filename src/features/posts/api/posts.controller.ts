@@ -103,14 +103,15 @@ export class PostController {
     @Query() query: PostQuery,
     @Req() req: Request,
   ): Promise<PostsPaging> {
-    const headerToken = req.headers.authorization;
+    // const headerToken = req.headers.authorization;
     const dto: { userId?: string; blogId?: string } = {};
-    if (!headerToken) return this.postsQueryRepository.findPaging(query, dto);
-    const accessJwtToken = headerToken.split(' ')[1];
-    const payload = await this.accessJwtToken.verify(accessJwtToken);
-    if (!payload) return this.postsQueryRepository.findPaging(query, dto);
-    dto.userId = payload.sub;
-    return this.postsQueryRepository.findPaging(query, dto);
+    // if (!headerToken) return this.postsQueryRepository.findPaging(query, dto);
+    // const accessJwtToken = headerToken.split(' ')[1];
+    // const payload = await this.accessJwtToken.verify(accessJwtToken);
+    // if (!payload) return this.postsQueryRepository.findPaging(query, dto);
+    // dto.userId = payload.sub;
+
+    return this.postsSqlQueryRepository.findPaging(query, dto);
   }
 
   @Get(':postId/comments')
