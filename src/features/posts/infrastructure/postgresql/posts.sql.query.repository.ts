@@ -42,15 +42,15 @@ export class PostsSqlQueryRepository {
     if (dto.blogId) {
       posts.where('post.blogId = :blogId', {blogId: dto.blogId})
     }
-console.log('1')
+
     const totalPosts = await posts.getCount();
-    console.log('2')
+
     const postsPaging = await posts
         .orderBy(`post.${query.sortBy}`, query.sortDirection)
         .skip((query.pageNumber - 1) * query.pageSize)
         .take(query.pageSize)
         .getMany();
-    console.log('3')
+
     return postsSqlPaging(query, totalPosts, postsPaging, dto.userId);
   }
 }

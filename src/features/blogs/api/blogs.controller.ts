@@ -98,21 +98,21 @@ export class BlogsController {
     @Query() query: PostQuery,
     @Req() req: Request,
   ): Promise<PostsPaging> {
-    await this.blogsQueryRepository.findById(blogId);
+    await this.blogsSqlQueryRepository.findById(blogId);
 
     const dto: { userId?: string; blogId?: string } = { blogId: blogId };
 
-    const headerToken = req.headers.authorization;
-
-    if (!headerToken) return this.postsQueryRepository.findPaging(query, dto);
-
-    const accessJwtToken = headerToken.split(' ')[1];
-
-    const payload = await this.accessJwtToken.verify(accessJwtToken);
-
-    if (!payload) return this.postsQueryRepository.findPaging(query, dto);
-
-    dto.userId = payload.sub;
+    // const headerToken = req.headers.authorization;
+    //
+    // if (!headerToken) return this.postsQueryRepository.findPaging(query, dto);
+    //
+    // const accessJwtToken = headerToken.split(' ')[1];
+    //
+    // const payload = await this.accessJwtToken.verify(accessJwtToken);
+    //
+    // if (!payload) return this.postsQueryRepository.findPaging(query, dto);
+    //
+    // dto.userId = payload.sub;
 
     return this.postsSqlQueryRepository.findPaging(query, dto);
   }
