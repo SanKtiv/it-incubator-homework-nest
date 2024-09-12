@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { BlogsTable } from '../../domain/blog.entity';
+import {BlogsTable, ForBlogsTable} from '../../domain/blog.entity';
 import {BlogDocument} from "../../domain/blogs.schema";
 
 @Injectable()
@@ -46,6 +46,17 @@ export class BlogsSqlRepository {
 
   async deleteAll(): Promise<void> {
     await this.repository.clear();
+  }
+
+  async createForBlog(name: string, blogId: string) {
+    // const blog = await this.findById(blogId)
+    //
+    // await this.dataSource.getRepository(ForBlogsTable)
+    //     .save({name: name, forBlog: blog!})
+
+    // return this.repository.createQueryBuilder('blog')
+    //     .leftJoin
+    //     .getMany()
   }
 
   // async create() {

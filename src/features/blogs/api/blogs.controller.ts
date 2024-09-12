@@ -42,6 +42,7 @@ export class BlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly blogsSqlQueryRepository: BlogsSqlQueryRepository,
+    private readonly blogsSqlRepository: BlogsSqlRepository,
     private readonly blogsService: BlogsService,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly postsSqlQueryRepository: PostsSqlQueryRepository,
@@ -51,13 +52,10 @@ export class BlogsController {
   ) {}
 
   @Get('/blogs')
-  async createBlogInSql() {
-    const dto = {
-      ip: '12345',
-      url: 'Chrome3',
-      date: '098761333',
-    };
-    //return this.usersSqlRepository.create(dto);
+  async createBlogInSql(
+      //@Param('blogId', paramIdIsMongoIdPipe) id: string
+  ) {
+    return this.blogsSqlRepository.createForBlog('Qwerty1', '1c66a9f0-5c11-4ce4-8c66-3c0354492c5b')
   }
 
   @Post()

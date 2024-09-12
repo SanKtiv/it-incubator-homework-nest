@@ -60,7 +60,7 @@ import configuration from './settings/configuration';
 import { DevicesController } from './features/security/api/devices.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlogsSqlRepository } from './features/blogs/infrastructure/postgresdb/blogs.sql.repository';
-import { BlogsTable } from './features/blogs/domain/blog.entity';
+import {BlogsTable, ForBlogsTable} from './features/blogs/domain/blog.entity';
 import { AccountData, UsersTable } from './features/users/domain/users.table';
 import { UsersSqlRepository } from './features/users/infrastructure/postgresqldb/users.sql.repository';
 import { DeviceTable } from './features/security/domain/device.table';
@@ -135,7 +135,7 @@ const strategies = [
       // username: 'neondb_owner',
       // password: 'gnyfzHjQ0T9J',
       // database: 'neondb',
-      entities: [BlogsTable, PostsTable, DeviceTable, RequestTable, UsersTable],
+      entities: [BlogsTable, PostsTable, DeviceTable, RequestTable, UsersTable, ForBlogsTable],
       ssl: true,
       //autoLoadEntities: false,
       synchronize: true,
@@ -146,6 +146,7 @@ const strategies = [
       DeviceTable,
       RequestTable,
       UsersTable,
+      ForBlogsTable
     ]),
     MongooseModule.forRoot(
       appSettings.env.isTesting()

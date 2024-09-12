@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, OneToOne, JoinColumn} from 'typeorm';
+import {name} from "ts-jest/dist/transformers/hoist-jest";
 
 @Entity('blogs')
 export class BlogsTable {
@@ -20,4 +21,17 @@ export class BlogsTable {
 
   @Column({ default: true })
   isMembership: boolean;
+}
+
+@Entity('forBlogs')
+export class ForBlogsTable {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column('character varying')
+  name: string;
+
+  @OneToOne(() => BlogsTable, {cascade: true})
+  @JoinColumn()
+  forBlog: BlogsTable;
 }
