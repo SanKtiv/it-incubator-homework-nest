@@ -3,6 +3,7 @@ import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import {BlogsTable, ForBlogsTable} from '../../domain/blog.entity';
 import {BlogDocument} from "../../domain/blogs.schema";
+import {PostsTable} from "../../../posts/domain/posts.table";
 
 @Injectable()
 export class BlogsSqlRepository {
@@ -54,9 +55,21 @@ export class BlogsSqlRepository {
     // await this.dataSource.getRepository(ForBlogsTable)
     //     .save({name: name, forBlog: blog!})
 
-    // return this.repository.createQueryBuilder('blog')
-    //     .leftJoin
-    //     .getMany()
+    return this.dataSource
+        .getRepository(BlogsTable)
+        .createQueryBuilder('b')
+        //.select(['b', 'f.id AS forid'])
+        .leftJoinAndSelect(PostsTable, 'f', 'b.name = f.blogId')
+        //.addSelect(['f.id AS forid', 'f.name AS forname'])
+        .select(['b.*', 'f.title'])
+        .getRawMany();
+
+    // return this.dataSource.query(`
+    //   SELECT b.*, f."title"
+    //   FROM "blogs" as b
+    //   LEFT JOIN "posts" as f
+    //   ON b."id" = f."blogId";`
+    // )
   }
 
   // async create() {
