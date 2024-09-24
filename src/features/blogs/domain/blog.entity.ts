@@ -30,8 +30,4 @@ export class ForBlogsTable {
 
   @Column('character varying')
   name: string;
-
-  @OneToOne(() => BlogsTable, {cascade: true})
-  @JoinColumn()
-  forBlog: BlogsTable;
 }

@@ -3,8 +3,10 @@ import { AppModule } from '../../src/app.module';
 import { applyAppSettings } from '../../src/settings/apply-app-setting';
 import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
-import { deleteAllData } from './delete-all-data';
+import {deleteAllData, deleteAllDataSQL} from './delete-all-data';
 import { BlogsTestManager } from './blogs-test-manager';
+import {DataSource} from "typeorm";
+import {getDataSourceName} from "@nestjs/typeorm";
 
 export const initSettings = async (
   //передаем callback, который получает ModuleBuilder,
@@ -29,14 +31,17 @@ export const initSettings = async (
 
   await app.init();
 
-  const databaseConnection = app.get<Connection>(getConnectionToken());
+  //const databaseConnection = app.get<Connection>(getConnectionToken());
+  const databaseConnection = app.get<DataSource>(getDataSourceName);
 
   const httpServer = app.getHttpServer();
   const blogsTestManager = new BlogsTestManager(app);
   //const userTestManger = new UsersTestManager(app);
 
   //чистим БД
-  await deleteAllData(databaseConnection);
+  //await deleteAllData(databaseConnection);
+  await deleteAllDataSQL(databaseConnection);
+
 
   //TODO:переписать через setState
   return {

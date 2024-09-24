@@ -16,13 +16,27 @@ export class BlogsSqlRepository {
     return this.dataSource.getRepository(BlogsTable)
   }
 
+  // async create(dto) {
+  //   const blog: BlogsTable = {
+  //     ...dto,
+  //     createdAt: new Date(),
+  //     isMembership: false,
+  //   };
+  //   return this.save(blog);
+  // }
   async create(dto) {
-    const blog: BlogsTable = {
-      ...dto,
-      createdAt: new Date(),
-      isMembership: false,
-    };
-    return this.save(blog);
+    const query = `
+    SELECT *
+    FROM blogs;
+    `
+    // const query = `
+    // INSERT INTO 'blogs' ('name', 'description', 'websiteUrl', 'createdAt', 'isMembership')
+    // VALUES (${dto.name}, ${dto.description} , ${dto.websiteUrl}, ${new Date()}, ${false})
+    // `
+    console.log(query)
+    return this.dataSource
+        // .query(query,[dto.name, dto.description, dto.websiteUrl, new Date(), false])
+        .query(query)
   }
 
   async save(blog: BlogsTable) {

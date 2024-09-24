@@ -18,7 +18,7 @@ export class BlogsService {
 
   async createBlog(dto: BlogsInputDto): Promise<BlogsViewDto> {
     const blogDocument = await this.blogsSqlRepository.create(dto);
-
+console.log(blogDocument)
     return sqlBlogsViewDto(blogDocument);
   }
 

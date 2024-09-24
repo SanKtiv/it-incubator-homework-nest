@@ -26,7 +26,7 @@ export class BlogsInputDto {
       '^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$',
     ),
     {
-      message: 'This email can not exist',
+      message: 'This website can not exist',
     },
   )
   @Length(1, 100)

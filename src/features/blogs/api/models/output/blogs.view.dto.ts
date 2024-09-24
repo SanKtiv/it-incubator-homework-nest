@@ -1,6 +1,8 @@
 import { BlogDocument } from '../../../domain/blogs.schema';
 import { BlogQuery } from '../input/blogs.input.dto';
 import {BlogsTable} from "../../../domain/blog.entity";
+import {rethrow} from "@nestjs/core/helpers/rethrow";
+import retryTimes = jest.retryTimes;
 
 export class BlogsViewDto {
   constructor(
@@ -23,15 +25,14 @@ export class BlogsViewPagingDto {
   ) {}
 }
 
-export const blogsViewDto = (blogDocument: BlogDocument) =>
-  new BlogsViewDto(
-    blogDocument._id.toString(),
-    blogDocument.name,
-    blogDocument.description,
-    blogDocument.websiteUrl,
-    blogDocument.createdAt,
-    blogDocument.isMembership,
-  );
+export const blogsViewDto = (blogDocument: BlogDocument): BlogsViewDto => ({
+    id: blogDocument._id.toString(),
+    name: blogDocument.name,
+    description: blogDocument.description,
+    websiteUrl: blogDocument.websiteUrl,
+    createdAt: blogDocument.createdAt,
+    isMembership: blogDocument.isMembership
+});
 
 export const sqlBlogsViewDto = (blogDocument: BlogsTable): BlogsViewDto =>
     new BlogsViewDto(
