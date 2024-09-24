@@ -26,8 +26,8 @@ export class BlogsSqlRepository {
   // }
   async create(dto) {
     const query = `
-    INSERT INTO blogs (name)
-    VALUES (1$);
+    INSERT INTO blogs (name, description, "websiteUrl", "createdAt")
+    VALUES ('name', 'description', 'https://web.com', '01.01.2001');
     `;
     // const query = `
     // INSERT INTO 'blogs' ('name', 'description', 'websiteUrl', 'createdAt', 'isMembership')
@@ -36,7 +36,7 @@ export class BlogsSqlRepository {
     console.log(query);
     return await this.dataSource
       // .query(query,[dto.name, dto.description, dto.websiteUrl, new Date(), false])
-      .query(query, [dto.name]);
+      .query(query, [dto.name, dto.description, dto.websiteUrl, new Date()]);
   }
 
   async save(blog: BlogsTable) {
