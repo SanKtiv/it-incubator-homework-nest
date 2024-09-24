@@ -60,7 +60,7 @@ import configuration from './settings/configuration';
 import { DevicesController } from './features/security/api/devices.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlogsSqlRepository } from './features/blogs/infrastructure/postgresdb/blogs.sql.repository';
-import {BlogsTable, ForBlogsTable} from './features/blogs/domain/blog.entity';
+import { BlogsTable, ForBlogsTable } from './features/blogs/domain/blog.entity';
 import { AccountData, UsersTable } from './features/users/domain/users.table';
 import { UsersSqlRepository } from './features/users/infrastructure/postgresqldb/users.sql.repository';
 import { DeviceTable } from './features/security/domain/device.table';
@@ -68,11 +68,11 @@ import { DevicesSqlRepository } from './features/security/infrastructure/devices
 import { RequestApiSqlRepository } from './features/requests/infrastructure/request.sql.repository';
 import { RequestTable } from './features/requests/domain/request.table';
 import { UsersSqlQueryRepository } from './features/users/infrastructure/postgresqldb/users.sql.query.repository';
-import {BlogsSqlQueryRepository} from "./features/blogs/infrastructure/postgresdb/blogs.sql.query.repository";
-import {PostsTable} from "./features/posts/domain/posts.table";
-import {SaBlogsController} from "./features/blogs/api/sa.blogscontroller";
-import {PostsSqlRepository} from "./features/posts/infrastructure/postgresql/posts.sql.repository";
-import {PostsSqlQueryRepository} from "./features/posts/infrastructure/postgresql/posts.sql.query.repository";
+import { BlogsSqlQueryRepository } from './features/blogs/infrastructure/postgresdb/blogs.sql.query.repository';
+import { PostsTable } from './features/posts/domain/posts.table';
+import { SaBlogsController } from './features/blogs/api/sa.blogscontroller';
+import { PostsSqlRepository } from './features/posts/infrastructure/postgresql/posts.sql.repository';
+import { PostsSqlQueryRepository } from './features/posts/infrastructure/postgresql/posts.sql.query.repository';
 
 dotenv.config();
 
@@ -135,7 +135,14 @@ const strategies = [
       // username: 'neondb_owner',
       // password: 'gnyfzHjQ0T9J',
       // database: 'neondb',
-      entities: [BlogsTable, PostsTable, DeviceTable, RequestTable, UsersTable, ForBlogsTable],
+      entities: [
+        BlogsTable,
+        PostsTable,
+        DeviceTable,
+        RequestTable,
+        UsersTable,
+        ForBlogsTable,
+      ],
       ssl: true,
       //autoLoadEntities: false,
       synchronize: true,
@@ -146,7 +153,7 @@ const strategies = [
       DeviceTable,
       RequestTable,
       UsersTable,
-      ForBlogsTable
+      ForBlogsTable,
     ]),
     MongooseModule.forRoot(
       appSettings.env.isTesting()
@@ -188,7 +195,6 @@ const strategies = [
     EmailAdapter,
   ],
 })
-
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
@@ -203,4 +209,3 @@ export class AppModule implements NestModule {
       );
   }
 }
-

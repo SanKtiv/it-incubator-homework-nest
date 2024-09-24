@@ -1,6 +1,6 @@
 import { Connection } from 'mongoose';
-import {DataSource} from "typeorm";
-import {BlogsTable} from "../../src/features/blogs/domain/blog.entity";
+import { DataSource } from 'typeorm';
+import { BlogsTable } from '../../src/features/blogs/domain/blog.entity';
 
 export const deleteAllData = async (databaseConnection: Connection) => {
   await databaseConnection.collection('users').deleteMany({});
@@ -8,5 +8,5 @@ export const deleteAllData = async (databaseConnection: Connection) => {
 };
 
 export const deleteAllDataSQL = async (databaseConnection: DataSource) => {
-  await databaseConnection.getRepository(BlogsTable).clear()
-}
+  await databaseConnection.getRepository(BlogsTable).clear();
+};

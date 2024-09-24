@@ -4,21 +4,22 @@ import { BlogsRepository } from '../infrastructure/mongodb/blogs.repository';
 import { BlogDocument } from '../domain/blogs.schema';
 import {
   BlogsViewDto,
-  blogsViewDto, sqlBlogsViewDto,
+  blogsViewDto,
+  sqlBlogsViewDto,
 } from '../api/models/output/blogs.view.dto';
-import {BlogsSqlRepository} from "../infrastructure/postgresdb/blogs.sql.repository";
-import {BlogsTable} from "../domain/blog.entity";
+import { BlogsSqlRepository } from '../infrastructure/postgresdb/blogs.sql.repository';
+import { BlogsTable } from '../domain/blog.entity';
 
 @Injectable()
 export class BlogsService {
   constructor(
-      private readonly blogsRepository: BlogsRepository,
-      private readonly blogsSqlRepository: BlogsSqlRepository
+    private readonly blogsRepository: BlogsRepository,
+    private readonly blogsSqlRepository: BlogsSqlRepository,
   ) {}
 
   async createBlog(dto: BlogsInputDto): Promise<BlogsViewDto> {
     const blogDocument = await this.blogsSqlRepository.create(dto);
-console.log(blogDocument)
+    console.log(blogDocument);
     return sqlBlogsViewDto(blogDocument);
   }
 

@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import {ToUpperCase} from "../decorators/transform/toUpperCase.decorator";
+import { ToUpperCase } from '../decorators/transform/toUpperCase.decorator';
 
 export class QueryDto {
   @IsOptional()

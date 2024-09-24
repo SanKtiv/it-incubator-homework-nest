@@ -36,7 +36,7 @@ import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user
 import { CommentServiceDto } from '../../comments/api/models/input/comment-service.dto';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
-import {PostsSqlQueryRepository} from "../infrastructure/postgresql/posts.sql.query.repository";
+import { PostsSqlQueryRepository } from '../infrastructure/postgresql/posts.sql.query.repository';
 
 @Controller('posts')
 export class PostController {

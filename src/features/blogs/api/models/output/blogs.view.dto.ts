@@ -1,7 +1,7 @@
 import { BlogDocument } from '../../../domain/blogs.schema';
 import { BlogQuery } from '../input/blogs.input.dto';
-import {BlogsTable} from "../../../domain/blog.entity";
-import {rethrow} from "@nestjs/core/helpers/rethrow";
+import { BlogsTable } from '../../../domain/blog.entity';
+import { rethrow } from '@nestjs/core/helpers/rethrow';
 import retryTimes = jest.retryTimes;
 
 export class BlogsViewDto {
@@ -26,23 +26,23 @@ export class BlogsViewPagingDto {
 }
 
 export const blogsViewDto = (blogDocument: BlogDocument): BlogsViewDto => ({
-    id: blogDocument._id.toString(),
-    name: blogDocument.name,
-    description: blogDocument.description,
-    websiteUrl: blogDocument.websiteUrl,
-    createdAt: blogDocument.createdAt,
-    isMembership: blogDocument.isMembership
+  id: blogDocument._id.toString(),
+  name: blogDocument.name,
+  description: blogDocument.description,
+  websiteUrl: blogDocument.websiteUrl,
+  createdAt: blogDocument.createdAt,
+  isMembership: blogDocument.isMembership,
 });
 
 export const sqlBlogsViewDto = (blogDocument: BlogsTable): BlogsViewDto =>
-    new BlogsViewDto(
-        blogDocument.id,
-        blogDocument.name,
-        blogDocument.description,
-        blogDocument.websiteUrl,
-        blogDocument.createdAt.toISOString(),
-        blogDocument.isMembership,
-    );
+  new BlogsViewDto(
+    blogDocument.id,
+    blogDocument.name,
+    blogDocument.description,
+    blogDocument.websiteUrl,
+    blogDocument.createdAt.toISOString(),
+    blogDocument.isMembership,
+  );
 
 export const blogPagingViewModel = (
   query: BlogQuery,
@@ -58,14 +58,14 @@ export const blogPagingViewModel = (
   );
 
 export const sqlBlogPagingViewModel = (
-    query: BlogQuery,
-    totalBlogs: number,
-    blogsPaging: BlogsTable[],
+  query: BlogQuery,
+  totalBlogs: number,
+  blogsPaging: BlogsTable[],
 ) =>
-    new BlogsViewPagingDto(
-        Math.ceil(totalBlogs / query.pageSize),
-        query.pageNumber,
-        query.pageSize,
-        totalBlogs,
-        blogsPaging.map((blog) => sqlBlogsViewDto(blog)),
-    );
+  new BlogsViewPagingDto(
+    Math.ceil(totalBlogs / query.pageSize),
+    query.pageNumber,
+    query.pageSize,
+    totalBlogs,
+    blogsPaging.map((blog) => sqlBlogsViewDto(blog)),
+  );

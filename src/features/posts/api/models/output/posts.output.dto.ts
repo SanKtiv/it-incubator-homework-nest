@@ -1,6 +1,6 @@
 import { LikesUsers, PostDocument } from '../../../domain/posts.schema';
 import { PostQuery } from '../input/posts.input.dto';
-import {PostsTable} from "../../../domain/posts.table";
+import { PostsTable } from '../../../domain/posts.table';
 
 export class PostsOutputDto {
   constructor(
@@ -66,21 +66,16 @@ export const postsOutputDto = (postDocument: PostDocument, userId?: string) =>
   );
 
 export const postsSqlOutputDto = (postDocument: PostsTable, userId?: string) =>
-    new PostsOutputDto(
-        postDocument.id,
-        postDocument.title,
-        postDocument.shortDescription,
-        postDocument.content,
-        postDocument.blogId,
-        postDocument.blogName,
-        postDocument.createdAt.toISOString(),
-        new ExtendedLikesInfo(
-            0,
-            0,
-            'Like',
-            [],
-        ),
-    );
+  new PostsOutputDto(
+    postDocument.id,
+    postDocument.title,
+    postDocument.shortDescription,
+    postDocument.content,
+    postDocument.blogId,
+    postDocument.blogName,
+    postDocument.createdAt.toISOString(),
+    new ExtendedLikesInfo(0, 0, 'Like', []),
+  );
 
 export class PostsPaging {
   constructor(
@@ -106,15 +101,15 @@ export const postsPaging = (
   );
 
 export const postsSqlPaging = (
-    query: PostQuery,
-    totalPosts: number,
-    postDocuments: PostsTable[],
-    userId?: string,
+  query: PostQuery,
+  totalPosts: number,
+  postDocuments: PostsTable[],
+  userId?: string,
 ) =>
-    new PostsPaging(
-        Math.ceil(totalPosts / +query.pageSize),
-        +query.pageNumber,
-        +query.pageSize,
-        totalPosts,
-        postDocuments.map((document) => postsSqlOutputDto(document, userId)),
-    );
+  new PostsPaging(
+    Math.ceil(totalPosts / +query.pageSize),
+    +query.pageNumber,
+    +query.pageSize,
+    totalPosts,
+    postDocuments.map((document) => postsSqlOutputDto(document, userId)),
+  );

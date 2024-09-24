@@ -34,8 +34,8 @@ import { BlogsSqlRepository } from '../infrastructure/postgresdb/blogs.sql.repos
 import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
 import { DevicesSqlRepository } from '../../security/infrastructure/devices.sql.repository';
 import { RequestApiSqlRepository } from '../../requests/infrastructure/request.sql.repository';
-import {BlogsSqlQueryRepository} from "../infrastructure/postgresdb/blogs.sql.query.repository";
-import {PostsSqlQueryRepository} from "../../posts/infrastructure/postgresql/posts.sql.query.repository";
+import { BlogsSqlQueryRepository } from '../infrastructure/postgresdb/blogs.sql.query.repository';
+import { PostsSqlQueryRepository } from '../../posts/infrastructure/postgresql/posts.sql.query.repository';
 
 @Controller('blogs')
 export class BlogsController {
@@ -52,10 +52,12 @@ export class BlogsController {
   ) {}
 
   @Get('/blogs')
-  async createBlogInSql(
-      //@Param('blogId', paramIdIsMongoIdPipe) id: string
-  ) {
-    return this.blogsSqlRepository.createForBlog('Qwerty1', '1c66a9f0-5c11-4ce4-8c66-3c0354492c5b')
+  async createBlogInSql() {
+    //@Param('blogId', paramIdIsMongoIdPipe) id: string
+    return this.blogsSqlRepository.createForBlog(
+      'Qwerty1',
+      '1c66a9f0-5c11-4ce4-8c66-3c0354492c5b',
+    );
   }
 
   @Post()

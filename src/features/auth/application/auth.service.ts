@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
 import { UserDocument } from '../../users/domain/users.schema';
 import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
-import {UsersTable} from "../../users/domain/users.table";
+import { UsersTable } from '../../users/domain/users.table';
 
 @Injectable()
 export class AuthService {
@@ -36,12 +36,14 @@ export class AuthService {
     const userDocument =
       await this.usersSqlRepository.findByConfirmationCode(code);
 
-    if (!userDocument ||
-        userDocument.expirationDate < new Date() ||
-        userDocument.isConfirmed)
+    if (
+      !userDocument ||
+      userDocument.expirationDate < new Date() ||
+      userDocument.isConfirmed
+    )
       throw new BadRequestException({
-      message: [{ message: 'code is wrong', field: 'code' }],
-    });
+        message: [{ message: 'code is wrong', field: 'code' }],
+      });
 
     // userDocument!.emailConfirmation.isConfirmed = true; for mongo
     userDocument!.isConfirmed = true;
@@ -113,7 +115,7 @@ export class AuthService {
     const compareHash = await bcrypt.compare(
       password,
       //userDocument.accountData.passwordHash, for mongo
-        userDocument.passwordHash,
+      userDocument.passwordHash,
     );
 
     if (!compareHash) return null;

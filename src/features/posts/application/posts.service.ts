@@ -8,14 +8,15 @@ import { PostDocument } from '../domain/posts.schema';
 import { BlogsRepository } from '../../blogs/infrastructure/mongodb/blogs.repository';
 import {
   PostsOutputDto,
-  postsOutputDto, postsSqlOutputDto,
+  postsOutputDto,
+  postsSqlOutputDto,
 } from '../api/models/output/posts.output.dto';
 import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
 import { BlogsService } from '../../blogs/application/blogs.service';
-import {PostsSqlRepository} from "../infrastructure/postgresql/posts.sql.repository";
-import {BlogsSqlRepository} from "../../blogs/infrastructure/postgresdb/blogs.sql.repository";
-import {PostsTable} from "../domain/posts.table";
-import {InputDto} from "../../../infrastructure/models/input.dto";
+import { PostsSqlRepository } from '../infrastructure/postgresql/posts.sql.repository';
+import { BlogsSqlRepository } from '../../blogs/infrastructure/postgresdb/blogs.sql.repository';
+import { PostsTable } from '../domain/posts.table';
+import { InputDto } from '../../../infrastructure/models/input.dto';
 
 @Injectable()
 export class PostsService {
@@ -33,7 +34,7 @@ export class PostsService {
 
     const postDocument = await this.postsSqlRepository.create(
       dto,
-      blogDocument.name,// can use without blogName
+      blogDocument.name, // can use without blogName
     );
 
     return postsSqlOutputDto(postDocument);
@@ -152,8 +153,11 @@ export class PostsService {
     if (!result) throw new NotFoundException();
   }
 
-  async deletePostByIdForBlog(postId: string, blogId: string): Promise<void | HttpException> {
-    const post = await this.existPost(postId)
+  async deletePostByIdForBlog(
+    postId: string,
+    blogId: string,
+  ): Promise<void | HttpException> {
+    const post = await this.existPost(postId);
 
     if (post.blogId !== blogId) throw new NotFoundException();
 

@@ -43,8 +43,10 @@ describe('BLOGS (e2e)', () => {
   // });
 
   it('/blogs (POST), should returned status 201 and correct blog model', async () => {
-    const responseCreateBlog = await blogsTestManager
-        .createBlog(blogCreateModel, authBasic);
+    const responseCreateBlog = await blogsTestManager.createBlog(
+      blogCreateModel,
+      authBasic,
+    );
 
     await expect(responseCreateBlog.statusCode).toBe(201);
 

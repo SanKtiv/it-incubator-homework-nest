@@ -1,5 +1,12 @@
-import {Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, OneToOne, JoinColumn} from 'typeorm';
-import {name} from "ts-jest/dist/transformers/hoist-jest";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  PrimaryColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { name } from 'ts-jest/dist/transformers/hoist-jest';
 
 @Entity('blogs')
 export class BlogsTable {
@@ -17,7 +24,6 @@ export class BlogsTable {
 
   @Column('timestamp with time zone')
   createdAt: Date;
-
 
   @Column({ default: true })
   isMembership: boolean;

@@ -8,8 +8,8 @@ import { DevicesRepository } from '../features/security/infrastructure/devices.r
 import { UsersSqlRepository } from '../features/users/infrastructure/postgresqldb/users.sql.repository';
 import { RequestApiSqlRepository } from '../features/requests/infrastructure/request.sql.repository';
 import { DevicesSqlRepository } from '../features/security/infrastructure/devices.sql.repository';
-import {BlogsSqlRepository} from "../features/blogs/infrastructure/postgresdb/blogs.sql.repository";
-import {PostsSqlRepository} from "../features/posts/infrastructure/postgresql/posts.sql.repository";
+import { BlogsSqlRepository } from '../features/blogs/infrastructure/postgresdb/blogs.sql.repository';
+import { PostsSqlRepository } from '../features/posts/infrastructure/postgresql/posts.sql.repository';
 
 @Controller('testing/all-data')
 export class TestingController {

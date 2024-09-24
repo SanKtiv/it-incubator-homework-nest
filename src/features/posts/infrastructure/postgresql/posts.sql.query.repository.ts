@@ -6,23 +6,24 @@ import {
   PostsOutputDto,
   postsOutputDto,
   PostsPaging,
-  postsPaging, postsSqlOutputDto, postsSqlPaging,
+  postsPaging,
+  postsSqlOutputDto,
+  postsSqlPaging,
 } from '../../api/models/output/posts.output.dto';
-import {InjectDataSource} from "@nestjs/typeorm";
-import {DataSource} from "typeorm";
-import {PostsTable} from "../../domain/posts.table";
-
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { PostsTable } from '../../domain/posts.table';
 
 @Injectable()
 export class PostsSqlQueryRepository {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   private get repository() {
-    return this.dataSource.getRepository(PostsTable)
+    return this.dataSource.getRepository(PostsTable);
   }
 
   async findById(id: string, userId?: string): Promise<PostsOutputDto> {
-    const postDocument = await this.repository.findOneBy({id: id});
+    const postDocument = await this.repository.findOneBy({ id: id });
 
     if (!postDocument) throw new NotFoundException();
 
@@ -37,19 +38,19 @@ export class PostsSqlQueryRepository {
 
     //const totalPosts = await this.repository.countBy(filter);
 
-    const posts = this.repository.createQueryBuilder('post')
+    const posts = this.repository.createQueryBuilder('post');
 
     if (dto.blogId) {
-      posts.where('post.blogId = :blogId', {blogId: dto.blogId})
+      posts.where('post.blogId = :blogId', { blogId: dto.blogId });
     }
 
     const totalPosts = await posts.getCount();
 
     const postsPaging = await posts
-        .orderBy(`post.${query.sortBy}`, query.sortDirection)
-        .skip((query.pageNumber - 1) * query.pageSize)
-        .take(query.pageSize)
-        .getMany();
+      .orderBy(`post.${query.sortBy}`, query.sortDirection)
+      .skip((query.pageNumber - 1) * query.pageSize)
+      .take(query.pageSize)
+      .getMany();
 
     return postsSqlPaging(query, totalPosts, postsPaging, dto.userId);
   }

@@ -12,9 +12,12 @@ import {
   InfoCurrentUserDto,
 } from '../../../auth/api/models/output/info-current-user.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
-import {Brackets, DataSource} from 'typeorm';
+import { Brackets, DataSource } from 'typeorm';
 import { UsersTable } from '../../domain/users.table';
-import {UsersPagingDto, usersPagingDto} from "../../api/models/output/users.output.dto";
+import {
+  UsersPagingDto,
+  usersPagingDto,
+} from '../../api/models/output/users.output.dto';
 
 @Injectable()
 export class UsersSqlQueryRepository {
@@ -62,24 +65,24 @@ export class UsersSqlQueryRepository {
     const emailTerm = query.searchEmailTerm;
 
     const users = this.dataSource
-        .getRepository(UsersTable)
-        .createQueryBuilder('user')
+      .getRepository(UsersTable)
+      .createQueryBuilder('user');
 
     if (loginTerm || emailTerm) {
       const filter = 'user.login ~* :login OR user.email ~* :email';
-      const paramFilter = {login: loginTerm, email: emailTerm}
+      const paramFilter = { login: loginTerm, email: emailTerm };
 
-      users.where(filter, paramFilter)
+      users.where(filter, paramFilter);
     }
 
-    const totalUsers = await users.getCount()
+    const totalUsers = await users.getCount();
 
     const usersPaging = await users
-        .orderBy(`user.${query.sortBy}`, query.sortDirection)
-        .skip((query.pageNumber - 1) * query.pageSize)
-        .take(query.pageSize)
-        .getMany();
+      .orderBy(`user.${query.sortBy}`, query.sortDirection)
+      .skip((query.pageNumber - 1) * query.pageSize)
+      .take(query.pageSize)
+      .getMany();
 
-    return usersPagingDto(totalUsers, query, usersPaging)
+    return usersPagingDto(totalUsers, query, usersPaging);
   }
 }

@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Trim } from '../../../../../infrastructure/decorators/transform/trim-custom.decorator';
-import {ToUpperCase} from "../../../../../infrastructure/decorators/transform/toUpperCase.decorator";
+import { ToUpperCase } from '../../../../../infrastructure/decorators/transform/toUpperCase.decorator';
 
 export class BlogsInputDto {
   @Length(1, 15)

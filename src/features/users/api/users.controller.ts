@@ -46,7 +46,7 @@ export class UsersController {
     //const totalUsers = await this.usersSqlQueryRepository.countDocument(query);for mongo
     //const usersPaging = await this.usersSqlQueryRepository.findPaging(query);for mongo
     //return usersPagingDto(totalUsers, query, usersPaging);for mongo
-      return await this.usersSqlQueryRepository.findPaging(query)
+    return await this.usersSqlQueryRepository.findPaging(query);
   }
 
   @Delete(':userId')

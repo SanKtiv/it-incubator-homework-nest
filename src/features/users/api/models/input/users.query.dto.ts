@@ -1,6 +1,13 @@
-import {IsLowercase, IsNumber, IsOptional, IsString, IsUppercase, Min} from 'class-validator';
+import {
+  IsLowercase,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUppercase,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
-import {ToUpperCase} from "../../../../../infrastructure/decorators/transform/toUpperCase.decorator";
+import { ToUpperCase } from '../../../../../infrastructure/decorators/transform/toUpperCase.decorator';
 
 export class UsersQuery {
   @IsOptional()
