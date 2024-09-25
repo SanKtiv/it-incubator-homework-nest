@@ -96,11 +96,9 @@ export class BlogsSqlRepository {
     const query = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM "blogs" AS b
-    WHERE b."id" = $1
-    RETURNING *;`
+    WHERE b."id" = $1;`
 
     try {
-      console.log('FindBlog')
       const foundBlogArray = await this.dataSource
           .query(query, [id]);
 
@@ -115,7 +113,7 @@ export class BlogsSqlRepository {
     DELETE FROM "blogs" AS b
     WHERE b."id" = $1
     RETURNING *`
-    console.log('2')
+
     try {
       const deletedBlogArray = await this.dataSource
           .query(query, [blog.id]);

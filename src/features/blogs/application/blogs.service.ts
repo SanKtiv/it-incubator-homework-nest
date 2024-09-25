@@ -40,9 +40,8 @@ export class BlogsService {
   }
 
   async deleteBlogById(id: string): Promise<void> {
-    console.log('Hello')
     const blogDocument = await this.existBlog(id);
-    console.log('1')
+
     await this.blogsSqlRepository.deleteOne(blogDocument);
   }
 }
