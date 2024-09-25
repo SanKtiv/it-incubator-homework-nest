@@ -19,7 +19,7 @@ export class BlogsService {
 
   async createBlog(dto: BlogsInputDto): Promise<BlogsViewDto> {
     const blogDocument = await this.blogsSqlRepository.create(dto);
-    console.log(blogDocument);
+
     return sqlBlogsViewDto(blogDocument);
   }
 
@@ -40,8 +40,9 @@ export class BlogsService {
   }
 
   async deleteBlogById(id: string): Promise<void> {
+    console.log('Hello')
     const blogDocument = await this.existBlog(id);
-
+    console.log('1')
     await this.blogsSqlRepository.deleteOne(blogDocument);
   }
 }

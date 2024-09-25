@@ -24,40 +24,26 @@ export class BlogsSqlRepository {
   //   };
   //   return this.save(blog);
   // }
-  async create(dto) {
-    const query = `
-    INSERT INTO blogs (name, description, "websiteUrl", "createdAt")
-    VALUES ('name', 'description', 'https://web.com', '01.01.2001');
-    `;
-    // const query = `
-    // INSERT INTO 'blogs' ('name', 'description', 'websiteUrl', 'createdAt', 'isMembership')
-    // VALUES (${dto.name}, ${dto.description} , ${dto.websiteUrl}, ${new Date()}, ${false})
-    // `
-    console.log(query);
-    return await this.dataSource
-      // .query(query,[dto.name, dto.description, dto.websiteUrl, new Date(), false])
-      .query(query, [dto.name, dto.description, dto.websiteUrl, new Date()]);
-  }
 
   async save(blog: BlogsTable) {
     return this.repository.save(blog);
   }
 
-  async findById(id: string): Promise<BlogsTable | null> {
-    try {
-      return this.repository.findOneBy({ id: id });
-    } catch (e) {
-      throw new Error('Error finding blog by blogId');
-    }
-  }
+  // async findById(id: string): Promise<BlogsTable | null> {
+  //   try {
+  //     return this.repository.findOneBy({ id: id });
+  //   } catch (e) {
+  //     throw new Error('Error finding blog by blogId');
+  //   }
+  // }
 
-  async deleteOne(blog: BlogsTable): Promise<BlogsTable> {
-    try {
-      return this.repository.remove(blog);
-    } catch (e) {
-      throw new Error('Error DB');
-    }
-  }
+  // async deleteOne(blog: BlogsTable): Promise<BlogsTable> {
+  //   try {
+  //     return this.repository.remove(blog);
+  //   } catch (e) {
+  //     throw new Error('Error DB');
+  //   }
+  // }
 
   async deleteAll(): Promise<void> {
     await this.repository.clear();
@@ -88,9 +74,55 @@ export class BlogsSqlRepository {
     // )
   }
 
-  // async create() {
-  //     return this.dataSource.query(`
-  //     CREATE TABLE IF NOT EXISTS blogs(id SERIAL PRIMARY KEY, name TEXT NOT NULL, value REAL);
-  //     `)
-  // }
+  async create(dto): Promise<BlogsTable> {
+    const query = `
+    INSERT INTO public."blogs" ("name", "description", "websiteUrl", "createdAt")
+    VALUES ($1, $2, $3, $4)
+    RETURNING *;`;
+
+    const queryParams = [
+      dto.name,
+      dto.description,
+      dto.websiteUrl, new Date()
+    ]
+
+    const createdRowsArray = await this.dataSource
+        .query(query, queryParams);
+
+    return createdRowsArray[0]
+  }
+
+  async findById(id: string): Promise<BlogsTable | null> {
+    const query = `
+    SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
+    FROM "blogs" AS b
+    WHERE b."id" = $1
+    RETURNING *;`
+
+    try {
+      console.log('FindBlog')
+      const foundBlogArray = await this.dataSource
+          .query(query, [id]);
+
+      return foundBlogArray[0]
+    } catch (e) {
+      throw new Error('Error finding blog by blogId');
+    }
+  }
+
+  async deleteOne(blog: BlogsTable): Promise<BlogsTable> {
+    const query = `
+    DELETE FROM "blogs" AS b
+    WHERE b."id" = $1
+    RETURNING *`
+    console.log('2')
+    try {
+      const deletedBlogArray = await this.dataSource
+          .query(query, [blog.id]);
+
+      return deletedBlogArray[0];
+    } catch (e) {
+      throw new Error('Error DB');
+    }
+  }
 }
