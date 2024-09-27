@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
 import { BlogQuery } from '../../api/models/input/blogs.input.dto';
 import {
   BlogsViewDto,
@@ -61,31 +61,39 @@ export class BlogsSqlQueryRepository {
     return sqlBlogsViewDto(blogDocument);
   }
 
-  async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
-    const searchTerm = query.searchNameTerm;
-    const pageSize = query.pageSize;
-    const pageOffSet = (query.pageNumber - 1) * query.pageSize;
+    async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
+        const searchTerm = !query.searchNameTerm ? '' : query.searchNameTerm;
+        const pageSize = query.pageSize;
+        const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
-    const querySQL = `
+        const querySQL = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM "blogs" AS b
     WHERE b."name" ~* $1
-    ORDER BY $2 ASC
-    LIMIT $3 OFFSET $4`;
+    ORDER BY b."${query.sortBy}" ${query.sortDirection} $4
+    LIMIT $2 OFFSET $3`;
 
-    const querySQLCount = `
+        const querySQLCount = `
     SELECT COUNT(*)
     FROM "blogs" AS b
     WHERE b."name" ~* $1`
 
-    const totalBlogsArray = await this.dataSource
-        .query(querySQLCount, [searchTerm])
+        const totalBlogsArray = await this.dataSource
+            .query(querySQLCount, [searchTerm])
 
-    const totalBlogs = totalBlogsArray[0].count
+        const totalBlogs = totalBlogsArray[0].count
 
-    const pagingBlogs = await this.dataSource
-        .query(querySQL, [searchTerm, query.sortBy, pageSize, pageOffSet])
+        let pagingBlogs
 
-    return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
-  }
+        try {
+            pagingBlogs = await this.dataSource
+                .query(querySQL, [searchTerm, pageSize, pageOffSet])
+
+
+        } catch (e) {
+            throw new InternalServerErrorException()
+        }
+
+        return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
+    }
 }

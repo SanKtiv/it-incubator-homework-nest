@@ -29,8 +29,8 @@ export class ErrorsFilter implements ExceptionFilter {
     if (status === 400) {
       const messageArray: any = exception.getResponse();
       return response
-        .status(status)
-        .send(new ErrorsMessages(messageArray.message));
+          .status(status)
+          .send(new ErrorsMessages(messageArray.message));
     }
 
     if (status === 401) return response.sendStatus(status);
@@ -39,6 +39,9 @@ export class ErrorsFilter implements ExceptionFilter {
 
     if (status === 429) return response.sendStatus(status);
 
-    return response.status(status).send({ exception });
+    if (status === 500) return response.sendStatus(status);
+
+    return response.status(status).send({exception});
+
   }
 }
