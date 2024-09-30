@@ -46,20 +46,20 @@ export class BlogsSqlQueryRepository {
   //   return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
   // }
 
-  async findById(id: string): Promise<BlogsViewDto> {
-    const query = `
+    async findById(id: string): Promise<BlogsViewDto> {
+        const query = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM public."blogs" AS b
     WHERE b."id" = $1;`
 
-    const foundBlogArray = await this.dataSource.query(query, [id])
+        const foundBlogArray = await this.dataSource.query(query, [id])
 
-    const blogDocument = foundBlogArray[0]
+        const blogDocument = foundBlogArray[0]
 
-    if (!blogDocument) throw new NotFoundException();
+        if (!blogDocument) throw new NotFoundException();
 
-    return sqlBlogsViewDto(blogDocument);
-  }
+        return sqlBlogsViewDto(blogDocument);
+    }
 
     async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
         const searchTerm = !query.searchNameTerm ? '' : query.searchNameTerm;
@@ -83,17 +83,13 @@ export class BlogsSqlQueryRepository {
 
         const totalBlogs = totalBlogsArray[0].count
 
-        let pagingBlogs
-
         try {
-            pagingBlogs = await this.dataSource
+            const pagingBlogs = await this.dataSource
                 .query(querySQL, [searchTerm, pageSize, pageOffSet])
 
-
+            return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
         } catch (e) {
             throw new InternalServerErrorException()
         }
-
-        return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
     }
 }
