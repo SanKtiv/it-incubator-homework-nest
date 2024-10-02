@@ -4,17 +4,17 @@ import {
   Comment,
   CommentDocument,
   CommentModelType,
-} from '../domain/comment.schema';
-import { QueryDto } from '../../../infrastructure/models/query.dto';
+} from '../../domain/comment.schema';
+import { QueryDto } from '../../../../infrastructure/models/query.dto';
 import {
   CommentOutputDto,
   commentOutputDto,
   CommentsPagingDto,
   commentsPagingDto,
-} from '../api/models/output/comment.output.dto';
+} from '../../api/models/output/comment.output.dto';
 
 @Injectable()
-export class CommentsQueryRepository {
+export class CommentsSqlQueryRepository {
   constructor(
     @InjectModel(Comment.name) private CommentModel: CommentModelType,
   ) {}

@@ -2,7 +2,7 @@ import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { BlogsRepository } from '../features/blogs/infrastructure/mongodb/blogs.repository';
 import { UsersRepository } from '../features/users/infrastructure/mongodb/users.repository';
 import { PostsRepository } from '../features/posts/infrastructure/mongodb/posts.repository';
-import { CommentsRepository } from '../features/comments/infrastructure/comments.repository';
+import { CommentsRepository } from '../features/comments/infrastructure/mongodb/comments.repository';
 import { RequestApiRepository } from '../features/requests/infrastructure/request.repository';
 import { DevicesRepository } from '../features/security/infrastructure/devices.repository';
 import { UsersSqlRepository } from '../features/users/infrastructure/postgresqldb/users.sql.repository';

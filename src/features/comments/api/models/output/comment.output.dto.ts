@@ -1,6 +1,7 @@
 import { CommentDocument } from '../../../domain/comment.schema';
 import { QueryDto } from '../../../../../infrastructure/models/query.dto';
 import { PostDocument } from '../../../../posts/domain/posts.schema';
+import {CommentsTable} from "../../../domain/comments.entity";
 
 export class CommentOutputDto {
   constructor(
@@ -49,6 +50,26 @@ export const commentOutputDto = (
       myStatus(commentDocument, userId),
     ),
   );
+
+export const sqlCommentOutputDto = (
+    commentDocument: CommentsTable,
+    userId?: string,
+) => (
+    {
+      id: commentDocument.id,
+      content: commentDocument.content,
+      createdAt: commentDocument.createdAt,
+      commentatorInfo:{
+        userId: commentDocument.userId,
+        userLogin: commentDocument.userLogin
+      },
+      likesInfo: {
+        likesCount: commentDocument.likesCount,
+        dislikesCount: commentDocument.dislikesCount,
+        myStatus: myStatus(commentDocument, userId),
+      }
+    }
+);
 
 export class CommentsPagingDto {
   constructor(

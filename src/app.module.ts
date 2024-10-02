@@ -22,10 +22,10 @@ import {
   Comment,
   CommentSchema,
 } from './features/comments/domain/comment.schema';
-import { CommentsRepository } from './features/comments/infrastructure/comments.repository';
+import { CommentsRepository } from './features/comments/infrastructure/mongodb/comments.repository';
 import { CommentsService } from './features/comments/application/comments.service';
 import { CommentsController } from './features/comments/api/comments.controller';
-import { CommentsQueryRepository } from './features/comments/infrastructure/comments.query.repository';
+import { CommentsQueryRepository } from './features/comments/infrastructure/mongodb/comments.query.repository';
 import dotenv from 'dotenv';
 import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './features/auth/api/auth.controller';
@@ -73,6 +73,9 @@ import { PostsTable } from './features/posts/domain/posts.table';
 import { SaBlogsController } from './features/blogs/api/sa.blogscontroller';
 import { PostsSqlRepository } from './features/posts/infrastructure/postgresql/posts.sql.repository';
 import { PostsSqlQueryRepository } from './features/posts/infrastructure/postgresql/posts.sql.query.repository';
+import {CommentsTable, UsersStatusesTable} from "./features/comments/domain/comments.entity";
+import {CommentsSqlRepository} from "./features/comments/infrastructure/postgresql/sql.comments.repository";
+import {CommentsSqlQueryRepository} from "./features/comments/infrastructure/postgresql/sql.comments.query.repository";
 
 dotenv.config();
 
@@ -99,6 +102,8 @@ const repositories = [
   PostsSqlQueryRepository,
   CommentsRepository,
   CommentsQueryRepository,
+  CommentsSqlRepository,
+  CommentsSqlQueryRepository,
   UsersRepository,
   UsersQueryRepository,
   DevicesRepository,
@@ -142,6 +147,8 @@ const strategies = [
         RequestTable,
         UsersTable,
         ForBlogsTable,
+        CommentsTable,
+        UsersStatusesTable
       ],
       ssl: true,
       //autoLoadEntities: false,
@@ -154,6 +161,8 @@ const strategies = [
       RequestTable,
       UsersTable,
       ForBlogsTable,
+      CommentsTable,
+      UsersStatusesTable
     ]),
     MongooseModule.forRoot(
       appSettings.env.isTesting()

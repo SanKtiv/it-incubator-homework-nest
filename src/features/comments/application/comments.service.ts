@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CommentsRepository } from '../infrastructure/comments.repository';
+import { CommentsRepository } from '../infrastructure/mongodb/comments.repository';
 import { PostsRepository } from '../../posts/infrastructure/mongodb/posts.repository';
 import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
 import {
@@ -15,24 +15,29 @@ import { CommentInputDto } from '../api/models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
 import { CommentDocument } from '../domain/comment.schema';
 import { PostsService } from '../../posts/application/posts.service';
+import {UsersSqlRepository} from "../../users/infrastructure/postgresqldb/users.sql.repository";
+import {CommentsSqlRepository} from "../infrastructure/postgresql/sql.comments.repository";
 
 @Injectable()
 export class CommentsService {
   constructor(
     private readonly commentsRepository: CommentsRepository,
+    private readonly commentsSqlRepository: CommentsSqlRepository,
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly usersSqlRepository: UsersSqlRepository,
     private readonly postsService: PostsService,
   ) {}
 
   async createComment(dto: CommentServiceDto): Promise<CommentOutputDto> {
     await this.postsService.existPost(dto.postId);
 
-    const userDocument = await this.usersRepository.findById(dto.userId);
+    const userDocument = await this.usersSqlRepository.findById(dto.userId);
 
-    dto.userLogin = userDocument!.accountData.login;
+    // dto.userLogin = userDocument!.accountData.login; for mongo
+    dto.userLogin = userDocument!.login;
 
-    const commentDocument = await this.commentsRepository.create(dto);
+    const commentDocument = await this.commentsSqlRepository.create(dto);
 
     return commentOutputDto(commentDocument);
   }

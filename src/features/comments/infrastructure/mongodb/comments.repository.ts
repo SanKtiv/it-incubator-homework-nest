@@ -4,8 +4,8 @@ import {
   Comment,
   CommentDocument,
   CommentModelType,
-} from '../domain/comment.schema';
-import { CommentServiceDto } from '../api/models/input/comment-service.dto';
+} from '../../domain/comment.schema';
+import { CommentServiceDto } from '../../api/models/input/comment-service.dto';
 
 @Injectable()
 export class CommentsRepository {

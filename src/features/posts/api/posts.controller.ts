@@ -28,7 +28,7 @@ import {
   CommentOutputDto,
   commentsPagingDto,
 } from '../../comments/api/models/output/comment.output.dto';
-import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query.repository';
+import { CommentsQueryRepository } from '../../comments/infrastructure/mongodb/comments.query.repository';
 import { QueryDto } from '../../../infrastructure/models/query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
@@ -89,12 +89,12 @@ export class PostController {
     @Body() inputDto: CommentInputDto,
     @CurrentUserId() userId: string,
   ): Promise<CommentOutputDto> {
-    const dto: CommentServiceDto = {
-      content: inputDto.content,
-      userId: userId,
-      userLogin: 'userLogin',
-      postId: id,
-    };
+    const dto = new CommentServiceDto();
+
+    dto.content = inputDto.content;
+    dto.userId = userId;
+    dto.postId = id;
+
     return this.commentsService.createComment(dto);
   }
 
