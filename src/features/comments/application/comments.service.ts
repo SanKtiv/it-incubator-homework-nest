@@ -8,7 +8,7 @@ import { PostsRepository } from '../../posts/infrastructure/mongodb/posts.reposi
 import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
 import {
   CommentOutputDto,
-  commentOutputDto,
+  commentOutputDto, sqlCommentOutputDto,
 } from '../api/models/output/comment.output.dto';
 import { CommentServiceDto } from '../api/models/input/comment-service.dto';
 import { CommentInputDto } from '../api/models/input/comment.input.dto';
@@ -39,7 +39,7 @@ export class CommentsService {
 
     const commentDocument = await this.commentsSqlRepository.create(dto);
 
-    return commentOutputDto(commentDocument);
+    return sqlCommentOutputDto(commentDocument);
   }
 
   async updateCommentById(id: string, userId: string, dto: CommentInputDto) {

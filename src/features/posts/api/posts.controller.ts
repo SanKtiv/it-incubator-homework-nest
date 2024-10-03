@@ -71,16 +71,16 @@ export class PostController {
     return this.postsSqlQueryRepository.findById(id);
   }
 
-  // @Put(':postId/like-status')
-  // @HttpCode(204)
-  // @UseGuards(JWTAccessAuthGuard)
-  // async createStatus(
-  //   @Param('postId', paramIdIsMongoIdPipe) id: string,
-  //   @Body() dto: PostLikeStatusDto,
-  //   @CurrentUserId() userId: string,
-  // ) {
-  //   await this.postsService.updateLikeStatus(id, dto, userId);
-  // }
+  @Put(':postId/like-status')
+  @HttpCode(204)
+  @UseGuards(JWTAccessAuthGuard)
+  async createStatus(
+    @Param('postId', paramIdIsMongoIdPipe) id: string,
+    @Body() dto: PostLikeStatusDto,
+    @CurrentUserId() userId: string,
+  ) {
+    await this.postsService.updateLikeStatus(id, dto, userId);
+  }
 
   @Post(':postId/comments')
   @UseGuards(JWTAccessAuthGuard)

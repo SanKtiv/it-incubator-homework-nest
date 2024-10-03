@@ -26,22 +26,3 @@ export class CommentsTable {
     @Column({type:'int', default: 0})
     dislikesCount: number;
 }
-
-@Entity('usersStatuses')
-export class UsersStatusesTable {
-
-    @Column('uuid')
-    userId: string;
-
-    @Column('uuid')
-    postId: string;
-
-    @Column('uuid')
-    commentId: string;
-
-    @Column('character varying')
-    userStatus: string;
-
-    @Column('timestamp with time zone')
-    addedAt: Date;
-}

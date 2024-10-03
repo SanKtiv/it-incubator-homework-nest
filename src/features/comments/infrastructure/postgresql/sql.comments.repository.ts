@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, InternalServerErrorException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Comment,
@@ -18,21 +18,25 @@ export class CommentsSqlRepository {
 
   async create(dto: CommentServiceDto): Promise<CommentsTable> {
     const querySql = `
-        INSERT INTO "comments" (content, userId, userLogin, createdAt, postId)
+        INSERT INTO "comments" ("content", "userId", "userLogin", "createdAt", "postId")
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *;`;
 
     const queryParams = [
       dto.content,
       dto.userId,
-      dto.userId,
+      dto.userLogin,
       new Date(),
       dto.postId
     ]
+    try {
+      const commentsArray = await this.dataSource.query(querySql, queryParams)
 
-    const commentsArray = await this.dataSource.query(querySql, queryParams)
-
-    return commentsArray[0]
+      return commentsArray[0]
+    }
+    catch (e) {
+      throw new InternalServerErrorException()
+    }
   }
 
   // async findById(id: string): Promise<CommentDocument | null> {

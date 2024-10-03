@@ -73,9 +73,10 @@ import { PostsTable } from './features/posts/domain/posts.table';
 import { SaBlogsController } from './features/blogs/api/sa.blogscontroller';
 import { PostsSqlRepository } from './features/posts/infrastructure/postgresql/posts.sql.repository';
 import { PostsSqlQueryRepository } from './features/posts/infrastructure/postgresql/posts.sql.query.repository';
-import {CommentsTable, UsersStatusesTable} from "./features/comments/domain/comments.entity";
+import {CommentsTable} from "./features/comments/domain/comments.entity";
 import {CommentsSqlRepository} from "./features/comments/infrastructure/postgresql/sql.comments.repository";
 import {CommentsSqlQueryRepository} from "./features/comments/infrastructure/postgresql/sql.comments.query.repository";
+import {StatusesTable} from "./features/statuses/domain/statuses.entity";
 
 dotenv.config();
 
@@ -148,7 +149,7 @@ const strategies = [
         UsersTable,
         ForBlogsTable,
         CommentsTable,
-        UsersStatusesTable
+        StatusesTable
       ],
       ssl: true,
       //autoLoadEntities: false,
@@ -162,7 +163,7 @@ const strategies = [
       UsersTable,
       ForBlogsTable,
       CommentsTable,
-      UsersStatusesTable
+      StatusesTable
     ]),
     MongooseModule.forRoot(
       appSettings.env.isTesting()

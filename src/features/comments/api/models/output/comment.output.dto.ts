@@ -56,18 +56,18 @@ export const sqlCommentOutputDto = (
     userId?: string,
 ) => (
     {
-      id: commentDocument.id,
-      content: commentDocument.content,
-      createdAt: commentDocument.createdAt,
-      commentatorInfo:{
-        userId: commentDocument.userId,
-        userLogin: commentDocument.userLogin
-      },
-      likesInfo: {
-        likesCount: commentDocument.likesCount,
-        dislikesCount: commentDocument.dislikesCount,
-        myStatus: myStatus(commentDocument, userId),
-      }
+        id: commentDocument.id,
+        content: commentDocument.content,
+        createdAt: commentDocument.createdAt.toISOString(),
+        commentatorInfo: {
+            userId: commentDocument.userId,
+            userLogin: commentDocument.userLogin
+        },
+        likesInfo: {
+            likesCount: commentDocument.likesCount,
+            dislikesCount: commentDocument.dislikesCount,
+            myStatus: 'None',
+        }
     }
 );
 
