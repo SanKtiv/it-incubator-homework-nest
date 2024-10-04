@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, InternalServerErrorException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument, PostModelType } from '../../domain/posts.schema';
 import { PostsInputDto } from '../../api/models/input/posts.input.dto';
@@ -29,6 +29,22 @@ export class PostsSqlRepository {
 
   async savePost(postDocument: PostsTable): Promise<PostsTable> {
     return this.repository.save(postDocument);
+  }
+
+  async updateStatus(status: string, postId: string) {
+    const querySql = `
+        UPDATE "posts" AS p
+        SET p."userStatus" = $1
+        WHERE status."userId" = $2 AND status."postId" = $3
+        `
+    const queryParams = [status, postId]
+
+    try {
+      await this.dataSource.query(querySql, queryParams)
+    }
+    catch (e) {
+      throw new InternalServerErrorException()
+    }
   }
 
   async deletePost(post: PostsTable): Promise<void> {
