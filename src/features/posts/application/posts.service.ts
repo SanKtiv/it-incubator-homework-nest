@@ -18,6 +18,7 @@ import { BlogsSqlRepository } from '../../blogs/infrastructure/postgresdb/blogs.
 import { PostsTable } from '../domain/posts.table';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import {UsersSqlRepository} from "../../users/infrastructure/postgresqldb/users.sql.repository";
+import {StatusesSqlRepository} from "../../statuses/infrastructure/statuses.sql.repository";
 
 @Injectable()
 export class PostsService {
@@ -29,6 +30,7 @@ export class PostsService {
     private readonly usersRepository: UsersRepository,
     private readonly usersSqlRepository: UsersSqlRepository,
     private readonly blogsService: BlogsService,
+    private readonly statusesSqlRepository: StatusesSqlRepository,
   ) {}
 
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
@@ -74,40 +76,107 @@ export class PostsService {
     await this.postsSqlRepository.savePost(post);
   }
 
-  async updateLikeStatus(
-    id: string,
-    dto: PostLikeStatusDto,
-    userId: string,
+  // async createStatusForPost(
+  //   id: string,
+  //   dto: PostLikeStatusDto,
+  //   userId: string,
+  // ): Promise<void> {
+  //   const postDocument = await this.existPost(id);
+  //
+  //   const userDocument = await this.usersRepository.findById(userId);
+  //
+  //   const userLogin = userDocument!.accountData.login;
+  //
+  //   const newStatus = dto.likeStatus;
+  //
+  //   const newStatusIsLike = newStatus === 'Like';
+  //
+  //   const newStatusIsDislike = newStatus === 'Dislike';
+  //
+  //   const currentUser = postDocument.likesUsers.find(
+  //     (e) => e.userId === userId,
+  //   );
+  //
+  //   if (newStatus === 'None' && !currentUser) return;
+  //
+  //   if (newStatus === 'None' && currentUser) {
+  //     if (currentUser.userStatus === 'Like') postDocument.likesCount--;
+  //
+  //     if (currentUser.userStatus === 'Dislike') postDocument.dislikesCount--;
+  //
+  //     postDocument.likesUsers = postDocument.likesUsers.filter(
+  //       (e) => e.userId !== userId,
+  //     );
+  //
+  //     await this.postsRepository.save(postDocument);
+  //
+  //     return;
+  //   }
+  //
+  //   const likeUser = {
+  //     userStatus: newStatus,
+  //     addedAt: new Date().toISOString(),
+  //     userId: userId,
+  //     login: userLogin,
+  //   };
+  //
+  //   if (!currentUser) {
+  //     if (newStatusIsLike) postDocument.likesCount++;
+  //
+  //     if (newStatusIsDislike) postDocument.dislikesCount++;
+  //
+  //     postDocument.likesUsers.push(likeUser);
+  //
+  //     await this.postsRepository.save(postDocument);
+  //
+  //     return;
+  //   }
+  //
+  //   if (newStatusIsLike && currentUser.userStatus === 'Dislike') {
+  //     postDocument.likesCount++;
+  //     postDocument.dislikesCount--;
+  //   }
+  //
+  //   if (newStatusIsDislike && currentUser.userStatus === 'Like') {
+  //     postDocument.likesCount--;
+  //     postDocument.dislikesCount++;
+  //   }
+  //
+  //   postDocument.likesUsers = postDocument.likesUsers.map((e) =>
+  //     e.userId === userId ? likeUser : e,
+  //   );
+  //
+  //   await this.postsRepository.save(postDocument);
+  //
+  //   return;
+  // }
+
+  async createStatusForPost(
+      id: string,
+      dto: PostLikeStatusDto,
+      userId: string,
   ): Promise<void> {
     const postDocument = await this.existPost(id);
-
     const userDocument = await this.usersSqlRepository.findById(userId);
-
-    // const userLogin = userDocument!.accountData.login; for mongo
     const userLogin = userDocument!.login;
-
     const newStatus = dto.likeStatus;
-
     const newStatusIsLike = newStatus === 'Like';
-
     const newStatusIsDislike = newStatus === 'Dislike';
 
-    const currentUser = postDocument.likesUsers.find(
-      (e) => e.userId === userId,
-    );
+    const currentStatus = await this.statusesSqlRepository
+        .getStatusOfPost(userId, id)
 
-    if (newStatus === 'None' && !currentUser) return;
+    if (newStatus === 'None' && !currentStatus) return;
 
-    if (newStatus === 'None' && currentUser) {
-      if (currentUser.userStatus === 'Like') postDocument.likesCount--;
+    if (newStatus === 'None' && currentStatus) {
+      if (currentStatus === 'Like') postDocument.likesCount--;
 
-      if (currentUser.userStatus === 'Dislike') postDocument.dislikesCount--;
+      if (currentStatus === 'Dislike') postDocument.dislikesCount--;
 
-      postDocument.likesUsers = postDocument.likesUsers.filter(
-        (e) => e.userId !== userId,
-      );
+      await this.statusesSqlRepository
+          .updateStatus(newStatus, userId, id);
 
-      await this.postsRepository.save(postDocument);
+      await this.postsSqlRepository.;
 
       return;
     }
@@ -142,7 +211,7 @@ export class PostsService {
     }
 
     postDocument.likesUsers = postDocument.likesUsers.map((e) =>
-      e.userId === userId ? likeUser : e,
+        e.userId === userId ? likeUser : e,
     );
 
     await this.postsRepository.save(postDocument);

@@ -77,6 +77,7 @@ import {CommentsTable} from "./features/comments/domain/comments.entity";
 import {CommentsSqlRepository} from "./features/comments/infrastructure/postgresql/sql.comments.repository";
 import {CommentsSqlQueryRepository} from "./features/comments/infrastructure/postgresql/sql.comments.query.repository";
 import {StatusesTable} from "./features/statuses/domain/statuses.entity";
+import {StatusesSqlRepository} from "./features/statuses/infrastructure/statuses.sql.repository";
 
 dotenv.config();
 
@@ -113,6 +114,7 @@ const repositories = [
   UsersSqlQueryRepository,
   DevicesSqlRepository,
   RequestApiSqlRepository,
+  StatusesSqlRepository
 ];
 
 const strategies = [

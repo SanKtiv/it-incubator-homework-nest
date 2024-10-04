@@ -79,7 +79,7 @@ export class PostController {
     @Body() dto: PostLikeStatusDto,
     @CurrentUserId() userId: string,
   ) {
-    await this.postsService.updateLikeStatus(id, dto, userId);
+    await this.postsService.createStatusForPost(id, dto, userId);
   }
 
   @Post(':postId/comments')
