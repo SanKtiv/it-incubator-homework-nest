@@ -9,16 +9,20 @@ export class StatusesSqlRepository {
     }
 
     async createStatus() {
-
+        const querySql = `
+        INSERT INTO "statuses" ("userId", "commentId", "")
+        `
+        const queryParams = []
     }
 
     async updateStatus(status: string, userId: string, postId: string) {
         const querySql = `
-        UPDATE "userStatus" AS status
-        SET status."userStatus" = $1
-        WHERE status."userId" = $2 AND status."postId" = $3
+        UPDATE "statuses" AS status
+        SET status."userStatus" = $1,
+        SET status."addedAt" = $2,
+        WHERE status."userId" = $3 AND status."postId" = $4
         `
-        const queryParams = [status, userId, postId]
+        const queryParams = [status, new Date(), userId, postId]
 
         try {
             await this.dataSource.query(querySql, queryParams)

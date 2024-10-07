@@ -169,14 +169,15 @@ export class PostsService {
     if (newStatus === 'None' && !currentStatus) return;
 
     if (newStatus === 'None' && currentStatus) {
-      if (currentStatus === 'Like') postDocument.likesCount--;
-
-      if (currentStatus === 'Dislike') postDocument.dislikesCount--;
+      // if (currentStatus === 'Like') postDocument.likesCount--;
+      //
+      // if (currentStatus === 'Dislike') postDocument.dislikesCount--;
 
       await this.statusesSqlRepository
           .updateStatus(newStatus, userId, id);
 
-      await this.postsSqlRepository.;
+      await this.postsSqlRepository
+          .updateStatusesCount(currentStatus, newStatus, id);
 
       return;
     }
