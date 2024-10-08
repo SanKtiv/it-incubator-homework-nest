@@ -8,11 +8,14 @@ export class StatusesSqlRepository {
     constructor(@InjectDataSource() protected dataSource: DataSource) {
     }
 
-    async createStatus() {
+    async createStatusForPost(userId: string, postId: string, status: string): Promise<void> {
         const querySql = `
-        INSERT INTO "statuses" ("userId", "commentId", "")
+        INSERT INTO "statuses" ("userId", "postId", "userStatus", "addedAt")
+        VALUE ($1, $2, $3, $4)
         `
-        const queryParams = []
+        const queryParams = [userId, postId, status, new Date()]
+
+        await this.dataSource.query(querySql, queryParams)
     }
 
     async updateStatus(status: string, userId: string, postId: string) {

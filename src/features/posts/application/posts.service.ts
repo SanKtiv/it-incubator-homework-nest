@@ -177,7 +177,7 @@ export class PostsService {
           .updateStatus(newStatus, userId, id);
 
       await this.postsSqlRepository
-          .updateStatusesCount(currentStatus, newStatus, id);
+          .updateStatusesCount(newStatus, id, currentStatus);
 
       return;
     }
@@ -189,14 +189,12 @@ export class PostsService {
       login: userLogin,
     };
 
-    if (!currentUser) {
-      if (newStatusIsLike) postDocument.likesCount++;
+    if (!currentStatus) {
+      await this.statusesSqlRepository
+          .createStatusForPost(userId, id, newStatus)
 
-      if (newStatusIsDislike) postDocument.dislikesCount++;
-
-      postDocument.likesUsers.push(likeUser);
-
-      await this.postsRepository.save(postDocument);
+      await this.postsSqlRepository
+          .updateStatusesCount(newStatus, id);
 
       return;
     }
