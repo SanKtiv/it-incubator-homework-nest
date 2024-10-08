@@ -36,12 +36,16 @@ export class PostsSqlRepository {
         UPDATE "posts" AS p
         SET p."likesCount" = 
         CASE 
-        WHEN 'Like' = $1 AND 'None' = $2 THEN p."likesCount" - 1
+        WHEN $1 = 'Like' AND $2 = 'None' THEN p."likesCount" - 1
+        WHEN $1 = 'Like' AND $2 = 'Dislike' THEN p."likesCount" - 1
+        WHEN $1 = 'Dislike' AND $2 = 'Like' THEN p."likesCount" + 1
         WHEN $1 = undefined AND 'Like' = $2 THEN p."likesCount" + 1
         END,
         SET p."dislikesCount" = 
         CASE
-        WHEN 'Dislike' = $1 AND 'None' = $2 THEN p."dislikesCount" - 1
+        WHEN $1 = 'Dislike' AND $2 = 'None' THEN p."dislikesCount" - 1
+        WHEN $1 = 'Like' AND $2 = 'Dislike' THEN p."dislikesCount" + 1
+        WHEN $1 = 'Dislike' AND $2 = 'Like' THEN p."dislikesCount" - 1
         WHEN $1 = undefined AND 'Dislike' = $2 THEN p."dislikesCount" + 1
         END
         WHERE status."postId" = $3

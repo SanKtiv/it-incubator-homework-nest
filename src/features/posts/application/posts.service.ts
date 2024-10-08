@@ -199,20 +199,6 @@ export class PostsService {
       return;
     }
 
-    if (newStatusIsLike && currentUser.userStatus === 'Dislike') {
-      postDocument.likesCount++;
-      postDocument.dislikesCount--;
-    }
-
-    if (newStatusIsDislike && currentUser.userStatus === 'Like') {
-      postDocument.likesCount--;
-      postDocument.dislikesCount++;
-    }
-
-    postDocument.likesUsers = postDocument.likesUsers.map((e) =>
-        e.userId === userId ? likeUser : e,
-    );
-
     await this.postsRepository.save(postDocument);
 
     return;
