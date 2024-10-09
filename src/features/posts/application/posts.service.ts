@@ -157,21 +157,52 @@ export class PostsService {
       userId: string,
   ): Promise<void> {
     const postDocument = await this.existPost(id);
+    let likesCount = postDocument.likesCount;
+    let dislikesCount = postDocument.dislikesCount;
     const userDocument = await this.usersSqlRepository.findById(userId);
     const userLogin = userDocument!.login;
     const newStatus = dto.likeStatus;
-    const newStatusIsLike = newStatus === 'Like';
-    const newStatusIsDislike = newStatus === 'Dislike';
 
     const currentStatus = await this.statusesSqlRepository
         .getStatusOfPost(userId, id)
 
-    if (newStatus === 'None' && !currentStatus) return;
+    if (!currentStatus) {
+      if (newStatus === 'None') return;
+    }
 
-    if (newStatus === 'None' && currentStatus) {
-      // if (currentStatus === 'Like') postDocument.likesCount--;
-      //
-      // if (currentStatus === 'Dislike') postDocument.dislikesCount--;
+    if (currentStatus === 'Like') {
+      if (newStatus === 'None') likesCount--
+    }
+
+    if (newStatus === 'None') {
+      if (!currentStatus) return;
+
+      if (currentStatus === 'Like') likesCount--
+
+      if (currentStatus === 'Dislike') dislikesCount--
+    }
+
+    if (newStatus === 'Like') {
+      if (!currentStatus) {
+        await this.statusesSqlRepository
+            .createStatusForPost(userId, id, newStatus)
+
+        likesCount++
+      }
+
+      if (currentStatus === 'Dislike') dislikesCount--
+    }
+
+    if (newStatus === 'Dislike') {
+      if (!currentStatus) {
+        await this.statusesSqlRepository
+            .createStatusForPost(userId, id, newStatus)
+
+        dislikesCount++
+      }
+
+      if (currentStatus === 'Like') likesCount--
+    }
 
       await this.statusesSqlRepository
           .updateStatus(newStatus, userId, id);
@@ -180,7 +211,7 @@ export class PostsService {
           .updateStatusesCount(newStatus, id, currentStatus);
 
       return;
-    }
+
 
     const likeUser = {
       userStatus: newStatus,
