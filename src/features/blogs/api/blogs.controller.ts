@@ -36,6 +36,7 @@ import { DevicesSqlRepository } from '../../security/infrastructure/devices.sql.
 import { RequestApiSqlRepository } from '../../requests/infrastructure/request.sql.repository';
 import { BlogsSqlQueryRepository } from '../infrastructure/postgresdb/blogs.sql.query.repository';
 import { PostsSqlQueryRepository } from '../../posts/infrastructure/postgresql/posts.sql.query.repository';
+import {StatusesSqlRepository} from "../../statuses/infrastructure/statuses.sql.repository";
 
 @Controller('blogs')
 export class BlogsController {
@@ -49,15 +50,23 @@ export class BlogsController {
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
     private readonly usersSqlRepository: RequestApiSqlRepository,
+    private readonly statusesSqlRepository: StatusesSqlRepository,
   ) {}
 
   @Get('/blogs')
   async createBlogInSql() {
-    //@Param('blogId', paramIdIsMongoIdPipe) id: string
-    return this.blogsSqlRepository.createForBlog(
-      'Qwerty1',
-      '1c66a9f0-5c11-4ce4-8c66-3c0354492c5b',
-    );
+    console.log("blogs/blogs")
+    const userId = '979bf99b-9db2-4612-bf0b-1ea4fcfb555a'
+        const postId = '9a5fc3f0-2cce-48bd-952a-a862b1d93d46'
+    // return this.statusesSqlRepository
+    //     .createStatusForPost(
+    //         userId,
+    //         postId,
+    //     'Like')
+    const status = await this.statusesSqlRepository
+        .getStatusOfPost(userId, postId)
+    console.log(status)
+    return status
   }
 
   @Post()

@@ -31,26 +31,15 @@ export class PostsSqlRepository {
     return this.repository.save(postDocument);
   }
 
-  async updateStatusesCount(newStatus: string, postId: string, currentStatus?: string) {
+  async updateStatusesCount(postId: string, likesCount, dislikesCount: number) {
     const querySql = `
         UPDATE "posts" AS p
-        SET p."likesCount" = 
-        CASE 
-        WHEN $1 = 'Like' AND $2 = 'None' THEN p."likesCount" - 1
-        WHEN $1 = 'Like' AND $2 = 'Dislike' THEN p."likesCount" - 1
-        WHEN $1 = 'Dislike' AND $2 = 'Like' THEN p."likesCount" + 1
-        WHEN $1 = undefined AND 'Like' = $2 THEN p."likesCount" + 1
-        END,
-        SET p."dislikesCount" = 
-        CASE
-        WHEN $1 = 'Dislike' AND $2 = 'None' THEN p."dislikesCount" - 1
-        WHEN $1 = 'Like' AND $2 = 'Dislike' THEN p."dislikesCount" + 1
-        WHEN $1 = 'Dislike' AND $2 = 'Like' THEN p."dislikesCount" - 1
-        WHEN $1 = undefined AND 'Dislike' = $2 THEN p."dislikesCount" + 1
-        END
-        WHERE status."postId" = $3
+        SET
+        p."likesCount" = $1,
+        p."dislikesCount" = $2
+        WHERE p."id" = $3
         `
-    const queryParams = [currentStatus, newStatus, postId]
+    const queryParams = [likesCount, dislikesCount, postId]
 
     try {
       await this.dataSource.query(querySql, queryParams)

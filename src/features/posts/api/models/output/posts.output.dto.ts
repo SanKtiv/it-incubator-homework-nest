@@ -65,17 +65,23 @@ export const postsOutputDto = (postDocument: PostDocument, userId?: string) =>
     ),
   );
 
-export const postsSqlOutputDto = (postDocument: PostsTable, userId?: string) =>
-  new PostsOutputDto(
-    postDocument.id,
-    postDocument.title,
-    postDocument.shortDescription,
-    postDocument.content,
-    postDocument.blogId,
-    postDocument.blogName,
-    postDocument.createdAt.toISOString(),
-    new ExtendedLikesInfo(0, 0, 'Like', []),
-  );
+export const postsSqlOutputDto = (postDocument: any, userId?: string) =>
+    ({
+          id: postDocument.id,
+          title: postDocument.title,
+          shortDescription: postDocument.shortDescription,
+          content: postDocument.content,
+          blogId: postDocument.blogId,
+          blogName: postDocument.blogName,
+          createdAt: postDocument.createdAt.toISOString(),
+          extendedLikesInfo: {
+            likesCount: postDocument.likesCount,
+            dislikesCount: postDocument.dislikesCount,
+            myStatus: postDocument.myStatus,
+            newestLikes: [],
+          }
+        }
+    );
 
 export class PostsPaging {
   constructor(

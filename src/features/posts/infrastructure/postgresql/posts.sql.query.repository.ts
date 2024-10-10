@@ -23,7 +23,28 @@ export class PostsSqlQueryRepository {
   }
 
   async findById(id: string, userId?: string): Promise<PostsOutputDto> {
-    const postDocument = await this.repository.findOneBy({ id: id });
+    // const postDocument = await this.repository.findOneBy({ id: id });
+
+    const querySql = `
+    SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."blogName", p."createdAt",
+        (SELECT COUNT(*)
+        FROM "statuses" AS s
+        WHERE p."id" = s."postId" AND s."userStatus" = 'Like'
+        ) AS "likesCount",
+        (SELECT COUNT(*)
+        FROM "statuses" AS s
+        WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike'
+        ) AS "dislikesCount",
+        (SELECT s."userStatus"
+        FROM "statuses" AS s
+        WHERE p."id" = s."postId" AND s."userId" = $2
+        ) AS "myStatus"
+        FROM "posts" AS p
+        WHERE p."id" = $1
+    `
+    const queryParams = [id, userId]
+
+    const postDocument = await this.dataSource.query(querySql, queryParams)
 
     if (!postDocument) throw new NotFoundException();
 

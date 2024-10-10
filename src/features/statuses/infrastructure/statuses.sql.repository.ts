@@ -11,14 +11,18 @@ export class StatusesSqlRepository {
     async createStatusForPost(userId: string, postId: string, status: string): Promise<void> {
         const querySql = `
         INSERT INTO "statuses" ("userId", "postId", "userStatus", "addedAt")
-        VALUE ($1, $2, $3, $4)
+        VALUES ($1, $2, $3, $4)
         `
         const queryParams = [userId, postId, status, new Date()]
 
-        await this.dataSource.query(querySql, queryParams)
+        try {
+            await this.dataSource.query(querySql, queryParams)
+        } catch (e) {
+            throw new InternalServerErrorException()
+        }
     }
 
-    async updateStatus(status: string, userId: string, postId: string) {
+    async updateStatus(userId: string, postId: string, status: string): Promise<void> {
         const querySql = `
         UPDATE "statuses" AS status
         SET status."userStatus" = $1,
@@ -29,13 +33,12 @@ export class StatusesSqlRepository {
 
         try {
             await this.dataSource.query(querySql, queryParams)
-        }
-        catch (e) {
+        } catch (e) {
             throw new InternalServerErrorException()
         }
     }
 
-    async getStatusOfPost(userId: string, postId: string): Promise<string> {
+    async getStatusOfPost(userId: string, postId: string): Promise<string | null> {
         const querySql = `
         SELECT status."userStatus"
         FROM "statuses" AS status
@@ -43,11 +46,12 @@ export class StatusesSqlRepository {
         `
         const queryParams = [userId, postId]
         try {
-            const statusArray = await this.dataSource.query(querySql, queryParams)
+            const statusesArray = await this.dataSource.query(querySql, queryParams)
 
-            return statusArray[0].userStatus
-        }
-        catch (e) {
+            if (!statusesArray.length) return null
+
+            return statusesArray[0].userStatus
+        } catch (e) {
             throw new InternalServerErrorException()
         }
     }

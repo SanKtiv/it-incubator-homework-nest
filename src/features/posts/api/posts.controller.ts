@@ -78,7 +78,7 @@ export class PostController {
     @Param('postId', paramIdIsMongoIdPipe) id: string,
     @Body() dto: PostLikeStatusDto,
     @CurrentUserId() userId: string,
-  ) {
+  ): Promise<void> {
     await this.postsService.createStatusForPost(id, dto, userId);
   }
 

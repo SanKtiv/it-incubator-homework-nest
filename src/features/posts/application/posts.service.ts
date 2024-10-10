@@ -4,7 +4,6 @@ import {
   PostLikeStatusDto,
   PostsInputDto,
 } from '../api/models/input/posts.input.dto';
-import { PostDocument } from '../domain/posts.schema';
 import { BlogsRepository } from '../../blogs/infrastructure/mongodb/blogs.repository';
 import {
   PostsOutputDto,
@@ -22,233 +21,199 @@ import {StatusesSqlRepository} from "../../statuses/infrastructure/statuses.sql.
 
 @Injectable()
 export class PostsService {
-  constructor(
-    private readonly postsRepository: PostsRepository,
-    private readonly postsSqlRepository: PostsSqlRepository,
-    private readonly blogsRepository: BlogsRepository,
-    //private readonly blogsSqlRepository: BlogsSqlRepository,
-    private readonly usersRepository: UsersRepository,
-    private readonly usersSqlRepository: UsersSqlRepository,
-    private readonly blogsService: BlogsService,
-    private readonly statusesSqlRepository: StatusesSqlRepository,
-  ) {}
+    constructor(
+        private readonly postsRepository: PostsRepository,
+        private readonly postsSqlRepository: PostsSqlRepository,
+        private readonly blogsRepository: BlogsRepository,
+        //private readonly blogsSqlRepository: BlogsSqlRepository,
+        private readonly usersRepository: UsersRepository,
+        private readonly usersSqlRepository: UsersSqlRepository,
+        private readonly blogsService: BlogsService,
+        private readonly statusesSqlRepository: StatusesSqlRepository,
+    ) {
+    }
 
-  async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
-    const blogDocument = await this.blogsService.existBlog(dto.blogId);
+    async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
+        const blogDocument = await this.blogsService.existBlog(dto.blogId);
 
-    const postDocument = await this.postsSqlRepository.create(
-      dto,
-      blogDocument.name, // can use without blogName
-    );
+        const postDocument = await this.postsSqlRepository.create(
+            dto,
+            blogDocument.name, // can use without blogName
+        );
 
-    return postsSqlOutputDto(postDocument);
-  }
+        return postsSqlOutputDto(postDocument);
+    }
 
-  async existPost(id: string): Promise<PostsTable> {
-    const postDocument = await this.postsSqlRepository.findById(id);
+    async existPost(id: string): Promise<PostsTable> {
+        const postDocument = await this.postsSqlRepository.findById(id);
 
-    if (!postDocument) throw new NotFoundException();
+        if (!postDocument) throw new NotFoundException();
 
-    return postDocument;
-  }
+        return postDocument;
+    }
 
-  async updatePost(id: string, postUpdateDto: PostsInputDto) {
-    // const postDocument = await this.postsRepository.findById(id);
+    async updatePost(id: string, postUpdateDto: PostsInputDto) {
+        // const postDocument = await this.postsRepository.findById(id);
+        //
+        // if (!postDocument) throw new NotFoundException();
+        const postDocument = await this.existPost(id);
+
+        Object.assign(postDocument, postUpdateDto);
+
+        await this.postsSqlRepository.savePost(postDocument);
+    }
+
+    async updatePostForBlog(postId: string, blogId: string, UpdateDto: InputDto) {
+        // const postDocument = await this.postsRepository.findById(id);
+        //
+        // if (!postDocument) throw new NotFoundException();
+        const post = await this.existPost(postId);
+
+        if (post.blogId !== blogId) throw new NotFoundException();
+
+        Object.assign(post, UpdateDto);
+
+        await this.postsSqlRepository.savePost(post);
+    }
+
+    // async createStatusForPost(
+    //   id: string,
+    //   dto: PostLikeStatusDto,
+    //   userId: string,
+    // ): Promise<void> {
+    //   const postDocument = await this.existPost(id);
     //
-    // if (!postDocument) throw new NotFoundException();
-    const postDocument = await this.existPost(id);
-
-    Object.assign(postDocument, postUpdateDto);
-
-    await this.postsSqlRepository.savePost(postDocument);
-  }
-
-  async updatePostForBlog(postId: string, blogId: string, UpdateDto: InputDto) {
-    // const postDocument = await this.postsRepository.findById(id);
+    //   const userDocument = await this.usersRepository.findById(userId);
     //
-    // if (!postDocument) throw new NotFoundException();
-    const post = await this.existPost(postId);
+    //   const userLogin = userDocument!.accountData.login;
+    //
+    //   const newStatus = dto.likeStatus;
+    //
+    //   const newStatusIsLike = newStatus === 'Like';
+    //
+    //   const newStatusIsDislike = newStatus === 'Dislike';
+    //
+    //   const currentUser = postDocument.likesUsers.find(
+    //     (e) => e.userId === userId,
+    //   );
+    //
+    //   if (newStatus === 'None' && !currentUser) return;
+    //
+    //   if (newStatus === 'None' && currentUser) {
+    //     if (currentUser.userStatus === 'Like') postDocument.likesCount--;
+    //
+    //     if (currentUser.userStatus === 'Dislike') postDocument.dislikesCount--;
+    //
+    //     postDocument.likesUsers = postDocument.likesUsers.filter(
+    //       (e) => e.userId !== userId,
+    //     );
+    //
+    //     await this.postsRepository.save(postDocument);
+    //
+    //     return;
+    //   }
+    //
+    //   const likeUser = {
+    //     userStatus: newStatus,
+    //     addedAt: new Date().toISOString(),
+    //     userId: userId,
+    //     login: userLogin,
+    //   };
+    //
+    //   if (!currentUser) {
+    //     if (newStatusIsLike) postDocument.likesCount++;
+    //
+    //     if (newStatusIsDislike) postDocument.dislikesCount++;
+    //
+    //     postDocument.likesUsers.push(likeUser);
+    //
+    //     await this.postsRepository.save(postDocument);
+    //
+    //     return;
+    //   }
+    //
+    //   if (newStatusIsLike && currentUser.userStatus === 'Dislike') {
+    //     postDocument.likesCount++;
+    //     postDocument.dislikesCount--;
+    //   }
+    //
+    //   if (newStatusIsDislike && currentUser.userStatus === 'Like') {
+    //     postDocument.likesCount--;
+    //     postDocument.dislikesCount++;
+    //   }
+    //
+    //   postDocument.likesUsers = postDocument.likesUsers.map((e) =>
+    //     e.userId === userId ? likeUser : e,
+    //   );
+    //
+    //   await this.postsRepository.save(postDocument);
+    //
+    //   return;
+    // }
 
-    if (post.blogId !== blogId) throw new NotFoundException();
+    async createStatusForPost(
+        id: string,
+        dto: PostLikeStatusDto,
+        userId: string,
+    ): Promise<void> {
+        const postDocument = await this.existPost(id);
+        let likesCount = postDocument.likesCount;
+        let dislikesCount = postDocument.dislikesCount;
+        const newStatus = dto.likeStatus;
 
-    Object.assign(post, UpdateDto);
+        const currentStatus = await this.statusesSqlRepository
+            .getStatusOfPost(userId, id)
 
-    await this.postsSqlRepository.savePost(post);
-  }
+        if (!currentStatus) {
+            if (newStatus === 'None') return;
 
-  // async createStatusForPost(
-  //   id: string,
-  //   dto: PostLikeStatusDto,
-  //   userId: string,
-  // ): Promise<void> {
-  //   const postDocument = await this.existPost(id);
-  //
-  //   const userDocument = await this.usersRepository.findById(userId);
-  //
-  //   const userLogin = userDocument!.accountData.login;
-  //
-  //   const newStatus = dto.likeStatus;
-  //
-  //   const newStatusIsLike = newStatus === 'Like';
-  //
-  //   const newStatusIsDislike = newStatus === 'Dislike';
-  //
-  //   const currentUser = postDocument.likesUsers.find(
-  //     (e) => e.userId === userId,
-  //   );
-  //
-  //   if (newStatus === 'None' && !currentUser) return;
-  //
-  //   if (newStatus === 'None' && currentUser) {
-  //     if (currentUser.userStatus === 'Like') postDocument.likesCount--;
-  //
-  //     if (currentUser.userStatus === 'Dislike') postDocument.dislikesCount--;
-  //
-  //     postDocument.likesUsers = postDocument.likesUsers.filter(
-  //       (e) => e.userId !== userId,
-  //     );
-  //
-  //     await this.postsRepository.save(postDocument);
-  //
-  //     return;
-  //   }
-  //
-  //   const likeUser = {
-  //     userStatus: newStatus,
-  //     addedAt: new Date().toISOString(),
-  //     userId: userId,
-  //     login: userLogin,
-  //   };
-  //
-  //   if (!currentUser) {
-  //     if (newStatusIsLike) postDocument.likesCount++;
-  //
-  //     if (newStatusIsDislike) postDocument.dislikesCount++;
-  //
-  //     postDocument.likesUsers.push(likeUser);
-  //
-  //     await this.postsRepository.save(postDocument);
-  //
-  //     return;
-  //   }
-  //
-  //   if (newStatusIsLike && currentUser.userStatus === 'Dislike') {
-  //     postDocument.likesCount++;
-  //     postDocument.dislikesCount--;
-  //   }
-  //
-  //   if (newStatusIsDislike && currentUser.userStatus === 'Like') {
-  //     postDocument.likesCount--;
-  //     postDocument.dislikesCount++;
-  //   }
-  //
-  //   postDocument.likesUsers = postDocument.likesUsers.map((e) =>
-  //     e.userId === userId ? likeUser : e,
-  //   );
-  //
-  //   await this.postsRepository.save(postDocument);
-  //
-  //   return;
-  // }
+            if (newStatus === 'Like') likesCount++
 
-  async createStatusForPost(
-      id: string,
-      dto: PostLikeStatusDto,
-      userId: string,
-  ): Promise<void> {
-    const postDocument = await this.existPost(id);
-    let likesCount = postDocument.likesCount;
-    let dislikesCount = postDocument.dislikesCount;
-    const userDocument = await this.usersSqlRepository.findById(userId);
-    const userLogin = userDocument!.login;
-    const newStatus = dto.likeStatus;
+            if (newStatus === 'Dislike') dislikesCount++
 
-    const currentStatus = await this.statusesSqlRepository
-        .getStatusOfPost(userId, id)
+            await this.statusesSqlRepository
+                .createStatusForPost(userId, id, newStatus)
+        } else {
+            if (currentStatus === 'Like') {
+                if (newStatus === 'None') likesCount--
 
-    if (!currentStatus) {
-      if (newStatus === 'None') return;
+                if (newStatus === 'Dislike') {
+                    likesCount--
+                    dislikesCount++
+                }
+            }
+
+            if (currentStatus === 'Dislike') {
+                if (newStatus === 'None') dislikesCount--
+
+                if (newStatus === 'Like') {
+                    likesCount++
+                    dislikesCount--
+                }
+            }
+
+            await this.statusesSqlRepository
+                .updateStatus(userId, id, newStatus);
+        }
+
+        await this.postsSqlRepository
+            .updateStatusesCount(id, likesCount, dislikesCount);
     }
 
-    if (currentStatus === 'Like') {
-      if (newStatus === 'None') likesCount--
+    async deletePost(id: string): Promise<void | HttpException> {
+        const result = await this.postsRepository.remove(id);
+
+        if (!result) throw new NotFoundException();
     }
 
-    if (newStatus === 'None') {
-      if (!currentStatus) return;
+    async deletePostByIdForBlog(
+        postId: string,
+        blogId: string,
+    ): Promise<void | HttpException> {
+        const post = await this.existPost(postId);
 
-      if (currentStatus === 'Like') likesCount--
+        if (post.blogId !== blogId) throw new NotFoundException();
 
-      if (currentStatus === 'Dislike') dislikesCount--
+        await this.postsSqlRepository.deletePost(post);
     }
-
-    if (newStatus === 'Like') {
-      if (!currentStatus) {
-        await this.statusesSqlRepository
-            .createStatusForPost(userId, id, newStatus)
-
-        likesCount++
-      }
-
-      if (currentStatus === 'Dislike') dislikesCount--
-    }
-
-    if (newStatus === 'Dislike') {
-      if (!currentStatus) {
-        await this.statusesSqlRepository
-            .createStatusForPost(userId, id, newStatus)
-
-        dislikesCount++
-      }
-
-      if (currentStatus === 'Like') likesCount--
-    }
-
-      await this.statusesSqlRepository
-          .updateStatus(newStatus, userId, id);
-
-      await this.postsSqlRepository
-          .updateStatusesCount(newStatus, id, currentStatus);
-
-      return;
-
-
-    const likeUser = {
-      userStatus: newStatus,
-      addedAt: new Date().toISOString(),
-      userId: userId,
-      login: userLogin,
-    };
-
-    if (!currentStatus) {
-      await this.statusesSqlRepository
-          .createStatusForPost(userId, id, newStatus)
-
-      await this.postsSqlRepository
-          .updateStatusesCount(newStatus, id);
-
-      return;
-    }
-
-    await this.postsRepository.save(postDocument);
-
-    return;
-  }
-
-  async deletePost(id: string): Promise<void | HttpException> {
-    const result = await this.postsRepository.remove(id);
-
-    if (!result) throw new NotFoundException();
-  }
-
-  async deletePostByIdForBlog(
-    postId: string,
-    blogId: string,
-  ): Promise<void | HttpException> {
-    const post = await this.existPost(postId);
-
-    if (post.blogId !== blogId) throw new NotFoundException();
-
-    await this.postsSqlRepository.deletePost(post);
-  }
 }
