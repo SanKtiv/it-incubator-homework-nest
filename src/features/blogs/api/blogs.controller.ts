@@ -56,17 +56,17 @@ export class BlogsController {
   @Get('/blogs')
   async createBlogInSql() {
     console.log("blogs/blogs")
-    const userId = '979bf99b-9db2-4612-bf0b-1ea4fcfb555a'
-        const postId = '9a5fc3f0-2cce-48bd-952a-a862b1d93d46'
-    // return this.statusesSqlRepository
-    //     .createStatusForPost(
-    //         userId,
-    //         postId,
-    //     'Like')
-    const status = await this.statusesSqlRepository
-        .getStatusOfPost(userId, postId)
-    console.log(status)
-    return status
+    const userId = '98b52915-5853-444d-951e-c2b432e97111'
+        const postId = '9a5fc3f0-2cce-48bd-952a-a862b1d93d45'
+    return this.statusesSqlRepository
+        .createStatusForPost(
+            userId,
+            postId,
+        'Like')
+    // const status = await this.statusesSqlRepository
+    //     .getStatusOfPost(userId, postId)
+    // console.log(status)
+    // return status
   }
 
   @Post()

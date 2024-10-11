@@ -41,7 +41,10 @@ export class PostsService {
             blogDocument.name, // can use without blogName
         );
 
-        return postsSqlOutputDto(postDocument);
+        const newestLikes = await this.statusesSqlRepository
+            .getNewestLikesByPostId(postDocument.id)
+
+        return postsSqlOutputDto(postDocument, newestLikes);
     }
 
     async existPost(id: string): Promise<PostsTable> {

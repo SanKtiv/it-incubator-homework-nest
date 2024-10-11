@@ -65,7 +65,7 @@ export const postsOutputDto = (postDocument: PostDocument, userId?: string) =>
     ),
   );
 
-export const postsSqlOutputDto = (postDocument: any, userId?: string) =>
+export const postsSqlOutputDto = (postDocument: any, newestLikes: NewestLikes[]) =>
     ({
           id: postDocument.id,
           title: postDocument.title,
@@ -78,7 +78,7 @@ export const postsSqlOutputDto = (postDocument: any, userId?: string) =>
             likesCount: postDocument.likesCount,
             dislikesCount: postDocument.dislikesCount,
             myStatus: postDocument.myStatus,
-            newestLikes: [],
+            newestLikes: newestLikes,
           }
         }
     );

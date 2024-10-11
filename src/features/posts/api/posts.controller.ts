@@ -50,11 +50,11 @@ export class PostController {
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
-  @Post()
-  @UseGuards(BasicAuthGuard)
-  async createPost(@Body() inputDto: PostsInputDto): Promise<PostsOutputDto> {
-    return this.postsService.createPost(inputDto);
-  }
+  // @Post()
+  // @UseGuards(BasicAuthGuard)
+  // async createPost(@Body() inputDto: PostsInputDto): Promise<PostsOutputDto> {
+  //   return this.postsService.createPost(inputDto);
+  // }
 
   @Get(':postId')
   async getPostById(
