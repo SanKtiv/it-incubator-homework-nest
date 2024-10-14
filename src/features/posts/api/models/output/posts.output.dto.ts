@@ -110,12 +110,12 @@ export const postsSqlPaging = (
   query: PostQuery,
   totalPosts: number,
   postDocuments: PostsTable[],
-  userId?: string,
+  newestLikes: any[],
 ) =>
   new PostsPaging(
     Math.ceil(totalPosts / +query.pageSize),
     +query.pageNumber,
     +query.pageSize,
     totalPosts,
-    postDocuments.map((document) => postsSqlOutputDto(document, userId)),
+    postDocuments.map((document) => postsSqlOutputDto(document, newestLikes)),
   );

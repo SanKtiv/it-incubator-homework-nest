@@ -65,27 +65,84 @@ export class PostsSqlQueryRepository {
   }
 
   async findPaging(
-    query: PostQuery,
-    dto: { userId?: string; blogId?: string },
+      query: PostQuery,
+      dto: { userId?: string; blogId?: string },
   ): Promise<PostsPaging> {
-    const filter = dto.blogId ? { blogId: dto.blogId } : {};
+    const userId = dto.userId ? dto.userId : null
+    const pageSize = query.pageSize;
+    const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
-    //const totalPosts = await this.repository.countBy(filter);
+    const querySqlPost = `
+    SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."blogName", p."createdAt",
+        
+        (SELECT COUNT(*) FROM "statuses" AS s
+        WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
+        
+        (SELECT COUNT(*) FROM "statuses" AS s
+        WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
+        
+        (SELECT s."userStatus" FROM "statuses" AS s
+        WHERE p."id" = s."postId" AND s."userId" = $1) AS "myStatus"
+        
+    FROM "posts" AS p
+    ORDER BY p."${query.sortBy}" ${query.sortDirection}
+    LIMIT $2
+    OFFSET $3
+    `
 
-    const posts = this.repository.createQueryBuilder('post');
 
-    if (dto.blogId) {
-      posts.where('post.blogId = :blogId', { blogId: dto.blogId });
+    const queryPostParams = [userId, pageSize, pageOffSet]
+
+    const querySqlStatuses = `
+    SELECT s."addedAt", s."userId", s."postId",
+      (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
+    FROM "statuses" AS s
+    WHERE s."userStatus" = 'Like'
+    ORDER BY d."addedAt" desc
+    LIMIT 3
+    `
+        
+    try {
+      const totalPostsArr = await this.dataSource
+          .query(`SELECT COUNT(*) FROM "posts"`)
+
+      const totalPosts = totalPostsArr[0].count
+      
+      const postsPaging = await this.dataSource
+          .query(querySqlPost, queryPostParams)
+
+      const newestLikes = await this.dataSource
+          .query(querySqlStatuses)
+
+      return postsSqlPaging(query, totalPosts, postsPaging, newestLikes);
     }
-
-    const totalPosts = await posts.getCount();
-
-    const postsPaging = await posts
-      .orderBy(`post.${query.sortBy}`, query.sortDirection)
-      .skip((query.pageNumber - 1) * query.pageSize)
-      .take(query.pageSize)
-      .getMany();
-
-    return postsSqlPaging(query, totalPosts, postsPaging, dto.userId);
+    catch (e) {
+      throw new InternalServerErrorException()
+    }
   }
+
+  // async findPaging(
+  //   query: PostQuery,
+  //   dto: { userId?: string; blogId?: string },
+  // ): Promise<PostsPaging> {
+  //   const filter = dto.blogId ? { blogId: dto.blogId } : {};
+  //
+  //   //const totalPosts = await this.repository.countBy(filter); for mongo
+  //
+  //   const posts = this.repository.createQueryBuilder('post');
+  //
+  //   if (dto.blogId) {
+  //     posts.where('post.blogId = :blogId', { blogId: dto.blogId });
+  //   }
+  //
+  //   const totalPosts = await posts.getCount();
+  //
+  //   const postsPaging = await posts
+  //     .orderBy(`post.${query.sortBy}`, query.sortDirection)
+  //     .skip((query.pageNumber - 1) * query.pageSize)
+  //     .take(query.pageSize)
+  //     .getMany();
+  //
+  //   return postsSqlPaging(query, totalPosts, postsPaging, dto.userId);
+  // }
 }
