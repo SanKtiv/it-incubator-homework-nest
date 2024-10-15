@@ -28,7 +28,8 @@ export class PostsSqlQueryRepository {
     const queryParams = [id, userId]
 
     const querySqlPost = `
-    SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."blogName", p."createdAt",
+    SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
+    FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."blogName", p."createdAt",
         
         (SELECT COUNT(*) FROM "statuses" AS s
         WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
@@ -40,24 +41,21 @@ export class PostsSqlQueryRepository {
         WHERE p."id" = s."postId" AND s."userId" = $2) AS "myStatus"
         
     FROM "posts" AS p
-    WHERE p."id" = $1
-    `
-    const querySqlStatus = `
-    SELECT s."addedAt", s."userId",
+    WHERE p."id" = $1) AS newPost
+    LEFT JOIN
+    (SELECT s."addedAt", s."userId",
       (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
     FROM "statuses" AS s
     WHERE s."userStatus" = 'Like' AND s."postId" = $1
     ORDER BY d."addedAt" desc
-    LIMIT 3
-    `
+    LIMIT 3) AS newestLikes ON newPost."id" = newestLikes."postId"`
+
     try {
       const postDocument = await this.dataSource.query(querySqlPost, queryParams)
 
-      if (!postDocument) throw new NotFoundException();
+      if (postDocument.length === 0) throw new NotFoundException();
 
-      const newestLikes = await this.dataSource.query(querySqlStatus, queryParams)
-
-      return postsSqlOutputDto(postDocument, newestLikes);
+      return postsSqlOutputDto(postDocument);
     }
     catch (e) {
       throw new InternalServerErrorException()
@@ -73,34 +71,23 @@ export class PostsSqlQueryRepository {
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
     const querySqlPost = `
-    SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."blogName", p."createdAt",
-        
-        (SELECT COUNT(*) FROM "statuses" AS s
-        WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
-        
-        (SELECT COUNT(*) FROM "statuses" AS s
-        WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
-        
-        (SELECT s."userStatus" FROM "statuses" AS s
-        WHERE p."id" = s."postId" AND s."userId" = $1) AS "myStatus"
-        
-    FROM "posts" AS p
-    ORDER BY p."${query.sortBy}" ${query.sortDirection}
-    LIMIT $2
-    OFFSET $3
-    `
-
+        SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
+    FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."blogName", p."createdAt",
+           (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
+           (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
+           (SELECT s."userStatus" FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userId" = $1) AS "myStatus" 
+       FROM "posts" AS p
+       ORDER BY p."createdAt" desc
+       LIMIT $2
+       OFFSET $3) AS newPost
+    LEFT JOIN
+      (SELECT s."addedAt", s."userId", s."postId", (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
+      FROM "statuses" AS s
+      WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null
+      ORDER BY p."${query.sortBy}" ${query.sortDirection}
+      LIMIT 3) AS newestLikes ON newPost."id" = newestLikes."postId"`
 
     const queryPostParams = [userId, pageSize, pageOffSet]
-
-    const querySqlStatuses = `
-    SELECT s."addedAt", s."userId", s."postId",
-      (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
-    FROM "statuses" AS s
-    WHERE s."userStatus" = 'Like'
-    ORDER BY d."addedAt" desc
-    LIMIT 3
-    `
         
     try {
       const totalPostsArr = await this.dataSource
@@ -111,10 +98,7 @@ export class PostsSqlQueryRepository {
       const postsPaging = await this.dataSource
           .query(querySqlPost, queryPostParams)
 
-      const newestLikes = await this.dataSource
-          .query(querySqlStatuses)
-
-      return postsSqlPaging(query, totalPosts, postsPaging, newestLikes);
+      return postsSqlPaging(query, totalPosts, postsPaging);
     }
     catch (e) {
       throw new InternalServerErrorException()

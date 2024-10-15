@@ -65,23 +65,38 @@ export const postsOutputDto = (postDocument: PostDocument, userId?: string) =>
     ),
   );
 
-export const postsSqlOutputDto = (postDocument: any, newestLikes: NewestLikes[]) =>
+export const postsSqlOutputDto = (postDocument: any) =>
     ({
-          id: postDocument.id,
-          title: postDocument.title,
-          shortDescription: postDocument.shortDescription,
-          content: postDocument.content,
-          blogId: postDocument.blogId,
-          blogName: postDocument.blogName,
-          createdAt: postDocument.createdAt.toISOString(),
+          id: postDocument[0].id,
+          title: postDocument[0].title,
+          shortDescription: postDocument[0].shortDescription,
+          content: postDocument[0].content,
+          blogId: postDocument[0].blogId,
+          blogName: postDocument[0].blogName,
+          createdAt: postDocument[0].createdAt.toISOString(),
           extendedLikesInfo: {
-            likesCount: postDocument.likesCount,
-            dislikesCount: postDocument.dislikesCount,
-            myStatus: postDocument.myStatus,
-            newestLikes: newestLikes,
+            likesCount: postDocument[0].likesCount,
+            dislikesCount: postDocument[0].dislikesCount,
+            myStatus: postDocument[0].myStatus,
+            newestLikes: postDocument.map(post => ({
+                userId: post.userId,
+                login: post.login,
+                addedAt: post.addedAt
+            })),
           }
         }
     );
+
+export const postSqlAdapter = (postFromSQL: any) =>
+    postFromSQL.map(post => ({
+        id: post.id,
+        newestLikes: post.userId ? {
+            userId: post.userId,
+            login: post.login,
+            addedAt: post.addedAt
+        } :
+        })
+    )
 
 export class PostsPaging {
   constructor(
@@ -109,13 +124,12 @@ export const postsPaging = (
 export const postsSqlPaging = (
   query: PostQuery,
   totalPosts: number,
-  postDocuments: PostsTable[],
-  newestLikes: any[],
+  postDocuments: any[]
 ) =>
   new PostsPaging(
     Math.ceil(totalPosts / +query.pageSize),
     +query.pageNumber,
     +query.pageSize,
     totalPosts,
-    postDocuments.map((document) => postsSqlOutputDto(document, newestLikes)),
+    postDocuments.map((document) => postsSqlOutputDto(document))
   );

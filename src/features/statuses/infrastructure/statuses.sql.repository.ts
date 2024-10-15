@@ -65,11 +65,12 @@ export class StatusesSqlRepository {
       (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
     FROM "statuses" AS s
     WHERE s."userStatus" = 'Like' AND s."postId" = $1
-    ORDER BY d."addedAt" desc
+    ORDER BY s."addedAt" desc
     LIMIT 3
     `
         try {
-            return this.dataSource.query(querySqlStatus, queryParams)
+            return await this.dataSource
+                .query(querySqlStatus, queryParams)
         }
         catch (e) {
             throw new InternalServerErrorException()
