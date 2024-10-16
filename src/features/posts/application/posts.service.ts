@@ -6,9 +6,10 @@ import {
 } from '../api/models/input/posts.input.dto';
 import { BlogsRepository } from '../../blogs/infrastructure/mongodb/blogs.repository';
 import {
-  PostsOutputDto,
-  postsOutputDto,
-  postsSqlOutputDto,
+    postOutputModelFromSql,
+    PostsOutputDto,
+    postsOutputDto,
+    postsSqlOutputDto,
 } from '../api/models/output/posts.output.dto';
 import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
 import { BlogsService } from '../../blogs/application/blogs.service';
@@ -44,7 +45,7 @@ export class PostsService {
         const newestLikes = await this.statusesSqlRepository
             .getNewestLikesByPostId(postDocument.id)
 
-        return postsSqlOutputDto(postDocument, newestLikes);
+        return postOutputModelFromSql(postDocument)[0];
     }
 
     async existPost(id: string): Promise<PostsTable> {

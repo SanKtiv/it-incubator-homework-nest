@@ -87,16 +87,43 @@ export const postsSqlOutputDto = (postDocument: any) =>
         }
     );
 
-export const postSqlAdapter = (postFromSQL: any) =>
-    postFromSQL.map(post => ({
-        id: post.id,
-        newestLikes: post.userId ? {
-            userId: post.userId,
-            login: post.login,
-            addedAt: post.addedAt
-        } :
-        })
+
+export function postOutputModelFromSql(postFromSQL): PostsOutputDto[] {
+    const resultArray: PostsOutputDto[] = [];
+
+    postFromSQL.forEach(row =>
+        resultArray.find(i => i.id && i.id === row.id) ?
+            resultArray :
+            resultArray.push({
+                id: row.id,
+                title: row.title,
+                shortDescription: row.shortDescription,
+                content: row.content,
+                blogId: row.blogId,
+                blogName: row.blogName,
+                createdAt: row.createdAt,
+                extendedLikesInfo: {
+                    likesCount: row.likesCount,
+                    dislikesCount: row.dislikesCount,
+                    myStatus: row.myStatus ? row.myStatus : 'None',
+                    newestLikes: []
+                }
+            })
     )
+
+    resultArray.forEach(post =>
+        postFromSQL.forEach(row =>
+            post.id === row.id && row.userId ?
+                post.extendedLikesInfo.newestLikes.push({
+                    userId: row.userId,
+                    login: row.login,
+                    addedAt: row.addedAt
+                }) : post
+        )
+    )
+
+    return resultArray
+}
 
 export class PostsPaging {
   constructor(
@@ -107,29 +134,30 @@ export class PostsPaging {
     public items: PostsOutputDto[],
   ) {}
 }
+
 export const postsPaging = (
-  query: PostQuery,
-  totalPosts: number,
-  postDocuments: PostDocument[],
-  userId?: string,
+    query: PostQuery,
+    totalPosts: number,
+    postDocuments: PostDocument[],
+    userId?: string,
 ) =>
-  new PostsPaging(
-    Math.ceil(totalPosts / +query.pageSize),
-    +query.pageNumber,
-    +query.pageSize,
-    totalPosts,
-    postDocuments.map((document) => postsOutputDto(document, userId)),
-  );
+    new PostsPaging(
+        Math.ceil(totalPosts / +query.pageSize),
+        +query.pageNumber,
+        +query.pageSize,
+        totalPosts,
+        postDocuments.map((document) => postsOutputDto(document, userId)),
+    );
 
 export const postsSqlPaging = (
-  query: PostQuery,
-  totalPosts: number,
-  postDocuments: any[]
+    query: PostQuery,
+    totalPosts: number,
+    postDocuments: any[]
 ) =>
-  new PostsPaging(
-    Math.ceil(totalPosts / +query.pageSize),
-    +query.pageNumber,
-    +query.pageSize,
-    totalPosts,
-    postDocuments.map((document) => postsSqlOutputDto(document))
-  );
+    new PostsPaging(
+        Math.ceil(totalPosts / +query.pageSize),
+        +query.pageNumber,
+        +query.pageSize,
+        totalPosts,
+        postOutputModelFromSql(postDocuments)
+    );

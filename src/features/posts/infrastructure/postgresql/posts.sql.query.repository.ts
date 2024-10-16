@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostModelType } from '../../domain/posts.schema';
 import { PostQuery } from '../../api/models/input/posts.input.dto';
 import {
+  postOutputModelFromSql,
   PostsOutputDto,
   postsOutputDto,
   PostsPaging,
@@ -55,12 +56,13 @@ export class PostsSqlQueryRepository {
 
       if (postDocument.length === 0) throw new NotFoundException();
 
-      return postsSqlOutputDto(postDocument);
+      return postOutputModelFromSql(postDocument)[0];
     }
     catch (e) {
       throw new InternalServerErrorException()
     }
   }
+
 
   async findPaging(
       query: PostQuery,
@@ -77,26 +79,26 @@ export class PostsSqlQueryRepository {
            (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
            (SELECT s."userStatus" FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userId" = $1) AS "myStatus" 
        FROM "posts" AS p
-       ORDER BY p."createdAt" desc
+       ORDER BY p."${query.sortBy}" ${query.sortDirection}
        LIMIT $2
        OFFSET $3) AS newPost
     LEFT JOIN
       (SELECT s."addedAt", s."userId", s."postId", (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
       FROM "statuses" AS s
       WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null
-      ORDER BY p."${query.sortBy}" ${query.sortDirection}
+      ORDER BY s."addedAt" DESC
       LIMIT 3) AS newestLikes ON newPost."id" = newestLikes."postId"`
 
-    const queryPostParams = [userId, pageSize, pageOffSet]
+    const parameters = [userId, pageSize, pageOffSet]
         
     try {
       const totalPostsArr = await this.dataSource
           .query(`SELECT COUNT(*) FROM "posts"`)
 
       const totalPosts = totalPostsArr[0].count
-      
+
       const postsPaging = await this.dataSource
-          .query(querySqlPost, queryPostParams)
+          .query(querySqlPost, parameters)
 
       return postsSqlPaging(query, totalPosts, postsPaging);
     }
