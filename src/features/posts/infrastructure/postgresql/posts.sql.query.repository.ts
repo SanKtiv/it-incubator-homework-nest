@@ -23,9 +23,10 @@ export class PostsSqlQueryRepository {
     return this.dataSource.getRepository(PostsTable);
   }
 
-  async findById(id: string, userId?: string): Promise<PostsOutputDto> {
+  async findById(id: string, userId?: string | null): Promise<PostsOutputDto> {
     // const postDocument = await this.repository.findOneBy({ id: id });
 
+    if (!userId) userId = null
     const queryParams = [id, userId]
 
     const querySqlPost = `
@@ -44,11 +45,11 @@ export class PostsSqlQueryRepository {
     FROM "posts" AS p
     WHERE p."id" = $1) AS newPost
     LEFT JOIN
-    (SELECT s."addedAt", s."userId",
+    (SELECT s."addedAt", s."userId", s."postId",
       (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
     FROM "statuses" AS s
     WHERE s."userStatus" = 'Like' AND s."postId" = $1
-    ORDER BY d."addedAt" desc
+    ORDER BY s."addedAt" desc
     LIMIT 3) AS newestLikes ON newPost."id" = newestLikes."postId"`
 
     try {

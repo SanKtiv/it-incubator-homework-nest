@@ -61,14 +61,17 @@ export class PostController {
     @Param('postId', paramIdIsMongoIdPipe) id: string,
     @Req() req: Request,
   ): Promise<PostsOutputDto | HttpException> {
-    // const headerToken = req.headers.authorization;
-    // if (!headerToken) return this.postsQueryRepository.findById(id);
-    // const accessJwtToken = headerToken.split(' ')[1];
-    // const payload = await this.accessJwtToken.verify(accessJwtToken);
-    // if (!payload) return this.postsQueryRepository.findById(id);
-    // return this.postsQueryRepository.findById(id, payload.sub);
+    const headerToken = req.headers.authorization;
 
-    return this.postsSqlQueryRepository.findById(id);
+    if (!headerToken) return this.postsSqlQueryRepository.findById(id);
+
+    const accessJwtToken = headerToken.split(' ')[1];
+    const payload = await this.accessJwtToken.verify(accessJwtToken);
+
+    if (!payload) return this.postsSqlQueryRepository.findById(id);
+
+    return this.postsSqlQueryRepository.findById(id, payload.sub);
+
   }
 
   @Put(':postId/like-status')
