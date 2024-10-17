@@ -33,6 +33,10 @@ export class CommentsSqlRepository {
     }
   }
 
+  async findById(id: string) {
+
+  }
+
   // async findById(id: string): Promise<CommentDocument | null> {
   //   return this.CommentModel.findById(id);
   // }

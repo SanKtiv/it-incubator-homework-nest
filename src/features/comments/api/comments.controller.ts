@@ -18,11 +18,13 @@ import { CommentInputDto } from './models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
+import {CommentsSqlQueryRepository} from "../infrastructure/postgresql/sql.comments.query.repository";
 
 @Controller('comments')
 export class CommentsController {
   constructor(
     private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly commentsSqlQueryRepository: CommentsSqlQueryRepository,
     private readonly commentsService: CommentsService,
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
@@ -33,10 +35,14 @@ export class CommentsController {
     @Req() req: Request,
   ) {
     const headerToken = req.headers.authorization;
+
     if (!headerToken) return this.commentsQueryRepository.findById(id);
+
     const accessJwtToken = headerToken.split(' ')[1];
     const payload = await this.accessJwtToken.verify(accessJwtToken);
+
     if (!payload) return this.commentsQueryRepository.findById(id);
+
     return this.commentsQueryRepository.findById(id, payload.sub);
   }
 
