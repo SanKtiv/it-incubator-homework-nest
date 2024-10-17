@@ -60,7 +60,7 @@ export class PostController {
   async getPostById(
     @Param('postId', paramIdIsMongoIdPipe) id: string,
     @Req() req: Request,
-  ): Promise<PostsOutputDto | HttpException> {
+  ): Promise<PostsOutputDto> {
     const headerToken = req.headers.authorization;
 
     if (!headerToken) return this.postsSqlQueryRepository.findById(id);

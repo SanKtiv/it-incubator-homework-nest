@@ -17,24 +17,18 @@ export class CommentsSqlRepository {
   ) {}
 
   async create(dto: CommentServiceDto): Promise<CommentsTable> {
-    const querySql = `
+    const rawQuery = `
         INSERT INTO "comments" ("content", "userId", "userLogin", "createdAt", "postId")
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *;`;
 
-    const queryParams = [
-      dto.content,
-      dto.userId,
-      dto.userLogin,
-      new Date(),
-      dto.postId
-    ]
+    const parameters = [dto.content, dto.userId, dto.userLogin, new Date(), dto.postId]
+
     try {
-      const commentsArray = await this.dataSource.query(querySql, queryParams)
+      const commentsArray = await this.dataSource.query(rawQuery, parameters)
 
       return commentsArray[0]
-    }
-    catch (e) {
+    } catch (e) {
       throw new InternalServerErrorException()
     }
   }
