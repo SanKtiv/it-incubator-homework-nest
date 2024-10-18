@@ -176,7 +176,7 @@ export class PostsService {
             if (newStatus === 'Dislike') dislikesCount++
 
             await this.statusesSqlRepository
-                .createStatusForPost(userId, id, newStatus)
+                .insertStatusForPost(userId, id, newStatus)
         } else {
             if (currentStatus === 'Like') {
                 if (newStatus === 'None') likesCount--
@@ -197,7 +197,7 @@ export class PostsService {
             }
 
             await this.statusesSqlRepository
-                .updateStatus(userId, id, newStatus);
+                .updateStatusForPost(userId, id, newStatus);
         }
 
         await this.postsSqlRepository

@@ -9,7 +9,7 @@ export class StatusesSqlRepository {
     constructor(@InjectDataSource() protected dataSource: DataSource) {
     }
 
-    async createStatusForPost(userId: string, postId: string, status: string): Promise<void> {
+    async insertStatusForPost(userId: string, postId: string, status: string): Promise<void> {
         const querySql = `
         INSERT INTO "statuses" ("userId", "postId", "userStatus", "addedAt")
         VALUES ($1, $2, $3, $4)
@@ -23,7 +23,21 @@ export class StatusesSqlRepository {
         }
     }
 
-    async updateStatus(userId: string, postId: string, status: string): Promise<void> {
+    async insertStatusOfComment(userId: string, commentId: string, status: string): Promise<void> {
+        const querySql = `
+        INSERT INTO "statuses" ("userId", "commentId", "userStatus", "addedAt")
+        VALUES ($1, $2, $3, $4)
+        `
+        const queryParams = [userId, commentId, status, new Date()]
+
+        try {
+            await this.dataSource.query(querySql, queryParams)
+        } catch (e) {
+            throw new InternalServerErrorException()
+        }
+    }
+
+    async updateStatusForPost(userId: string, postId: string, status: string): Promise<void> {
         const querySql = `
         UPDATE "statuses" AS status
         SET status."userStatus" = $1,
@@ -31,6 +45,22 @@ export class StatusesSqlRepository {
         WHERE status."userId" = $3 AND status."postId" = $4
         `
         const queryParams = [status, new Date(), userId, postId]
+
+        try {
+            await this.dataSource.query(querySql, queryParams)
+        } catch (e) {
+            throw new InternalServerErrorException()
+        }
+    }
+
+    async updateStatusForComment(userId: string, commentId: string, status: string): Promise<void> {
+        const querySql = `
+        UPDATE "statuses" AS status
+        SET status."userStatus" = $1,
+        SET status."addedAt" = $2,
+        WHERE status."userId" = $3 AND status."commentId" = $4`
+
+        const queryParams = [status, new Date(), userId, commentId]
 
         try {
             await this.dataSource.query(querySql, queryParams)
@@ -50,6 +80,24 @@ export class StatusesSqlRepository {
             const statusesArray = await this.dataSource.query(querySql, queryParams)
 
             if (!statusesArray.length) return null
+
+            return statusesArray[0].userStatus
+        } catch (e) {
+            throw new InternalServerErrorException()
+        }
+    }
+
+    async getStatusOfComment(userId: string, commentId: string): Promise<string | null> {
+        const rawQuery = `
+        SELECT status."userStatus"
+        FROM "statuses" AS status
+        WHERE status."userId" = $1 AND status."commentId" = $2`
+
+        const parameters = [userId, commentId]
+        try {
+            const statusesArray = await this.dataSource.query(rawQuery, parameters)
+
+            if (statusesArray.length === 0) return null
 
             return statusesArray[0].userStatus
         } catch (e) {

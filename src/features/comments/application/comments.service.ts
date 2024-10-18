@@ -17,6 +17,7 @@ import { CommentDocument } from '../domain/comment.schema';
 import { PostsService } from '../../posts/application/posts.service';
 import {UsersSqlRepository} from "../../users/infrastructure/postgresqldb/users.sql.repository";
 import {CommentsSqlRepository} from "../infrastructure/postgresql/sql.comments.repository";
+import {StatusesSqlRepository} from "../../statuses/infrastructure/statuses.sql.repository";
 
 @Injectable()
 export class CommentsService {
@@ -26,6 +27,7 @@ export class CommentsService {
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly usersSqlRepository: UsersSqlRepository,
+    private readonly statusesSqlRepository: StatusesSqlRepository,
     private readonly postsService: PostsService,
   ) {}
 
@@ -60,78 +62,96 @@ export class CommentsService {
     await this.commentsRepository.deleteById(id);
   }
 
-  async createLikeStatus(id: string, userId: string, dto: PostLikeStatusDto) {
-    const commentDocument = await this.commentsRepository.findById(id);
-
-    if (!commentDocument) throw new NotFoundException();
+  async createStatusOfComment(id: string, userId: string, dto: PostLikeStatusDto) {
+    await this.existComment(id)
 
     const newStatus = dto.likeStatus;
 
-    const currentUser = commentDocument.usersStatuses.find(
-      (e) => e.userId === userId,
-    );
+    const currentStatus = await this.statusesSqlRepository
+        .getStatusOfComment(userId, id);
 
-    if (newStatus === 'None' && !currentUser) return;
+    if (!currentStatus) {
+      if (newStatus === 'None') return;
 
-    if (newStatus === 'None' && currentUser) {
-      if (currentUser.userStatus === 'Like') commentDocument.likesCount--;
-
-      if (currentUser.userStatus === 'Dislike') commentDocument.dislikesCount--;
-
-      commentDocument.usersStatuses = commentDocument.usersStatuses.filter(
-        (e) => e.userId !== userId,
-      );
-
-      await this.commentsRepository.save(commentDocument);
-
-      return;
+      await this.statusesSqlRepository
+          .insertStatusOfComment(userId, id, newStatus);
     }
-
-    const userStatus = {
-      userId: userId,
-      userStatus: dto.likeStatus,
-    };
-
-    const newStatusIsLike = newStatus === 'Like';
-
-    const newStatusIsDislike = newStatus === 'Dislike';
-
-    if (!currentUser) {
-      if (newStatusIsLike) commentDocument.likesCount++;
-
-      if (newStatusIsDislike) commentDocument.dislikesCount++;
-
-      commentDocument.usersStatuses.push(userStatus);
-
-      await this.commentsRepository.save(commentDocument);
-
-      return;
-    }
-
-    if (newStatusIsLike && currentUser.userStatus === 'Dislike') {
-      commentDocument.likesCount++;
-      commentDocument.dislikesCount--;
-    }
-
-    if (newStatusIsDislike && currentUser.userStatus === 'Like') {
-      commentDocument.likesCount--;
-      commentDocument.dislikesCount++;
-    }
-
-    commentDocument.usersStatuses = commentDocument.usersStatuses.map((e) =>
-      e.userId === userId ? userStatus : e,
-    );
-
-    await this.commentsRepository.save(commentDocument);
-
-    return;
+    await this.statusesSqlRepository
+        .updateStatusForComment(userId, id, newStatus);
   }
 
   async existComment(id: string): Promise<CommentDocument> {
-    const commentDocument = await this.commentsRepository.findById(id);
+    const commentDocument = await this.commentsSqlRepository.findById(id);
 
     if (!commentDocument) throw new NotFoundException();
 
     return commentDocument;
   }
+
+  // async createLikeStatus(id: string, userId: string, dto: PostLikeStatusDto) {
+  //   const commentDocument = await this.commentsRepository.findById(id);
+  //
+  //   if (!commentDocument) throw new NotFoundException();
+  //
+  //   const newStatus = dto.likeStatus;
+  //
+  //   const currentUser = commentDocument.usersStatuses.find(
+  //       (e) => e.userId === userId,
+  //   );
+  //
+  //   if (newStatus === 'None' && !currentUser) return;
+  //
+  //   if (newStatus === 'None' && currentUser) {
+  //     if (currentUser.userStatus === 'Like') commentDocument.likesCount--;
+  //
+  //     if (currentUser.userStatus === 'Dislike') commentDocument.dislikesCount--;
+  //
+  //     commentDocument.usersStatuses = commentDocument.usersStatuses.filter(
+  //         (e) => e.userId !== userId,
+  //     );
+  //
+  //     await this.commentsRepository.save(commentDocument);
+  //
+  //     return;
+  //   }
+  //
+  //   const userStatus = {
+  //     userId: userId,
+  //     userStatus: dto.likeStatus,
+  //   };
+  //
+  //   const newStatusIsLike = newStatus === 'Like';
+  //
+  //   const newStatusIsDislike = newStatus === 'Dislike';
+  //
+  //   if (!currentUser) {
+  //     if (newStatusIsLike) commentDocument.likesCount++;
+  //
+  //     if (newStatusIsDislike) commentDocument.dislikesCount++;
+  //
+  //     commentDocument.usersStatuses.push(userStatus);
+  //
+  //     await this.commentsRepository.save(commentDocument);
+  //
+  //     return;
+  //   }
+  //
+  //   if (newStatusIsLike && currentUser.userStatus === 'Dislike') {
+  //     commentDocument.likesCount++;
+  //     commentDocument.dislikesCount--;
+  //   }
+  //
+  //   if (newStatusIsDislike && currentUser.userStatus === 'Like') {
+  //     commentDocument.likesCount--;
+  //     commentDocument.dislikesCount++;
+  //   }
+  //
+  //   commentDocument.usersStatuses = commentDocument.usersStatuses.map((e) =>
+  //       e.userId === userId ? userStatus : e,
+  //   );
+  //
+  //   await this.commentsRepository.save(commentDocument);
+  //
+  //   return;
+  // }
 }

@@ -8,7 +8,7 @@ export class CommentsTable {
     @Column('character varying')
     content: string;
 
-    @Column('character varying')
+    @Column('uuid')
     userId: string;
 
     @Column('character varying')
@@ -17,7 +17,7 @@ export class CommentsTable {
     @Column('timestamp with time zone')
     createdAt: Date;
 
-    @Column('character varying')
+    @Column('uuid')
     postId: string;
 
     @Column({type:'int', default: 0})

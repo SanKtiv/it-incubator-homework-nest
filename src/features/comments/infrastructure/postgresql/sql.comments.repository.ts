@@ -1,4 +1,4 @@
-import {Injectable, InternalServerErrorException} from '@nestjs/common';
+import {Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Comment,
@@ -9,6 +9,7 @@ import { CommentServiceDto } from '../../api/models/input/comment-service.dto';
 import {InjectDataSource} from "@nestjs/typeorm";
 import {DataSource} from "typeorm";
 import {CommentsTable} from "../../domain/comments.entity";
+import {commentOutputDto, CommentOutputDto} from "../../api/models/output/comment.output.dto";
 
 @Injectable()
 export class CommentsSqlRepository {
@@ -33,8 +34,48 @@ export class CommentsSqlRepository {
     }
   }
 
-  async findById(id: string) {
+  async findById(id: string, userId?: string | null) {
+    userId = userId ? userId : null
 
+    const rawQuery = `
+    SELECT c."id", c."content", c."createdAt", c."userId",
+    
+      (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id") AS "userLogin",
+      
+      (SELECT COUNT(*) FROM "statuses" AS s
+       WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
+        
+      (SELECT COUNT(*) FROM "statuses" AS s
+       WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
+        
+      (SELECT s."userStatus" FROM "statuses" AS s
+       WHERE p."id" = s."postId" AND s."userId" = $2) AS "myStatus"
+    FROM "comments" AS c
+    WHERE c."id" = $1`
+
+    const parameters = [id, userId]
+
+    try {
+      return (await this.dataSource.query(rawQuery, parameters))[0];
+    } catch (e) {
+      throw new InternalServerErrorException()
+    }
+  }
+
+  async updateStatusesCount(commentId: string, likesCount, dislikesCount: number) {
+    const rawQuery = `
+        UPDATE "comments" AS p
+        SET p."likesCount" = $1, p."dislikesCount" = $2
+        WHERE p."id" = $3`
+
+    const parameters = [likesCount, dislikesCount, commentId]
+
+    try {
+      await this.dataSource.query(rawQuery, parameters)
+    }
+    catch (e) {
+      throw new InternalServerErrorException()
+    }
   }
 
   // async findById(id: string): Promise<CommentDocument | null> {

@@ -59,7 +59,7 @@ export class BlogsController {
     const userId = '98b52915-5853-444d-951e-c2b432e97111'
         const postId = '9a5fc3f0-2cce-48bd-952a-a862b1d93d45'
     return this.statusesSqlRepository
-        .createStatusForPost(
+        .insertStatusForPost(
             userId,
             postId,
         'Like')
