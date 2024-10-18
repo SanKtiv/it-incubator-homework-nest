@@ -1,10 +1,4 @@
 import {Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import {
-  Comment,
-  CommentDocument,
-  CommentModelType,
-} from '../../domain/comment.schema';
 import { CommentServiceDto } from '../../api/models/input/comment-service.dto';
 import {InjectDataSource} from "@nestjs/typeorm";
 import {DataSource} from "typeorm";

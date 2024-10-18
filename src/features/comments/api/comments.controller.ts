@@ -36,7 +36,7 @@ export class CommentsController {
   ) {
     const headerToken = req.headers.authorization;
 
-    if (!headerToken) return this.commentsQueryRepository.findById(id);
+    if (!headerToken) return this.commentsSqlQueryRepository.findById(id);
 
     const accessJwtToken = headerToken.split(' ')[1];
     const payload = await this.accessJwtToken.verify(accessJwtToken);
