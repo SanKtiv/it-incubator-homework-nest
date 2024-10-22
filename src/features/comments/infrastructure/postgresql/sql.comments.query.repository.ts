@@ -8,7 +8,7 @@ import {
 import { QueryDto } from '../../../../infrastructure/models/query.dto';
 import {
   CommentOutputDto,
-  commentOutputDto,
+  commentOutputDto, commentOutputModelRawSql,
   CommentsPagingDto,
   commentsPagingDto,
 } from '../../api/models/output/comment.output.dto';
@@ -21,17 +21,26 @@ export class CommentsSqlQueryRepository {
     @InjectDataSource() private dataSource: DataSource,
   ) {}
 
-  async findById(id: string, userId?: string): Promise<CommentOutputDto> {
+  async findById(id: string, userId?: string | null): Promise<CommentOutputDto> {
     const rawQuery = `
-    SELECT c."id", c."content", c."createdAt"
-    FROM "comments" AS c`
-    const parameters = []
+    SELECT c."id", c."content", c."createdAt", c."userId",
+      (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id") AS "userLogin",
+      (SELECT COUNT(*) FROM "statuses" AS s
+        WHERE c."id" = s."commentId" AND s."userStatus" = 'Like') AS "likesCount",
+      (SELECT COUNT(*) FROM "statuses" AS s
+        WHERE c."id" = s."commentId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
+      (SELECT s."userStatus" FROM "statuses" AS s
+        WHERE c."id" = s."commentId" AND s."userId" = $2) AS "myStatus"  
+    FROM "comments" AS c
+    WHERE c."id" = $1`
+
+    const parameters = [id, userId]
 
     const commentDocument = await this.dataSource.query(rawQuery, parameters);
 
     if (!commentDocument) throw new NotFoundException();
 
-    return commentOutputDto(commentDocument, userId);
+    return commentOutputModelRawSql(commentDocument);
   }
 
   // async countDocuments(id: string): Promise<number> {

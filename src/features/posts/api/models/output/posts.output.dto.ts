@@ -77,7 +77,7 @@ export const postsSqlOutputDto = (postDocument: any) =>
           extendedLikesInfo: {
             likesCount: postDocument[0].likesCount,
             dislikesCount: postDocument[0].dislikesCount,
-            myStatus: postDocument[0].myStatus,
+            myStatus: postDocument[0].myStatus || 'None',
             newestLikes: postDocument.map(post => ({
                 userId: post.userId,
                 login: post.login,

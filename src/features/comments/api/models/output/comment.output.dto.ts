@@ -94,3 +94,31 @@ export const commentsPagingDto = (
     totalComments,
     commentsDocument.map((document) => commentOutputDto(document, userId)),
   );
+
+export class CommentOutputSqlModel {
+    public id: string
+    public content: string
+    public createdAt: Date
+    public userId: string
+    public userLogin: string
+    public likesCount: number
+    public dislikesCount: number
+    public myStatus: string
+}
+
+export const commentOutputModelRawSql = (
+    comment: any[]
+): CommentOutputDto => ({
+    id: comment[0].id,
+    content: comment[0].content,
+    createdAt: comment[0].createdAt.toISOString(),
+    commentatorInfo: {
+        userId: comment[0].userId,
+        userLogin: comment[0].userLogin
+    },
+    likesInfo: {
+        likesCount: comment[0].likesCount,
+        dislikesCount: comment[0].dislikesCount,
+        myStatus: comment[0].myStatus || 'None',
+    }
+});

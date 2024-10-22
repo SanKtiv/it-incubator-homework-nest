@@ -34,16 +34,10 @@ export class CommentsController {
     @Param('commentId', paramIdIsMongoIdPipe) id: string,
     @Req() req: Request,
   ) {
-    const headerToken = req.headers.authorization;
+    const userId = await this.accessJwtToken
+        .getUserIdFromHeaders(req.headers.authorization);
 
-    if (!headerToken) return this.commentsSqlQueryRepository.findById(id);
-
-    const accessJwtToken = headerToken.split(' ')[1];
-    const payload = await this.accessJwtToken.verify(accessJwtToken);
-
-    if (!payload) return this.commentsQueryRepository.findById(id);
-
-    return this.commentsQueryRepository.findById(id, payload.sub);
+    return this.commentsSqlQueryRepository.findById(id, userId);
   }
 
   @Put(':commentId/like-status')

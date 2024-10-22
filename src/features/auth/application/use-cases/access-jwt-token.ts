@@ -22,4 +22,18 @@ export class AccessJwtToken {
       return undefined;
     }
   }
+
+  async getUserIdFromHeaders(header: string | undefined) {
+      if (!header) return null;
+
+      const token = header.split(' ')[1];
+
+      try {
+          const payload = await this.jwtService.verify(token);
+
+          return payload.sub;
+      } catch (e) {
+          return null;
+      }
+  }
 }

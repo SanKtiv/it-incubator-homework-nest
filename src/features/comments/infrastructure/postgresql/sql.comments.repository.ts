@@ -72,6 +72,10 @@ export class CommentsSqlRepository {
     }
   }
 
+  async updateById (commentId: string, content: string) {
+
+  }
+
   // async findById(id: string): Promise<CommentDocument | null> {
   //   return this.CommentModel.findById(id);
   // }

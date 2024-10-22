@@ -55,18 +55,11 @@ export class BlogsController {
 
   @Get('/blogs')
   async createBlogInSql() {
-    console.log("blogs/blogs")
-    const userId = '98b52915-5853-444d-951e-c2b432e97111'
-        const postId = '9a5fc3f0-2cce-48bd-952a-a862b1d93d45'
-    return this.statusesSqlRepository
-        .insertStatusForPost(
-            userId,
-            postId,
-        'Like')
-    // const status = await this.statusesSqlRepository
-    //     .getStatusOfPost(userId, postId)
-    // console.log(status)
-    // return status
+    console.log('blogs/blogs')
+    const token = await this.accessJwtToken.create('1234567890')
+    const userId = await this.accessJwtToken
+        .getUserIdFromHeaders(undefined)
+    return {userId: userId}
   }
 
   @Post()
