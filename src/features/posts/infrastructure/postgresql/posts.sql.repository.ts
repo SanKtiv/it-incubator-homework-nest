@@ -23,18 +23,18 @@ export class PostsSqlRepository {
     return this.repository.save(postDocument);
   }
 
-  async createRawSql(inputDto: PostsInputDto) {
+  async createRawSql(dto: PostsInputDto) {
     const rawQuery = `
     INSERT INTO "posts" AS p ("title", "shortDescription", "content", "blogId", "createdAt")
     VALUES ($1, $2, $3, $4, $5)
     RETURNING p."id", p."title", p."shortDescription", p."content", p."blogId", p."createdAt",
-      (SELECT b."name" FROM "blogs" AS b WHERE b."id" = $4) AS "blogName"`
+      (SELECT b."name" FROM "blogs" AS b WHERE b."id" = p."id") AS "blogName"`
 
     const parameters = [
-      inputDto.title,
-      inputDto.shortDescription,
-      inputDto.content,
-      inputDto.blogId,
+      dto.title,
+      dto.shortDescription,
+      dto.content,
+      dto.blogId,
       new Date()
     ]
 
