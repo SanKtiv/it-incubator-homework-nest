@@ -27,26 +27,12 @@ export class PostsSqlRepository {
     return this.repository.findOneBy({ id: id });
   }
 
-  async savePost(postDocument: PostsTable): Promise<PostsTable> {
-    return this.repository.save(postDocument);
+  async deleteById(id: string) {
+
   }
 
-  async updateStatusesCount(postId: string, likesCount, dislikesCount: number) {
-    const querySql = `
-        UPDATE "posts" AS p
-        SET
-        p."likesCount" = $1,
-        p."dislikesCount" = $2
-        WHERE p."id" = $3
-        `
-    const queryParams = [likesCount, dislikesCount, postId]
-
-    try {
-      await this.dataSource.query(querySql, queryParams)
-    }
-    catch (e) {
-      throw new InternalServerErrorException()
-    }
+  async savePost(postDocument: PostsTable): Promise<PostsTable> {
+    return this.repository.save(postDocument);
   }
 
   async deletePost(post: PostsTable): Promise<void> {

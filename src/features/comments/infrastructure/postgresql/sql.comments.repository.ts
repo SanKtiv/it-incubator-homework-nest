@@ -56,39 +56,32 @@ export class CommentsSqlRepository {
     }
   }
 
-  async updateStatusesCount(commentId: string, likesCount, dislikesCount: number) {
+  async updateById (commentId: string, content: string) {
     const rawQuery = `
-        UPDATE "comments" AS p
-        SET p."likesCount" = $1, p."dislikesCount" = $2
-        WHERE p."id" = $3`
+    UPDATE "comments" AS c
+    SET c."content" = $2
+    WHERE c."id" = $1`
 
-    const parameters = [likesCount, dislikesCount, commentId]
+    const parameters = [commentId, content]
 
     try {
-      await this.dataSource.query(rawQuery, parameters)
-    }
-    catch (e) {
+      await this.dataSource.query(rawQuery, parameters);
+    } catch (e) {
       throw new InternalServerErrorException()
     }
   }
 
-  async updateById (commentId: string, content: string) {
+  async deleteById(id: string) {
+    const rawQuery = `
+    DELETE FROM "comments" AS c
+    WHERE c."id" = $1`
 
+    const parameters = [id]
+
+    try {
+      await this.dataSource.query(rawQuery, parameters);
+    } catch (e) {
+      throw new InternalServerErrorException()
+    }
   }
-
-  // async findById(id: string): Promise<CommentDocument | null> {
-  //   return this.CommentModel.findById(id);
-  // }
-  //
-  // async save(commentDocument: CommentDocument): Promise<CommentDocument> {
-  //   return commentDocument.save();
-  // }
-  //
-  // async deleteById(id: string) {
-  //   return this.CommentModel.findByIdAndDelete(id);
-  // }
-  //
-  // async deleteAll() {
-  //   await this.CommentModel.deleteMany();
-  // }
 }

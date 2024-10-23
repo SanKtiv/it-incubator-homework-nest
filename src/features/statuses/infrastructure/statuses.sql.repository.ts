@@ -39,10 +39,10 @@ export class StatusesSqlRepository {
 
     async updateStatusForPost(userId: string, postId: string, status: string): Promise<void> {
         const querySql = `
-        UPDATE "statuses" AS status
-        SET status."userStatus" = $1,
-        SET status."addedAt" = $2,
-        WHERE status."userId" = $3 AND status."postId" = $4
+        UPDATE "statuses" AS s
+        SET s."userStatus" = $1,
+        SET s."addedAt" = $2,
+        WHERE s."userId" = $3 AND s."postId" = $4
         `
         const queryParams = [status, new Date(), userId, postId]
 
@@ -55,10 +55,10 @@ export class StatusesSqlRepository {
 
     async updateStatusForComment(userId: string, commentId: string, status: string): Promise<void> {
         const querySql = `
-        UPDATE "statuses" AS status
-        SET status."userStatus" = $1,
-        SET status."addedAt" = $2,
-        WHERE status."userId" = $3 AND status."commentId" = $4`
+        UPDATE "statuses" AS s
+        SET s."userStatus" = $1,
+        SET s."addedAt" = $2,
+        WHERE s."userId" = $3 AND s."commentId" = $4`
 
         const queryParams = [status, new Date(), userId, commentId]
 
@@ -69,7 +69,7 @@ export class StatusesSqlRepository {
         }
     }
 
-    async getStatusOfPost(userId: string, postId: string): Promise<string | null> {
+    async getCurrentStatusOfPost(userId: string, postId: string): Promise<string | null> {
         const querySql = `
         SELECT status."userStatus"
         FROM "statuses" AS status

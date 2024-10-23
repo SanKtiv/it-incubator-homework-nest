@@ -64,7 +64,6 @@ export class PostsSqlQueryRepository {
     }
   }
 
-
   async findPaging(
       query: PostQuery,
       dto: { userId?: string; blogId?: string },

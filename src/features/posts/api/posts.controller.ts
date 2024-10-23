@@ -152,6 +152,6 @@ export class PostController {
   async deletePostById(
     @Param('postId', paramIdIsMongoIdPipe) id: string,
   ): Promise<void> {
-    await this.postsService.deletePost(id);
+    await this.postsService.deletePostById(id);
   }
 }

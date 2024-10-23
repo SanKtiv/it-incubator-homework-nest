@@ -49,9 +49,10 @@ export class CommentsService {
 
     if (commentDocument.userId !== userId) throw new ForbiddenException();
 
-    commentDocument.content = dto.content;
-
-    await this.commentsRepository.save(commentDocument);
+    await this.commentsSqlRepository.updateById(id, dto.content)
+    // commentDocument.content = dto.content;
+    //
+    // await this.commentsRepository.save(commentDocument);
   }
 
   async removeCommentById(id: string, userId: string) {
@@ -59,7 +60,7 @@ export class CommentsService {
 
     if (commentDocument.userId !== userId) throw new ForbiddenException();
 
-    await this.commentsRepository.deleteById(id);
+    await this.commentsSqlRepository.deleteById(id);
   }
 
   async createStatusOfComment(id: string, userId: string, dto: PostLikeStatusDto) {

@@ -155,65 +155,32 @@ export class PostsService {
     //   return;
     // }
 
-    async createStatusForPost(
-        id: string,
-        dto: PostLikeStatusDto,
-        userId: string,
-    ): Promise<void> {
-        const postDocument = await this.existPost(id);
-        let likesCount = postDocument.likesCount;
-        let dislikesCount = postDocument.dislikesCount;
+    async createStatusForPost(id: string, dto: PostLikeStatusDto, userId: string,): Promise<void> {
+        await this.existPost(id);
+
         const newStatus = dto.likeStatus;
 
         const currentStatus = await this.statusesSqlRepository
-            .getStatusOfPost(userId, id)
+            .getCurrentStatusOfPost(userId, id)
 
         if (!currentStatus) {
             if (newStatus === 'None') return;
 
-            if (newStatus === 'Like') likesCount++
-
-            if (newStatus === 'Dislike') dislikesCount++
-
             await this.statusesSqlRepository
                 .insertStatusForPost(userId, id, newStatus)
-        } else {
-            if (currentStatus === 'Like') {
-                if (newStatus === 'None') likesCount--
-
-                if (newStatus === 'Dislike') {
-                    likesCount--
-                    dislikesCount++
-                }
-            }
-
-            if (currentStatus === 'Dislike') {
-                if (newStatus === 'None') dislikesCount--
-
-                if (newStatus === 'Like') {
-                    likesCount++
-                    dislikesCount--
-                }
-            }
-
-            await this.statusesSqlRepository
-                .updateStatusForPost(userId, id, newStatus);
         }
 
-        await this.postsSqlRepository
-            .updateStatusesCount(id, likesCount, dislikesCount);
+        await this.statusesSqlRepository
+            .updateStatusForPost(userId, id, newStatus)
     }
 
-    async deletePost(id: string): Promise<void | HttpException> {
+    async deletePostById(id: string): Promise<void> {
         const result = await this.postsRepository.remove(id);
 
         if (!result) throw new NotFoundException();
     }
 
-    async deletePostByIdForBlog(
-        postId: string,
-        blogId: string,
-    ): Promise<void | HttpException> {
+    async deletePostByIdForBlog(postId: string, blogId: string,): Promise<void | HttpException> {
         const post = await this.existPost(postId);
 
         if (post.blogId !== blogId) throw new NotFoundException();
