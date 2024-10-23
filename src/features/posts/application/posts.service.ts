@@ -35,15 +35,9 @@ export class PostsService {
     }
 
     async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
-        const blogDocument = await this.blogsService.existBlog(dto.blogId);
+        await this.blogsService.existBlog(dto.blogId);
 
-        const postDocument = await this.postsSqlRepository.create(
-            dto,
-            blogDocument.name, // can use without blogName
-        );
-
-        const newestLikes = await this.statusesSqlRepository
-            .getNewestLikesByPostId(postDocument.id)
+        const postDocument = await this.postsSqlRepository.createRawSql(dto);
 
         return postOutputModelFromSql(postDocument)[0];
     }

@@ -23,6 +23,29 @@ export class PostsSqlRepository {
     return this.repository.save(postDocument);
   }
 
+  async createRawSql(inputDto: PostsInputDto) {
+    const rawQuery = `
+    INSERT INTO "posts" AS p ("title", "shortDescription", "content", "blogId", "createdAt")
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING p."id", p."title", p."shortDescription", p."content", p."blogId", p."createdAt",
+      (SELECT b."name" FROM "blogs" AS b WHERE b."id" = $4) AS "blogName"`
+
+    const parameters = [
+      inputDto.title,
+      inputDto.shortDescription,
+      inputDto.content,
+      inputDto.blogId,
+      new Date()
+    ]
+
+    try {
+      return await this.dataSource.query(rawQuery, parameters)
+
+    } catch (e) {
+      throw new InternalServerErrorException()
+    }
+  }
+
   async findById(id: string): Promise<PostsTable | null> {
     return this.repository.findOneBy({ id: id });
   }

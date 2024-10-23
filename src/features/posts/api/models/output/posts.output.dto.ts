@@ -101,10 +101,10 @@ export function postOutputModelFromSql(postFromSQL): PostsOutputDto[] {
                 content: row.content,
                 blogId: row.blogId,
                 blogName: row.blogName,
-                createdAt: row.createdAt,
+                createdAt: row.createdAt.toISOString(),
                 extendedLikesInfo: {
-                    likesCount: row.likesCount,
-                    dislikesCount: row.dislikesCount,
+                    likesCount: row.likesCount ? row.likesCount : 0,
+                    dislikesCount: row.dislikesCount ? row.dislikesCount : 0,
                     myStatus: row.myStatus ? row.myStatus : 'None',
                     newestLikes: []
                 }
@@ -117,7 +117,7 @@ export function postOutputModelFromSql(postFromSQL): PostsOutputDto[] {
                 post.extendedLikesInfo.newestLikes.push({
                     userId: row.userId,
                     login: row.login,
-                    addedAt: row.addedAt
+                    addedAt: row.addedAt.toISOString()
                 }) : post
         )
     )
