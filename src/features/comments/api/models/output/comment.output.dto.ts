@@ -117,8 +117,8 @@ export const commentOutputModelRawSql = (
         userLogin: comment[0].userLogin
     },
     likesInfo: {
-        likesCount: comment[0].likesCount || 0,
-        dislikesCount: comment[0].dislikesCount || 0,
+        likesCount: comment[0].likesCount ? Number(comment[0].likesCount) : 0,
+        dislikesCount: comment[0].dislikesCount ? Number(comment[0].dislikesCount) : 0,
         myStatus: comment[0].myStatus || 'None',
     }
 });
