@@ -27,9 +27,9 @@ export class PostsSqlQueryRepository {
     // const postDocument = await this.repository.findOneBy({ id: id });
 
     if (!userId) userId = null
-    const queryParams = [id, userId]
+    const parameters = [id, userId]
 
-    const querySqlPost = `
+    const rawQuery = `
     SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
     FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."blogName", p."createdAt",
         
@@ -53,7 +53,7 @@ export class PostsSqlQueryRepository {
     LIMIT 3) AS newestLikes ON newPost."id" = newestLikes."postId"`
 
     try {
-      const postDocument = await this.dataSource.query(querySqlPost, queryParams)
+      const postDocument = await this.dataSource.query(rawQuery, parameters)
 
       if (postDocument.length === 0) throw new NotFoundException();
 

@@ -17,15 +17,16 @@ export class PostsTable {
   @Column('character varying')
   blogId: string;
 
-  @Column('character varying')
-  blogName: string;
+  // @Column('character varying')
+  // blogName: string;
 
   @Column('timestamp with time zone')
   createdAt: Date;
 
-  @Column({type: "int", default: 0})
-  likesCount: number;
+  // @Column({type: "int", default: 0})
+  // likesCount: number;
+  //
+  // @Column({type: "int", default: 0})
+  // dislikesCount: number;
 
-  @Column({type: "int", default: 0})
-  dislikesCount: number;
 }
