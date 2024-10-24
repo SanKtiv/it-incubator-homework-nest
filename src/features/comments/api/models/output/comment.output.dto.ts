@@ -64,8 +64,8 @@ export const sqlCommentOutputDto = (
             userLogin: commentDocument.userLogin
         },
         likesInfo: {
-            likesCount: commentDocument.likesCount,
-            dislikesCount: commentDocument.dislikesCount,
+            likesCount: commentDocument.likesCount ? commentDocument.likesCount : 0,
+            dislikesCount: commentDocument.dislikesCount ? commentDocument.dislikesCount: 0,
             myStatus: 'None',
         }
     }
