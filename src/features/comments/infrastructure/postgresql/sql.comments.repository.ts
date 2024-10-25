@@ -37,13 +37,13 @@ export class CommentsSqlRepository {
       (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id") AS "userLogin",
       
       (SELECT COUNT(*) FROM "statuses" AS s
-       WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
+       WHERE c."id" = s."commentId" AND s."userStatus" = 'Like') AS "likesCount",
         
       (SELECT COUNT(*) FROM "statuses" AS s
-       WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
+       WHERE c."id" = s."commentId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
         
       (SELECT s."userStatus" FROM "statuses" AS s
-       WHERE p."id" = s."postId" AND s."userId" = $2) AS "myStatus"
+       WHERE c."id" = s."commentId" AND s."userId" = $2) AS "myStatus"
     FROM "comments" AS c
     WHERE c."id" = $1`
 
