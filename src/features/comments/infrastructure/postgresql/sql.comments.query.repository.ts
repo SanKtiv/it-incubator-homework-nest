@@ -38,7 +38,7 @@ export class CommentsSqlQueryRepository {
 
     const commentDocument = await this.dataSource.query(rawQuery, parameters);
 
-    if (!commentDocument) throw new NotFoundException();
+    if (commentDocument.length === 0) throw new NotFoundException();
 
     return commentOutputModelRawSql(commentDocument);
   }
