@@ -50,7 +50,10 @@ export class CommentsSqlRepository {
     const parameters = [id, userId]
 
     try {
-      return (await this.dataSource.query(rawQuery, parameters))[0];
+      const arrayOfFoundComments = await this.dataSource
+          .query(rawQuery, parameters);
+
+      return arrayOfFoundComments[0];
     } catch (e) {
       throw new InternalServerErrorException()
     }
@@ -58,9 +61,9 @@ export class CommentsSqlRepository {
 
   async updateById (commentId: string, content: string) {
     const rawQuery = `
-    UPDATE "comments" AS c
-    SET c."content" = $2
-    WHERE c."id" = $1`
+    UPDATE "comments"
+    SET "content" = $2
+    WHERE "id" = $1`
 
     const parameters = [commentId, content]
 

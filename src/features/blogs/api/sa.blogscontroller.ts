@@ -37,6 +37,7 @@ import { RequestApiSqlRepository } from '../../requests/infrastructure/request.s
 import { BlogsSqlQueryRepository } from '../infrastructure/postgresdb/blogs.sql.query.repository';
 import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
 import { PostsSqlQueryRepository } from '../../posts/infrastructure/postgresql/posts.sql.query.repository';
+import {CommentsSqlRepository} from "../../comments/infrastructure/postgresql/sql.comments.repository";
 
 @Controller('sa/blogs')
 @UseGuards(BasicAuthGuard)
@@ -50,17 +51,14 @@ export class SaBlogsController {
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
     private readonly usersSqlRepository: RequestApiSqlRepository,
+    private readonly commentsSqlRepository: CommentsSqlRepository,
   ) {}
 
   @Get('/blogs')
-  async createBlogInSql(@CurrentUserId() userName: string) {
-    // const dto = {
-    //     ip: '12345',
-    //     url: 'Chrome3',
-    //     date: '098761333',
-    // };
-    //return this.usersSqlRepository.create(dto);
-    return userName;
+  async createBlogInSql() {
+
+    await this.commentsSqlRepository
+        .updateById('0208b79e-85ba-465c-b9c7-f776abeff611', 'Hello')
   }
 
   @Post()

@@ -37,6 +37,7 @@ import { RequestApiSqlRepository } from '../../requests/infrastructure/request.s
 import { BlogsSqlQueryRepository } from '../infrastructure/postgresdb/blogs.sql.query.repository';
 import { PostsSqlQueryRepository } from '../../posts/infrastructure/postgresql/posts.sql.query.repository';
 import {StatusesSqlRepository} from "../../statuses/infrastructure/statuses.sql.repository";
+import {CommentsSqlRepository} from "../../comments/infrastructure/postgresql/sql.comments.repository";
 
 @Controller('blogs')
 export class BlogsController {
@@ -51,15 +52,13 @@ export class BlogsController {
     private readonly accessJwtToken: AccessJwtToken,
     private readonly usersSqlRepository: RequestApiSqlRepository,
     private readonly statusesSqlRepository: StatusesSqlRepository,
+    private readonly commentsSqlRepository: CommentsSqlRepository,
   ) {}
 
   @Get('/blogs')
   async createBlogInSql() {
-    console.log('blogs/blogs')
-    const token = await this.accessJwtToken.create('1234567890')
-    const userId = await this.accessJwtToken
-        .getUserIdFromHeaders(undefined)
-    return {userId: userId}
+    await this.commentsSqlRepository
+        .updateById('0208b79e-85ba-465c-b9c7-f776abeff611', 'Hello hello')
   }
 
   @Post()
