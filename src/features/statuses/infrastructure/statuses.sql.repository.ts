@@ -40,8 +40,7 @@ export class StatusesSqlRepository {
     async updateStatusForPost(userId: string, postId: string, status: string): Promise<void> {
         const querySql = `
         UPDATE "statuses"
-        SET "userStatus" = $1,
-        SET "addedAt" = $2,
+        SET ("userStatus", "addedAt") = ($1, $2)
         WHERE "userId" = $3 AND "postId" = $4
         `
         const queryParams = [status, new Date(), userId, postId]
@@ -56,8 +55,7 @@ export class StatusesSqlRepository {
     async updateStatusForComment(userId: string, commentId: string, status: string): Promise<void> {
         const querySql = `
         UPDATE "statuses"
-        SET "userStatus" = $1,
-        SET "addedAt" = $2,
+        SET ("userStatus", "addedAt") = ($1, $2)
         WHERE "userId" = $3 AND "commentId" = $4`
 
         const queryParams = [status, new Date(), userId, commentId]
@@ -79,7 +77,7 @@ export class StatusesSqlRepository {
         try {
             const statusesArray = await this.dataSource.query(querySql, queryParams)
 
-            if (!statusesArray.length) return null
+            if (statusesArray.length === 0) return null
 
             return statusesArray[0].userStatus
         } catch (e) {
