@@ -89,8 +89,7 @@ export class PostsSqlQueryRepository {
       (SELECT s."addedAt", s."userId", s."postId", (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
       FROM "statuses" AS s
       WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null
-      ORDER BY s."addedAt" DESC
-      LIMIT 3) AS newestLikes ON newPost."id" = newestLikes."postId"`
+      ORDER BY s."addedAt" DESC) AS newestLikes ON newPost."id" = newestLikes."postId"`
 
     const parameters = [userId, pageSize, pageOffSet]
         
@@ -102,7 +101,8 @@ export class PostsSqlQueryRepository {
 
       const postsPaging = await this.dataSource
           .query(querySqlPost, parameters)
-
+console.log('totalPostsArr =', totalPostsArr)
+      console.log('postsPaging =', postsPaging)
       return postsSqlPaging(query, totalPosts, postsPaging);
     }
     catch (e) {

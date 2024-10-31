@@ -158,6 +158,6 @@ export const postsSqlPaging = (
         Math.ceil(totalPosts / +query.pageSize),
         +query.pageNumber,
         +query.pageSize,
-        totalPosts,
+        +totalPosts,
         postOutputModelFromSql(postDocuments)
     );
