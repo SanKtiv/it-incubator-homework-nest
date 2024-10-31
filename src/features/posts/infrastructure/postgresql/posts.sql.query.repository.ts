@@ -68,7 +68,7 @@ export class PostsSqlQueryRepository {
 
   async findPaging(
       query: PostQuery,
-      dto: { userId?: string; blogId?: string },
+      dto: { userId?: string | null; blogId?: string | null },
   ): Promise<PostsPaging> {
     const userId = dto.userId ? dto.userId : null
     const pageSize = query.pageSize;
@@ -76,7 +76,8 @@ export class PostsSqlQueryRepository {
 
     const querySqlPost = `
         SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
-    FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."blogName", p."createdAt",
+    FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
+           (SELECT b."name" FROM "blogs" AS b WHERE p."blogId" = b."id"::text) AS "blogName",
            (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
            (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
            (SELECT s."userStatus" FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userId" = $1) AS "myStatus" 
