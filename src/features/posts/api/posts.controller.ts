@@ -64,12 +64,12 @@ export class PostController {
     const headerToken = req.headers.authorization;
 
     if (!headerToken) return this.postsSqlQueryRepository.findById(id);
-
+console.log('1')
     const accessJwtToken = headerToken.split(' ')[1];
     const payload = await this.accessJwtToken.verify(accessJwtToken);
-
+      console.log('2')
     if (!payload) return this.postsSqlQueryRepository.findById(id);
-
+      console.log('3')
     return this.postsSqlQueryRepository.findById(id, payload.sub);
 
   }

@@ -31,7 +31,9 @@ export class PostsSqlQueryRepository {
 
     const rawQuery = `
     SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
-    FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."blogName", p."createdAt",
+    FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
+        
+        (SELECT b."name" FROM "blogs" AS b WHERE p."blogId" = b."id"::text) AS "blogName",
         
         (SELECT COUNT(*) FROM "statuses" AS s
         WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
