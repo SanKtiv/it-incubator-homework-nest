@@ -113,7 +113,7 @@ export function postOutputModelFromSql(postFromSQL): PostsOutputDto[] {
 
     resultArray.forEach(post =>
         postFromSQL.forEach(row =>
-            post.id === row.id && row.userId ?
+            post.id === row.id && row.userId && post.extendedLikesInfo.newestLikes.length < 3 ?
                 post.extendedLikesInfo.newestLikes.push({
                     userId: row.userId,
                     login: row.login,

@@ -101,8 +101,7 @@ export class PostsSqlQueryRepository {
 
       const postsPaging = await this.dataSource
           .query(querySqlPost, parameters)
-console.log('totalPostsArr =', totalPostsArr)
-      console.log('postsPaging =', postsPaging)
+
       return postsSqlPaging(query, totalPosts, postsPaging);
     }
     catch (e) {
