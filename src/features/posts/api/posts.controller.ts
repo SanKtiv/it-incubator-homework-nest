@@ -37,6 +37,7 @@ import { CommentServiceDto } from '../../comments/api/models/input/comment-servi
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { PostsSqlQueryRepository } from '../infrastructure/postgresql/posts.sql.query.repository';
+import {CommentsSqlQueryRepository} from "../../comments/infrastructure/postgresql/sql.comments.query.repository";
 
 @Controller('posts')
 export class PostController {
@@ -47,6 +48,7 @@ export class PostController {
     private readonly postsSqlQueryRepository: PostsSqlQueryRepository,
     private readonly commentsService: CommentsService,
     private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly commentsSqlQueryRepository: CommentsSqlQueryRepository,
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
@@ -127,12 +129,17 @@ export class PostController {
     @Req() req: Request,
   ) {
     const headerToken = req.headers.authorization;
+
     if (!headerToken)
-      return this.commentsQueryRepository.findPaging(postId, query);
+      return this.commentsSqlQueryRepository.findPaging(postId, query);
+
     const accessJwtToken = headerToken.split(' ')[1];
+
     const payload = await this.accessJwtToken.verify(accessJwtToken);
-    if (!payload) return this.commentsQueryRepository.findPaging(postId, query);
-    return this.commentsQueryRepository.findPaging(postId, query, payload.sub);
+
+    if (!payload) return this.commentsSqlQueryRepository.findPaging(postId, query);
+
+    return this.commentsSqlQueryRepository.findPaging(postId, query, payload.sub);
   }
 
   @Put(':postId')

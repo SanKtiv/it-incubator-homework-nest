@@ -74,7 +74,7 @@ export class PostsSqlQueryRepository {
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
-    const querySqlPost = `
+    const rawQuery = `
         SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
     FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
            (SELECT b."name" FROM "blogs" AS b WHERE p."blogId" = b."id"::text) AS "blogName",
@@ -100,7 +100,7 @@ export class PostsSqlQueryRepository {
       const totalPosts = totalPostsArr[0].count
 
       const postsPaging = await this.dataSource
-          .query(querySqlPost, parameters)
+          .query(rawQuery, parameters)
 
       return postsSqlPaging(query, totalPosts, postsPaging);
     }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Comment,
@@ -10,7 +10,7 @@ import {
   CommentOutputDto,
   commentOutputDto, commentOutputModelRawSql,
   CommentsPagingDto,
-  commentsPagingDto,
+  commentsPagingDto, commentsSqlPaging,
 } from '../../api/models/output/comment.output.dto';
 import {InjectDataSource} from "@nestjs/typeorm";
 import {DataSource} from "typeorm";
@@ -47,18 +47,46 @@ export class CommentsSqlQueryRepository {
   //   return this.CommentModel.countDocuments({ postId: id });
   // }
 
-  // async findPaging(
-  //   postId: string,
-  //   query: QueryDto,
-  //   userId?: string,
-  // ): Promise<CommentsPagingDto> {
-  //   const totalComments = await this.CommentModel.countDocuments({
-  //     postId: postId,
-  //   });
-  //   if (totalComments === 0) throw new NotFoundException();
-  //   const commentPaging = await this.CommentModel.find({ postId: postId })
-  //     //.sort({ [query.sortBy]: query.sortDirection }) dont work with upper case
-  //     .skip((query.pageNumber - 1) * query.pageSize);
-  //   return commentsPagingDto(query, totalComments, commentPaging, userId);
-  // }
+  async findPaging(
+    postId: string,
+    query: QueryDto,
+    userId?: string | null,
+  ): Promise<CommentsPagingDto> {
+    userId = userId ? userId : null
+
+    const pageSize = query.pageSize;
+
+    const pageOffSet = (query.pageNumber - 1) * query.pageSize;
+
+    const rawQuery = `
+    SELECT c."id", c."content", c."createdAt", c."userId",
+      (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id"::text) AS "userLogin",
+      (SELECT COUNT(*) FROM "statuses" AS s
+        WHERE c."id" = s."commentId" AND s."userStatus" = 'Like') AS "likesCount",
+      (SELECT COUNT(*) FROM "statuses" AS s
+        WHERE c."id" = s."commentId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
+      (SELECT s."userStatus" FROM "statuses" AS s
+        WHERE c."id" = s."commentId" AND s."userId" = $1) AS "myStatus"  
+    FROM "comments" AS c
+    WHERE c."postId" = $4
+    ORDER BY p."${query.sortBy}" ${query.sortDirection}
+    LIMIT $2
+    OFFSET $3`;
+
+    const parameters = [userId, pageSize, pageOffSet, postId];
+
+    try {
+      const totalCommentsArr = await this.dataSource
+          .query(`SELECT COUNT(*) FROM "comments"`)
+
+      const totalPosts = totalCommentsArr[0].count
+
+      const commentsArray = await this.dataSource.query(rawQuery, parameters)
+
+      return commentsSqlPaging(query, totalPosts, commentsArray)
+    }
+    catch (e) {
+      throw new InternalServerErrorException()
+    }
+  }
 }

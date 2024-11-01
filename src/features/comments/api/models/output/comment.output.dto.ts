@@ -2,6 +2,12 @@ import { CommentDocument } from '../../../domain/comment.schema';
 import { QueryDto } from '../../../../../infrastructure/models/query.dto';
 import { PostDocument } from '../../../../posts/domain/posts.schema';
 import {CommentsTable} from "../../../domain/comments.entity";
+import {PostQuery} from "../../../../posts/api/models/input/posts.input.dto";
+import {
+    postOutputModelFromSql,
+    PostsOutputDto,
+    PostsPaging
+} from "../../../../posts/api/models/output/posts.output.dto";
 
 export class CommentOutputDto {
   constructor(
@@ -122,3 +128,39 @@ export const commentOutputModelRawSql = (
         myStatus: comment[0].myStatus || 'None',
     }
 });
+
+export const commentsSqlPaging = (
+    query: QueryDto,
+    totalComments: number,
+    commentsArray: any[]
+) =>
+    new CommentsPagingDto(
+        Math.ceil(totalComments / +query.pageSize),
+        +query.pageNumber,
+        +query.pageSize,
+        +totalComments,
+        commentOutputModelFromSql(commentsArray)
+    );
+
+export function commentOutputModelFromSql(commentsArray): CommentOutputDto[] {
+    const resultArray: CommentOutputDto[] = [];
+
+    commentsArray.forEach(row =>
+            resultArray.push({
+                id: row.id,
+                content: row.content,
+                commentatorInfo: {
+                    userId: row.userId,
+                    userLogin: row.userLogin,
+                },
+                createdAt: row.createdAt.toISOString(),
+                likesInfo: {
+                    likesCount: row.likesCount ? Number(row.likesCount) : 0,
+                    dislikesCount: row.dislikesCount ? Number(row.dislikesCount) : 0,
+                    myStatus: row.myStatus ? row.myStatus : 'None',
+                }
+            })
+    )
+
+    return resultArray
+}
