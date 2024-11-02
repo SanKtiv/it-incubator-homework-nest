@@ -77,7 +77,7 @@ export class CommentsSqlQueryRepository {
 
     try {
       const totalCommentsArr = await this.dataSource
-          .query(`SELECT COUNT(*) FROM "comments"`)
+          .query(`SELECT COUNT(*) FROM "comments" WHERE "postId" = $1`, [postId])
 
       const totalPosts = totalCommentsArr[0].count
 
