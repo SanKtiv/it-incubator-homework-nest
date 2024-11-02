@@ -81,6 +81,8 @@ export class CommentsSqlQueryRepository {
 
       const totalPosts = totalCommentsArr[0].count
 
+      if (+totalPosts === 0) new NotFoundException()
+
       const commentsArray = await this.dataSource.query(rawQuery, parameters)
 
       return commentsSqlPaging(query, totalPosts, commentsArray)
