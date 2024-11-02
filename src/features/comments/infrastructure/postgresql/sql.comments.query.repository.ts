@@ -60,7 +60,7 @@ export class CommentsSqlQueryRepository {
 
     const rawQuery = `
     SELECT c."id", c."content", c."createdAt", c."userId",
-      (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id"::text) AS "userLogin",
+      (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id") AS "userLogin",
       (SELECT COUNT(*) FROM "statuses" AS s
         WHERE c."id" = s."commentId" AND s."userStatus" = 'Like') AS "likesCount",
       (SELECT COUNT(*) FROM "statuses" AS s
@@ -69,7 +69,7 @@ export class CommentsSqlQueryRepository {
         WHERE c."id" = s."commentId" AND s."userId" = $1) AS "myStatus"  
     FROM "comments" AS c
     WHERE c."postId" = $4
-    ORDER BY p."${query.sortBy}" ${query.sortDirection}
+    ORDER BY c."${query.sortBy}" ${query.sortDirection}
     LIMIT $2
     OFFSET $3`;
 
