@@ -123,15 +123,15 @@ export class PostsSqlQueryRepository {
     const parametersCount = blogId ? [blogId] : []
         
     try {
-      console.log('Try start')
+
       const totalPostsArr = await this.dataSource
           .query(rawQueryCount, parametersCount)
-      console.log('totalPostsArr')
+
       const totalPosts = totalPostsArr[0].count
 
       const postsPaging = await this.dataSource
           .query(rawQuery, parametersPaging)
-      console.log('postsPaging')
+      console.log('postsPaging =', postsPaging)
       return postsSqlPaging(query, totalPosts, postsPaging);
     }
     catch (e) {
