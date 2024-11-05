@@ -75,8 +75,8 @@ export class PostsSqlQueryRepository {
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
-    const rawQuery1 = `
-        SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
+    const rawQueryWithBlogId = `
+    SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
     FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
            (SELECT b."name" FROM "blogs" AS b WHERE p."blogId" = b."id"::text) AS "blogName",
            (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
@@ -93,23 +93,45 @@ export class PostsSqlQueryRepository {
       WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null
       ORDER BY s."addedAt" ASC) AS newestLikes ON newPost."id" = newestLikes."postId"`
 
-    const rawQuery2 = blogId ?
-        `SELECT COUNT(*) FROM "posts" WHERE p."blogId" = $1` :
+    const rawQueryAllPosts = `
+        SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
+    FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
+           (SELECT b."name" FROM "blogs" AS b WHERE p."blogId" = b."id"::text) AS "blogName",
+           (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
+           (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
+           (SELECT s."userStatus" FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userId" = $1) AS "myStatus" 
+       FROM "posts" AS p
+       ORDER BY p."${query.sortBy}" ${query.sortDirection}
+       LIMIT $2
+       OFFSET $3) AS newPost
+    LEFT JOIN
+      (SELECT s."addedAt", s."userId", s."postId", (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
+      FROM "statuses" AS s
+      WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null
+      ORDER BY s."addedAt" ASC) AS newestLikes ON newPost."id" = newestLikes."postId"`
+
+    const rawQueryCount = blogId ?
+        `SELECT COUNT(*) FROM "posts" WHERE "blogId" = $1` :
         `SELECT COUNT(*) FROM "posts"`
 
-    const parameters1 = [userId, pageSize, pageOffSet, blogId]
+    const rawQuery = blogId ? rawQueryWithBlogId : rawQueryAllPosts
 
-    const parameters2 = [blogId]
+    const parametersPaging = blogId ?
+        [userId, pageSize, pageOffSet, blogId] :
+        [userId, pageSize, pageOffSet]
+
+    const parametersCount = blogId ? [blogId] : []
         
     try {
+      console.log('Try start')
       const totalPostsArr = await this.dataSource
-          .query(rawQuery2, parameters2)
-
+          .query(rawQueryCount, parametersCount)
+      console.log('totalPostsArr')
       const totalPosts = totalPostsArr[0].count
 
       const postsPaging = await this.dataSource
-          .query(rawQuery1, parameters1)
-
+          .query(rawQuery, parametersPaging)
+      console.log('postsPaging')
       return postsSqlPaging(query, totalPosts, postsPaging);
     }
     catch (e) {
