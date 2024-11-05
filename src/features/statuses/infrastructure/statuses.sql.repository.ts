@@ -122,4 +122,14 @@ export class StatusesSqlRepository {
             throw new InternalServerErrorException()
         }
     }
+
+    async deleteAll () {
+        const rawQuery = `TRUNCATE "statuses"`
+
+        try {
+            await this.dataSource.query(rawQuery);
+        } catch (e) {
+            throw new InternalServerErrorException()
+        }
+    }
 }

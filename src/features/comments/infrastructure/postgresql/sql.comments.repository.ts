@@ -87,4 +87,14 @@ export class CommentsSqlRepository {
       throw new InternalServerErrorException()
     }
   }
+
+  async deleteAll() {
+    const rawQuery = `TRUNCATE "comments"`
+
+    try {
+      await this.dataSource.query(rawQuery);
+    } catch (e) {
+      throw new InternalServerErrorException()
+    }
+  }
 }
