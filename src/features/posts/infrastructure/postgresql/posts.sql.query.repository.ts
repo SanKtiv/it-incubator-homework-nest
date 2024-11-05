@@ -97,7 +97,7 @@ export class PostsSqlQueryRepository {
         
     try {
       const totalPostsArr = await this.dataSource
-          .query(`SELECT COUNT(*) FROM "posts" WHERE "blogId" = $1`, [blogId])
+          .query(`SELECT COUNT(*) FROM "posts" AS p WHERE p."blogId" = $1`, [blogId])
 
       const totalPosts = totalPostsArr[0].count
 
