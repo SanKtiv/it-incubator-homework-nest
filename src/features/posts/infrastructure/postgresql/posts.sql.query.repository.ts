@@ -71,6 +71,7 @@ export class PostsSqlQueryRepository {
       dto: { userId?: string | null; blogId?: string | null },
   ): Promise<PostsPaging> {
     const userId = dto.userId ? dto.userId : null
+    const blogId = dto.blogId ? dto.blogId : null
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
@@ -82,6 +83,7 @@ export class PostsSqlQueryRepository {
            (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
            (SELECT s."userStatus" FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userId" = $1) AS "myStatus" 
        FROM "posts" AS p
+       WHERE p."blogId" = $4
        ORDER BY p."${query.sortBy}" ${query.sortDirection}
        LIMIT $2
        OFFSET $3) AS newPost
@@ -91,11 +93,11 @@ export class PostsSqlQueryRepository {
       WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null
       ORDER BY s."addedAt" ASC) AS newestLikes ON newPost."id" = newestLikes."postId"`
 
-    const parameters = [userId, pageSize, pageOffSet]
+    const parameters = [userId, pageSize, pageOffSet, blogId]
         
     try {
       const totalPostsArr = await this.dataSource
-          .query(`SELECT COUNT(*) FROM "posts"`)
+          .query(`SELECT COUNT(*) FROM "posts" WHERE "blogId" = $1`, [blogId])
 
       const totalPosts = totalPostsArr[0].count
 
