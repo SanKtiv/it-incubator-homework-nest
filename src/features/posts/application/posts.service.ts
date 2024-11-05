@@ -1,22 +1,22 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
-import { PostsRepository } from '../infrastructure/mongodb/posts.repository';
+import {HttpException, Injectable, NotFoundException} from '@nestjs/common';
+import {PostsRepository} from '../infrastructure/mongodb/posts.repository';
 import {
-  PostLikeStatusDto,
-  PostsInputDto,
+    PostLikeStatusDto,
+    PostsInputDto,
 } from '../api/models/input/posts.input.dto';
-import { BlogsRepository } from '../../blogs/infrastructure/mongodb/blogs.repository';
+import {BlogsRepository} from '../../blogs/infrastructure/mongodb/blogs.repository';
 import {
     postOutputModelFromSql,
     PostsOutputDto,
     postsOutputDto,
     postsSqlOutputDto,
 } from '../api/models/output/posts.output.dto';
-import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
-import { BlogsService } from '../../blogs/application/blogs.service';
-import { PostsSqlRepository } from '../infrastructure/postgresql/posts.sql.repository';
-import { BlogsSqlRepository } from '../../blogs/infrastructure/postgresdb/blogs.sql.repository';
-import { PostsTable } from '../domain/posts.table';
-import { InputDto } from '../../../infrastructure/models/input.dto';
+import {UsersRepository} from '../../users/infrastructure/mongodb/users.repository';
+import {BlogsService} from '../../blogs/application/blogs.service';
+import {PostsSqlRepository} from '../infrastructure/postgresql/posts.sql.repository';
+import {BlogsSqlRepository} from '../../blogs/infrastructure/postgresdb/blogs.sql.repository';
+import {PostsTable} from '../domain/posts.table';
+import {InputDto} from '../../../infrastructure/models/input.dto';
 import {UsersSqlRepository} from "../../users/infrastructure/postgresqldb/users.sql.repository";
 import {StatusesSqlRepository} from "../../statuses/infrastructure/statuses.sql.repository";
 
