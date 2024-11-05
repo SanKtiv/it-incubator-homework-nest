@@ -212,12 +212,12 @@ export class AppModule implements NestModule {
     consumer
       .apply(TooManyRequestsMiddleware)
       .forRoutes(
-        '/auth/registration',
-        '/auth/login',
-        '/auth/password-recovery',
-        '/auth/new-password',
-        '/auth/registration-confirmation',
-        '/auth/registration-email-resending',
+        // '/auth/registration',
+        // '/auth/login',
+        // '/auth/password-recovery',
+        // '/auth/new-password',
+        // '/auth/registration-confirmation',
+        // '/auth/registration-email-resending',
       );
   }
 }
