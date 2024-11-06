@@ -108,7 +108,7 @@ export class PostsSqlQueryRepository {
       (SELECT s."addedAt", s."userId", s."postId", (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
       FROM "statuses" AS s
       WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null
-      ORDER BY s."addedAt" DESC) AS newestLikes ON newPost."id" = newestLikes."postId"`
+      ORDER BY s."addedAt" ASC) AS newestLikes ON newPost."id" = newestLikes."postId"`
 
     const rawQueryCount = blogId ?
         `SELECT COUNT(*) FROM "posts" WHERE "blogId" = $1` :
