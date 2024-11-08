@@ -14,14 +14,14 @@ export class PostsSqlRepository {
     return this.dataSource.getRepository(PostsTable);
   }
 
-  async create(inputDto: PostsInputDto, blogName: string): Promise<PostsTable> {
-    const postDocument = {
-      ...inputDto,
-      blogName: blogName,
-      createdAt: new Date(),
-    };
-    return this.repository.save(postDocument);
-  }
+  // async create(inputDto: PostsInputDto, blogName: string): Promise<PostsTable> {
+  //   const postDocument = {
+  //     ...inputDto,
+  //     blogName: blogName,
+  //     createdAt: new Date(),
+  //   };
+  //   return this.repository.save(postDocument);
+  // }
 
   async createRaw(dto: PostsInputDto) {
     const rawQuery = `

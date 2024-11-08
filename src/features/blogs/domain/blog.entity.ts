@@ -34,6 +34,7 @@ export class ForBlogsTable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+
   @Column('character varying')
   name: string;
 }

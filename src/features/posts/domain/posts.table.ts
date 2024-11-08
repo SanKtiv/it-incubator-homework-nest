@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {BlogsTable} from "../../blogs/domain/blog.entity";
 
 @Entity('posts')
 export class PostsTable {
@@ -14,19 +15,13 @@ export class PostsTable {
   @Column('character varying')
   content: string;
 
-  @Column('character varying')
-  blogId: string;
+  @ManyToOne(() => BlogsTable)
+  @JoinColumn()
+  blogId: BlogsTable;
 
   // @Column('character varying')
-  // blogName: string;
+  // blogId: string;
 
   @Column('timestamp with time zone')
   createdAt: Date;
-
-  // @Column({type: "int", default: 0})
-  // likesCount: number;
-  //
-  // @Column({type: "int", default: 0})
-  // dislikesCount: number;
-
 }

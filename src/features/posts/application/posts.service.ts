@@ -67,7 +67,7 @@ export class PostsService {
         // if (!postDocument) throw new NotFoundException();
         const post = await this.existPost(postId);
 
-        if (post.blogId !== blogId) throw new NotFoundException();
+        if (post.blogId.id !== blogId) throw new NotFoundException();
 
         Object.assign(post, UpdateDto);
 
@@ -177,7 +177,7 @@ export class PostsService {
     async deletePostByIdForBlog(postId: string, blogId: string,): Promise<void | HttpException> {
         const post = await this.existPost(postId);
 
-        if (post.blogId !== blogId) throw new NotFoundException();
+        if (post.blogId.id !== blogId) throw new NotFoundException();
 
         await this.postsSqlRepository.deletePost(post);
     }
