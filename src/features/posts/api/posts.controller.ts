@@ -4,7 +4,7 @@ import {
     Delete,
     Get,
     HttpCode,
-    HttpException,
+    HttpException, NotFoundException,
     Param,
     Post,
     Put,
@@ -64,16 +64,10 @@ export class PostController {
         @Param('postId', paramIdIsMongoIdPipe) id: string,
         @Req() req: Request,
     ): Promise<PostsOutputDto> {
-        const headerToken = req.headers.authorization;
+        const userId = await this.accessJwtToken
+            .getUserIdFromHeaders(req.headers.authorization);
 
-        if (!headerToken) return this.postsSqlQueryRepository.findById(id);
-
-        const accessJwtToken = headerToken.split(' ')[1];
-        const payload = await this.accessJwtToken.verify(accessJwtToken);
-
-        if (!payload) return this.postsSqlQueryRepository.findById(id);
-
-        return this.postsSqlQueryRepository.findById(id, payload.sub);
+        return this.postsSqlQueryRepository.findById(id, userId);
     }
 
     @Put(':postId/like-status')
@@ -108,17 +102,12 @@ export class PostController {
         @Query() query: PostQuery,
         @Req() req: Request,
     ): Promise<PostsPaging> {
-        const headerToken = req.headers.authorization;
-        const dto: { userId?: string; blogId?: string } = {};
+        const userId = await this.accessJwtToken
+            .getUserIdFromHeaders(req.headers.authorization);
 
-        if (!headerToken) return this.postsSqlQueryRepository.findPaging(query, dto);
+        const dto: { userId?: string | null; blogId?: string | null } = {};
 
-        const accessJwtToken = headerToken.split(' ')[1];
-        const payload = await this.accessJwtToken.verify(accessJwtToken);
-
-        if (!payload) return this.postsQueryRepository.findPaging(query, dto);
-
-        dto.userId = payload.sub;
+        dto.userId = userId;
 
         return this.postsSqlQueryRepository.findPaging(query, dto);
     }
@@ -129,20 +118,18 @@ export class PostController {
         @Query() query: QueryDto,
         @Req() req: Request,
     ) {
-        await this.postsService.existPost(postId)
+        const count = await this.postsSqlQueryRepository.countById(postId)
 
-        const headerToken = req.headers.authorization;
+        if (count === 0) throw new NotFoundException()
 
-        if (!headerToken)
-            return this.commentsSqlQueryRepository.findPaging(postId, query);
+        const dto: {id?: string | null, userId?: string | null} = {}
 
-        const accessJwtToken = headerToken.split(' ')[1];
+        dto.id = postId
 
-        const payload = await this.accessJwtToken.verify(accessJwtToken);
+        dto.userId = await this.accessJwtToken
+            .getUserIdFromHeaders(req.headers.authorization)
 
-        if (!payload) return this.commentsSqlQueryRepository.findPaging(postId, query);
-
-        return this.commentsSqlQueryRepository.findPaging(postId, query, payload.sub);
+        return this.commentsSqlQueryRepository.findPaging(query, dto);
     }
 
     @Put(':postId')

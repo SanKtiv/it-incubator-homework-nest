@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, InternalServerErrorException} from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BlogsTable, ForBlogsTable } from '../../domain/blog.entity';
@@ -75,6 +75,7 @@ export class BlogsSqlRepository {
   }
 
   async create(dto): Promise<BlogsTable> {
+    console.log('Create Blog')
     const query = `
     INSERT INTO public."blogs" ("name", "description", "websiteUrl", "createdAt")
     VALUES ($1, $2, $3, $4)
@@ -105,6 +106,19 @@ export class BlogsSqlRepository {
       return foundBlogArray[0]
     } catch (e) {
       throw new Error('Error finding blog by blogId');
+    }
+  }
+
+  async countById(id: string) {
+    const queryRaw = `SELECT COUNT (*) FROM "blogs" WHERE "id" = $1`
+
+    try {
+      const countBlogs = await this.dataSource
+          .query(queryRaw, [id]);
+
+      return countBlogs[0].count
+    } catch (e) {
+      throw new InternalServerErrorException();
     }
   }
 

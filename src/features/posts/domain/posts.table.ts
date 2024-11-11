@@ -16,11 +16,8 @@ export class PostsTable {
   content: string;
 
   @ManyToOne(() => BlogsTable)
-  @JoinColumn()
+  @JoinColumn({ name: 'blogId' })
   blogId: BlogsTable;
-
-  // @Column('character varying')
-  // blogId: string;
 
   @Column('timestamp with time zone')
   createdAt: Date;

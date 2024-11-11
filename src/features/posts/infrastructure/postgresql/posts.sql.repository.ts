@@ -31,6 +31,7 @@ export class PostsSqlRepository {
     RETURNING p."id", p."title", p."shortDescription", p."content", p."blogId", p."createdAt",
       (SELECT "name" FROM "bName") AS "blogName"`
 
+
     const parameters = [
       dto.title,
       dto.shortDescription,

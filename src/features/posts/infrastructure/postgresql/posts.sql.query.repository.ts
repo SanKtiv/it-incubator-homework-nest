@@ -23,6 +23,19 @@ export class PostsSqlQueryRepository {
     return this.dataSource.getRepository(PostsTable);
   }
 
+  async countById(postId: string) {
+    const rawQuery = `SELECT COUNT (*) FROM "posts" WHERE "id" = $1`
+
+    try {
+      const countPostsArray = await this.dataSource
+          .query(rawQuery, [postId])
+
+      return countPostsArray[0].count
+    }catch (e) {
+      throw new InternalServerErrorException()
+    }
+  }
+
   async findById(id: string, userId?: string | null): Promise<PostsOutputDto> {
     // const postDocument = await this.repository.findOneBy({ id: id });
 
@@ -127,7 +140,6 @@ export class PostsSqlQueryRepository {
     const parametersCount = blogId ? [blogId] : []
         
     try {
-
       const totalPostsArr = await this.dataSource
           .query(rawQueryCount, parametersCount)
 
@@ -135,7 +147,7 @@ export class PostsSqlQueryRepository {
 
       const postsPaging = await this.dataSource
           .query(rawQuery, parametersPaging)
-      console.log('postsPaging =', postsPaging)
+
       return postsSqlPaging(query, totalPosts, postsPaging);
     }
     catch (e) {

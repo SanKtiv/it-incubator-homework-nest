@@ -54,12 +54,12 @@ export class SaBlogsController {
     private readonly commentsSqlRepository: CommentsSqlRepository,
   ) {}
 
-  @Get('/blogs')
-  async createBlogInSql() {
-
-    await this.commentsSqlRepository
-        .updateById('0208b79e-85ba-465c-b9c7-f776abeff611', 'Hello')
-  }
+  // @Get('/blogs')
+  // async createBlogInSql() {
+  //
+  //   await this.commentsSqlRepository
+  //       .updateById('0208b79e-85ba-465c-b9c7-f776abeff611', 'Hello')
+  // }
 
   @Post()
   async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {
@@ -71,12 +71,12 @@ export class SaBlogsController {
     @Param('blogId', paramIdIsMongoIdPipe) id: string,
     @Body() dto: InputDto,
   ) {
-    const serviceDto: PostsInputDto = {
+    const postsInputDto: PostsInputDto = {
       ...dto,
       blogId: id,
     };
 
-    return this.postsService.createPost(serviceDto);
+    return this.postsService.createPost(postsInputDto);
   }
 
   @Get()
@@ -100,18 +100,6 @@ export class SaBlogsController {
     await this.blogsSqlQueryRepository.findById(blogId);
 
     const dto: { userId?: string; blogId?: string } = { blogId: blogId };
-
-    // const headerToken = req.headers.authorization;
-    //
-    // if (!headerToken) return this.postsQueryRepository.findPaging(query, dto);
-    //
-    // const accessJwtToken = headerToken.split(' ')[1];
-    //
-    // const payload = await this.accessJwtToken.verify(accessJwtToken);
-    //
-    // if (!payload) return this.postsQueryRepository.findPaging(query, dto);
-    //
-    // dto.userId = payload.sub;
 
     return this.postsSqlQueryRepository.findPaging(query, dto);
   }

@@ -48,14 +48,12 @@ export class CommentsSqlQueryRepository {
   // }
 
   async findPaging(
-    postId: string,
     query: QueryDto,
-    userId?: string | null,
+    dto: { id?: string | null, userId?: string | null}
   ): Promise<CommentsPagingDto> {
-    userId = userId ? userId : null
-
+    const userId = dto.userId ? dto.userId : null;
+    const postId = dto.id ? dto.id : null;
     const pageSize = query.pageSize;
-
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
     const rawQuery = `
