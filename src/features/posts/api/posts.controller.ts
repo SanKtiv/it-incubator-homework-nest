@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
   NotFoundException,
   Param,
   Post,
@@ -25,10 +24,7 @@ import { PostsQueryRepository } from '../infrastructure/mongodb/posts.query.repo
 import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { CommentInputDto } from '../../comments/api/models/input/comment.input.dto';
 import { CommentsService } from '../../comments/application/comments.service';
-import {
-  CommentOutputDto,
-  commentsPagingDto,
-} from '../../comments/api/models/output/comment.output.dto';
+import { CommentOutputDto } from '../../comments/api/models/output/comment.output.dto';
 import { CommentsQueryRepository } from '../../comments/infrastructure/mongodb/comments.query.repository';
 import { QueryDto } from '../../../infrastructure/models/query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
