@@ -13,7 +13,6 @@ export class BasicStrategy extends PassportStrategy(Strategy) {
       process.env.SUPER_USER_NAME === username &&
       process.env.SUPER_USER_PASS === password
     ) {
-
       return { sub: username };
       //return true;
     }

@@ -1,4 +1,4 @@
-import {Injectable, InternalServerErrorException} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument, PostModelType } from '../../domain/posts.schema';
 import { PostsInputDto } from '../../api/models/input/posts.input.dto';
@@ -29,22 +29,20 @@ export class PostsSqlRepository {
     INSERT INTO "posts" AS p ("title", "shortDescription", "content", "blogId", "createdAt")
     VALUES ($1, $2, $3, $4, $5)
     RETURNING p."id", p."title", p."shortDescription", p."content", p."blogId", p."createdAt",
-      (SELECT "name" FROM "bName") AS "blogName"`
-
+      (SELECT "name" FROM "bName") AS "blogName"`;
 
     const parameters = [
       dto.title,
       dto.shortDescription,
       dto.content,
       dto.blogId,
-      new Date()
-    ]
+      new Date(),
+    ];
 
     try {
-      return await this.dataSource.query(rawQuery, parameters)
-
+      return await this.dataSource.query(rawQuery, parameters);
     } catch (e) {
-      throw new InternalServerErrorException()
+      throw new InternalServerErrorException();
     }
   }
 
@@ -52,9 +50,7 @@ export class PostsSqlRepository {
     return this.repository.findOneBy({ id: id });
   }
 
-  async deleteById(id: string) {
-
-  }
+  async deleteById(id: string) {}
 
   async savePost(postDocument: PostsTable): Promise<PostsTable> {
     return this.repository.save(postDocument);

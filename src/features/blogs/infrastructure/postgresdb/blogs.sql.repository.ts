@@ -1,4 +1,4 @@
-import {Injectable, InternalServerErrorException} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BlogsTable, ForBlogsTable } from '../../domain/blog.entity';
@@ -75,48 +75,41 @@ export class BlogsSqlRepository {
   }
 
   async create(dto): Promise<BlogsTable> {
-    console.log('Create Blog')
+    console.log('Create Blog');
     const query = `
     INSERT INTO public."blogs" ("name", "description", "websiteUrl", "createdAt")
     VALUES ($1, $2, $3, $4)
     RETURNING *;`;
 
-    const queryParams = [
-      dto.name,
-      dto.description,
-      dto.websiteUrl, new Date()
-    ]
+    const queryParams = [dto.name, dto.description, dto.websiteUrl, new Date()];
 
-    const createdRowsArray = await this.dataSource
-        .query(query, queryParams);
+    const createdRowsArray = await this.dataSource.query(query, queryParams);
 
-    return createdRowsArray[0]
+    return createdRowsArray[0];
   }
 
   async findById(id: string): Promise<BlogsTable | null> {
     const query = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM "blogs" AS b
-    WHERE b."id" = $1;`
+    WHERE b."id" = $1;`;
 
     try {
-      const foundBlogArray = await this.dataSource
-          .query(query, [id]);
+      const foundBlogArray = await this.dataSource.query(query, [id]);
 
-      return foundBlogArray[0]
+      return foundBlogArray[0];
     } catch (e) {
       throw new Error('Error finding blog by blogId');
     }
   }
 
   async countById(id: string) {
-    const queryRaw = `SELECT COUNT (*) FROM "blogs" WHERE "id" = $1`
+    const queryRaw = `SELECT COUNT (*) FROM "blogs" WHERE "id" = $1`;
 
     try {
-      const countBlogs = await this.dataSource
-          .query(queryRaw, [id]);
+      const countBlogs = await this.dataSource.query(queryRaw, [id]);
 
-      return countBlogs[0].count
+      return countBlogs[0].count;
     } catch (e) {
       throw new InternalServerErrorException();
     }
@@ -126,11 +119,10 @@ export class BlogsSqlRepository {
     const query = `
     DELETE FROM "blogs" AS b
     WHERE b."id" = $1
-    RETURNING *`
+    RETURNING *`;
 
     try {
-      const deletedBlogArray = await this.dataSource
-          .query(query, [blog.id]);
+      const deletedBlogArray = await this.dataSource.query(query, [blog.id]);
 
       return deletedBlogArray[0];
     } catch (e) {

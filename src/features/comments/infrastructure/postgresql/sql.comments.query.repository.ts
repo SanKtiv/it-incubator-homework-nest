@@ -1,4 +1,8 @@
-import {Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Comment,
@@ -8,20 +12,23 @@ import {
 import { QueryDto } from '../../../../infrastructure/models/query.dto';
 import {
   CommentOutputDto,
-  commentOutputDto, commentOutputModelRawSql,
+  commentOutputDto,
+  commentOutputModelRawSql,
   CommentsPagingDto,
-  commentsPagingDto, commentsSqlPaging,
+  commentsPagingDto,
+  commentsSqlPaging,
 } from '../../api/models/output/comment.output.dto';
-import {InjectDataSource} from "@nestjs/typeorm";
-import {DataSource} from "typeorm";
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class CommentsSqlQueryRepository {
-  constructor(
-    @InjectDataSource() private dataSource: DataSource,
-  ) {}
+  constructor(@InjectDataSource() private dataSource: DataSource) {}
 
-  async findById(id: string, userId?: string | null): Promise<CommentOutputDto> {
+  async findById(
+    id: string,
+    userId?: string | null,
+  ): Promise<CommentOutputDto> {
     const rawQuery = `
     SELECT c."id", c."content", c."createdAt", c."userId",
       (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id") AS "userLogin",
@@ -32,9 +39,9 @@ export class CommentsSqlQueryRepository {
       (SELECT s."userStatus" FROM "statuses" AS s
         WHERE c."id" = s."commentId" AND s."userId" = $2) AS "myStatus"  
     FROM "comments" AS c
-    WHERE c."id" = $1`
+    WHERE c."id" = $1`;
 
-    const parameters = [id, userId]
+    const parameters = [id, userId];
 
     const commentDocument = await this.dataSource.query(rawQuery, parameters);
 
@@ -49,7 +56,7 @@ export class CommentsSqlQueryRepository {
 
   async findPaging(
     query: QueryDto,
-    dto: { id?: string | null, userId?: string | null}
+    dto: { id?: string | null; userId?: string | null },
   ): Promise<CommentsPagingDto> {
     const userId = dto.userId ? dto.userId : null;
     const postId = dto.id ? dto.id : null;
@@ -74,17 +81,18 @@ export class CommentsSqlQueryRepository {
     const parameters = [userId, pageSize, pageOffSet, postId];
 
     try {
-      const totalCommentsArr = await this.dataSource
-          .query(`SELECT COUNT(*) FROM "comments" WHERE "postId" = $1`, [postId])
+      const totalCommentsArr = await this.dataSource.query(
+        `SELECT COUNT(*) FROM "comments" WHERE "postId" = $1`,
+        [postId],
+      );
 
-      const totalPosts = totalCommentsArr[0].count
+      const totalPosts = totalCommentsArr[0].count;
 
-      const commentsArray = await this.dataSource.query(rawQuery, parameters)
+      const commentsArray = await this.dataSource.query(rawQuery, parameters);
 
-      return commentsSqlPaging(query, totalPosts, commentsArray)
-    }
-    catch (e) {
-      throw new InternalServerErrorException()
+      return commentsSqlPaging(query, totalPosts, commentsArray);
+    } catch (e) {
+      throw new InternalServerErrorException();
     }
   }
 }

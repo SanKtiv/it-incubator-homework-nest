@@ -73,11 +73,11 @@ import { PostsTable } from './features/posts/domain/posts.table';
 import { SaBlogsController } from './features/blogs/api/sa.blogscontroller';
 import { PostsSqlRepository } from './features/posts/infrastructure/postgresql/posts.sql.repository';
 import { PostsSqlQueryRepository } from './features/posts/infrastructure/postgresql/posts.sql.query.repository';
-import {CommentsTable} from "./features/comments/domain/comments.entity";
-import {CommentsSqlRepository} from "./features/comments/infrastructure/postgresql/sql.comments.repository";
-import {CommentsSqlQueryRepository} from "./features/comments/infrastructure/postgresql/sql.comments.query.repository";
-import {StatusesTable} from "./features/statuses/domain/statuses.entity";
-import {StatusesSqlRepository} from "./features/statuses/infrastructure/statuses.sql.repository";
+import { CommentsTable } from './features/comments/domain/comments.entity';
+import { CommentsSqlRepository } from './features/comments/infrastructure/postgresql/sql.comments.repository';
+import { CommentsSqlQueryRepository } from './features/comments/infrastructure/postgresql/sql.comments.query.repository';
+import { StatusesTable } from './features/statuses/domain/statuses.entity';
+import { StatusesSqlRepository } from './features/statuses/infrastructure/statuses.sql.repository';
 
 dotenv.config();
 
@@ -114,7 +114,7 @@ const repositories = [
   UsersSqlQueryRepository,
   DevicesSqlRepository,
   RequestApiSqlRepository,
-  StatusesSqlRepository
+  StatusesSqlRepository,
 ];
 
 const strategies = [
@@ -151,7 +151,7 @@ const strategies = [
         UsersTable,
         ForBlogsTable,
         CommentsTable,
-        StatusesTable
+        StatusesTable,
       ],
       ssl: true,
       //autoLoadEntities: false,
@@ -165,7 +165,7 @@ const strategies = [
       UsersTable,
       ForBlogsTable,
       CommentsTable,
-      StatusesTable
+      StatusesTable,
     ]),
     MongooseModule.forRoot(
       appSettings.env.isTesting()
@@ -211,13 +211,13 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(TooManyRequestsMiddleware)
-      .forRoutes(
-        // '/auth/registration',
-        // '/auth/login',
-        // '/auth/password-recovery',
-        // '/auth/new-password',
-        // '/auth/registration-confirmation',
-        // '/auth/registration-email-resending',
-      );
+      .forRoutes
+      // '/auth/registration',
+      // '/auth/login',
+      // '/auth/password-recovery',
+      // '/auth/new-password',
+      // '/auth/registration-confirmation',
+      // '/auth/registration-email-resending',
+      ();
   }
 }

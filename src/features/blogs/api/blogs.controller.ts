@@ -36,8 +36,8 @@ import { DevicesSqlRepository } from '../../security/infrastructure/devices.sql.
 import { RequestApiSqlRepository } from '../../requests/infrastructure/request.sql.repository';
 import { BlogsSqlQueryRepository } from '../infrastructure/postgresdb/blogs.sql.query.repository';
 import { PostsSqlQueryRepository } from '../../posts/infrastructure/postgresql/posts.sql.query.repository';
-import {StatusesSqlRepository} from "../../statuses/infrastructure/statuses.sql.repository";
-import {CommentsSqlRepository} from "../../comments/infrastructure/postgresql/sql.comments.repository";
+import { StatusesSqlRepository } from '../../statuses/infrastructure/statuses.sql.repository';
+import { CommentsSqlRepository } from '../../comments/infrastructure/postgresql/sql.comments.repository';
 
 @Controller('blogs')
 export class BlogsController {
@@ -103,10 +103,11 @@ export class BlogsController {
 
     const dto: { userId?: string; blogId?: string } = { blogId: blogId };
 
-    const userId = await this.accessJwtToken
-        .getUserIdFromHeaders(req.headers.authorization)
+    const userId = await this.accessJwtToken.getUserIdFromHeaders(
+      req.headers.authorization,
+    );
 
-    if (userId) dto.userId = userId
+    if (userId) dto.userId = userId;
 
     return this.postsSqlQueryRepository.findPaging(query, dto);
   }

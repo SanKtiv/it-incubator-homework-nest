@@ -1,4 +1,8 @@
-import {Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostModelType } from '../../domain/posts.schema';
 import { PostQuery } from '../../api/models/input/posts.input.dto';
@@ -24,23 +28,22 @@ export class PostsSqlQueryRepository {
   }
 
   async countById(postId: string) {
-    const rawQuery = `SELECT COUNT (*) FROM "posts" WHERE "id" = $1`
+    const rawQuery = `SELECT COUNT (*) FROM "posts" WHERE "id" = $1`;
 
     try {
-      const countPostsArray = await this.dataSource
-          .query(rawQuery, [postId])
+      const countPostsArray = await this.dataSource.query(rawQuery, [postId]);
 
-      return countPostsArray[0].count
-    }catch (e) {
-      throw new InternalServerErrorException()
+      return countPostsArray[0].count;
+    } catch (e) {
+      throw new InternalServerErrorException();
     }
   }
 
   async findById(id: string, userId?: string | null): Promise<PostsOutputDto> {
     // const postDocument = await this.repository.findOneBy({ id: id });
 
-    if (!userId) userId = null
-    const parameters = [id, userId]
+    if (!userId) userId = null;
+    const parameters = [id, userId];
 
     const rawQuery = `
     SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
@@ -65,26 +68,25 @@ export class PostsSqlQueryRepository {
     FROM "statuses" AS s
     WHERE s."userStatus" = 'Like' AND s."postId" = $1
     ORDER BY s."addedAt" desc
-    LIMIT 3) AS newestLikes ON newPost."id" = newestLikes."postId"`
+    LIMIT 3) AS newestLikes ON newPost."id" = newestLikes."postId"`;
 
     try {
-      const postDocument = await this.dataSource.query(rawQuery, parameters)
+      const postDocument = await this.dataSource.query(rawQuery, parameters);
 
       if (postDocument.length === 0) throw new NotFoundException();
 
       return postOutputModelFromSql(postDocument)[0];
-    }
-    catch (e) {
-      throw new InternalServerErrorException()
+    } catch (e) {
+      throw new InternalServerErrorException();
     }
   }
 
   async findPaging(
-      query: PostQuery,
-      dto: { userId?: string | null; blogId?: string | null },
+    query: PostQuery,
+    dto: { userId?: string | null; blogId?: string | null },
   ): Promise<PostsPaging> {
-    const userId = dto.userId ? dto.userId : null
-    const blogId = dto.blogId ? dto.blogId : null
+    const userId = dto.userId ? dto.userId : null;
+    const blogId = dto.blogId ? dto.blogId : null;
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
@@ -106,7 +108,7 @@ export class PostsSqlQueryRepository {
       ROW_NUMBER() OVER (PARTITION BY s."postId" ORDER BY s."addedAt" DESC) AS "rowNumber"
       FROM "statuses" AS s
       WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null)
-      WHERE "rowNumber" <= 3) AS newestLikes ON newPost."id" = newestLikes."postId"`
+      WHERE "rowNumber" <= 3) AS newestLikes ON newPost."id" = newestLikes."postId"`;
 
     const rawQueryAllPosts = `
         SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
@@ -125,33 +127,36 @@ export class PostsSqlQueryRepository {
       ROW_NUMBER() OVER (PARTITION BY s."postId" ORDER BY s."addedAt" DESC) AS "rowNumber"
       FROM "statuses" AS s
       WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null)
-      WHERE "rowNumber" <= 3) AS newestLikes ON newPost."id" = newestLikes."postId"`
+      WHERE "rowNumber" <= 3) AS newestLikes ON newPost."id" = newestLikes."postId"`;
 
-    const rawQueryCount = blogId ?
-        `SELECT COUNT(*) FROM "posts" WHERE "blogId" = $1` :
-        `SELECT COUNT(*) FROM "posts"`
+    const rawQueryCount = blogId
+      ? `SELECT COUNT(*) FROM "posts" WHERE "blogId" = $1`
+      : `SELECT COUNT(*) FROM "posts"`;
 
-    const rawQuery = blogId ? rawQueryWithBlogId : rawQueryAllPosts
+    const rawQuery = blogId ? rawQueryWithBlogId : rawQueryAllPosts;
 
-    const parametersPaging = blogId ?
-        [userId, pageSize, pageOffSet, blogId] :
-        [userId, pageSize, pageOffSet]
+    const parametersPaging = blogId
+      ? [userId, pageSize, pageOffSet, blogId]
+      : [userId, pageSize, pageOffSet];
 
-    const parametersCount = blogId ? [blogId] : []
-        
+    const parametersCount = blogId ? [blogId] : [];
+
     try {
-      const totalPostsArr = await this.dataSource
-          .query(rawQueryCount, parametersCount)
+      const totalPostsArr = await this.dataSource.query(
+        rawQueryCount,
+        parametersCount,
+      );
 
-      const totalPosts = totalPostsArr[0].count
+      const totalPosts = totalPostsArr[0].count;
 
-      const postsPaging = await this.dataSource
-          .query(rawQuery, parametersPaging)
+      const postsPaging = await this.dataSource.query(
+        rawQuery,
+        parametersPaging,
+      );
 
       return postsSqlPaging(query, totalPosts, postsPaging);
-    }
-    catch (e) {
-      throw new InternalServerErrorException()
+    } catch (e) {
+      throw new InternalServerErrorException();
     }
   }
 

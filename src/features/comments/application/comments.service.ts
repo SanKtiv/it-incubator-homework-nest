@@ -8,16 +8,17 @@ import { PostsRepository } from '../../posts/infrastructure/mongodb/posts.reposi
 import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
 import {
   CommentOutputDto,
-  commentOutputDto, sqlCommentOutputDto,
+  commentOutputDto,
+  sqlCommentOutputDto,
 } from '../api/models/output/comment.output.dto';
 import { CommentServiceDto } from '../api/models/input/comment-service.dto';
 import { CommentInputDto } from '../api/models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
 import { CommentDocument } from '../domain/comment.schema';
 import { PostsService } from '../../posts/application/posts.service';
-import {UsersSqlRepository} from "../../users/infrastructure/postgresqldb/users.sql.repository";
-import {CommentsSqlRepository} from "../infrastructure/postgresql/sql.comments.repository";
-import {StatusesSqlRepository} from "../../statuses/infrastructure/statuses.sql.repository";
+import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
+import { CommentsSqlRepository } from '../infrastructure/postgresql/sql.comments.repository';
+import { StatusesSqlRepository } from '../../statuses/infrastructure/statuses.sql.repository';
 
 @Injectable()
 export class CommentsService {
@@ -49,7 +50,7 @@ export class CommentsService {
 
     if (commentDocument.userId !== userId) throw new ForbiddenException();
 
-    await this.commentsSqlRepository.updateById(id, dto.content)
+    await this.commentsSqlRepository.updateById(id, dto.content);
     // commentDocument.content = dto.content;
     //
     // await this.commentsRepository.save(commentDocument);
@@ -63,22 +64,34 @@ export class CommentsService {
     await this.commentsSqlRepository.deleteById(id);
   }
 
-  async createStatusOfComment(id: string, userId: string, dto: PostLikeStatusDto) {
-    await this.existComment(id)
+  async createStatusOfComment(
+    id: string,
+    userId: string,
+    dto: PostLikeStatusDto,
+  ) {
+    await this.existComment(id);
 
     const newStatus = dto.likeStatus;
 
-    const currentStatus = await this.statusesSqlRepository
-        .getStatusOfComment(userId, id);
+    const currentStatus = await this.statusesSqlRepository.getStatusOfComment(
+      userId,
+      id,
+    );
 
     if (!currentStatus) {
       if (newStatus === 'None') return;
 
-      await this.statusesSqlRepository
-          .insertStatusOfComment(userId, id, newStatus);
+      await this.statusesSqlRepository.insertStatusOfComment(
+        userId,
+        id,
+        newStatus,
+      );
     }
-    await this.statusesSqlRepository
-        .updateStatusForComment(userId, id, newStatus);
+    await this.statusesSqlRepository.updateStatusForComment(
+      userId,
+      id,
+      newStatus,
+    );
   }
 
   async existComment(id: string): Promise<CommentDocument> {

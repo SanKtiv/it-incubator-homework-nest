@@ -1,13 +1,13 @@
 import { CommentDocument } from '../../../domain/comment.schema';
 import { QueryDto } from '../../../../../infrastructure/models/query.dto';
 import { PostDocument } from '../../../../posts/domain/posts.schema';
-import {CommentsTable} from "../../../domain/comments.entity";
-import {PostQuery} from "../../../../posts/api/models/input/posts.input.dto";
+import { CommentsTable } from '../../../domain/comments.entity';
+import { PostQuery } from '../../../../posts/api/models/input/posts.input.dto';
 import {
-    postOutputModelFromSql,
-    PostsOutputDto,
-    PostsPaging
-} from "../../../../posts/api/models/output/posts.output.dto";
+  postOutputModelFromSql,
+  PostsOutputDto,
+  PostsPaging,
+} from '../../../../posts/api/models/output/posts.output.dto';
 
 export class CommentOutputDto {
   constructor(
@@ -58,24 +58,24 @@ export const commentOutputDto = (
   );
 
 export const sqlCommentOutputDto = (
-    commentDocument: CommentsTable,
-    userId?: string,
-) => (
-    {
-        id: commentDocument.id,
-        content: commentDocument.content,
-        createdAt: commentDocument.createdAt.toISOString(),
-        commentatorInfo: {
-            userId: commentDocument.userId,
-            userLogin: commentDocument.userLogin
-        },
-        likesInfo: {
-            likesCount: commentDocument.likesCount ? commentDocument.likesCount : 0,
-            dislikesCount: commentDocument.dislikesCount ? commentDocument.dislikesCount: 0,
-            myStatus: 'None',
-        }
-    }
-);
+  commentDocument: CommentsTable,
+  userId?: string,
+) => ({
+  id: commentDocument.id,
+  content: commentDocument.content,
+  createdAt: commentDocument.createdAt.toISOString(),
+  commentatorInfo: {
+    userId: commentDocument.userId,
+    userLogin: commentDocument.userLogin,
+  },
+  likesInfo: {
+    likesCount: commentDocument.likesCount ? commentDocument.likesCount : 0,
+    dislikesCount: commentDocument.dislikesCount
+      ? commentDocument.dislikesCount
+      : 0,
+    myStatus: 'None',
+  },
+});
 
 export class CommentsPagingDto {
   constructor(
@@ -102,65 +102,65 @@ export const commentsPagingDto = (
   );
 
 export class CommentOutputSqlModel {
-    public id: string
-    public content: string
-    public createdAt: Date
-    public userId: string
-    public userLogin: string
-    public likesCount: number
-    public dislikesCount: number
-    public myStatus: string
+  public id: string;
+  public content: string;
+  public createdAt: Date;
+  public userId: string;
+  public userLogin: string;
+  public likesCount: number;
+  public dislikesCount: number;
+  public myStatus: string;
 }
 
-export const commentOutputModelRawSql = (
-    comment: any[]
-): CommentOutputDto => ({
-    id: comment[0].id,
-    content: comment[0].content,
-    createdAt: comment[0].createdAt.toISOString(),
-    commentatorInfo: {
-        userId: comment[0].userId,
-        userLogin: comment[0].userLogin
-    },
-    likesInfo: {
-        likesCount: comment[0].likesCount ? Number(comment[0].likesCount) : 0,
-        dislikesCount: comment[0].dislikesCount ? Number(comment[0].dislikesCount) : 0,
-        myStatus: comment[0].myStatus || 'None',
-    }
+export const commentOutputModelRawSql = (comment: any[]): CommentOutputDto => ({
+  id: comment[0].id,
+  content: comment[0].content,
+  createdAt: comment[0].createdAt.toISOString(),
+  commentatorInfo: {
+    userId: comment[0].userId,
+    userLogin: comment[0].userLogin,
+  },
+  likesInfo: {
+    likesCount: comment[0].likesCount ? Number(comment[0].likesCount) : 0,
+    dislikesCount: comment[0].dislikesCount
+      ? Number(comment[0].dislikesCount)
+      : 0,
+    myStatus: comment[0].myStatus || 'None',
+  },
 });
 
 export const commentsSqlPaging = (
-    query: QueryDto,
-    totalComments: number,
-    commentsArray: any[]
+  query: QueryDto,
+  totalComments: number,
+  commentsArray: any[],
 ) =>
-    new CommentsPagingDto(
-        Math.ceil(totalComments / +query.pageSize),
-        +query.pageNumber,
-        +query.pageSize,
-        +totalComments,
-        commentOutputModelFromSql(commentsArray)
-    );
+  new CommentsPagingDto(
+    Math.ceil(totalComments / +query.pageSize),
+    +query.pageNumber,
+    +query.pageSize,
+    +totalComments,
+    commentOutputModelFromSql(commentsArray),
+  );
 
 export function commentOutputModelFromSql(commentsArray): CommentOutputDto[] {
-    const resultArray: CommentOutputDto[] = [];
+  const resultArray: CommentOutputDto[] = [];
 
-    commentsArray.forEach(row =>
-            resultArray.push({
-                id: row.id,
-                content: row.content,
-                commentatorInfo: {
-                    userId: row.userId,
-                    userLogin: row.userLogin,
-                },
-                createdAt: row.createdAt.toISOString(),
-                likesInfo: {
-                    likesCount: row.likesCount ? Number(row.likesCount) : 0,
-                    dislikesCount: row.dislikesCount ? Number(row.dislikesCount) : 0,
-                    myStatus: row.myStatus ? row.myStatus : 'None',
-                }
-            })
-    )
+  commentsArray.forEach((row) =>
+    resultArray.push({
+      id: row.id,
+      content: row.content,
+      commentatorInfo: {
+        userId: row.userId,
+        userLogin: row.userLogin,
+      },
+      createdAt: row.createdAt.toISOString(),
+      likesInfo: {
+        likesCount: row.likesCount ? Number(row.likesCount) : 0,
+        dislikesCount: row.dislikesCount ? Number(row.dislikesCount) : 0,
+        myStatus: row.myStatus ? row.myStatus : 'None',
+      },
+    }),
+  );
 
-    return resultArray
+  return resultArray;
 }

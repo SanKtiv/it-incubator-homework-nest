@@ -18,7 +18,7 @@ import { CommentInputDto } from './models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
-import {CommentsSqlQueryRepository} from "../infrastructure/postgresql/sql.comments.query.repository";
+import { CommentsSqlQueryRepository } from '../infrastructure/postgresql/sql.comments.query.repository';
 
 @Controller('comments')
 export class CommentsController {
@@ -34,8 +34,9 @@ export class CommentsController {
     @Param('commentId', paramIdIsMongoIdPipe) id: string,
     @Req() req: Request,
   ) {
-    const userId = await this.accessJwtToken
-        .getUserIdFromHeaders(req.headers.authorization);
+    const userId = await this.accessJwtToken.getUserIdFromHeaders(
+      req.headers.authorization,
+    );
 
     return this.commentsSqlQueryRepository.findById(id, userId);
   }

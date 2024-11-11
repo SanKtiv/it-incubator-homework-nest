@@ -65,64 +65,64 @@ export const postsOutputDto = (postDocument: PostDocument, userId?: string) =>
     ),
   );
 
-export const postsSqlOutputDto = (postDocument: any) =>
-    ({
-          id: postDocument[0].id,
-          title: postDocument[0].title,
-          shortDescription: postDocument[0].shortDescription,
-          content: postDocument[0].content,
-          blogId: postDocument[0].blogId,
-          blogName: postDocument[0].blogName,
-          createdAt: postDocument[0].createdAt.toISOString(),
-          extendedLikesInfo: {
-            likesCount: postDocument[0].likesCount,
-            dislikesCount: postDocument[0].dislikesCount,
-            myStatus: postDocument[0].myStatus || 'None',
-            newestLikes: postDocument.map(post => ({
-                userId: post.userId,
-                login: post.login,
-                addedAt: post.addedAt
-            })),
-          }
-        }
-    );
-
+export const postsSqlOutputDto = (postDocument: any) => ({
+  id: postDocument[0].id,
+  title: postDocument[0].title,
+  shortDescription: postDocument[0].shortDescription,
+  content: postDocument[0].content,
+  blogId: postDocument[0].blogId,
+  blogName: postDocument[0].blogName,
+  createdAt: postDocument[0].createdAt.toISOString(),
+  extendedLikesInfo: {
+    likesCount: postDocument[0].likesCount,
+    dislikesCount: postDocument[0].dislikesCount,
+    myStatus: postDocument[0].myStatus || 'None',
+    newestLikes: postDocument.map((post) => ({
+      userId: post.userId,
+      login: post.login,
+      addedAt: post.addedAt,
+    })),
+  },
+});
 
 export function postOutputModelFromSql(postFromSQL): PostsOutputDto[] {
-    const resultArray: PostsOutputDto[] = [];
+  const resultArray: PostsOutputDto[] = [];
 
-    postFromSQL.forEach(row =>
-        resultArray.find(i => i.id && i.id === row.id) ?
-            resultArray :
-            resultArray.push({
-                id: row.id,
-                title: row.title,
-                shortDescription: row.shortDescription,
-                content: row.content,
-                blogId: row.blogId,
-                blogName: row.blogName,
-                createdAt: row.createdAt.toISOString(),
-                extendedLikesInfo: {
-                    likesCount: row.likesCount ? Number(row.likesCount) : 0,
-                    dislikesCount: row.dislikesCount ? Number(row.dislikesCount) : 0,
-                    myStatus: row.myStatus ? row.myStatus : 'None',
-                    newestLikes: []
-                }
-            })
-    )
+  postFromSQL.forEach((row) =>
+    resultArray.find((i) => i.id && i.id === row.id)
+      ? resultArray
+      : resultArray.push({
+          id: row.id,
+          title: row.title,
+          shortDescription: row.shortDescription,
+          content: row.content,
+          blogId: row.blogId,
+          blogName: row.blogName,
+          createdAt: row.createdAt.toISOString(),
+          extendedLikesInfo: {
+            likesCount: row.likesCount ? Number(row.likesCount) : 0,
+            dislikesCount: row.dislikesCount ? Number(row.dislikesCount) : 0,
+            myStatus: row.myStatus ? row.myStatus : 'None',
+            newestLikes: [],
+          },
+        }),
+  );
 
-    resultArray.forEach(post =>
-        postFromSQL.forEach(row =>
-            post.id === row.id && row.userId && post.extendedLikesInfo.newestLikes.length < 3 ?
-                post.extendedLikesInfo.newestLikes.push({
-                    userId: row.userId,
-                    login: row.login,
-                    addedAt: row.addedAt.toISOString()
-                }) : post
-        )
-    )
+  resultArray.forEach((post) =>
+    postFromSQL.forEach((row) =>
+      post.id === row.id &&
+      row.userId &&
+      post.extendedLikesInfo.newestLikes.length < 3
+        ? post.extendedLikesInfo.newestLikes.push({
+            userId: row.userId,
+            login: row.login,
+            addedAt: row.addedAt.toISOString(),
+          })
+        : post,
+    ),
+  );
 
-    return resultArray
+  return resultArray;
 }
 
 export class PostsPaging {
@@ -136,28 +136,28 @@ export class PostsPaging {
 }
 
 export const postsPaging = (
-    query: PostQuery,
-    totalPosts: number,
-    postDocuments: PostDocument[],
-    userId?: string,
+  query: PostQuery,
+  totalPosts: number,
+  postDocuments: PostDocument[],
+  userId?: string,
 ) =>
-    new PostsPaging(
-        Math.ceil(totalPosts / +query.pageSize),
-        +query.pageNumber,
-        +query.pageSize,
-        totalPosts,
-        postDocuments.map((document) => postsOutputDto(document, userId)),
-    );
+  new PostsPaging(
+    Math.ceil(totalPosts / +query.pageSize),
+    +query.pageNumber,
+    +query.pageSize,
+    totalPosts,
+    postDocuments.map((document) => postsOutputDto(document, userId)),
+  );
 
 export const postsSqlPaging = (
-    query: PostQuery,
-    totalPosts: number,
-    postDocuments: any[]
+  query: PostQuery,
+  totalPosts: number,
+  postDocuments: any[],
 ) =>
-    new PostsPaging(
-        Math.ceil(totalPosts / +query.pageSize),
-        +query.pageNumber,
-        +query.pageSize,
-        +totalPosts,
-        postOutputModelFromSql(postDocuments)
-    );
+  new PostsPaging(
+    Math.ceil(totalPosts / +query.pageSize),
+    +query.pageNumber,
+    +query.pageSize,
+    +totalPosts,
+    postOutputModelFromSql(postDocuments),
+  );

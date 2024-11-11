@@ -1,5 +1,12 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {BlogsTable} from "../../blogs/domain/blog.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { BlogsTable } from '../../blogs/domain/blog.entity';
 
 @Entity('posts')
 export class PostsTable {

@@ -1,4 +1,4 @@
-import {IsMongoId, IsString, IsUUID, Matches} from 'class-validator';
+import { IsMongoId, IsString, IsUUID, Matches } from 'class-validator';
 import { QueryDto } from '../../../../../infrastructure/models/query.dto';
 import { InputDto } from '../../../../../infrastructure/models/input.dto';
 import { Trim } from '../../../../../infrastructure/decorators/transform/trim-custom.decorator';

@@ -10,8 +10,8 @@ import { RequestApiSqlRepository } from '../features/requests/infrastructure/req
 import { DevicesSqlRepository } from '../features/security/infrastructure/devices.sql.repository';
 import { BlogsSqlRepository } from '../features/blogs/infrastructure/postgresdb/blogs.sql.repository';
 import { PostsSqlRepository } from '../features/posts/infrastructure/postgresql/posts.sql.repository';
-import {CommentsSqlRepository} from "../features/comments/infrastructure/postgresql/sql.comments.repository";
-import {StatusesSqlRepository} from "../features/statuses/infrastructure/statuses.sql.repository";
+import { CommentsSqlRepository } from '../features/comments/infrastructure/postgresql/sql.comments.repository';
+import { StatusesSqlRepository } from '../features/statuses/infrastructure/statuses.sql.repository';
 
 @Controller('testing/all-data')
 export class TestingController {
@@ -28,7 +28,7 @@ export class TestingController {
     private readonly requestApiSqlRepository: RequestApiSqlRepository,
     private readonly devicesRepository: DevicesRepository,
     private readonly devicesSqlRepository: DevicesSqlRepository,
-    private readonly statusesSqlRepository: StatusesSqlRepository
+    private readonly statusesSqlRepository: StatusesSqlRepository,
   ) {}
 
   @Delete()

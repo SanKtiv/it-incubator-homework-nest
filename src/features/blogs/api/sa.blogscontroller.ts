@@ -37,7 +37,7 @@ import { RequestApiSqlRepository } from '../../requests/infrastructure/request.s
 import { BlogsSqlQueryRepository } from '../infrastructure/postgresdb/blogs.sql.query.repository';
 import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
 import { PostsSqlQueryRepository } from '../../posts/infrastructure/postgresql/posts.sql.query.repository';
-import {CommentsSqlRepository} from "../../comments/infrastructure/postgresql/sql.comments.repository";
+import { CommentsSqlRepository } from '../../comments/infrastructure/postgresql/sql.comments.repository';
 
 @Controller('sa/blogs')
 @UseGuards(BasicAuthGuard)

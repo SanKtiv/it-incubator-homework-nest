@@ -1,4 +1,10 @@
-import {HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { BlogQuery } from '../../api/models/input/blogs.input.dto';
 import {
   BlogsViewDto,
@@ -9,7 +15,7 @@ import {
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { BlogsTable } from '../../domain/blog.entity';
-import {UUID} from "typeorm/driver/mongodb/bson.typings";
+import { UUID } from 'typeorm/driver/mongodb/bson.typings';
 
 @Injectable()
 export class BlogsSqlQueryRepository {
@@ -46,50 +52,54 @@ export class BlogsSqlQueryRepository {
   //   return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
   // }
 
-    async findById(id: string): Promise<BlogsViewDto> {
-        const query = `
+  async findById(id: string): Promise<BlogsViewDto> {
+    const query = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM public."blogs" AS b
-    WHERE b."id" = $1;`
+    WHERE b."id" = $1;`;
 
-        const foundBlogArray = await this.dataSource.query(query, [id])
+    const foundBlogArray = await this.dataSource.query(query, [id]);
 
-        const blogDocument = foundBlogArray[0]
+    const blogDocument = foundBlogArray[0];
 
-        if (!blogDocument) throw new NotFoundException();
+    if (!blogDocument) throw new NotFoundException();
 
-        return sqlBlogsViewDto(blogDocument);
-    }
+    return sqlBlogsViewDto(blogDocument);
+  }
 
-    async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
-        const searchTerm = !query.searchNameTerm ? '' : query.searchNameTerm;
-        const pageSize = query.pageSize;
-        const pageOffSet = (query.pageNumber - 1) * query.pageSize;
+  async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
+    const searchTerm = !query.searchNameTerm ? '' : query.searchNameTerm;
+    const pageSize = query.pageSize;
+    const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
-        const querySQL = `
+    const querySQL = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM "blogs" AS b
     WHERE b."name" ~* $1
     ORDER BY b."${query.sortBy}" ${query.sortDirection} $4
     LIMIT $2 OFFSET $3`;
 
-        const querySQLCount = `
+    const querySQLCount = `
     SELECT COUNT(*)
     FROM "blogs" AS b
-    WHERE b."name" ~* $1`
+    WHERE b."name" ~* $1`;
 
-        const totalBlogsArray = await this.dataSource
-            .query(querySQLCount, [searchTerm])
+    const totalBlogsArray = await this.dataSource.query(querySQLCount, [
+      searchTerm,
+    ]);
 
-        const totalBlogs = totalBlogsArray[0].count
+    const totalBlogs = totalBlogsArray[0].count;
 
-        try {
-            const pagingBlogs = await this.dataSource
-                .query(querySQL, [searchTerm, pageSize, pageOffSet])
+    try {
+      const pagingBlogs = await this.dataSource.query(querySQL, [
+        searchTerm,
+        pageSize,
+        pageOffSet,
+      ]);
 
-            return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
-        } catch (e) {
-            throw new InternalServerErrorException()
-        }
+      return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
+    } catch (e) {
+      throw new InternalServerErrorException();
     }
+  }
 }

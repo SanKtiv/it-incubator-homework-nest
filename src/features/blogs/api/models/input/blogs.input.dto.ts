@@ -52,7 +52,7 @@ export class BlogQuery {
 
   @IsOptional()
   @IsString()
-  sortBy: string = "createdAt";
+  sortBy: string = 'createdAt';
 
   @IsOptional()
   @ToUpperCase()
