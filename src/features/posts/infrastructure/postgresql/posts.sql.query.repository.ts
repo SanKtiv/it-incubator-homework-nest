@@ -83,10 +83,9 @@ export class PostsSqlQueryRepository {
 
   async findPaging(
     query: PostQuery,
-    dto: { userId?: string | null; blogId?: string | null },
+    blogId: string | null,
+    userId: string | null,
   ): Promise<PostsPaging> {
-    const userId = dto.userId ? dto.userId : null;
-    const blogId = dto.blogId ? dto.blogId : null;
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 

@@ -101,15 +101,11 @@ export class BlogsController {
   ): Promise<PostsPaging> {
     await this.blogsSqlQueryRepository.findById(blogId);
 
-    const dto: { userId?: string; blogId?: string } = { blogId: blogId };
-
     const userId = await this.accessJwtToken.getUserIdFromHeaders(
       req.headers.authorization,
     );
 
-    if (userId) dto.userId = userId;
-
-    return this.postsSqlQueryRepository.findPaging(query, dto);
+    return this.postsSqlQueryRepository.findPaging(query, blogId, userId);
   }
 
   @Put(':blogId')

@@ -99,9 +99,7 @@ export class SaBlogsController {
   ): Promise<PostsPaging> {
     await this.blogsSqlQueryRepository.findById(blogId);
 
-    const dto: { userId?: string; blogId?: string } = { blogId: blogId };
-
-    return this.postsSqlQueryRepository.findPaging(query, dto);
+    return this.postsSqlQueryRepository.findPaging(query, blogId, null);
   }
 
   @Put(':blogId')

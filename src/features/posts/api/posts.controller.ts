@@ -103,11 +103,7 @@ export class PostController {
       req.headers.authorization,
     );
 
-    const dto: { userId?: string | null; blogId?: string | null } = {};
-
-    dto.userId = userId;
-
-    return this.postsSqlQueryRepository.findPaging(query, dto);
+    return this.postsSqlQueryRepository.findPaging(query, null, userId);
   }
 
   @Get(':postId/comments')
@@ -120,15 +116,11 @@ export class PostController {
 
     if (count === 0) throw new NotFoundException();
 
-    const dto: { id?: string | null; userId?: string | null } = {};
-
-    dto.id = postId;
-
-    dto.userId = await this.accessJwtToken.getUserIdFromHeaders(
+    const userId = await this.accessJwtToken.getUserIdFromHeaders(
       req.headers.authorization,
     );
 
-    return this.commentsSqlQueryRepository.findPaging(query, dto);
+    return this.commentsSqlQueryRepository.findPaging(query, postId, userId);
   }
 
   @Put(':postId')
