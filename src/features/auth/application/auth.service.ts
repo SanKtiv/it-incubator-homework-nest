@@ -25,9 +25,9 @@ export class AuthService {
 
     //const confirmationCode = userDocument.emailConfirmation.confirmationCode; for mongo
 
-    const confirmationCode = userDocument.confirmationCode;
+    // const confirmationCode = userDocument.confirmationCode;
 
-    await this.emailAdapter.sendConfirmationCode(dto.email, confirmationCode);
+    // await this.emailAdapter.sendConfirmationCode(dto.email, confirmationCode);
 
     //await this.usersService.saveUser(userDocument);
   }
@@ -60,11 +60,11 @@ export class AuthService {
     //   });
     // } for mongo
 
-    if (!userDocument || userDocument.isConfirmed) {
-      throw new BadRequestException({
-        message: [{ message: 'email already confirmed', field: 'email' }],
-      });
-    }
+    // if (!userDocument || userDocument.isConfirmed) {
+    //   throw new BadRequestException({
+    //     message: [{ message: 'email already confirmed', field: 'email' }],
+    //   });
+    // }
 
     const emailConfirmation = this.usersService.createCodeWithExpireDate();
 
@@ -79,11 +79,11 @@ export class AuthService {
     // userDocument.emailConfirmation.expirationDate =
     //   emailConfirmation.expirationDate;
 
-    userDocument.confirmationCode = emailConfirmation.confirmationCode;
+    // userDocument.confirmationCode = emailConfirmation.confirmationCode;
+    //
+    // userDocument.expirationDate = emailConfirmation.expirationDate;
 
-    userDocument.expirationDate = emailConfirmation.expirationDate;
-
-    await this.usersSqlRepository.save(userDocument);
+    // await this.usersSqlRepository.save(userDocument);
   }
 
   async emailIsConfirmed(email: string) {
@@ -157,9 +157,9 @@ export class AuthService {
       //
       // userDocument.passwordRecovery!.expirationDate = code.expirationDate; for mongo
 
-      userDocument.recoveryCode = code.confirmationCode;
-
-      userDocument.expirationDate = code.expirationDate;
+      // userDocument.recoveryCode = code.confirmationCode;
+      //
+      // userDocument.expirationDate = code.expirationDate;
 
       await this.usersSqlRepository.save(userDocument);
     }
@@ -175,16 +175,16 @@ export class AuthService {
       dto.recoveryCode,
     );
 
-    const userDocument = await this.usersSqlRepository.findById(recoveryInfo!.id)
+    // const userDocument = await this.usersSqlRepository.findById(recoveryInfo!.id)
 
     // userDocument!.accountData.passwordHash = await this.usersService.genHash(
     //   dto.newPassword,
     // );for mongo
 
-    userDocument!.passwordHash = await this.usersService.genHash(
-      dto.newPassword,
-    );
+    // userDocument!.passwordHash = await this.usersService.genHash(
+    //   dto.newPassword,
+    // );
 
-    await this.usersSqlRepository.save(userDocument!);
+    // await this.usersSqlRepository.save(userDocument!);
   }
 }

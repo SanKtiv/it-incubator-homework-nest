@@ -1,4 +1,4 @@
-import {Column, Entity, OneToOne, PrimaryColumn, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity('account_data')
 export class AccountData {
@@ -58,9 +58,12 @@ export class UsersTable {
 
 @Entity('usersConfirmInfo')
 export class UsersConfirmInfoTable {
-  @PrimaryColumn('uuid')
-  @OneToOne(() => UsersTable)
+  @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @OneToOne(() => UsersTable)
+  @JoinColumn()
+  user: UsersTable;
 
   @Column('character varying')
   confirmationCode: string;
@@ -74,9 +77,12 @@ export class UsersConfirmInfoTable {
 
 @Entity('usersRecoveryInfo')
 export class UsersRecoveryInfoTable {
-  @PrimaryColumn('uuid')
-  @OneToOne(() => UsersTable)
+  @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @OneToOne(() => UsersTable)
+  @JoinColumn()
+  user: UsersTable;
 
   @Column({ type: 'character varying', nullable: true })
   recoveryCode: string;
