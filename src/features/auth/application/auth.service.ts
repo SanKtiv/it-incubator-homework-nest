@@ -1,21 +1,21 @@
 import { EmailAdapter } from '../infrastructure/mail.adapter';
 import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
-import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
+import { UsersRepositoryMongo } from '../../users/infrastructure/mongodb/users.repository-mongo';
 import { UsersService } from '../../users/application/users.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
 import { UserDocument } from '../../users/domain/users.schema';
-import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
+import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
 import { UsersTable } from '../../users/domain/users.table';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly emailAdapter: EmailAdapter,
-    private readonly usersRepository: UsersRepository,
-    private readonly usersSqlRepository: UsersSqlRepository,
+    private readonly usersRepository: UsersRepositoryMongo,
+    private readonly usersSqlRepository: UsersRepositorySql,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
@@ -33,22 +33,22 @@ export class AuthService {
   }
 
   async registrationConfirmation(code: string) {
-    const userDocument =
+    const userConfirmInfo =
       await this.usersSqlRepository.findByConfirmationCode(code);
 
     if (
-      !userDocument ||
-      userDocument.expirationDate < new Date() ||
-      userDocument.isConfirmed
+      !userConfirmInfo ||
+      userConfirmInfo.expirationDate < new Date() ||
+      userConfirmInfo.isConfirmed
     )
       throw new BadRequestException({
         message: [{ message: 'code is wrong', field: 'code' }],
       });
 
     // userDocument!.emailConfirmation.isConfirmed = true; for mongo
-    userDocument!.isConfirmed = true;
+    userConfirmInfo.isConfirmed = true;
 
-    await this.usersSqlRepository.save(userDocument!);
+    await this.usersSqlRepository.saveConfirmInfo(userConfirmInfo);
   }
 
   async resendConfirmCode(email: string): Promise<void> {
@@ -171,9 +171,11 @@ export class AuthService {
   }
 
   async saveNewPassword(dto: NewPasswordInputDto) {
-    const userDocument = await this.usersSqlRepository.findByRecoveryCode(
+    const recoveryInfo = await this.usersSqlRepository.findByRecoveryCode(
       dto.recoveryCode,
     );
+
+    const userDocument = await this.usersSqlRepository.findById(recoveryInfo!.id)
 
     // userDocument!.accountData.passwordHash = await this.usersService.genHash(
     //   dto.newPassword,

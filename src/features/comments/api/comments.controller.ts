@@ -9,7 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { CommentsQueryRepository } from '../infrastructure/mongodb/comments.query.repository';
+import { CommentsQueryRepositoryMongo } from '../infrastructure/mongodb/comments.query.repository-mongo';
 import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { CommentsService } from '../application/comments.service';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
@@ -18,12 +18,12 @@ import { CommentInputDto } from './models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
-import { CommentsSqlQueryRepository } from '../infrastructure/postgresql/sql.comments.query.repository';
+import { CommentsSqlQueryRepository } from '../infrastructure/postgresql/comments.query.repository-sql';
 
 @Controller('comments')
 export class CommentsController {
   constructor(
-    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepositoryMongo,
     private readonly commentsSqlQueryRepository: CommentsSqlQueryRepository,
     private readonly commentsService: CommentsService,
     private readonly accessJwtToken: AccessJwtToken,

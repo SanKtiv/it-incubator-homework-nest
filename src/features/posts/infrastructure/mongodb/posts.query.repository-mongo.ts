@@ -10,7 +10,7 @@ import {
 } from '../../api/models/output/posts.output.dto';
 
 @Injectable()
-export class PostsQueryRepository {
+export class PostsQueryRepositoryMongo {
   constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
 
   async findById(id: string, userId?: string): Promise<PostsOutputDto> {

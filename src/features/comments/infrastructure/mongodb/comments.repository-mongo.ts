@@ -8,7 +8,7 @@ import {
 import { CommentServiceDto } from '../../api/models/input/comment-service.dto';
 
 @Injectable()
-export class CommentsRepository {
+export class CommentsRepositoryMongo {
   constructor(
     @InjectModel(Comment.name) private CommentModel: CommentModelType,
   ) {}

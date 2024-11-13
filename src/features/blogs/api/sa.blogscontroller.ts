@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { BlogQuery, BlogsInputDto } from './models/input/blogs.input.dto';
 import { BlogsService } from '../application/blogs.service';
-import { BlogsQueryRepository } from '../infrastructure/mongodb/blogs.query.repository';
+import { BlogsQueryRepositoryMongo } from '../infrastructure/mongodb/blogs.query.repository-mongo';
 import {
   BlogsViewDto,
   BlogsViewPagingDto,
@@ -23,31 +23,31 @@ import {
   PostQuery,
   PostsInputDto,
 } from '../../posts/api/models/input/posts.input.dto';
-import { PostsQueryRepository } from '../../posts/infrastructure/mongodb/posts.query.repository';
+import { PostsQueryRepositoryMongo } from '../../posts/infrastructure/mongodb/posts.query.repository-mongo';
 import { PostsPaging } from '../../posts/api/models/output/posts.output.dto';
 import { PostsService } from '../../posts/application/posts.service';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
-import { BlogsSqlRepository } from '../infrastructure/postgresdb/blogs.sql.repository';
-import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
-import { DevicesSqlRepository } from '../../security/infrastructure/devices.sql.repository';
-import { RequestApiSqlRepository } from '../../requests/infrastructure/request.sql.repository';
-import { BlogsSqlQueryRepository } from '../infrastructure/postgresdb/blogs.sql.query.repository';
+import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repository-sql';
+import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
+import { DevicesRepositorySql } from '../../security/infrastructure/postgresqldb/devices.repository-sql';
+import { RequestApiSqlRepository } from '../../requests/infrastructure/postgresqldb/request.repository-sql';
+import { BlogsQueryRepositorySql } from '../infrastructure/postgresdb/blogs.query.repository-sql';
 import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
-import { PostsSqlQueryRepository } from '../../posts/infrastructure/postgresql/posts.sql.query.repository';
-import { CommentsSqlRepository } from '../../comments/infrastructure/postgresql/sql.comments.repository';
+import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
+import { CommentsSqlRepository } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 
 @Controller('sa/blogs')
 @UseGuards(BasicAuthGuard)
 export class SaBlogsController {
   constructor(
-    private readonly blogsQueryRepository: BlogsQueryRepository,
-    private readonly blogsSqlQueryRepository: BlogsSqlQueryRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
+    private readonly blogsSqlQueryRepository: BlogsQueryRepositorySql,
     private readonly blogsService: BlogsService,
-    private readonly postsQueryRepository: PostsQueryRepository,
-    private readonly postsSqlQueryRepository: PostsSqlQueryRepository,
+    private readonly postsQueryRepository: PostsQueryRepositoryMongo,
+    private readonly postsSqlQueryRepository: PostsQueryRepositorySql,
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
     private readonly usersSqlRepository: RequestApiSqlRepository,

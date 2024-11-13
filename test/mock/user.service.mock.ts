@@ -1,4 +1,4 @@
-import { UsersRepository } from '../../src/features/users/infrastructure/mongodb/users.repository';
+import { UsersRepositoryMongo } from '../../src/features/users/infrastructure/mongodb/users.repository-mongo';
 import { UsersService } from '../../src/features/users/application/users.service';
 
 export const UserServiceMockObject = {
@@ -12,7 +12,7 @@ export const UserServiceMockObject = {
 };
 
 export class UserServiceMock extends UsersService {
-  constructor(usersRepository: UsersRepository) {
+  constructor(usersRepository: UsersRepositoryMongo) {
     super(usersRepository);
   }
 

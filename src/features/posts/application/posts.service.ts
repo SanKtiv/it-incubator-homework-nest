@@ -1,36 +1,36 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
-import { PostsRepository } from '../infrastructure/mongodb/posts.repository';
+import { PostsRepositoryMongo } from '../infrastructure/mongodb/posts.repository-mongo';
 import {
   PostLikeStatusDto,
   PostsInputDto,
 } from '../api/models/input/posts.input.dto';
-import { BlogsRepository } from '../../blogs/infrastructure/mongodb/blogs.repository';
+import { BlogsRepositoryMongo } from '../../blogs/infrastructure/mongodb/blogs.repository-mongo';
 import {
   postOutputModelFromSql,
   PostsOutputDto,
   postsOutputDto,
   postsSqlOutputDto,
 } from '../api/models/output/posts.output.dto';
-import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
+import { UsersRepositoryMongo } from '../../users/infrastructure/mongodb/users.repository-mongo';
 import { BlogsService } from '../../blogs/application/blogs.service';
-import { PostsSqlRepository } from '../infrastructure/postgresql/posts.sql.repository';
-import { BlogsSqlRepository } from '../../blogs/infrastructure/postgresdb/blogs.sql.repository';
+import { PostsRepositorySql } from '../infrastructure/postgresql/posts.repository-sql';
+import { BlogsRepositorySql } from '../../blogs/infrastructure/postgresdb/blogs.repository-sql';
 import { PostsTable } from '../domain/posts.table';
 import { InputDto } from '../../../infrastructure/models/input.dto';
-import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
-import { StatusesSqlRepository } from '../../statuses/infrastructure/statuses.sql.repository';
+import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
+import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 
 @Injectable()
 export class PostsService {
   constructor(
-    private readonly postsRepository: PostsRepository,
-    private readonly postsSqlRepository: PostsSqlRepository,
-    private readonly blogsRepository: BlogsRepository,
-    //private readonly blogsSqlRepository: BlogsSqlRepository,
-    private readonly usersRepository: UsersRepository,
-    private readonly usersSqlRepository: UsersSqlRepository,
+    private readonly postsRepository: PostsRepositoryMongo,
+    private readonly postsSqlRepository: PostsRepositorySql,
+    private readonly blogsRepository: BlogsRepositoryMongo,
+    //private readonly blogsSqlRepository: BlogsRepositorySql,
+    private readonly usersRepository: UsersRepositoryMongo,
+    private readonly usersSqlRepository: UsersRepositorySql,
     private readonly blogsService: BlogsService,
-    private readonly statusesSqlRepository: StatusesSqlRepository,
+    private readonly statusesSqlRepository: StatusesRepositorySql,
   ) {}
 
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {

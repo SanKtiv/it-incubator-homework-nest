@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { DeviceDto } from '../api/models/device.dto';
+import { DeviceDto } from '../../api/models/device.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, Not } from 'typeorm';
-import { DeviceTable } from '../domain/device.table';
+import { DeviceTable } from '../../domain/device.table';
 
 @Injectable()
-export class DevicesSqlRepository {
+export class DevicesRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   async create(dto: DeviceDto): Promise<DeviceTable> {

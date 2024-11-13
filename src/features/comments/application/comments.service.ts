@@ -3,9 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CommentsRepository } from '../infrastructure/mongodb/comments.repository';
-import { PostsRepository } from '../../posts/infrastructure/mongodb/posts.repository';
-import { UsersRepository } from '../../users/infrastructure/mongodb/users.repository';
+import { CommentsRepositoryMongo } from '../infrastructure/mongodb/comments.repository-mongo';
+import { PostsRepositoryMongo } from '../../posts/infrastructure/mongodb/posts.repository-mongo';
+import { UsersRepositoryMongo } from '../../users/infrastructure/mongodb/users.repository-mongo';
 import {
   CommentOutputDto,
   commentOutputDto,
@@ -16,19 +16,19 @@ import { CommentInputDto } from '../api/models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
 import { CommentDocument } from '../domain/comment.schema';
 import { PostsService } from '../../posts/application/posts.service';
-import { UsersSqlRepository } from '../../users/infrastructure/postgresqldb/users.sql.repository';
-import { CommentsSqlRepository } from '../infrastructure/postgresql/sql.comments.repository';
-import { StatusesSqlRepository } from '../../statuses/infrastructure/statuses.sql.repository';
+import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
+import { CommentsSqlRepository } from '../infrastructure/postgresql/comments.repository-sql';
+import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 
 @Injectable()
 export class CommentsService {
   constructor(
-    private readonly commentsRepository: CommentsRepository,
+    private readonly commentsRepository: CommentsRepositoryMongo,
     private readonly commentsSqlRepository: CommentsSqlRepository,
-    private readonly postsRepository: PostsRepository,
-    private readonly usersRepository: UsersRepository,
-    private readonly usersSqlRepository: UsersSqlRepository,
-    private readonly statusesSqlRepository: StatusesSqlRepository,
+    private readonly postsRepository: PostsRepositoryMongo,
+    private readonly usersRepository: UsersRepositoryMongo,
+    private readonly usersSqlRepository: UsersRepositorySql,
+    private readonly statusesSqlRepository: StatusesRepositorySql,
     private readonly postsService: PostsService,
   ) {}
 

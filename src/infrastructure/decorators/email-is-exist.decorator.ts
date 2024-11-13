@@ -6,12 +6,12 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { UsersQueryRepository } from '../../features/users/infrastructure/mongodb/users.query.repository';
+import { UsersQueryRepositoryMongo } from '../../features/users/infrastructure/mongodb/users.query.repository-mongo';
 
 @ValidatorConstraint({ name: 'EmailIsExist', async: false })
 @Injectable()
 export class EmailIsExistConstraint implements ValidatorConstraintInterface {
-  constructor(private readonly usersQueryRepository: UsersQueryRepository) {}
+  constructor(private readonly usersQueryRepository: UsersQueryRepositoryMongo) {}
   async validate(value: any, args: ValidationArguments) {
     const result = await this.usersQueryRepository.emailIsExist(value);
     return !(result === 1);

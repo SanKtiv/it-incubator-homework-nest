@@ -4,28 +4,28 @@ import { AppService } from './app.service';
 import { BlogsController } from './features/blogs/api/blogs.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogSchema } from './features/blogs/domain/blogs.schema';
-import { BlogsRepository } from './features/blogs/infrastructure/mongodb/blogs.repository';
+import { BlogsRepositoryMongo } from './features/blogs/infrastructure/mongodb/blogs.repository-mongo';
 import { TestingController } from './testing/testig.controller';
 import { BlogsService } from './features/blogs/application/blogs.service';
-import { BlogsQueryRepository } from './features/blogs/infrastructure/mongodb/blogs.query.repository';
+import { BlogsQueryRepositoryMongo } from './features/blogs/infrastructure/mongodb/blogs.query.repository-mongo';
 import { UsersService } from './features/users/application/users.service';
-import { UsersRepository } from './features/users/infrastructure/mongodb/users.repository';
+import { UsersRepositoryMongo } from './features/users/infrastructure/mongodb/users.repository-mongo';
 import { UsersController } from './features/users/api/users.controller';
 import { User, UsersSchema } from './features/users/domain/users.schema';
-import { UsersQueryRepository } from './features/users/infrastructure/mongodb/users.query.repository';
+import { UsersQueryRepositoryMongo } from './features/users/infrastructure/mongodb/users.query.repository-mongo';
 import { PostController } from './features/posts/api/posts.controller';
 import { PostsService } from './features/posts/application/posts.service';
-import { PostsRepository } from './features/posts/infrastructure/mongodb/posts.repository';
+import { PostsRepositoryMongo } from './features/posts/infrastructure/mongodb/posts.repository-mongo';
 import { Post, PostSchema } from './features/posts/domain/posts.schema';
-import { PostsQueryRepository } from './features/posts/infrastructure/mongodb/posts.query.repository';
+import { PostsQueryRepositoryMongo } from './features/posts/infrastructure/mongodb/posts.query.repository-mongo';
 import {
   Comment,
   CommentSchema,
 } from './features/comments/domain/comment.schema';
-import { CommentsRepository } from './features/comments/infrastructure/mongodb/comments.repository';
+import { CommentsRepositoryMongo } from './features/comments/infrastructure/mongodb/comments.repository-mongo';
 import { CommentsService } from './features/comments/application/comments.service';
 import { CommentsController } from './features/comments/api/comments.controller';
-import { CommentsQueryRepository } from './features/comments/infrastructure/mongodb/comments.query.repository';
+import { CommentsQueryRepositoryMongo } from './features/comments/infrastructure/mongodb/comments.query.repository-mongo';
 import dotenv from 'dotenv';
 import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './features/auth/api/auth.controller';
@@ -43,13 +43,13 @@ import {
   RequestToApi,
   RequestToApiSchema,
 } from './features/requests/domain/request.schema';
-import { RequestApiRepository } from './features/requests/infrastructure/request.repository';
+import { RequestApiRepository } from './features/requests/infrastructure/mongodb/request.repository-mongo';
 import {
   JwtAccessStrategy,
   JwtRefreshStrategy,
 } from './features/auth/infrastructure/jwt.strategy';
 import { BasicStrategy } from './features/auth/infrastructure/basic.strategy';
-import { DevicesRepository } from './features/security/infrastructure/devices.repository';
+import { DevicesRepositoryMongo } from './features/security/infrastructure/mongodb/devices.repository-mongo';
 import { Device, DeviceSchema } from './features/security/domain/device.schema';
 import { DevicesService } from './features/security/application/devices.service';
 import { appSettings } from './settings/app-settings';
@@ -59,25 +59,30 @@ import { BlogIdIsExistConstraint } from './infrastructure/decorators/validation/
 import configuration from './settings/configuration';
 import { DevicesController } from './features/security/api/devices.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BlogsSqlRepository } from './features/blogs/infrastructure/postgresdb/blogs.sql.repository';
+import { BlogsRepositorySql } from './features/blogs/infrastructure/postgresdb/blogs.repository-sql';
 import { BlogsTable, ForBlogsTable } from './features/blogs/domain/blog.entity';
-import { AccountData, UsersTable } from './features/users/domain/users.table';
-import { UsersSqlRepository } from './features/users/infrastructure/postgresqldb/users.sql.repository';
+import {
+  AccountData,
+  UsersConfirmInfoTable,
+  UsersRecoveryInfoTable,
+  UsersTable
+} from './features/users/domain/users.table';
+import { UsersRepositorySql } from './features/users/infrastructure/postgresqldb/users.repository-sql';
 import { DeviceTable } from './features/security/domain/device.table';
-import { DevicesSqlRepository } from './features/security/infrastructure/devices.sql.repository';
-import { RequestApiSqlRepository } from './features/requests/infrastructure/request.sql.repository';
+import { DevicesRepositorySql } from './features/security/infrastructure/postgresqldb/devices.repository-sql';
+import { RequestApiSqlRepository } from './features/requests/infrastructure/postgresqldb/request.repository-sql';
 import { RequestTable } from './features/requests/domain/request.table';
-import { UsersSqlQueryRepository } from './features/users/infrastructure/postgresqldb/users.sql.query.repository';
-import { BlogsSqlQueryRepository } from './features/blogs/infrastructure/postgresdb/blogs.sql.query.repository';
+import { UsersQueryRepositorySql } from './features/users/infrastructure/postgresqldb/users.query.repository-sql';
+import { BlogsQueryRepositorySql } from './features/blogs/infrastructure/postgresdb/blogs.query.repository-sql';
 import { PostsTable } from './features/posts/domain/posts.table';
 import { SaBlogsController } from './features/blogs/api/sa.blogscontroller';
-import { PostsSqlRepository } from './features/posts/infrastructure/postgresql/posts.sql.repository';
-import { PostsSqlQueryRepository } from './features/posts/infrastructure/postgresql/posts.sql.query.repository';
+import { PostsRepositorySql } from './features/posts/infrastructure/postgresql/posts.repository-sql';
+import { PostsQueryRepositorySql } from './features/posts/infrastructure/postgresql/posts.query.repository-sql';
 import { CommentsTable } from './features/comments/domain/comments.entity';
-import { CommentsSqlRepository } from './features/comments/infrastructure/postgresql/sql.comments.repository';
-import { CommentsSqlQueryRepository } from './features/comments/infrastructure/postgresql/sql.comments.query.repository';
+import { CommentsSqlRepository } from './features/comments/infrastructure/postgresql/comments.repository-sql';
+import { CommentsSqlQueryRepository } from './features/comments/infrastructure/postgresql/comments.query.repository-sql';
 import { StatusesTable } from './features/statuses/domain/statuses.entity';
-import { StatusesSqlRepository } from './features/statuses/infrastructure/statuses.sql.repository';
+import { StatusesRepositorySql } from './features/statuses/infrastructure/statuses.repository-sql';
 
 dotenv.config();
 
@@ -94,27 +99,27 @@ const services = [
 ];
 
 const repositories = [
-  BlogsRepository,
-  BlogsQueryRepository,
-  BlogsSqlRepository,
-  BlogsSqlQueryRepository,
-  PostsRepository,
-  PostsSqlRepository,
-  PostsQueryRepository,
-  PostsSqlQueryRepository,
-  CommentsRepository,
-  CommentsQueryRepository,
+  BlogsRepositoryMongo,
+  BlogsQueryRepositoryMongo,
+  BlogsRepositorySql,
+  BlogsQueryRepositorySql,
+  PostsRepositoryMongo,
+  PostsRepositorySql,
+  PostsQueryRepositoryMongo,
+  PostsQueryRepositorySql,
+  CommentsRepositoryMongo,
+  CommentsQueryRepositoryMongo,
   CommentsSqlRepository,
   CommentsSqlQueryRepository,
-  UsersRepository,
-  UsersQueryRepository,
-  DevicesRepository,
+  UsersRepositoryMongo,
+  UsersQueryRepositoryMongo,
+  DevicesRepositoryMongo,
   RequestApiRepository,
-  UsersSqlRepository,
-  UsersSqlQueryRepository,
-  DevicesSqlRepository,
+  UsersRepositorySql,
+  UsersQueryRepositorySql,
+  DevicesRepositorySql,
   RequestApiSqlRepository,
-  StatusesSqlRepository,
+  StatusesRepositorySql,
 ];
 
 const strategies = [
@@ -149,6 +154,8 @@ const strategies = [
         DeviceTable,
         RequestTable,
         UsersTable,
+        UsersConfirmInfoTable,
+        UsersRecoveryInfoTable,
         ForBlogsTable,
         CommentsTable,
         StatusesTable,
@@ -163,6 +170,8 @@ const strategies = [
       DeviceTable,
       RequestTable,
       UsersTable,
+      UsersConfirmInfoTable,
+      UsersRecoveryInfoTable,
       ForBlogsTable,
       CommentsTable,
       StatusesTable,

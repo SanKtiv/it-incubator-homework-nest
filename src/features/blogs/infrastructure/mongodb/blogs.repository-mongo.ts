@@ -4,7 +4,7 @@ import { Blog, BlogDocument, BlogsModelType } from '../../domain/blogs.schema';
 import { BlogsInputDto } from '../../api/models/input/blogs.input.dto';
 
 @Injectable()
-export class BlogsRepository {
+export class BlogsRepositoryMongo {
   constructor(
     @InjectModel(Blog.name)
     private BlogModel: BlogsModelType,

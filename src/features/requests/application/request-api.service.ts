@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RequestApiInputDto } from '../api/models/input.dto';
-import { RequestApiRepository } from '../infrastructure/request.repository';
+import { RequestApiRepository } from '../infrastructure/mongodb/request.repository-mongo';
 
 @Injectable()
 export class RequestApiService {

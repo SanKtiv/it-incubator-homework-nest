@@ -2,11 +2,12 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
+  ManyToOne, OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BlogsTable } from '../../blogs/domain/blog.entity';
+import {CommentsTable} from "../../comments/domain/comments.entity";
 
 @Entity('posts')
 export class PostsTable {
@@ -22,10 +23,10 @@ export class PostsTable {
   @Column('character varying')
   content: string;
 
+  @Column('timestamp with time zone')
+  createdAt: Date;
+
   @ManyToOne(() => BlogsTable)
   @JoinColumn({ name: 'blogId' })
   blogId: BlogsTable;
-
-  @Column('timestamp with time zone')
-  createdAt: Date;
 }

@@ -20,7 +20,7 @@ import {
 } from '../../api/models/output/users.output.dto';
 
 @Injectable()
-export class UsersSqlQueryRepository {
+export class UsersQueryRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   // async findById(id: string): Promise<UserDocument | null> {

@@ -24,7 +24,7 @@ export const usersOutputDto = (userDocument: UsersTable): UsersOutputDto =>
     userDocument.id,
     userDocument.login,
     userDocument.email,
-    userDocument.createdAt,
+    userDocument.createdAt.toISOString(),
   );
 
 export class UsersPagingDto {

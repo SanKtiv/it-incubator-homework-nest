@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
-import { UsersQueryRepository } from '../../users/infrastructure/mongodb/users.query.repository';
+import { UsersQueryRepositoryMongo } from '../../users/infrastructure/mongodb/users.query.repository-mongo';
 import { AuthService } from '../application/auth.service';
 import { UserLoginDto } from './models/input/input.dto';
 import { EmailResendingDto } from './models/input/email-resending.input.dto';
@@ -27,13 +27,13 @@ import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 import { InfoCurrentUserDto } from './models/output/info-current-user.dto';
 import { UsersService } from '../../users/application/users.service';
-import { UsersSqlQueryRepository } from '../../users/infrastructure/postgresqldb/users.sql.query.repository';
+import { UsersQueryRepositorySql } from '../../users/infrastructure/postgresqldb/users.query.repository-sql';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly usersQueryRepository: UsersQueryRepository,
-    private readonly usersSqlQueryRepository: UsersSqlQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepositoryMongo,
+    private readonly usersSqlQueryRepository: UsersQueryRepositorySql,
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly devicesService: DevicesService,

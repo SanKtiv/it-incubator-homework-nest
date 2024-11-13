@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { RequestApiInputDto } from '../api/models/input.dto';
+import { RequestApiInputDto } from '../../api/models/input.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, MoreThanOrEqual } from 'typeorm';
-import { RequestTable } from '../domain/request.table';
+import { RequestTable } from '../../domain/request.table';
 
 @Injectable()
 export class RequestApiSqlRepository {

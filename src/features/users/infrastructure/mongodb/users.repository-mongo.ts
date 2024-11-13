@@ -5,7 +5,7 @@ import { UsersInputDto } from '../../api/models/input/users.input.dto';
 import { filterByLoginAndEmail } from '../utils.repositories';
 
 @Injectable()
-export class UsersRepository {
+export class UsersRepositoryMongo {
   constructor(@InjectModel(User.name) private UserModel: UsersModelType) {}
 
   async create(

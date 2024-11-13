@@ -4,7 +4,7 @@ import { Post, PostDocument, PostModelType } from '../../domain/posts.schema';
 import { PostsInputDto } from '../../api/models/input/posts.input.dto';
 
 @Injectable()
-export class PostsRepository {
+export class PostsRepositoryMongo {
   constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
 
   async create(

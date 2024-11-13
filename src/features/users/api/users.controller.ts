@@ -19,17 +19,17 @@ import {
 } from './models/output/users.output.dto';
 import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
-import { UsersQueryRepository } from '../infrastructure/mongodb/users.query.repository';
+import { UsersQueryRepositoryMongo } from '../infrastructure/mongodb/users.query.repository-mongo';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
-import { UsersSqlQueryRepository } from '../infrastructure/postgresqldb/users.sql.query.repository';
+import { UsersQueryRepositorySql } from '../infrastructure/postgresqldb/users.query.repository-sql';
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly usersQueryRepository: UsersQueryRepository,
-    private readonly usersSqlQueryRepository: UsersSqlQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepositoryMongo,
+    private readonly usersSqlQueryRepository: UsersQueryRepositorySql,
   ) {}
 
   @Post()

@@ -1,52 +1,53 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { BlogsTable, ForBlogsTable } from '../../domain/blog.entity';
-import { BlogDocument } from '../../domain/blogs.schema';
+import { BlogsTable} from '../../domain/blog.entity';
 import { PostsTable } from '../../../posts/domain/posts.table';
 
 @Injectable()
-export class BlogsSqlRepository {
+export class BlogsRepositorySql {
   constructor(
     @InjectDataSource()
     protected dataSource: DataSource,
+    @InjectRepository(BlogsTable)
+    protected blogsRepository: Repository<BlogsTable>
   ) {}
 
   private get repository() {
     return this.dataSource.getRepository(BlogsTable);
   }
 
-  // async create(dto) {
-  //   const blog: BlogsTable = {
-  //     ...dto,
-  //     createdAt: new Date(),
-  //     isMembership: false,
-  //   };
-  //   return this.save(blog);
-  // }
-
-  async save(blog: BlogsTable) {
-    return this.repository.save(blog);
+  async create_ORM(dto) {
+    const blog: BlogsTable = {
+      ...dto,
+      createdAt: new Date(),
+      isMembership: false,
+    };
+    return this.save(blog);
   }
 
-  // async findById(id: string): Promise<BlogsTable | null> {
-  //   try {
-  //     return this.repository.findOneBy({ id: id });
-  //   } catch (e) {
-  //     throw new Error('Error finding blog by blogId');
-  //   }
-  // }
+  async save(blog: BlogsTable) {
+    return this.blogsRepository.save(blog);
+  }
 
-  // async deleteOne(blog: BlogsTable): Promise<BlogsTable> {
-  //   try {
-  //     return this.repository.remove(blog);
-  //   } catch (e) {
-  //     throw new Error('Error DB');
-  //   }
-  // }
+  async findById_ORM(id: string): Promise<BlogsTable | null> {
+    try {
+      return this.blogsRepository.findOneBy({ id: id });
+    } catch (e) {
+      throw new Error('Error finding blog by blogId');
+    }
+  }
 
-  async deleteAll(): Promise<void> {
-    await this.repository.clear();
+  async deleteOne_ORM(blog: BlogsTable): Promise<BlogsTable> {
+    try {
+      return this.blogsRepository.remove(blog);
+    } catch (e) {
+      throw new Error('Error DB');
+    }
+  }
+
+  async deleteAll_ORM(): Promise<void> {
+    await this.blogsRepository.clear();
   }
 
   async createForBlog(name: string, blogId: string) {
@@ -74,28 +75,27 @@ export class BlogsSqlRepository {
     // )
   }
 
-  async create(dto): Promise<BlogsTable> {
-    console.log('Create Blog');
-    const query = `
+  async create_RAW(dto): Promise<BlogsTable> {
+    const rawQuery = `
     INSERT INTO public."blogs" ("name", "description", "websiteUrl", "createdAt")
     VALUES ($1, $2, $3, $4)
     RETURNING *;`;
 
-    const queryParams = [dto.name, dto.description, dto.websiteUrl, new Date()];
+    const parameters = [dto.name, dto.description, dto.websiteUrl, new Date()];
 
-    const createdRowsArray = await this.dataSource.query(query, queryParams);
+    const createdRowsArray = await this.dataSource.query(rawQuery, parameters);
 
     return createdRowsArray[0];
   }
 
-  async findById(id: string): Promise<BlogsTable | null> {
-    const query = `
+  async findById_RAW(id: string): Promise<BlogsTable | null> {
+    const rawQuery = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM "blogs" AS b
     WHERE b."id" = $1;`;
 
     try {
-      const foundBlogArray = await this.dataSource.query(query, [id]);
+      const foundBlogArray = await this.dataSource.query(rawQuery, [id]);
 
       return foundBlogArray[0];
     } catch (e) {
@@ -103,11 +103,11 @@ export class BlogsSqlRepository {
     }
   }
 
-  async countById(id: string) {
-    const queryRaw = `SELECT COUNT (*) FROM "blogs" WHERE "id" = $1`;
+  async countById_RAW(id: string) {
+    const rawQuery = `SELECT COUNT (*) FROM "blogs" WHERE "id" = $1`;
 
     try {
-      const countBlogs = await this.dataSource.query(queryRaw, [id]);
+      const countBlogs = await this.dataSource.query(rawQuery, [id]);
 
       return countBlogs[0].count;
     } catch (e) {
@@ -115,14 +115,14 @@ export class BlogsSqlRepository {
     }
   }
 
-  async deleteOne(blog: BlogsTable): Promise<BlogsTable> {
-    const query = `
+  async deleteOne_RAW(blog: BlogsTable): Promise<BlogsTable> {
+    const rawQuery = `
     DELETE FROM "blogs" AS b
     WHERE b."id" = $1
     RETURNING *`;
 
     try {
-      const deletedBlogArray = await this.dataSource.query(query, [blog.id]);
+      const deletedBlogArray = await this.dataSource.query(rawQuery, [blog.id]);
 
       return deletedBlogArray[0];
     } catch (e) {

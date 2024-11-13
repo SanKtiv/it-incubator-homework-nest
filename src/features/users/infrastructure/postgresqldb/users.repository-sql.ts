@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { UsersTable } from '../../domain/users.table';
+import {UsersConfirmInfoTable, UsersRecoveryInfoTable, UsersTable} from '../../domain/users.table';
 import { UsersInputDto } from '../../api/models/input/users.input.dto';
 
 @Injectable()
-export class UsersSqlRepository {
+export class UsersRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   async create(
@@ -14,7 +14,7 @@ export class UsersSqlRepository {
     confirmationCode: string,
     expirationDate: Date,
   ): Promise<UsersTable> {
-    return this.dataSource.getRepository(UsersTable).save({
+    return this.repository.save({
       ...dto,
       createdAt: new Date().toISOString(),
       passwordHash: passwordHash,
@@ -22,53 +22,57 @@ export class UsersSqlRepository {
       expirationDate: expirationDate,
     });
   }
+  private get repository() {
+    return this.dataSource.getRepository(UsersTable)
+  }
 
   async save(user: UsersTable): Promise<UsersTable> {
-    return this.dataSource.getRepository(UsersTable).save(user);
+    return this.repository.save(user);
+  }
+
+  async saveConfirmInfo(entity: UsersConfirmInfoTable) {
+    await this.dataSource
+        .getRepository(UsersConfirmInfoTable).save(entity)
   }
 
   async findById(id: string): Promise<UsersTable | null> {
     try {
-      return this.dataSource.getRepository(UsersTable).findOneBy({ id: id });
+      return this.repository.findOneBy({ id: id });
     } catch (e) {
       return null;
     }
   }
 
-  async findByConfirmationCode(code: string): Promise<UsersTable | null> {
-    return this.dataSource.getRepository(UsersTable).findOneBy({
+  async findByConfirmationCode(code: string): Promise<UsersConfirmInfoTable | null> {
+    return this.dataSource.getRepository(UsersConfirmInfoTable).findOneBy({
       confirmationCode: code,
     });
   }
 
-  async findByRecoveryCode(code: string): Promise<UsersTable | null> {
-    return this.dataSource.getRepository(UsersTable).findOneBy({
+  async findByRecoveryCode(code: string): Promise<UsersRecoveryInfoTable | null> {
+    return this.dataSource.getRepository(UsersRecoveryInfoTable).findOneBy({
       recoveryCode: code,
     });
   }
 
   async findByLogin(login: string): Promise<UsersTable | null> {
-    return this.dataSource
-      .getRepository(UsersTable)
+    return this.repository
       .findOneBy({ login: login });
   }
 
   async findByEmail(email: string): Promise<UsersTable | null> {
-    return this.dataSource
-      .getRepository(UsersTable)
+    return this.repository
       .findOneBy({ email: email });
   }
 
   async findByLoginOrEmail(loginOrEmail: string): Promise<UsersTable | null> {
-    return this.dataSource
-      .getRepository(UsersTable)
+    return this.repository
       .findOneBy([{ email: loginOrEmail }, { login: loginOrEmail }]);
   }
 
   async remove(id: string): Promise<UsersTable | null> {
     try {
-      const user = await this.dataSource
-        .getRepository(UsersTable)
+      const user = await this.repository
         .findOneBy({ id: id });
 
       if (user) await this.dataSource.getRepository(UsersTable).remove(user);
@@ -80,7 +84,7 @@ export class UsersSqlRepository {
   }
 
   async removeAll() {
-    await this.dataSource.getRepository(UsersTable).clear();
+    await this.repository.clear();
   }
   // return this.dataSource.getRepository(UsersTable).remove(user);
 

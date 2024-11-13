@@ -6,7 +6,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { UsersQueryRepository } from '../../features/users/infrastructure/mongodb/users.query.repository';
+import { UsersQueryRepositoryMongo } from '../../features/users/infrastructure/mongodb/users.query.repository-mongo';
 import { AuthService } from '../../features/auth/application/auth.service';
 
 @ValidatorConstraint({ name: 'EmailIsConfirmed', async: false })
@@ -15,7 +15,7 @@ export class EmailIsConfirmedConstraint
   implements ValidatorConstraintInterface
 {
   constructor(
-    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepositoryMongo,
     private readonly authService: AuthService,
   ) {}
   async validate(value: any, args: ValidationArguments) {

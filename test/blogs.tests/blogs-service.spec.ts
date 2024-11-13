@@ -1,7 +1,7 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { Model } from 'mongoose';
 import { BlogsService } from '../../src/features/blogs/application/blogs.service';
-import { BlogsRepository } from '../../src/features/blogs/infrastructure/mongodb/blogs.repository';
+import { BlogsRepositoryMongo } from '../../src/features/blogs/infrastructure/mongodb/blogs.repository-mongo';
 import {
   Blog,
   BlogDocument,
@@ -32,7 +32,7 @@ describe('integration tests for BlogsService', () => {
     };
 
     const blogModel = new Blog(); //as BlogsModelType
-    const blogsRepository = new BlogsRepository(blogModel);
+    const blogsRepository = new BlogsRepositoryMongo(blogModel);
     const blogsService = new BlogsService(blogsRepository);
 
     it('should return created blog', async () => {

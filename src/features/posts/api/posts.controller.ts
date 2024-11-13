@@ -19,13 +19,13 @@ import {
   PostsInputDto,
 } from './models/input/posts.input.dto';
 import { PostsOutputDto, PostsPaging } from './models/output/posts.output.dto';
-import { BlogsQueryRepository } from '../../blogs/infrastructure/mongodb/blogs.query.repository';
-import { PostsQueryRepository } from '../infrastructure/mongodb/posts.query.repository';
+import { BlogsQueryRepositoryMongo } from '../../blogs/infrastructure/mongodb/blogs.query.repository-mongo';
+import { PostsQueryRepositoryMongo } from '../infrastructure/mongodb/posts.query.repository-mongo';
 import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { CommentInputDto } from '../../comments/api/models/input/comment.input.dto';
 import { CommentsService } from '../../comments/application/comments.service';
 import { CommentOutputDto } from '../../comments/api/models/output/comment.output.dto';
-import { CommentsQueryRepository } from '../../comments/infrastructure/mongodb/comments.query.repository';
+import { CommentsQueryRepositoryMongo } from '../../comments/infrastructure/mongodb/comments.query.repository-mongo';
 import { QueryDto } from '../../../infrastructure/models/query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
@@ -33,18 +33,18 @@ import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user
 import { CommentServiceDto } from '../../comments/api/models/input/comment-service.dto';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
-import { PostsSqlQueryRepository } from '../infrastructure/postgresql/posts.sql.query.repository';
-import { CommentsSqlQueryRepository } from '../../comments/infrastructure/postgresql/sql.comments.query.repository';
+import { PostsQueryRepositorySql } from '../infrastructure/postgresql/posts.query.repository-sql';
+import { CommentsSqlQueryRepository } from '../../comments/infrastructure/postgresql/comments.query.repository-sql';
 
 @Controller('posts')
 export class PostController {
   constructor(
     private readonly postsService: PostsService,
-    private readonly blogsQueryRepository: BlogsQueryRepository,
-    private readonly postsQueryRepository: PostsQueryRepository,
-    private readonly postsSqlQueryRepository: PostsSqlQueryRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
+    private readonly postsQueryRepository: PostsQueryRepositoryMongo,
+    private readonly postsSqlQueryRepository: PostsQueryRepositorySql,
     private readonly commentsService: CommentsService,
-    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepositoryMongo,
     private readonly commentsSqlQueryRepository: CommentsSqlQueryRepository,
     private readonly accessJwtToken: AccessJwtToken,
   ) {}

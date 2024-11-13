@@ -4,8 +4,8 @@ import {
   RequestToApi,
   RequestToApiDocument,
   RequestToApiModelType,
-} from '../domain/request.schema';
-import { RequestApiInputDto } from '../api/models/input.dto';
+} from '../../domain/request.schema';
+import { RequestApiInputDto } from '../../api/models/input.dto';
 
 @Injectable()
 export class RequestApiRepository {

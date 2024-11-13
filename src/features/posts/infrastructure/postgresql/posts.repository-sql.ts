@@ -7,7 +7,7 @@ import { DataSource } from 'typeorm';
 import { PostsTable } from '../../domain/posts.table';
 
 @Injectable()
-export class PostsSqlRepository {
+export class PostsRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   private get repository() {

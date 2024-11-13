@@ -1,4 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn} from 'typeorm';
+import {BlogsTable} from "../../blogs/domain/blog.entity";
+import {PostsTable} from "../../posts/domain/posts.table";
+import {UsersTable} from "../../users/domain/users.table";
 
 @Entity('comments')
 export class CommentsTable {
@@ -8,21 +11,14 @@ export class CommentsTable {
   @Column('character varying')
   content: string;
 
-  @Column('uuid')
-  userId: string;
-
-  @Column('character varying')
-  userLogin: string;
-
   @Column('timestamp with time zone')
   createdAt: Date;
 
-  @Column('uuid')
+  @ManyToOne(() => UsersTable)
+  @JoinColumn({name: 'userId'})
+  userId: string;
+
+  @ManyToOne(() => PostsTable)
+  @JoinColumn({name: 'postId'})
   postId: string;
-
-  @Column({ type: 'int', default: 0 })
-  likesCount: number;
-
-  @Column({ type: 'int', default: 0 })
-  dislikesCount: number;
 }

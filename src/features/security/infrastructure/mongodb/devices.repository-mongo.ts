@@ -4,11 +4,11 @@ import {
   Device,
   DeviceDocument,
   DeviceModelType,
-} from '../domain/device.schema';
-import { DeviceDto } from '../api/models/device.dto';
+} from '../../domain/device.schema';
+import { DeviceDto } from '../../api/models/device.dto';
 
 @Injectable()
-export class DevicesRepository {
+export class DevicesRepositoryMongo {
   constructor(@InjectModel(Device.name) private DeviceModel: DeviceModelType) {}
 
   async create(dto: DeviceDto): Promise<DeviceDocument> {

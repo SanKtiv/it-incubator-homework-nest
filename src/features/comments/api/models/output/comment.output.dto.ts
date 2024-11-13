@@ -58,7 +58,7 @@ export const commentOutputDto = (
   );
 
 export const sqlCommentOutputDto = (
-  commentDocument: CommentsTable,
+  commentDocument: any,
   userId?: string,
 ) => ({
   id: commentDocument.id,

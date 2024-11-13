@@ -18,7 +18,7 @@ import { BlogsTable } from '../../domain/blog.entity';
 import { UUID } from 'typeorm/driver/mongodb/bson.typings';
 
 @Injectable()
-export class BlogsSqlQueryRepository {
+export class BlogsQueryRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   // async findById(id: string): Promise<BlogsViewDto> {

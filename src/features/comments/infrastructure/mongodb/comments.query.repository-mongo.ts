@@ -14,7 +14,7 @@ import {
 } from '../../api/models/output/comment.output.dto';
 
 @Injectable()
-export class CommentsQueryRepository {
+export class CommentsQueryRepositoryMongo {
   constructor(
     @InjectModel(Comment.name) private CommentModel: CommentModelType,
   ) {}

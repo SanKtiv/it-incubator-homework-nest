@@ -5,7 +5,7 @@ import { StatusesTable } from '../domain/statuses.entity';
 import { NewestLikes } from '../../posts/api/models/output/posts.output.dto';
 
 @Injectable()
-export class StatusesSqlRepository {
+export class StatusesRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   async insertStatusForPost(

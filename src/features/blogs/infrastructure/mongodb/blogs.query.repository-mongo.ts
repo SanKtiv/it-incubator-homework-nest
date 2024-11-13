@@ -10,7 +10,7 @@ import {
 } from '../../api/models/output/blogs.view.dto';
 
 @Injectable()
-export class BlogsQueryRepository {
+export class BlogsQueryRepositoryMongo {
   constructor(@InjectModel(Blog.name) private BlogModel: BlogsModelType) {}
 
   async findById(id: string): Promise<BlogsViewDto> {

@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {Column, Entity, OneToOne, PrimaryColumn, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity('account_data')
 export class AccountData {
@@ -19,24 +19,50 @@ export class AccountData {
 }
 
 @Entity('users')
-// @Tree("closure-table")
 export class UsersTable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('text')
+  @Column('character varying')
   login: string;
 
-  @Column('text')
+  @Column('character varying')
   email: string;
 
-  @Column('text')
-  createdAt: string;
+  @Column('timestamp with time zone')
+  createdAt: Date;
 
-  @Column('text')
+  @Column('character varying')
   passwordHash: string;
 
-  @Column('text')
+  // @Column('character varying')
+  // confirmationCode: string;
+  //
+  // @Column('date')
+  // expirationDate: Date;
+  //
+  // @Column({ type: 'boolean', default: false })
+  // isConfirmed: boolean;
+  //
+  // @Column({ type: 'character varying', nullable: true })
+  // recoveryCode: string;
+  //
+  // @Column({ type: 'date', nullable: true })
+  // expirationDateRecovery: Date;
+
+  // @OneToOne(() => AccountData)
+  // @JoinColumn()
+  // @TreeParent()
+  // accountData: AccountData;
+}
+
+@Entity('usersConfirmInfo')
+export class UsersConfirmInfoTable {
+  @PrimaryColumn('uuid')
+  @OneToOne(() => UsersTable)
+  id: string;
+
+  @Column('character varying')
   confirmationCode: string;
 
   @Column('date')
@@ -44,15 +70,17 @@ export class UsersTable {
 
   @Column({ type: 'boolean', default: false })
   isConfirmed: boolean;
+}
 
-  @Column({ type: 'text', nullable: true })
+@Entity('usersRecoveryInfo')
+export class UsersRecoveryInfoTable {
+  @PrimaryColumn('uuid')
+  @OneToOne(() => UsersTable)
+  id: string;
+
+  @Column({ type: 'character varying', nullable: true })
   recoveryCode: string;
 
   @Column({ type: 'date', nullable: true })
   expirationDateRecovery: Date;
-
-  // @OneToOne(() => AccountData)
-  // @JoinColumn()
-  // @TreeParent()
-  // accountData: AccountData;
 }

@@ -13,7 +13,7 @@ import {
 } from '../../../auth/api/models/output/info-current-user.dto';
 
 @Injectable()
-export class UsersQueryRepository {
+export class UsersQueryRepositoryMongo {
   constructor(@InjectModel(User.name) private UserModel: UsersModelType) {}
 
   async findById(id: string): Promise<UserDocument | null> {

@@ -4,12 +4,12 @@ import {
   ArgumentMetadata,
   NotFoundException,
 } from '@nestjs/common';
-import { BlogsQueryRepository } from '../../features/blogs/infrastructure/mongodb/blogs.query.repository';
+import { BlogsQueryRepositoryMongo } from '../../features/blogs/infrastructure/mongodb/blogs.query.repository-mongo';
 import { Types } from 'mongoose';
 
 @Injectable()
 export class bodyPipe implements PipeTransform {
-  constructor(private readonly blogsQueryRepository: BlogsQueryRepository) {}
+  constructor(private readonly blogsQueryRepository: BlogsQueryRepositoryMongo) {}
 
   async transform(value: any, metadata: ArgumentMetadata) {
     if (metadata.type !== 'body') return value;

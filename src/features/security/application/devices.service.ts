@@ -4,7 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { DevicesRepository } from '../infrastructure/devices.repository';
+import { DevicesRepositoryMongo } from '../infrastructure/mongodb/devices.repository-mongo';
 import { DeviceDto } from '../api/models/device.dto';
 import { DeviceDocument } from '../domain/device.schema';
 import { JwtService } from '@nestjs/jwt';
@@ -12,14 +12,14 @@ import {
   devicesViewModel,
   OutputDeviceDto,
 } from '../api/models/output-device.dto';
-import { DevicesSqlRepository } from '../infrastructure/devices.sql.repository';
+import { DevicesRepositorySql } from '../infrastructure/postgresqldb/devices.repository-sql';
 import { DeviceTable } from '../domain/device.table';
 
 @Injectable()
 export class DevicesService {
   constructor(
-    private readonly devicesRepository: DevicesRepository,
-    private readonly devicesSqlRepository: DevicesSqlRepository,
+    private readonly devicesRepository: DevicesRepositoryMongo,
+    private readonly devicesSqlRepository: DevicesRepositorySql,
     private readonly jwtService: JwtService,
   ) {}
 
