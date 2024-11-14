@@ -17,7 +17,8 @@ export class InfoCurrentUserDto {
 //   ); for mongo
 
 export const infoCurrentUserDto = (user: UsersTable) =>
-    new InfoCurrentUserDto(
-        user.accountData.email,
-        user.accountData.login,
-        user.accountData.id);
+  new InfoCurrentUserDto(
+    user.accountData.email,
+    user.accountData.login,
+    user.accountData.id,
+  );

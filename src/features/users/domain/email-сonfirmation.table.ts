@@ -1,21 +1,27 @@
-import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from "typeorm";
-import {UsersTable} from "./users.table";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { UsersTable } from './users.table';
 
 @Entity('emailConfirmation')
 export class EmailConfirmationTable {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @OneToOne(() => UsersTable, user => user.emailConfirmation)
-    @JoinColumn()
-    user: UsersTable;
+  @OneToOne(() => UsersTable, (user) => user.emailConfirmation)
+  @JoinColumn()
+  user: UsersTable;
 
-    @Column('character varying')
-    confirmationCode: string;
+  @Column('character varying')
+  confirmationCode: string;
 
-    @Column('date')
-    expirationDate: Date;
+  @Column('timestamp with time zone')
+  expirationDate: Date;
 
-    @Column({type: 'boolean', default: false})
-    isConfirmed: boolean;
+  @Column({ type: 'boolean', default: false })
+  isConfirmed: boolean;
 }

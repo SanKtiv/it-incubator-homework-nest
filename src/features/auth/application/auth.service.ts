@@ -33,8 +33,7 @@ export class AuthService {
   }
 
   async registrationConfirmation(code: string) {
-    const user =
-      await this.usersSqlRepository.findByConfirmationCode(code);
+    const user = await this.usersSqlRepository.findByConfirmationCode(code);
 
     if (
       !user ||
@@ -107,8 +106,7 @@ export class AuthService {
     loginOrEmail: string,
     password: string,
   ): Promise<UsersTable | null> {
-    const user =
-      await this.usersSqlRepository.findByLoginOrEmail(loginOrEmail);
+    const user = await this.usersSqlRepository.findByLoginOrEmail(loginOrEmail);
 
     if (!user) return null;
 

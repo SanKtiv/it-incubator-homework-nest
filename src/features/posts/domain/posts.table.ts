@@ -2,12 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne, OneToMany,
+  ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BlogsTable } from '../../blogs/domain/blog.entity';
-import {CommentsTable} from "../../comments/domain/comments.entity";
+import { CommentsTable } from '../../comments/domain/comments.entity';
 
 @Entity('posts')
 export class PostsTable {

@@ -1,7 +1,14 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn} from 'typeorm';
-import {BlogsTable} from "../../blogs/domain/blog.entity";
-import {PostsTable} from "../../posts/domain/posts.table";
-import {UsersTable} from "../../users/domain/users.table";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { BlogsTable } from '../../blogs/domain/blog.entity';
+import { PostsTable } from '../../posts/domain/posts.table';
+import { UsersTable } from '../../users/domain/users.table';
 
 @Entity('comments')
 export class CommentsTable {
@@ -15,10 +22,10 @@ export class CommentsTable {
   createdAt: Date;
 
   @ManyToOne(() => UsersTable)
-  @JoinColumn({name: 'userId'})
+  @JoinColumn({ name: 'userId' })
   userId: string;
 
   @ManyToOne(() => PostsTable)
-  @JoinColumn({name: 'postId'})
+  @JoinColumn({ name: 'postId' })
   postId: string;
 }

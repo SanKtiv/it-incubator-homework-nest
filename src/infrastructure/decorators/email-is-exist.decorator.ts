@@ -11,7 +11,9 @@ import { UsersQueryRepositoryMongo } from '../../features/users/infrastructure/m
 @ValidatorConstraint({ name: 'EmailIsExist', async: false })
 @Injectable()
 export class EmailIsExistConstraint implements ValidatorConstraintInterface {
-  constructor(private readonly usersQueryRepository: UsersQueryRepositoryMongo) {}
+  constructor(
+    private readonly usersQueryRepository: UsersQueryRepositoryMongo,
+  ) {}
   async validate(value: any, args: ValidationArguments) {
     const result = await this.usersQueryRepository.emailIsExist(value);
     return !(result === 1);

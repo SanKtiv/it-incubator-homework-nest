@@ -57,10 +57,7 @@ export const commentOutputDto = (
     ),
   );
 
-export const sqlCommentOutputDto = (
-  commentDocument: any,
-  userId?: string,
-) => ({
+export const sqlCommentOutputDto = (commentDocument: any, userId?: string) => ({
   id: commentDocument.id,
   content: commentDocument.content,
   createdAt: commentDocument.createdAt.toISOString(),

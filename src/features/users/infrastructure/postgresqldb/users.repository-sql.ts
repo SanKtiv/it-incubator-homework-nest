@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
-import {UsersTable} from '../../domain/users.table';
+import { UsersTable } from '../../domain/users.table';
 import { UsersInputDto } from '../../api/models/input/users.input.dto';
-import {EmailConfirmationTable} from "../../domain/email-сonfirmation.table";
-import {AccountDataTable} from "../../domain/account-data.table";
+import { EmailConfirmationTable } from '../../domain/email-сonfirmation.table';
+import { AccountDataTable } from '../../domain/account-data.table';
+import { PasswordRecoveryTable } from '../../domain/password-recovery.table';
 
 @Injectable()
 export class UsersRepositorySql {
@@ -19,6 +20,7 @@ export class UsersRepositorySql {
     const user = new UsersTable();
     const accountData = new AccountDataTable();
     const emailConfirmation = new EmailConfirmationTable();
+    const passwordRecovery = new PasswordRecoveryTable();
 
     accountData.login = dto.login;
     accountData.email = dto.email;
@@ -26,14 +28,17 @@ export class UsersRepositorySql {
     accountData.passwordHash = passwordHash;
     emailConfirmation.confirmationCode = confirmationCode;
     emailConfirmation.expirationDate = expirationDate;
+    passwordRecovery.recoveryCode = 'code';
+    passwordRecovery.expirationDateRecovery = new Date();
 
     user.accountData = accountData;
     user.emailConfirmation = emailConfirmation;
+    user.passwordRecovery = passwordRecovery;
 
-    return this.repository.save(user);
+    return await this.repository.save(user);
   }
   private get repository() {
-    return this.dataSource.getRepository(UsersTable)
+    return this.dataSource.getRepository(UsersTable);
   }
 
   async save(user: UsersTable): Promise<UsersTable> {
@@ -41,8 +46,7 @@ export class UsersRepositorySql {
   }
 
   async saveConfirmInfo(entity: EmailConfirmationTable) {
-    await this.dataSource
-        .getRepository(EmailConfirmationTable).save(entity)
+    await this.dataSource.getRepository(EmailConfirmationTable).save(entity);
   }
 
   async findById(id: string): Promise<UsersTable | null> {
@@ -56,56 +60,52 @@ export class UsersRepositorySql {
   async findByConfirmationCode(code: string): Promise<UsersTable | null> {
     return this.repository.findOne({
       where: {
-        emailConfirmation: {confirmationCode: code}
+        emailConfirmation: { confirmationCode: code },
       },
-      relations: ['emailConfirmation']
+      relations: ['emailConfirmation'],
     });
   }
 
   async findByRecoveryCode(code: string): Promise<UsersTable | null> {
     return this.repository.findOne({
       where: {
-        passwordRecovery: {recoveryCode: code}
+        passwordRecovery: { recoveryCode: code },
       },
-      relations: ['passwordRecovery']
+      relations: ['passwordRecovery'],
     });
   }
 
   async findByLogin(login: string): Promise<UsersTable | null> {
-    return this.repository
-        .findOne({
-          where: {
-            accountData: {login: login}
-          },
-          relations: ['accountData']
-        });
+    return this.repository.findOne({
+      where: {
+        accountData: { login: login },
+      },
+      relations: ['accountData'],
+    });
   }
 
   async findByEmail(email: string): Promise<UsersTable | null> {
-    return this.repository
-        .findOne({
-          where: {
-            accountData: {email: email}
-          },
-          relations: ['accountData']
-        });
+    return this.repository.findOne({
+      where: {
+        accountData: { email: email },
+      },
+      relations: ['accountData'],
+    });
   }
 
   async findByLoginOrEmail(loginOrEmail: string): Promise<UsersTable | null> {
-    return this.repository
-        .findOne({
-          where: [
-            {accountData: {email: loginOrEmail}},
-            {accountData: {login: loginOrEmail}}
-          ],
-          relations: ['accountData']
-        });
+    return this.repository.findOne({
+      where: [
+        { accountData: { email: loginOrEmail } },
+        { accountData: { login: loginOrEmail } },
+      ],
+      relations: ['accountData'],
+    });
   }
 
   async remove(id: string): Promise<UsersTable | null> {
     try {
-      const user = await this.repository
-        .findOneBy({ id: id });
+      const user = await this.repository.findOneBy({ id: id });
 
       if (user) await this.dataSource.getRepository(UsersTable).remove(user);
 

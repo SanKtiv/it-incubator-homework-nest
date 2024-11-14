@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { BlogsTable} from '../../domain/blog.entity';
+import { BlogsTable } from '../../domain/blog.entity';
 import { PostsTable } from '../../../posts/domain/posts.table';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class BlogsRepositorySql {
     @InjectDataSource()
     protected dataSource: DataSource,
     @InjectRepository(BlogsTable)
-    protected blogsRepository: Repository<BlogsTable>
+    protected blogsRepository: Repository<BlogsTable>,
   ) {}
 
   private get repository() {

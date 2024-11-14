@@ -9,7 +9,9 @@ import { Types } from 'mongoose';
 
 @Injectable()
 export class bodyPipe implements PipeTransform {
-  constructor(private readonly blogsQueryRepository: BlogsQueryRepositoryMongo) {}
+  constructor(
+    private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
+  ) {}
 
   async transform(value: any, metadata: ArgumentMetadata) {
     if (metadata.type !== 'body') return value;
