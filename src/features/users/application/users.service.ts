@@ -42,8 +42,8 @@ export class UsersService {
   }
 
   async existLogin(login: string): Promise<BadRequestException | void> {
-    const userDocument = await this.usersSqlRepository.findByLogin(login);
-    if (userDocument) {
+    const user = await this.usersSqlRepository.findByLogin(login);
+    if (user) {
       throw new BadRequestException({
         message: [{ message: 'login is already exist', field: 'login' }],
       });

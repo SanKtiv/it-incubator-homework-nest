@@ -35,10 +35,11 @@ export class CommentsService {
   async createComment(dto: CommentServiceDto): Promise<CommentOutputDto> {
     await this.postsService.existPost(dto.postId);
 
-    const userDocument = await this.usersSqlRepository.findById(dto.userId);
+
+    const user = await this.usersSqlRepository.findById(dto.userId);
 
     // dto.userLogin = userDocument!.accountData.login; for mongo
-    dto.userLogin = userDocument!.login;
+    dto.userLogin = user!.accountData.login;
 
     const commentDocument = await this.commentsSqlRepository.create(dto);
 
@@ -169,3 +170,4 @@ export class CommentsService {
   //   return;
   // }
 }
+

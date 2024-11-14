@@ -33,22 +33,22 @@ export class AuthService {
   }
 
   async registrationConfirmation(code: string) {
-    const userConfirmInfo =
+    const user =
       await this.usersSqlRepository.findByConfirmationCode(code);
 
     if (
-      !userConfirmInfo ||
-      userConfirmInfo.expirationDate < new Date() ||
-      userConfirmInfo.isConfirmed
+      !user ||
+      user.emailConfirmation.expirationDate < new Date() ||
+      user.emailConfirmation.isConfirmed
     )
       throw new BadRequestException({
         message: [{ message: 'code is wrong', field: 'code' }],
       });
 
     // userDocument!.emailConfirmation.isConfirmed = true; for mongo
-    userConfirmInfo.isConfirmed = true;
+    user.emailConfirmation.isConfirmed = true;
 
-    await this.usersSqlRepository.saveConfirmInfo(userConfirmInfo);
+    await this.usersSqlRepository.save(user);
   }
 
   async resendConfirmCode(email: string): Promise<void> {
@@ -107,20 +107,20 @@ export class AuthService {
     loginOrEmail: string,
     password: string,
   ): Promise<UsersTable | null> {
-    const userDocument =
+    const user =
       await this.usersSqlRepository.findByLoginOrEmail(loginOrEmail);
 
-    if (!userDocument) return null;
+    if (!user) return null;
 
     const compareHash = await bcrypt.compare(
       password,
       //userDocument.accountData.passwordHash, for mongo
-      userDocument.passwordHash,
+      user.accountData.passwordHash,
     );
 
     if (!compareHash) return null;
 
-    return userDocument;
+    return user;
   }
 
   async createAccessToken(userId: string) {

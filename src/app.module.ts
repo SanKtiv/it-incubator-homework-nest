@@ -62,9 +62,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlogsRepositorySql } from './features/blogs/infrastructure/postgresdb/blogs.repository-sql';
 import { BlogsTable, ForBlogsTable } from './features/blogs/domain/blog.entity';
 import {
-  AccountData,
-  UsersConfirmInfoTable,
-  UsersRecoveryInfoTable,
   UsersTable
 } from './features/users/domain/users.table';
 import { UsersRepositorySql } from './features/users/infrastructure/postgresqldb/users.repository-sql';
@@ -83,6 +80,10 @@ import { CommentsSqlRepository } from './features/comments/infrastructure/postgr
 import { CommentsSqlQueryRepository } from './features/comments/infrastructure/postgresql/comments.query.repository-sql';
 import { StatusesTable } from './features/statuses/domain/statuses.entity';
 import { StatusesRepositorySql } from './features/statuses/infrastructure/statuses.repository-sql';
+import {AccountDataTable} from "./features/users/domain/account-data.table";
+import {EmailConfirmationTable} from "./features/users/domain/email-сonfirmation.table";
+import {PasswordRecoveryTable} from "./features/users/domain/password-recovery.table";
+
 
 dotenv.config();
 
@@ -154,8 +155,9 @@ const strategies = [
         DeviceTable,
         RequestTable,
         UsersTable,
-        UsersConfirmInfoTable,
-        UsersRecoveryInfoTable,
+        AccountDataTable,
+        EmailConfirmationTable,
+        PasswordRecoveryTable,
         ForBlogsTable,
         CommentsTable,
         StatusesTable,
@@ -170,8 +172,9 @@ const strategies = [
       DeviceTable,
       RequestTable,
       UsersTable,
-      UsersConfirmInfoTable,
-      UsersRecoveryInfoTable,
+      AccountDataTable,
+      EmailConfirmationTable,
+      PasswordRecoveryTable,
       ForBlogsTable,
       CommentsTable,
       StatusesTable,

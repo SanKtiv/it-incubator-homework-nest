@@ -1,92 +1,22 @@
-import {Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn} from 'typeorm';
-
-@Entity('account_data')
-export class AccountData {
-  // @PrimaryGeneratedColumn('uuid')
-  // id: string;
-
-  @PrimaryColumn()
-  login: string;
-
-  @Column()
-  email: string;
-
-  @Column()
-  createdAt: string;
-
-  @Column()
-  passwordHash: string;
-}
+import {Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {AccountDataTable} from "./account-data.table";
+import {EmailConfirmationTable} from "./email-сonfirmation.table";
+import {PasswordRecoveryTable} from "./password-recovery.table";
 
 @Entity('users')
 export class UsersTable {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-  @Column('character varying')
-  login: string;
+    @OneToOne(() => AccountDataTable, accountData => accountData.user, {cascade: true})
+    @JoinColumn()
+    accountData: AccountDataTable;
 
-  @Column('character varying')
-  email: string;
+    @OneToOne(() => EmailConfirmationTable, emailConfirmation => emailConfirmation.user, {cascade: true})
+    @JoinColumn()
+    emailConfirmation: EmailConfirmationTable;
 
-  @Column('timestamp with time zone')
-  createdAt: Date;
-
-  @Column('character varying')
-  passwordHash: string;
-
-  // @Column('character varying')
-  // confirmationCode: string;
-  //
-  // @Column('date')
-  // expirationDate: Date;
-  //
-  // @Column({ type: 'boolean', default: false })
-  // isConfirmed: boolean;
-  //
-  // @Column({ type: 'character varying', nullable: true })
-  // recoveryCode: string;
-  //
-  // @Column({ type: 'date', nullable: true })
-  // expirationDateRecovery: Date;
-
-  // @OneToOne(() => AccountData)
-  // @JoinColumn()
-  // @TreeParent()
-  // accountData: AccountData;
-}
-
-@Entity('usersConfirmInfo')
-export class UsersConfirmInfoTable {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @OneToOne(() => UsersTable)
-  @JoinColumn()
-  user: UsersTable;
-
-  @Column('character varying')
-  confirmationCode: string;
-
-  @Column('date')
-  expirationDate: Date;
-
-  @Column({ type: 'boolean', default: false })
-  isConfirmed: boolean;
-}
-
-@Entity('usersRecoveryInfo')
-export class UsersRecoveryInfoTable {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @OneToOne(() => UsersTable)
-  @JoinColumn()
-  user: UsersTable;
-
-  @Column({ type: 'character varying', nullable: true })
-  recoveryCode: string;
-
-  @Column({ type: 'date', nullable: true })
-  expirationDateRecovery: Date;
+    @OneToOne(() => PasswordRecoveryTable, passwordRecovery => passwordRecovery.user, {cascade: true})
+    @JoinColumn()
+    passwordRecovery: PasswordRecoveryTable;
 }

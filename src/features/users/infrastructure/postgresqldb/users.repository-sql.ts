@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
-import {UsersConfirmInfoTable, UsersRecoveryInfoTable, UsersTable} from '../../domain/users.table';
+import {UsersTable} from '../../domain/users.table';
 import { UsersInputDto } from '../../api/models/input/users.input.dto';
+import {EmailConfirmationTable} from "../../domain/email-сonfirmation.table";
+import {AccountDataTable} from "../../domain/account-data.table";
 
 @Injectable()
 export class UsersRepositorySql {
@@ -14,13 +16,21 @@ export class UsersRepositorySql {
     confirmationCode: string,
     expirationDate: Date,
   ): Promise<UsersTable> {
-    return this.repository.save({
-      ...dto,
-      createdAt: new Date().toISOString(),
-      passwordHash: passwordHash,
-      confirmationCode: confirmationCode,
-      expirationDate: expirationDate,
-    });
+    const user = new UsersTable();
+    const accountData = new AccountDataTable();
+    const emailConfirmation = new EmailConfirmationTable();
+
+    accountData.login = dto.login;
+    accountData.email = dto.email;
+    accountData.createdAt = new Date();
+    accountData.passwordHash = passwordHash;
+    emailConfirmation.confirmationCode = confirmationCode;
+    emailConfirmation.expirationDate = expirationDate;
+
+    user.accountData = accountData;
+    user.emailConfirmation = emailConfirmation;
+
+    return this.repository.save(user);
   }
   private get repository() {
     return this.dataSource.getRepository(UsersTable)
@@ -30,9 +40,9 @@ export class UsersRepositorySql {
     return this.repository.save(user);
   }
 
-  async saveConfirmInfo(entity: UsersConfirmInfoTable) {
+  async saveConfirmInfo(entity: EmailConfirmationTable) {
     await this.dataSource
-        .getRepository(UsersConfirmInfoTable).save(entity)
+        .getRepository(EmailConfirmationTable).save(entity)
   }
 
   async findById(id: string): Promise<UsersTable | null> {
@@ -43,31 +53,53 @@ export class UsersRepositorySql {
     }
   }
 
-  async findByConfirmationCode(code: string): Promise<UsersConfirmInfoTable | null> {
-    return this.dataSource.getRepository(UsersConfirmInfoTable).findOneBy({
-      confirmationCode: code,
+  async findByConfirmationCode(code: string): Promise<UsersTable | null> {
+    return this.repository.findOne({
+      where: {
+        emailConfirmation: {confirmationCode: code}
+      },
+      relations: ['emailConfirmation']
     });
   }
 
-  async findByRecoveryCode(code: string): Promise<UsersRecoveryInfoTable | null> {
-    return this.dataSource.getRepository(UsersRecoveryInfoTable).findOneBy({
-      recoveryCode: code,
+  async findByRecoveryCode(code: string): Promise<UsersTable | null> {
+    return this.repository.findOne({
+      where: {
+        passwordRecovery: {recoveryCode: code}
+      },
+      relations: ['passwordRecovery']
     });
   }
 
   async findByLogin(login: string): Promise<UsersTable | null> {
     return this.repository
-      .findOneBy({ login: login });
+        .findOne({
+          where: {
+            accountData: {login: login}
+          },
+          relations: ['accountData']
+        });
   }
 
   async findByEmail(email: string): Promise<UsersTable | null> {
     return this.repository
-      .findOneBy({ email: email });
+        .findOne({
+          where: {
+            accountData: {email: email}
+          },
+          relations: ['accountData']
+        });
   }
 
   async findByLoginOrEmail(loginOrEmail: string): Promise<UsersTable | null> {
     return this.repository
-      .findOneBy([{ email: loginOrEmail }, { login: loginOrEmail }]);
+        .findOne({
+          where: [
+            {accountData: {email: loginOrEmail}},
+            {accountData: {login: loginOrEmail}}
+          ],
+          relations: ['accountData']
+        });
   }
 
   async remove(id: string): Promise<UsersTable | null> {
