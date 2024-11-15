@@ -162,7 +162,7 @@ const strategies = [
       ssl: true,
       //autoLoadEntities: false,
       synchronize: true,
-      // logging: ['query', 'error', 'warn'],
+      logging: ['query', 'error', 'warn'],
     }),
     TypeOrmModule.forFeature([
       BlogsTable,

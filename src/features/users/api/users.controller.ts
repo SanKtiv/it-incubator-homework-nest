@@ -37,6 +37,7 @@ export class UsersController {
     await this.usersService.existUserLogin(dto.login);
     await this.usersService.existUserEmail(dto.email);
     const userDocument = await this.usersService.createUser(dto);
+    console.log('userDocument =',userDocument)
     return usersOutputDto(userDocument);
   }
 

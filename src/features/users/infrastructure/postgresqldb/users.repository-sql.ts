@@ -11,6 +11,10 @@ import { PasswordRecoveryTable } from '../../domain/password-recovery.table';
 export class UsersRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
+  private get repository() {
+    return this.dataSource.getRepository(UsersTable);
+  }
+
   async create(
     dto: UsersInputDto,
     passwordHash: string,
@@ -35,8 +39,26 @@ export class UsersRepositorySql {
     return await this.repository.save(user);
   }
 
-  private get repository() {
-    return this.dataSource.getRepository(UsersTable);
+  async create_RAW(
+      dto: UsersInputDto,
+      passwordHash: string,
+      confirmationCode: string,
+      expirationDate: Date,) {
+    const rawQuery = `
+    INSERT INTO public."users"
+    ("accountData"."login", 
+    "accountData"."email", 
+    "accountData"."createdAt", 
+    "accountData"."passwordHash",
+    "emailConfirmation"."confirmationCode",
+    "emailConfirmation"."expirationDate"
+    )
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *`
+
+    const parameters = [dto.login, dto.email, new Date(), passwordHash, confirmationCode, expirationDate]
+
+    return await this.dataSource.query(rawQuery, parameters)
   }
 
   async save(user: UsersTable): Promise<UsersTable> {

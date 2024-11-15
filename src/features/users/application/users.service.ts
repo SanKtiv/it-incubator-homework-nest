@@ -15,7 +15,7 @@ export class UsersService {
     private readonly usersSqlRepository: UsersRepositorySql,
   ) {}
 
-  async createUser(dto: UsersInputDto): Promise<UsersTable> {
+  async createUser(dto: UsersInputDto): Promise<UsersTable | any> {
     const passwordHash = await this.genHash(dto.password);
 
     const code = this.createCodeWithExpireDate();
