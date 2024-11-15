@@ -41,7 +41,7 @@ export class UsersService {
     };
   }
 
-  async existLogin(login: string): Promise<BadRequestException | void> {
+  async existUserLogin(login: string): Promise<BadRequestException | void> {
     const user = await this.usersSqlRepository.findByLogin(login);
     if (user) {
       throw new BadRequestException({
@@ -50,7 +50,7 @@ export class UsersService {
     }
   }
 
-  async existEmail(email: string): Promise<BadRequestException | void> {
+  async existUserEmail(email: string): Promise<BadRequestException | void> {
     const userDocument = await this.usersSqlRepository.findByEmail(email);
     if (userDocument) {
       throw new BadRequestException({
@@ -59,7 +59,7 @@ export class UsersService {
     }
   }
 
-  async existUserWithId(id: string): Promise<boolean> {
+  async existUserById(id: string): Promise<boolean> {
     const result = await this.usersRepository.findById(id);
 
     return !!result;

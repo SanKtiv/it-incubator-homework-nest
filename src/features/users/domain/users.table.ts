@@ -8,24 +8,25 @@ export class UsersTable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => AccountDataTable, (accountData) => accountData.user, {
-    cascade: ['insert', 'update'],
-  })
+  @OneToOne(() => AccountDataTable,
+      (accountData) => accountData.user,
+      {cascade: ['insert'], eager: true, onDelete: 'CASCADE'}
+      )
   @JoinColumn()
   accountData: AccountDataTable;
 
   @OneToOne(
     () => EmailConfirmationTable,
     (emailConfirmation) => emailConfirmation.user,
-    { cascade: ['insert', 'update'] },
+    { cascade: ['insert'], eager: true, onDelete: 'CASCADE' },
   )
   @JoinColumn()
   emailConfirmation: EmailConfirmationTable;
 
   @OneToOne(
     () => PasswordRecoveryTable,
-    (passwordRecovery) => passwordRecovery.user,
-    { cascade: ['insert', 'update'] },
+      (passwordRecovery) => passwordRecovery.user,
+    { cascade: ['insert'], eager: true, onDelete: 'CASCADE' },
   )
   @JoinColumn()
   passwordRecovery: PasswordRecoveryTable;

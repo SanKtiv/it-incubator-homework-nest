@@ -20,23 +20,21 @@ export class UsersRepositorySql {
     const user = new UsersTable();
     const accountData = new AccountDataTable();
     const emailConfirmation = new EmailConfirmationTable();
-    const passwordRecovery = new PasswordRecoveryTable();
 
     accountData.login = dto.login;
     accountData.email = dto.email;
     accountData.createdAt = new Date();
     accountData.passwordHash = passwordHash;
+
     emailConfirmation.confirmationCode = confirmationCode;
     emailConfirmation.expirationDate = expirationDate;
-    passwordRecovery.recoveryCode = 'code';
-    passwordRecovery.expirationDateRecovery = new Date();
 
     user.accountData = accountData;
     user.emailConfirmation = emailConfirmation;
-    user.passwordRecovery = passwordRecovery;
 
     return await this.repository.save(user);
   }
+
   private get repository() {
     return this.dataSource.getRepository(UsersTable);
   }

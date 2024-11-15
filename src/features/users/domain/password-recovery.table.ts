@@ -12,8 +12,9 @@ export class PasswordRecoveryTable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => UsersTable, (user) => user.passwordRecovery)
-  @JoinColumn()
+  @OneToOne(() => UsersTable,
+      (user) => user.passwordRecovery,
+      {onDelete: 'CASCADE'})
   user: UsersTable;
 
   @Column({ type: 'character varying', nullable: true })

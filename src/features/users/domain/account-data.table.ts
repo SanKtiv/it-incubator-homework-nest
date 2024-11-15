@@ -24,7 +24,8 @@ export class AccountDataTable {
   @Column('character varying')
   passwordHash: string;
 
-  @OneToOne(() => UsersTable, (user) => user.accountData)
-  @JoinColumn()
+  @OneToOne(() => UsersTable,
+      (user) => user.accountData,
+      {onDelete: 'CASCADE'})
   user: UsersTable;
 }

@@ -34,8 +34,8 @@ export class UsersController {
 
   @Post()
   async createUser(@Body() dto: UsersInputDto) {
-    await this.usersService.existLogin(dto.login);
-    await this.usersService.existEmail(dto.email);
+    await this.usersService.existUserLogin(dto.login);
+    await this.usersService.existUserEmail(dto.email);
     const userDocument = await this.usersService.createUser(dto);
     return usersOutputDto(userDocument);
   }

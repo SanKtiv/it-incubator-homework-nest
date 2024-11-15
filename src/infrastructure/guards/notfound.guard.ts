@@ -15,7 +15,7 @@ export class UserGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     console.log(request.url);
     const id = request.params.id;
-    const user = await this.usersService.existUserWithId(id);
+    const user = await this.usersService.existUserById(id);
     if (!user) throw new NotFoundException();
     return true;
   }

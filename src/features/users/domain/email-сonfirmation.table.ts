@@ -12,8 +12,9 @@ export class EmailConfirmationTable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => UsersTable, (user) => user.emailConfirmation)
-  @JoinColumn()
+  @OneToOne(() => UsersTable,
+      (user) => user.emailConfirmation,
+      {onDelete: 'CASCADE'})
   user: UsersTable;
 
   @Column('character varying')
