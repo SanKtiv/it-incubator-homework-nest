@@ -40,10 +40,11 @@ export class UsersRepositorySql {
   }
 
   async create_RAW(
-      dto: UsersInputDto,
-      passwordHash: string,
-      confirmationCode: string,
-      expirationDate: Date,) {
+    dto: UsersInputDto,
+    passwordHash: string,
+    confirmationCode: string,
+    expirationDate: Date,
+  ) {
     const rawQuery = `
     INSERT INTO public."users"
     ("accountData"."login", 
@@ -54,11 +55,18 @@ export class UsersRepositorySql {
     "emailConfirmation"."expirationDate"
     )
     VALUES ($1, $2, $3, $4, $5, $6)
-    RETURNING *`
+    RETURNING *`;
 
-    const parameters = [dto.login, dto.email, new Date(), passwordHash, confirmationCode, expirationDate]
+    const parameters = [
+      dto.login,
+      dto.email,
+      new Date(),
+      passwordHash,
+      confirmationCode,
+      expirationDate,
+    ];
 
-    return await this.dataSource.query(rawQuery, parameters)
+    return await this.dataSource.query(rawQuery, parameters);
   }
 
   async save(user: UsersTable): Promise<UsersTable> {

@@ -8,10 +8,11 @@ export class UsersTable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => AccountDataTable,
-      (accountData) => accountData.user,
-      {cascade: ['insert'], eager: true, onDelete: 'CASCADE'}
-      )
+  @OneToOne(() => AccountDataTable, (accountData) => accountData.user, {
+    cascade: ['insert'],
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   accountData: AccountDataTable;
 
@@ -25,7 +26,7 @@ export class UsersTable {
 
   @OneToOne(
     () => PasswordRecoveryTable,
-      (passwordRecovery) => passwordRecovery.user,
+    (passwordRecovery) => passwordRecovery.user,
     { cascade: ['insert'], eager: true, onDelete: 'CASCADE' },
   )
   @JoinColumn()

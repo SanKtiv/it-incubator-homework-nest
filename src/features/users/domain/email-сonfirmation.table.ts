@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UsersTable } from './users.table';
 
 @Entity('emailConfirmation')
@@ -12,9 +6,9 @@ export class EmailConfirmationTable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => UsersTable,
-      (user) => user.emailConfirmation,
-      {onDelete: 'CASCADE'})
+  @OneToOne(() => UsersTable, (user) => user.emailConfirmation, {
+    onDelete: 'CASCADE',
+  })
   user: UsersTable;
 
   @Column('character varying')

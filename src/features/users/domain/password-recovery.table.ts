@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UsersTable } from './users.table';
 
 @Entity('passwordRecovery')
@@ -12,9 +6,9 @@ export class PasswordRecoveryTable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => UsersTable,
-      (user) => user.passwordRecovery,
-      {onDelete: 'CASCADE'})
+  @OneToOne(() => UsersTable, (user) => user.passwordRecovery, {
+    onDelete: 'CASCADE',
+  })
   user: UsersTable;
 
   @Column({ type: 'character varying', nullable: true })

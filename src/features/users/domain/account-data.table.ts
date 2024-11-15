@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UsersTable } from './users.table';
 
 @Entity('accountData')
@@ -24,8 +18,8 @@ export class AccountDataTable {
   @Column('character varying')
   passwordHash: string;
 
-  @OneToOne(() => UsersTable,
-      (user) => user.accountData,
-      {onDelete: 'CASCADE'})
+  @OneToOne(() => UsersTable, (user) => user.accountData, {
+    onDelete: 'CASCADE',
+  })
   user: UsersTable;
 }
