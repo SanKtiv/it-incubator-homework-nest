@@ -14,6 +14,6 @@ export class PasswordRecoveryTable {
   @Column({ type: 'character varying', nullable: true })
   recoveryCode: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp with time zone', nullable: true })
   expirationDateRecovery: Date;
 }

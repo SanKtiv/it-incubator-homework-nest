@@ -6,16 +6,16 @@ export class AccountDataTable {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('character varying')
+  @Column({type: 'character varying', nullable: false})
   login: string;
 
-  @Column('character varying')
+  @Column({type: 'character varying', nullable: false})
   email: string;
 
-  @Column('timestamp with time zone')
+  @Column({type: 'timestamp with time zone', nullable: false})
   createdAt: Date;
 
-  @Column('character varying')
+  @Column({type: 'character varying', nullable: false})
   passwordHash: string;
 
   @OneToOne(() => UsersTable, (user) => user.accountData, {

@@ -45,28 +45,32 @@ export class UsersRepositorySql {
     confirmationCode: string,
     expirationDate: Date,
   ) {
-    const rawQuery = `
-    INSERT INTO public."users"
-    ("accountData"."login", 
-    "accountData"."email", 
-    "accountData"."createdAt", 
-    "accountData"."passwordHash",
-    "emailConfirmation"."confirmationCode",
-    "emailConfirmation"."expirationDate"
-    )
-    VALUES ($1, $2, $3, $4, $5, $6)
-    RETURNING *`;
+    const accountDataQuery = `
+    INSERT INTO "accountData" ("login", "email", "createdAt", "passwordHash")
+    VALUES ($1, $2, $3, $4)
+    RETURNING "id"`;
 
-    const parameters = [
+    const accountDataParameters = [
       dto.login,
       dto.email,
       new Date(),
-      passwordHash,
-      confirmationCode,
-      expirationDate,
+      passwordHash
     ];
 
-    return await this.dataSource.query(rawQuery, parameters);
+    const emailConfirmationQuery = `
+    INSERT INTO "emailConfirmation" ("confirmationCode", "expirationDate")
+    VALUES ($1, $2)
+    RETURNING "id"`;
+
+    const emailConfirmationParameters = [confirmationCode, expirationDate];
+
+    const accountDataId = await this.dataSource
+        .query(accountDataQuery, accountDataParameters);
+
+    const emailConfirmationId = await this.dataSource
+        .query(emailConfirmationQuery, emailConfirmationParameters)
+
+
   }
 
   async save(user: UsersTable): Promise<UsersTable> {
