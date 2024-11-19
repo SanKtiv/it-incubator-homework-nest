@@ -20,7 +20,7 @@ export class UsersService {
 
     const code = this.createCodeWithExpireDate();
 
-    return this.usersSqlRepository.create(
+    return this.usersSqlRepository.create_RAW(
       dto,
       passwordHash,
       code.confirmationCode,

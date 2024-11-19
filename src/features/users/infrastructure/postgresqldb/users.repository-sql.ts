@@ -64,13 +64,28 @@ export class UsersRepositorySql {
 
     const emailConfirmationParameters = [confirmationCode, expirationDate];
 
-    const accountDataId = await this.dataSource
-        .query(accountDataQuery, accountDataParameters);
+    const passwordRecoveryQuery = `
+    INSERT INTO "passwordRecovery" ("recoveryCode")
+    VALUES (null)
+    RETURNING "id"`
 
-    const emailConfirmationId = await this.dataSource
-        .query(emailConfirmationQuery, emailConfirmationParameters)
+    const accountDataId = (await this.dataSource
+        .query(accountDataQuery, accountDataParameters))[0].id;
 
+    const emailConfirmationId = (await this.dataSource
+        .query(emailConfirmationQuery, emailConfirmationParameters))[0].id
 
+    const passwordRecoveryId = (await this.dataSource
+        .query(passwordRecoveryQuery))[0].id
+
+    const insertUserQuery = `
+    INSERT INTO "users" ("accountDataId", "emailConfirmationId", "passwordRecoveryId")
+    VALUES ($1, $2, $3)
+    RETURNING *`
+
+    const userParameters = [accountDataId, emailConfirmationId, passwordRecoveryId]
+
+    return await this.dataSource.query(insertUserQuery, userParameters)
   }
 
   async save(user: UsersTable): Promise<UsersTable> {
