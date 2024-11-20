@@ -48,7 +48,7 @@ export class UsersRepositorySql {
     const accountDataQuery = `
     INSERT INTO "accountData" ("login", "email", "createdAt", "passwordHash")
     VALUES ($1, $2, $3, $4)
-    RETURNING "id"`;
+    RETURNING *`;
 
     const accountDataParameters = [
       dto.login,
@@ -60,32 +60,34 @@ export class UsersRepositorySql {
     const emailConfirmationQuery = `
     INSERT INTO "emailConfirmation" ("confirmationCode", "expirationDate")
     VALUES ($1, $2)
-    RETURNING "id"`;
+    RETURNING *`;
 
     const emailConfirmationParameters = [confirmationCode, expirationDate];
 
     const passwordRecoveryQuery = `
-    INSERT INTO "passwordRecovery" ("recoveryCode")
-    VALUES (null)
-    RETURNING "id"`
+    INSERT INTO "passwordRecovery"
+    DEFAULT VALUES
+    RETURNING *`
 
-    const accountDataId = (await this.dataSource
-        .query(accountDataQuery, accountDataParameters))[0].id;
+    const [accountData] = await this.dataSource
+        .query(accountDataQuery, accountDataParameters);
 
-    const emailConfirmationId = (await this.dataSource
-        .query(emailConfirmationQuery, emailConfirmationParameters))[0].id
+    const [emailConfirmation] = await this.dataSource
+        .query(emailConfirmationQuery, emailConfirmationParameters)
 
-    const passwordRecoveryId = (await this.dataSource
-        .query(passwordRecoveryQuery))[0].id
+    const [passwordRecovery] = await this.dataSource
+        .query(passwordRecoveryQuery)
 
     const insertUserQuery = `
     INSERT INTO "users" ("accountDataId", "emailConfirmationId", "passwordRecoveryId")
     VALUES ($1, $2, $3)
     RETURNING *`
 
-    const userParameters = [accountDataId, emailConfirmationId, passwordRecoveryId]
+    const userParameters = [accountData.id, emailConfirmation.id, passwordRecovery.id]
 
-    return await this.dataSource.query(insertUserQuery, userParameters)
+    const [user] = await this.dataSource.query(insertUserQuery, userParameters)
+
+    return this.findById_RAW(user.id)
   }
 
   async save(user: UsersTable): Promise<UsersTable> {
@@ -99,6 +101,23 @@ export class UsersRepositorySql {
   async findById(id: string): Promise<UsersTable | null> {
     try {
       return this.repository.findOneBy({ id: id });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async findById_RAW(id: string): Promise<UsersTable | null> {
+    const findUserByIdQuery = `
+    SELECT u."id", "login", "email", "createdAt"
+    FROM "users" AS u
+    LEFT JOIN "accountData" AS a ON a."id" = u."accountDataId"
+    WHERE u."id" = $1`
+
+    const parameters = [id]
+    try {
+      const [user] = await this.dataSource.query(findUserByIdQuery, parameters);
+
+      return user;
     } catch (e) {
       return null;
     }

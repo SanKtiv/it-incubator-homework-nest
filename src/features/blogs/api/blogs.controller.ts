@@ -90,7 +90,7 @@ export class BlogsController {
   async getBlogById(
     @Param('blogId', paramIdIsMongoIdPipe) id: string,
   ): Promise<BlogsViewDto> {
-    return this.blogsSqlQueryRepository.findById(id);
+    return this.blogsSqlQueryRepository.findById_RAW(id);
   }
 
   @Get(':blogId/posts')
@@ -99,7 +99,7 @@ export class BlogsController {
     @Query() query: PostQuery,
     @Req() req: Request,
   ): Promise<PostsPaging> {
-    await this.blogsSqlQueryRepository.findById(blogId);
+    await this.blogsSqlQueryRepository.findById_RAW(blogId);
 
     const userId = await this.accessJwtToken.getUserIdFromHeaders(
       req.headers.authorization,

@@ -88,7 +88,7 @@ export class SaBlogsController {
   async getBlogById(
     @Param('blogId', paramIdIsMongoIdPipe) id: string,
   ): Promise<BlogsViewDto> {
-    return this.blogsSqlQueryRepository.findById(id);
+    return this.blogsSqlQueryRepository.findById_RAW(id);
   }
 
   @Get(':blogId/posts')
@@ -97,7 +97,7 @@ export class SaBlogsController {
     @Query() query: PostQuery,
     @Req() req: Request,
   ): Promise<PostsPaging> {
-    await this.blogsSqlQueryRepository.findById(blogId);
+    await this.blogsSqlQueryRepository.findById_RAW(blogId);
 
     return this.postsSqlQueryRepository.findPaging(query, blogId, null);
   }

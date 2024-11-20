@@ -36,9 +36,8 @@ export class UsersController {
   async createUser(@Body() dto: UsersInputDto) {
     await this.usersService.existUserLogin(dto.login);
     await this.usersService.existUserEmail(dto.email);
-    const userDocument = await this.usersService.createUser(dto);
-    console.log('userDocument =', userDocument);
-    return usersOutputDto(userDocument);
+    const user = await this.usersService.createUser(dto);
+    return usersOutputDto(user);
   }
 
   @Get()
@@ -47,7 +46,7 @@ export class UsersController {
     //const totalUsers = await this.usersSqlQueryRepository.countDocument(query);for mongo
     //const usersPaging = await this.usersSqlQueryRepository.findPaging(query);for mongo
     //return usersPagingDto(totalUsers, query, usersPaging);for mongo
-    return await this.usersSqlQueryRepository.findPaging(query);
+    return await this.usersSqlQueryRepository.findPaging_RAW(query);
   }
 
   @Delete(':userId')

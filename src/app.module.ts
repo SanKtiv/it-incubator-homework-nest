@@ -60,7 +60,7 @@ import configuration from './settings/configuration';
 import { DevicesController } from './features/security/api/devices.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlogsRepositorySql } from './features/blogs/infrastructure/postgresdb/blogs.repository-sql';
-import { BlogsTable, ForBlogsTable } from './features/blogs/domain/blog.entity';
+import { BlogsTable} from './features/blogs/domain/blog.entity';
 import { UsersTable } from './features/users/domain/users.table';
 import { UsersRepositorySql } from './features/users/infrastructure/postgresqldb/users.repository-sql';
 import { DeviceTable } from './features/security/domain/device.table';
@@ -155,7 +155,6 @@ const strategies = [
         AccountDataTable,
         EmailConfirmationTable,
         PasswordRecoveryTable,
-        ForBlogsTable,
         CommentsTable,
         StatusesTable,
       ],
@@ -173,7 +172,6 @@ const strategies = [
       AccountDataTable,
       EmailConfirmationTable,
       PasswordRecoveryTable,
-      ForBlogsTable,
       CommentsTable,
       StatusesTable,
     ]),

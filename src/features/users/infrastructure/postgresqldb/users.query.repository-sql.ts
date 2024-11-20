@@ -85,4 +85,32 @@ export class UsersQueryRepositorySql {
 
     return usersPagingDto(totalUsers, query, usersPaging);
   }
+
+  async findPaging_RAW(query: UsersQuery) {
+    const pageOffSet = (query.pageNumber - 1) * query.pageSize;
+
+    const findPagingUsersQuery = `
+    SELECT u."id", "login", "email", "createdAt" 
+    FROM "users" AS u
+    LEFT JOIN "accountData" AS a ON a."id" = u."accountDataId"
+    WHERE "login" ~* $1 OR "email" ~* $2
+    ORDER BY "${query.sortBy}" ${query.sortDirection}
+    LIMIT $3
+    OFFSET $4`
+
+    const pagingParameters = [query.searchLoginTerm, query.searchEmailTerm, query.pageSize, pageOffSet]
+
+    const usersCountQuery = `
+    SELECT COUNT(*) FROM "accountData" WHERE "login" ~* $1 OR "email" ~* $2`
+
+    const usersCountParameters = [query.searchLoginTerm, query.searchEmailTerm]
+
+    const [usersPaging] = await this.dataSource
+        .query(findPagingUsersQuery, pagingParameters)
+
+    const [usersCount] = await this.dataSource
+        .query(usersCountQuery, usersCountParameters)
+
+    return usersPagingDto(usersCount.count, query, usersPaging)
+  }
 }

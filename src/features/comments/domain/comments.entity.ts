@@ -3,10 +3,8 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BlogsTable } from '../../blogs/domain/blog.entity';
 import { PostsTable } from '../../posts/domain/posts.table';
 import { UsersTable } from '../../users/domain/users.table';
 

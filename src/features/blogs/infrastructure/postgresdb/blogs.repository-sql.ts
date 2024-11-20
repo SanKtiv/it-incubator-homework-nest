@@ -76,28 +76,28 @@ export class BlogsRepositorySql {
   }
 
   async create_RAW(dto): Promise<BlogsTable> {
-    const rawQuery = `
+    const createBlogQuery = `
     INSERT INTO public."blogs" ("name", "description", "websiteUrl", "createdAt")
     VALUES ($1, $2, $3, $4)
     RETURNING *;`;
 
     const parameters = [dto.name, dto.description, dto.websiteUrl, new Date()];
 
-    const createdRowsArray = await this.dataSource.query(rawQuery, parameters);
+    const [createdRowsArray] = await this.dataSource.query(createBlogQuery, parameters);
 
-    return createdRowsArray[0];
+    return createdRowsArray;
   }
 
   async findById_RAW(id: string): Promise<BlogsTable | null> {
-    const rawQuery = `
+    const getBlogQuery = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM "blogs" AS b
     WHERE b."id" = $1;`;
 
     try {
-      const foundBlogArray = await this.dataSource.query(rawQuery, [id]);
+      const [foundBlogArray] = await this.dataSource.query(getBlogQuery, [id]);
 
-      return foundBlogArray[0];
+      return foundBlogArray;
     } catch (e) {
       throw new Error('Error finding blog by blogId');
     }
@@ -116,15 +116,15 @@ export class BlogsRepositorySql {
   }
 
   async deleteOne_RAW(blog: BlogsTable): Promise<BlogsTable> {
-    const rawQuery = `
+    const deleteBlogQuery = `
     DELETE FROM "blogs" AS b
     WHERE b."id" = $1
     RETURNING *`;
 
     try {
-      const deletedBlogArray = await this.dataSource.query(rawQuery, [blog.id]);
+      const [deletedBlogArray] = await this.dataSource.query(deleteBlogQuery, [blog.id]);
 
-      return deletedBlogArray[0];
+      return deletedBlogArray;
     } catch (e) {
       throw new Error('Error DB');
     }

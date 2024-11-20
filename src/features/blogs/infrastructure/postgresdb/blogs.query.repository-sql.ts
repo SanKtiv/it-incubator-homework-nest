@@ -21,15 +21,15 @@ import { UUID } from 'typeorm/driver/mongodb/bson.typings';
 export class BlogsQueryRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
-  // async findById(id: string): Promise<BlogsViewDto> {
-  //   const blogDocument = await this.dataSource
-  //     .getRepository(BlogsTable)
-  //     .findOneBy({ id: id });
-  //
-  //   if (!blogDocument) throw new NotFoundException();
-  //
-  //   return sqlBlogsViewDto(blogDocument);
-  // }
+  async findById(id: string): Promise<BlogsViewDto> {
+    const blogDocument = await this.dataSource
+      .getRepository(BlogsTable)
+      .findOneBy({ id: id });
+
+    if (!blogDocument) throw new NotFoundException();
+
+    return sqlBlogsViewDto(blogDocument);
+  }
 
   // async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
   //   const searchName = query.searchNameTerm;
@@ -52,19 +52,17 @@ export class BlogsQueryRepositorySql {
   //   return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
   // }
 
-  async findById(id: string): Promise<BlogsViewDto> {
+  async findById_RAW(id: string): Promise<BlogsViewDto> {
     const query = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM public."blogs" AS b
     WHERE b."id" = $1;`;
 
-    const foundBlogArray = await this.dataSource.query(query, [id]);
+    const [blog] = await this.dataSource.query(query, [id]);
 
-    const blogDocument = foundBlogArray[0];
+    if (!blog) throw new NotFoundException();
 
-    if (!blogDocument) throw new NotFoundException();
-
-    return sqlBlogsViewDto(blogDocument);
+    return sqlBlogsViewDto(blog);
   }
 
   async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
