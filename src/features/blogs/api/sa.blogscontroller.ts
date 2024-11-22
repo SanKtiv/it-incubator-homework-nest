@@ -63,7 +63,7 @@ export class SaBlogsController {
 
   @Post()
   async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {
-    return this.blogsService.createBlog(dto);
+    return this.blogsService.createBlog(dto, false);
   }
 
   @Post(':blogId/posts')

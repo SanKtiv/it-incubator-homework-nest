@@ -75,13 +75,13 @@ export class BlogsRepositorySql {
     // )
   }
 
-  async create_RAW(dto): Promise<BlogsTable> {
+  async create_RAW(dto, isMembership?: boolean): Promise<BlogsTable> {
     const createBlogQuery = `
-    INSERT INTO public."blogs" ("name", "description", "websiteUrl", "createdAt")
-    VALUES ($1, $2, $3, $4)
+    INSERT INTO public."blogs" ("name", "description", "websiteUrl", "createdAt", "isMembership")
+    VALUES ($1, $2, $3, $4, $5)
     RETURNING *;`;
 
-    const parameters = [dto.name, dto.description, dto.websiteUrl, new Date()];
+    const parameters = [dto.name, dto.description, dto.websiteUrl, new Date(), isMembership];
 
     const [createdRowsArray] = await this.dataSource.query(createBlogQuery, parameters);
 
