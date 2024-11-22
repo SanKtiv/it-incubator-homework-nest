@@ -44,4 +44,9 @@ export class DevicesRepositorySql {
   async removeAll(): Promise<void> {
     await this.dataSource.getRepository(DeviceTable).clear();
   }
+
+  async deleteAll_RAW() {
+    await this.dataSource
+        .query(`TRUNCATE "devices" CASCADE`)
+  }
 }

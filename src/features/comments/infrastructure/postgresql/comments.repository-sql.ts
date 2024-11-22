@@ -110,4 +110,9 @@ export class CommentsSqlRepository {
       throw new InternalServerErrorException();
     }
   }
+
+  async deleteAll_RAW() {
+    await this.dataSource
+        .query(`TRUNCATE "comments" CASCADE`)
+  }
 }

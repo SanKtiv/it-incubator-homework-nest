@@ -142,13 +142,8 @@ export class StatusesRepositorySql {
     }
   }
 
-  async deleteAll() {
-    const rawQuery = `TRUNCATE "statuses"`;
-
-    try {
-      await this.dataSource.query(rawQuery);
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
+  async deleteAll_RAW() {
+    await this.dataSource
+        .query(`TRUNCATE "statuses" CASCADE`)
   }
 }

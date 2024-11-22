@@ -23,4 +23,9 @@ export class RequestApiSqlRepository {
   async removeAll() {
     await this.dataSource.getRepository(RequestTable).clear();
   }
+
+  async deleteAll_RAW() {
+    await this.dataSource
+        .query(`TRUNCATE "requests" CASCADE`)
+  }
 }

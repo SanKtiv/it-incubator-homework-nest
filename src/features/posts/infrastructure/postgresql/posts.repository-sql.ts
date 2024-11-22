@@ -46,6 +46,11 @@ export class PostsRepositorySql {
     }
   }
 
+  async deleteAll_RAW() {
+    await this.dataSource
+        .query(`TRUNCATE "posts" CASCADE`)
+  }
+
   async findById(id: string): Promise<PostsTable | null> {
     return this.repository.findOneBy({ id: id });
   }

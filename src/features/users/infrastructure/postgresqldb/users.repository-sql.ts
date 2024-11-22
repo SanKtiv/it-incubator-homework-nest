@@ -15,30 +15,6 @@ export class UsersRepositorySql {
     return this.dataSource.getRepository(UsersTable);
   }
 
-  async create(
-    dto: UsersInputDto,
-    passwordHash: string,
-    confirmationCode: string,
-    expirationDate: Date,
-  ): Promise<UsersTable> {
-    const user = new UsersTable();
-    const accountData = new AccountDataTable();
-    const emailConfirmation = new EmailConfirmationTable();
-
-    accountData.login = dto.login;
-    accountData.email = dto.email;
-    accountData.createdAt = new Date();
-    accountData.passwordHash = passwordHash;
-
-    emailConfirmation.confirmationCode = confirmationCode;
-    emailConfirmation.expirationDate = expirationDate;
-
-    user.accountData = accountData;
-    user.emailConfirmation = emailConfirmation;
-
-    return await this.repository.save(user);
-  }
-
   async create_RAW(
     dto: UsersInputDto,
     passwordHash: string,
@@ -88,6 +64,35 @@ export class UsersRepositorySql {
     const [user] = await this.dataSource.query(insertUserQuery, userParameters)
 
     return this.findById_RAW(user.id)
+  }
+
+  async deleteAll_RAW() {
+    await this.dataSource
+        .query(`TRUNCATE "users" CASCADE`)
+  }
+
+  async create(
+      dto: UsersInputDto,
+      passwordHash: string,
+      confirmationCode: string,
+      expirationDate: Date,
+  ): Promise<UsersTable> {
+    const user = new UsersTable();
+    const accountData = new AccountDataTable();
+    const emailConfirmation = new EmailConfirmationTable();
+
+    accountData.login = dto.login;
+    accountData.email = dto.email;
+    accountData.createdAt = new Date();
+    accountData.passwordHash = passwordHash;
+
+    emailConfirmation.confirmationCode = confirmationCode;
+    emailConfirmation.expirationDate = expirationDate;
+
+    user.accountData = accountData;
+    user.emailConfirmation = emailConfirmation;
+
+    return await this.repository.save(user);
   }
 
   async save(user: UsersTable): Promise<UsersTable> {
@@ -184,21 +189,5 @@ export class UsersRepositorySql {
   async removeAll() {
     await this.repository.clear();
   }
-  // return this.dataSource.getRepository(UsersTable).remove(user);
 
-  // return this.dataSource.transaction(async manager => {
-  //     await manager.save(blog)
-  // });
-  // return this.dataSource.manager.save(BlogsTable, {
-  //     ...dto,
-  //     createdAt: 'Date',
-  //     isMembership: true
-  // })
-  // }
-
-  // async create() {
-  //     return this.dataSource.query(`
-  //     CREATE TABLE IF NOT EXISTS blogs(id SERIAL PRIMARY KEY, name TEXT NOT NULL, value REAL);
-  //     `)
-  // }
 }

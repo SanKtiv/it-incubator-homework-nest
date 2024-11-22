@@ -50,16 +50,16 @@ export class BlogsController {
     private readonly postsSqlQueryRepository: PostsQueryRepositorySql,
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
-    private readonly usersSqlRepository: RequestApiSqlRepository,
+    private readonly usersSqlRepository: UsersRepositorySql,
     private readonly statusesSqlRepository: StatusesRepositorySql,
     private readonly commentsSqlRepository: CommentsSqlRepository,
   ) {}
 
-  // @Get('/blogs')
-  // async createBlogInSql() {
-  //   await this.commentsSqlRepository
-  //       .updateById('0208b79e-85ba-465c-b9c7-f776abeff611', 'Hello hello')
-  // }
+  @Get('/blogs')
+  async findUserByUserId() {
+    const user = await this.usersSqlRepository.findById_RAW('433d1a84-e5d6-48ff-916e-c8ba8b6d3df3')
+  console.log(user)
+  }
 
   @Post()
   @UseGuards(BasicAuthGuard)

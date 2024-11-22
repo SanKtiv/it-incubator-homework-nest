@@ -34,12 +34,12 @@ export class TestingController {
   @Delete()
   @HttpCode(204)
   async deleteAllData(): Promise<void> {
-    await this.blogsSqlRepository.deleteAll_ORM();
-    await this.usersSqlRepository.removeAll();
-    await this.postsSqlRepository.deleteAll();
-    await this.commentsSqlRepository.deleteAll();
-    await this.requestApiSqlRepository.removeAll();
-    await this.devicesSqlRepository.removeAll();
-    await this.statusesSqlRepository.deleteAll();
+    await this.blogsSqlRepository.deleteAll_RAW();
+    await this.usersSqlRepository.deleteAll_RAW();
+    await this.postsSqlRepository.deleteAll_RAW();
+    await this.commentsSqlRepository.deleteAll_RAW();
+    await this.requestApiSqlRepository.deleteAll_RAW();
+    await this.devicesSqlRepository.deleteAll_RAW();
+    await this.statusesSqlRepository.deleteAll_RAW();
   }
 }

@@ -129,4 +129,9 @@ export class BlogsRepositorySql {
       throw new Error('Error DB');
     }
   }
+
+  async deleteAll_RAW() {
+    await this.dataSource
+        .query(`TRUNCATE "blogs" CASCADE`)
+  }
 }
