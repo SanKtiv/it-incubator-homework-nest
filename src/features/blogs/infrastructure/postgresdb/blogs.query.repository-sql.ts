@@ -87,11 +87,11 @@ export class BlogsQueryRepositorySql {
     const parametersCount = [searchNameTerm];
 
     const [totalBlogs] = await this.dataSource
-        .query(countBlogsQuery, parametersBlogsPaging);
+        .query(countBlogsQuery, parametersCount);
 
     try {
       const pagingBlogs = await this.dataSource
-          .query(blogsPagingQuery, parametersCount);
+          .query(blogsPagingQuery, parametersBlogsPaging);
 
       return sqlBlogPagingViewModel(query, totalBlogs.count, pagingBlogs);
     } catch (e) {
