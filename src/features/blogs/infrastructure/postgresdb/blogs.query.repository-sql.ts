@@ -66,36 +66,33 @@ export class BlogsQueryRepositorySql {
   }
 
   async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
-    const searchTerm = !query.searchNameTerm ? '' : query.searchNameTerm;
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
-    const querySQL = `
+    const blogsPagingQuery = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM "blogs" AS b
     WHERE b."name" ~* $1
-    ORDER BY b."${query.sortBy}" ${query.sortDirection} $4
+    ORDER BY b."${query.sortBy}" ${query.sortDirection}
     LIMIT $2 OFFSET $3`;
 
-    const querySQLCount = `
+    const parametersBlogsPaging = [query.searchNameTerm, pageSize, pageOffSet];
+
+    const countBlogsQuery = `
     SELECT COUNT(*)
     FROM "blogs" AS b
     WHERE b."name" ~* $1`;
 
-    const totalBlogsArray = await this.dataSource.query(querySQLCount, [
-      searchTerm,
-    ]);
+    const parametersCount = [query.searchNameTerm];
 
-    const totalBlogs = totalBlogsArray[0].count;
+    const [totalBlogs] = await this.dataSource
+        .query(countBlogsQuery, parametersBlogsPaging);
 
     try {
-      const pagingBlogs = await this.dataSource.query(querySQL, [
-        searchTerm,
-        pageSize,
-        pageOffSet,
-      ]);
+      const pagingBlogs = await this.dataSource
+          .query(blogsPagingQuery, parametersCount);
 
-      return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
+      return sqlBlogPagingViewModel(query, totalBlogs.count, pagingBlogs);
     } catch (e) {
       throw new InternalServerErrorException();
     }
