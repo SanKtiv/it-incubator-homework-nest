@@ -66,6 +66,7 @@ export class BlogsQueryRepositorySql {
   }
 
   async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
+    const searchNameTerm = query.searchNameTerm === null ? '' : query.searchNameTerm;
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
@@ -76,14 +77,14 @@ export class BlogsQueryRepositorySql {
     ORDER BY b."${query.sortBy}" ${query.sortDirection}
     LIMIT $2 OFFSET $3`;
 
-    const parametersBlogsPaging = [query.searchNameTerm, pageSize, pageOffSet];
+    const parametersBlogsPaging = [searchNameTerm, pageSize, pageOffSet];
 
     const countBlogsQuery = `
     SELECT COUNT(*)
     FROM "blogs" AS b
     WHERE b."name" ~* $1`;
 
-    const parametersCount = [query.searchNameTerm];
+    const parametersCount = [searchNameTerm];
 
     const [totalBlogs] = await this.dataSource
         .query(countBlogsQuery, parametersBlogsPaging);
