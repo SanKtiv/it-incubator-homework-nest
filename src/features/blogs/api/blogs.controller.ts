@@ -83,7 +83,7 @@ export class BlogsController {
 
   @Get()
   async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto> {
-    return this.blogsSqlQueryRepository.getBlogsPaging(query);
+    return this.blogsSqlQueryRepository.getBlogsPaging_RAW(query);
   }
 
   @Get(':blogId')

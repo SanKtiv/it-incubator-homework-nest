@@ -65,7 +65,7 @@ export class BlogsQueryRepositorySql {
     return sqlBlogsViewDto(blog);
   }
 
-  async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
+  async getBlogsPaging_RAW(query: BlogQuery): Promise<BlogsViewPagingDto> {
     const searchNameTerm = query.searchNameTerm === null ? '' : query.searchNameTerm;
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
@@ -93,7 +93,7 @@ export class BlogsQueryRepositorySql {
       const pagingBlogs = await this.dataSource
           .query(blogsPagingQuery, parametersBlogsPaging);
 
-      return sqlBlogPagingViewModel(query, totalBlogs.count, pagingBlogs);
+      return sqlBlogPagingViewModel(query, totalBlogs.count.toString(), pagingBlogs);
     } catch (e) {
       throw new InternalServerErrorException();
     }
