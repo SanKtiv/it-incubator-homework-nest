@@ -63,9 +63,9 @@ export const sqlBlogPagingViewModel = (
   blogsPaging: BlogsTable[],
 ) =>
   new BlogsViewPagingDto(
-    Math.ceil(totalBlogs / query.pageSize),
+    Math.ceil(+totalBlogs / query.pageSize),
     query.pageNumber,
     query.pageSize,
-    totalBlogs,
+    +totalBlogs,
     blogsPaging.map((blog) => sqlBlogsViewDto(blog)),
   );

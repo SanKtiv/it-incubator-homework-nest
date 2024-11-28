@@ -93,7 +93,7 @@ export class BlogsQueryRepositorySql {
       const pagingBlogs = await this.dataSource
           .query(blogsPagingQuery, parametersBlogsPaging);
 
-      return sqlBlogPagingViewModel(query, totalBlogs.count.toString(), pagingBlogs);
+      return sqlBlogPagingViewModel(query, totalBlogs.count, pagingBlogs);
     } catch (e) {
       throw new InternalServerErrorException();
     }
