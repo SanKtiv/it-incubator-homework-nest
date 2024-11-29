@@ -103,7 +103,7 @@ export class PostController {
       req.headers.authorization,
     );
 
-    return this.postsSqlQueryRepository.findPaging(query, null, userId);
+    return this.postsSqlQueryRepository.findPaging_RAW(query, null, userId);
   }
 
   @Get(':postId/comments')

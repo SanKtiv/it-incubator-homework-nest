@@ -81,58 +81,46 @@ export class PostsQueryRepositorySql {
     }
   }
 
-  async findPaging(
+  async findPaging_RAW(
     query: PostQuery,
     blogId: string | null,
     userId: string | null,
   ): Promise<PostsPaging> {
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
+    const stringSelectByBlogId: string = blogId ? 'WHERE p."blogId" = $4' : ''
 
-    const rawQueryWithBlogId = `
-    SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
-    FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
-           (SELECT b."name" FROM "blogs" AS b WHERE p."blogId" = b."id"::text) AS "blogName",
-           (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
-           (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
-           (SELECT s."userStatus" FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userId" = $1) AS "myStatus" 
-       FROM "posts" AS p
-       WHERE p."blogId" = $4
-       ORDER BY p."${query.sortBy}" ${query.sortDirection}
-       LIMIT $2
-       OFFSET $3) AS newPost
-    LEFT JOIN
-      (SELECT "addedAt", "login", "userId", "postId"
-      FROM (SELECT s."addedAt", s."userId", s."postId", (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login",
-      ROW_NUMBER() OVER (PARTITION BY s."postId" ORDER BY s."addedAt" DESC) AS "rowNumber"
-      FROM "statuses" AS s
-      WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null)
-      WHERE "rowNumber" <= 3) AS newestLikes ON newPost."id" = newestLikes."postId"`;
+    const postPagingQuery = `
+    WITH
+    "postsPaging" AS
+    (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
+      b."name" AS "blogName", s."userStatus" AS "myStatus",
+      (SELECT COUNT(*) FROM "statuses" WHERE p."id" = "postId" AND "userStatus" = 'Like') AS "likesCount",
+      (SELECT COUNT(*) FROM "statuses" WHERE p."id" = "postId" AND "userStatus" = 'Dislike') AS "dislikesCount"
+    FROM "posts" AS p
+    LEFT JOIN "blogs" AS b ON p."blogId" = b."id"
+    LEFT JOIN "statuses" AS s ON p."id" = s."postId" AND s."userId" = $1
+    ${stringSelectByBlogId}
+    ORDER BY p."${query.sortBy}" ${query.sortDirection}
+    LIMIT $2 OFFSET $3),
+    
+    "newestLikes" AS
+    (SELECT "addedAt", "login", "userId", "postId",
+    ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"
+    FROM "statuses"
+    LEFT JOIN "users" ON users."id" = "userId"
+    LEFT JOIN "accountData" AS a ON a."id" = users."accountDataId"
+    WHERE "userStatus" = 'Like' AND "postId" is distinct from null),
+    
+    "newestLikesSorted" AS
+    (SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3)
+    
+    SELECT p.*, n.* FROM "postsPaging" AS p
+    LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"`;
 
-    const rawQueryAllPosts = `
-        SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
-    FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
-           (SELECT b."name" FROM "blogs" AS b WHERE p."blogId" = b."id"::text) AS "blogName",
-           (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
-           (SELECT COUNT(*) FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
-           (SELECT s."userStatus" FROM "statuses" AS s WHERE p."id" = s."postId" AND s."userId" = $1) AS "myStatus" 
-       FROM "posts" AS p
-       ORDER BY p."${query.sortBy}" ${query.sortDirection}
-       LIMIT $2
-       OFFSET $3) AS newPost
-    LEFT JOIN
-      (SELECT "addedAt", "login", "userId", "postId"
-      FROM (SELECT s."addedAt", s."userId", s."postId", (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login",
-      ROW_NUMBER() OVER (PARTITION BY s."postId" ORDER BY s."addedAt" DESC) AS "rowNumber"
-      FROM "statuses" AS s
-      WHERE s."userStatus" = 'Like' AND s."postId" is distinct from null)
-      WHERE "rowNumber" <= 3) AS newestLikes ON newPost."id" = newestLikes."postId"`;
-
-    const rawQueryCount = blogId
+    const countPostsQuery = blogId
       ? `SELECT COUNT(*) FROM "posts" WHERE "blogId" = $1`
       : `SELECT COUNT(*) FROM "posts"`;
-
-    const rawQuery = blogId ? rawQueryWithBlogId : rawQueryAllPosts;
 
     const parametersPaging = blogId
       ? [userId, pageSize, pageOffSet, blogId]
@@ -141,19 +129,17 @@ export class PostsQueryRepositorySql {
     const parametersCount = blogId ? [blogId] : [];
 
     try {
-      const totalPostsArr = await this.dataSource.query(
-        rawQueryCount,
+      const [totalPosts] = await this.dataSource.query(
+        countPostsQuery,
         parametersCount,
       );
 
-      const totalPosts = totalPostsArr[0].count;
-
       const postsPaging = await this.dataSource.query(
-        rawQuery,
+          postPagingQuery,
         parametersPaging,
       );
 
-      return postsSqlPaging(query, totalPosts, postsPaging);
+      return postsSqlPaging(query, totalPosts.count, postsPaging);
     } catch (e) {
       throw new InternalServerErrorException();
     }

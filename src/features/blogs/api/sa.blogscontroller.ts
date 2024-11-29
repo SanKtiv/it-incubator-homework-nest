@@ -99,7 +99,7 @@ export class SaBlogsController {
   ): Promise<PostsPaging> {
     await this.blogsSqlQueryRepository.findById_RAW(blogId);
 
-    return this.postsSqlQueryRepository.findPaging(query, blogId, null);
+    return this.postsSqlQueryRepository.findPaging_RAW(query, blogId, null);
   }
 
   @Put(':blogId')

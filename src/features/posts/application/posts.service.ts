@@ -36,7 +36,7 @@ export class PostsService {
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
     await this.blogsService.existBlog(dto.blogId);
 
-    const postDocument = await this.postsSqlRepository.createRaw(dto);
+    const postDocument = await this.postsSqlRepository.create_RAW(dto);
 
     return postOutputModelFromSql(postDocument)[0];
   }

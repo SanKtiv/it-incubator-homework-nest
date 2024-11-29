@@ -105,7 +105,7 @@ export class BlogsController {
       req.headers.authorization,
     );
 
-    return this.postsSqlQueryRepository.findPaging(query, blogId, userId);
+    return this.postsSqlQueryRepository.findPaging_RAW(query, blogId, userId);
   }
 
   @Put(':blogId')

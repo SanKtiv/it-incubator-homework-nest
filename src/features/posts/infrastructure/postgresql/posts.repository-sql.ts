@@ -23,13 +23,12 @@ export class PostsRepositorySql {
   //   return this.repository.save(postDocument);
   // }
 
-  async createRaw(dto: PostsInputDto) {
-    const rawQuery = `
-    WITH "bName" AS (SELECT b."name" FROM "blogs" AS b WHERE b."id" = $4)
+  async create_RAW(dto: PostsInputDto) {
+    const createPostQuery = `
     INSERT INTO "posts" AS p ("title", "shortDescription", "content", "blogId", "createdAt")
     VALUES ($1, $2, $3, $4, $5)
     RETURNING p."id", p."title", p."shortDescription", p."content", p."blogId", p."createdAt",
-      (SELECT "name" FROM "bName") AS "blogName"`;
+      (SELECT "name" FROM "blogs" WHERE "id" = $4) AS "blogName"`;
 
     const parameters = [
       dto.title,
@@ -40,7 +39,7 @@ export class PostsRepositorySql {
     ];
 
     try {
-      return await this.dataSource.query(rawQuery, parameters);
+      return await this.dataSource.query(createPostQuery, parameters);
     } catch (e) {
       throw new InternalServerErrorException();
     }
