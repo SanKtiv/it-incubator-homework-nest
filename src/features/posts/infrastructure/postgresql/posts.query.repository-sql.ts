@@ -39,43 +39,45 @@ export class PostsQueryRepositorySql {
     }
   }
 
-  async findById(id: string, userId?: string | null): Promise<PostsOutputDto> {
+  async findById_RAW(id: string, userId?: string | null): Promise<PostsOutputDto> {
     // const postDocument = await this.repository.findOneBy({ id: id });
 
-    if (!userId) userId = null;
+    //if (!userId) userId = null;
+
+    const findByIdQuery = `
+    WITH
+    "post" AS
+    (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
+      b."name" AS "blogName", s."userStatus" AS "myStatus",
+      (SELECT COUNT(*) FROM "statuses" WHERE p."id" = "postId" AND "userStatus" = 'Like') AS "likesCount",
+      (SELECT COUNT(*) FROM "statuses" WHERE p."id" = "postId" AND "userStatus" = 'Dislike') AS "dislikesCount"
+    FROM "posts" AS p
+    LEFT JOIN "blogs" AS b ON p."blogId" = b."id"
+    LEFT JOIN "statuses" AS s ON p."id" = s."postId" AND s."userId" = $2
+    WHERE p."id" = $1),
+    
+    "newestLikes" AS
+    (SELECT "addedAt", "login", "userId", "postId",
+    ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"
+    FROM "statuses"
+    LEFT JOIN "users" ON users."id" = "userId"
+    LEFT JOIN "accountData" AS a ON a."id" = users."accountDataId"
+    WHERE "userStatus" = 'Like' AND "postId" is distinct from null),
+    
+    "newestLikesSorted" AS
+    (SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3)
+    
+    SELECT p.*, n.* FROM "post" AS p
+    LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"`;
+
     const parameters = [id, userId];
 
-    const rawQuery = `
-    SELECT newPost.*, newestLikes."addedAt", newestLikes."userId", newestLikes."login"
-    FROM (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
-        
-        (SELECT b."name" FROM "blogs" AS b WHERE p."blogId" = b."id"::text) AS "blogName",
-        
-        (SELECT COUNT(*) FROM "statuses" AS s
-        WHERE p."id" = s."postId" AND s."userStatus" = 'Like') AS "likesCount",
-        
-        (SELECT COUNT(*) FROM "statuses" AS s
-        WHERE p."id" = s."postId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
-        
-        (SELECT s."userStatus" FROM "statuses" AS s
-        WHERE p."id" = s."postId" AND s."userId" = $2) AS "myStatus"
-        
-    FROM "posts" AS p
-    WHERE p."id" = $1) AS newPost
-    LEFT JOIN
-    (SELECT s."addedAt", s."userId", s."postId",
-      (SELECT u."login" FROM "users" AS u WHERE s."userId" = u."id") AS "login"
-    FROM "statuses" AS s
-    WHERE s."userStatus" = 'Like' AND s."postId" = $1
-    ORDER BY s."addedAt" desc
-    LIMIT 3) AS newestLikes ON newPost."id" = newestLikes."postId"`;
-
     try {
-      const postDocument = await this.dataSource.query(rawQuery, parameters);
+      const [postDocument] = await this.dataSource.query(findByIdQuery, parameters);
 
-      if (postDocument.length === 0) throw new NotFoundException();
+      if (!postDocument) throw new NotFoundException();
 
-      return postOutputModelFromSql(postDocument)[0];
+      return postOutputModelFromSql([postDocument])[0];
     } catch (e) {
       throw new InternalServerErrorException();
     }

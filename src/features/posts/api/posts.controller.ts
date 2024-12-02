@@ -64,7 +64,7 @@ export class PostController {
       req.headers.authorization,
     );
 
-    return this.postsSqlQueryRepository.findById(id, userId);
+    return this.postsSqlQueryRepository.findById_RAW(id, userId);
   }
 
   @Put(':postId/like-status')
