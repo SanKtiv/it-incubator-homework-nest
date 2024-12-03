@@ -5,6 +5,7 @@ import { PostsInputDto } from '../../api/models/input/posts.input.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { PostsTable } from '../../domain/posts.table';
+import {InputDto} from "../../../../infrastructure/models/input.dto";
 
 @Injectable()
 export class PostsRepositorySql {
@@ -54,10 +55,48 @@ export class PostsRepositorySql {
     return this.repository.findOneBy({ id: id });
   }
 
+  async findById_RAW(id: string): Promise<PostsTable | null> {
+    const findPostByIdQuery = `
+    SELECT *
+    FROM "posts"
+    WHERE "id" = $1`;
+
+    const parameters = [id];
+
+    const [post] = await this.dataSource.query(findPostByIdQuery, parameters);
+
+    return post;
+  }
+
   async deleteById(id: string) {}
 
   async savePost(postDocument: PostsTable): Promise<PostsTable> {
     return this.repository.save(postDocument);
+  }
+
+  async updatePost_RAW(postId: string, UpdateDto: InputDto, blogId?: string): Promise<void> {
+    let whereQuery = 'WHERE "id" = $5';
+
+    const parameters = [
+      UpdateDto.title,
+      UpdateDto.shortDescription,
+      UpdateDto.content,
+      new Date(),
+      postId
+    ];
+
+    if (blogId) {
+      whereQuery = 'WHERE "id" = $5 AND "blogId" = $6'
+
+      parameters.push(blogId)
+    }
+
+    const updatePostQuery = `
+    UPDATE "posts"
+    SET ("title", "shortDescription", "content", "createdAt") = ($1, $2, $3, $4)
+    ${whereQuery}`;
+
+    await this.dataSource.query(updatePostQuery, parameters)
   }
 
   async deletePost(post: PostsTable): Promise<void> {

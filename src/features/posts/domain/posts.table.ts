@@ -29,5 +29,5 @@ export class PostsTable {
 
   @ManyToOne(() => BlogsTable)
   @JoinColumn({ name: 'blogId' })
-  blogId: BlogsTable;
+  blogId: string//BlogsTable;
 }

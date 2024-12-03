@@ -24,7 +24,7 @@ import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.re
 export class PostsService {
   constructor(
     private readonly postsRepository: PostsRepositoryMongo,
-    private readonly postsSqlRepository: PostsRepositorySql,
+    private readonly postsRepositorySql: PostsRepositorySql,
     private readonly blogsRepository: BlogsRepositoryMongo,
     //private readonly blogsSqlRepository: BlogsRepositorySql,
     private readonly usersRepository: UsersRepositoryMongo,
@@ -36,13 +36,13 @@ export class PostsService {
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
     await this.blogsService.existBlog(dto.blogId);
 
-    const postDocument = await this.postsSqlRepository.create_RAW(dto);
+    const postDocument = await this.postsRepositorySql.create_RAW(dto);
 
     return postOutputModelFromSql(postDocument)[0];
   }
 
   async existPost(id: string): Promise<PostsTable> {
-    const postDocument = await this.postsSqlRepository.findById(id);
+    const postDocument = await this.postsRepositorySql.findById_RAW(id);
 
     if (!postDocument) throw new NotFoundException();
 
@@ -57,7 +57,7 @@ export class PostsService {
 
     Object.assign(postDocument, postUpdateDto);
 
-    await this.postsSqlRepository.savePost(postDocument);
+    await this.postsRepositorySql.updatePost_RAW(id, postUpdateDto);
   }
 
   async updatePostForBlog(postId: string, blogId: string, UpdateDto: InputDto) {
@@ -66,11 +66,11 @@ export class PostsService {
     // if (!postDocument) throw new NotFoundException();
     const post = await this.existPost(postId);
 
-    if (post.blogId.id !== blogId) throw new NotFoundException();
+    if (post!.blogId !== blogId) throw new NotFoundException();
 
-    Object.assign(post, UpdateDto);
+    //Object.assign(post, UpdateDto);
 
-    await this.postsSqlRepository.savePost(post);
+    await this.postsRepositorySql.updatePost_RAW(postId, UpdateDto, blogId);
   }
 
   // async createStatusForPost(
@@ -185,8 +185,8 @@ export class PostsService {
   ): Promise<void | HttpException> {
     const post = await this.existPost(postId);
 
-    if (post.blogId.id !== blogId) throw new NotFoundException();
+    if (post.blogId !== blogId) throw new NotFoundException();
 
-    await this.postsSqlRepository.deletePost(post);
+    await this.postsRepositorySql.deletePost(post);
   }
 }
