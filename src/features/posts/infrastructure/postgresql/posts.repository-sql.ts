@@ -75,25 +75,24 @@ export class PostsRepositorySql {
   }
 
   async updatePost_RAW(postId: string, UpdateDto: InputDto, blogId?: string): Promise<void> {
-    let whereQuery = 'WHERE "id" = $5';
+    let whereQuery = 'WHERE "id" = $4';
 
     const parameters = [
       UpdateDto.title,
       UpdateDto.shortDescription,
       UpdateDto.content,
-      new Date(),
       postId
     ];
 
     if (blogId) {
-      whereQuery = 'WHERE "id" = $5 AND "blogId" = $6'
+      whereQuery = 'WHERE "id" = $4 AND "blogId" = $5'
 
       parameters.push(blogId)
     }
 
     const updatePostQuery = `
     UPDATE "posts"
-    SET ("title", "shortDescription", "content", "createdAt") = ($1, $2, $3, $4)
+    SET ("title", "shortDescription", "content") = ($1, $2, $3)
     ${whereQuery}`;
 
     await this.dataSource.query(updatePostQuery, parameters)
