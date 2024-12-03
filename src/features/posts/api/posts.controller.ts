@@ -64,7 +64,11 @@ export class PostController {
       req.headers.authorization,
     );
 
-    return this.postsSqlQueryRepository.findById_RAW(id, userId);
+    const post = await this.postsSqlQueryRepository.findById_RAW(id, userId);
+
+    if (!post) throw new NotFoundException();
+
+    return post;
   }
 
   @Put(':postId/like-status')

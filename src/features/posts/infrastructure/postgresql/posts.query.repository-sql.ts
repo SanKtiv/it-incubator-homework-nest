@@ -39,7 +39,7 @@ export class PostsQueryRepositorySql {
     }
   }
 
-  async findById_RAW(id: string, userId?: string | null): Promise<PostsOutputDto> {
+  async findById_RAW(id: string, userId?: string | null): Promise<PostsOutputDto | null> {
     // const postDocument = await this.repository.findOneBy({ id: id });
 
     //if (!userId) userId = null;
@@ -75,7 +75,7 @@ export class PostsQueryRepositorySql {
     try {
       const [postDocument] = await this.dataSource.query(findByIdQuery, parameters);
 
-      if (!postDocument) throw new NotFoundException();
+      if (!postDocument) return null;
 
       return postOutputModelFromSql([postDocument])[0];
     } catch (e) {
