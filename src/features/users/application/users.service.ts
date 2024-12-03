@@ -12,7 +12,7 @@ import { UsersTable } from '../domain/users.table';
 export class UsersService {
   constructor(
     private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersSqlRepository: UsersRepositorySql,
+    private readonly usersRepositorySql: UsersRepositorySql,
   ) {}
 
   async createUser(dto: UsersInputDto): Promise<UsersTable | any> {
@@ -20,7 +20,7 @@ export class UsersService {
 
     const code = this.createCodeWithExpireDate();
 
-    return this.usersSqlRepository.create_RAW(
+    return this.usersRepositorySql.create_RAW(
       dto,
       passwordHash,
       code.confirmationCode,
@@ -42,7 +42,7 @@ export class UsersService {
   }
 
   async existUserLogin(login: string): Promise<BadRequestException | void> {
-    const user = await this.usersSqlRepository.findByLogin(login);
+    const user = await this.usersRepositorySql.findByLogin_RAW(login);
     if (user) {
       throw new BadRequestException({
         message: [{ message: 'login is already exist', field: 'login' }],
@@ -51,7 +51,7 @@ export class UsersService {
   }
 
   async existUserEmail(email: string): Promise<BadRequestException | void> {
-    const userDocument = await this.usersSqlRepository.findByEmail(email);
+    const userDocument = await this.usersRepositorySql.findByEmail_RAW(email);
     if (userDocument) {
       throw new BadRequestException({
         message: [{ message: 'email is already exist', field: 'email' }],
@@ -66,7 +66,7 @@ export class UsersService {
   }
 
   async deleteUserById(id: string): Promise<boolean> {
-    const result = await this.usersSqlRepository.remove(id);
+    const result = await this.usersRepositorySql.remove(id);
 
     return !!result;
   }

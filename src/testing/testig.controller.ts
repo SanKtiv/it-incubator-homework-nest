@@ -19,7 +19,7 @@ export class TestingController {
     private readonly blogsRepository: BlogsRepositoryMongo,
     private readonly blogsSqlRepository: BlogsRepositorySql,
     private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersSqlRepository: UsersRepositorySql,
+    private readonly usersRepositorySql: UsersRepositorySql,
     private readonly postsRepository: PostsRepositoryMongo,
     private readonly postsSqlRepository: PostsRepositorySql,
     private readonly commentsRepository: CommentsRepositoryMongo,
@@ -35,7 +35,7 @@ export class TestingController {
   @HttpCode(204)
   async deleteAllData(): Promise<void> {
     await this.blogsSqlRepository.deleteAll_RAW();
-    await this.usersSqlRepository.deleteAll_RAW();
+    await this.usersRepositorySql.deleteAll_RAW();
     await this.postsSqlRepository.deleteAll_RAW();
     await this.commentsSqlRepository.deleteAll_RAW();
     await this.requestApiSqlRepository.deleteAll_RAW();

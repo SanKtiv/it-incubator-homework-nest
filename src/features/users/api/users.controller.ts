@@ -29,7 +29,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly usersQueryRepository: UsersQueryRepositoryMongo,
-    private readonly usersSqlQueryRepository: UsersQueryRepositorySql,
+    private readonly usersQueryRepositorySql: UsersQueryRepositorySql,
   ) {}
 
   @Post()
@@ -46,7 +46,7 @@ export class UsersController {
     //const totalUsers = await this.usersSqlQueryRepository.countDocument(query);for mongo
     //const usersPaging = await this.usersSqlQueryRepository.findPaging(query);for mongo
     //return usersPagingDto(totalUsers, query, usersPaging);for mongo
-    return await this.usersSqlQueryRepository.findPaging_RAW(query);
+    return await this.usersQueryRepositorySql.findPaging_RAW(query);
   }
 
   @Delete(':userId')

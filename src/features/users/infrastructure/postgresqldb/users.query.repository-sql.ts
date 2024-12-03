@@ -87,6 +87,8 @@ export class UsersQueryRepositorySql {
   }
 
   async findPaging_RAW(query: UsersQuery) {
+    const searchLoginTerm = query.searchLoginTerm ? query.searchLoginTerm : '';
+    const searchEmailTerm = query.searchEmailTerm ? query.searchEmailTerm : '';
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
     const findPagingUsersQuery = `
@@ -98,19 +100,20 @@ export class UsersQueryRepositorySql {
     LIMIT $3
     OFFSET $4`
 
-    const pagingParameters = [query.searchLoginTerm, query.searchEmailTerm, query.pageSize, pageOffSet]
+    const pagingParameters = [searchLoginTerm, searchEmailTerm, query.pageSize, pageOffSet]
 
     const usersCountQuery = `
     SELECT COUNT(*) FROM "accountData" WHERE "login" ~* $1 OR "email" ~* $2`
 
-    const usersCountParameters = [query.searchLoginTerm, query.searchEmailTerm]
+    const usersCountParameters = [searchLoginTerm, searchEmailTerm]
 
-    const [usersPaging] = await this.dataSource
+    const usersPaging = await this.dataSource
         .query(findPagingUsersQuery, pagingParameters)
 
     const [usersCount] = await this.dataSource
         .query(usersCountQuery, usersCountParameters)
-
+console.log('usersPaging =',usersPaging)
+    console.log('usersCount =',usersCount)
     return usersPagingDto(usersCount.count, query, usersPaging)
   }
 }

@@ -155,6 +155,20 @@ export class UsersRepositorySql {
     });
   }
 
+  async findByLogin_RAW(login: string): Promise<UsersTable | null> {
+
+    const findByLoginQuery = `
+    SELECT *
+    FROM "accountData" 
+    WHERE "login" = $1`;
+
+    const [usersLogin] = await this.dataSource.query(findByLoginQuery, [login])
+
+    if (usersLogin) return usersLogin
+
+    return null
+  }
+
   async findByEmail(email: string): Promise<UsersTable | null> {
     return this.repository.findOne({
       where: {
@@ -162,6 +176,19 @@ export class UsersRepositorySql {
       },
       relations: ['accountData'],
     });
+  }
+
+  async findByEmail_RAW(email: string): Promise<UsersTable | null> {
+    const findByEmailQuery = `
+    SELECT *
+    FROM "accountData"
+    WHERE "email" = $1`
+
+    const [user] = await this.dataSource.query(findByEmailQuery, [email])
+
+    if (user) return user
+
+    return null
   }
 
   async findByLoginOrEmail(loginOrEmail: string): Promise<UsersTable | null> {
