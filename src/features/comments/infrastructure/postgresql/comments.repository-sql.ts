@@ -13,27 +13,26 @@ import {
 } from '../../api/models/output/comment.output.dto';
 
 @Injectable()
-export class CommentsSqlRepository {
+export class CommentsRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
-  async create(dto: CommentServiceDto): Promise<CommentsTable> {
+  async create_RAW(dto: CommentServiceDto): Promise<CommentsTable> {
     const rawQuery = `
-        INSERT INTO "comments" ("content", "userId", "userLogin", "createdAt", "postId")
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO "comments" ("content", "userId", "createdAt", "postId")
+        VALUES ($1, $2, $3, $4)
         RETURNING *;`;
 
     const parameters = [
       dto.content,
       dto.userId,
-      dto.userLogin,
       new Date(),
       dto.postId,
     ];
 
     try {
-      const commentsArray = await this.dataSource.query(rawQuery, parameters);
+      const [commentsArray] = await this.dataSource.query(rawQuery, parameters);
 
-      return commentsArray[0];
+      return commentsArray;
     } catch (e) {
       throw new InternalServerErrorException();
     }

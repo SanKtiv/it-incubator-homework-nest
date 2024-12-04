@@ -17,17 +17,17 @@ import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto'
 import { CommentDocument } from '../domain/comment.schema';
 import { PostsService } from '../../posts/application/posts.service';
 import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
-import { CommentsSqlRepository } from '../infrastructure/postgresql/comments.repository-sql';
+import { CommentsRepositorySql } from '../infrastructure/postgresql/comments.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 
 @Injectable()
 export class CommentsService {
   constructor(
     private readonly commentsRepository: CommentsRepositoryMongo,
-    private readonly commentsSqlRepository: CommentsSqlRepository,
+    private readonly commentsRepositorySql: CommentsRepositorySql,
     private readonly postsRepository: PostsRepositoryMongo,
     private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersSqlRepository: UsersRepositorySql,
+    private readonly usersRepositorySql: UsersRepositorySql,
     private readonly statusesSqlRepository: StatusesRepositorySql,
     private readonly postsService: PostsService,
   ) {}
@@ -35,12 +35,12 @@ export class CommentsService {
   async createComment(dto: CommentServiceDto): Promise<CommentOutputDto> {
     await this.postsService.existPost(dto.postId);
 
-    const user = await this.usersSqlRepository.findById(dto.userId);
+    //const user = await this.usersRepositorySql.findById_RAW(dto.userId);
 
+    //if (user) dto.userLogin = user.login;
     // dto.userLogin = userDocument!.accountData.login; for mongo
-    dto.userLogin = user!.accountData.login;
 
-    const commentDocument = await this.commentsSqlRepository.create(dto);
+    const commentDocument = await this.commentsRepositorySql.create_RAW(dto);
 
     return sqlCommentOutputDto(commentDocument);
   }
@@ -50,7 +50,7 @@ export class CommentsService {
 
     if (commentDocument.userId !== userId) throw new ForbiddenException();
 
-    await this.commentsSqlRepository.updateById(id, dto.content);
+    await this.commentsRepositorySql.updateById(id, dto.content);
     // commentDocument.content = dto.content;
     //
     // await this.commentsRepository.save(commentDocument);
@@ -61,7 +61,7 @@ export class CommentsService {
 
     if (commentDocument.userId !== userId) throw new ForbiddenException();
 
-    await this.commentsSqlRepository.deleteById(id);
+    await this.commentsRepositorySql.deleteById(id);
   }
 
   async createStatusOfComment(
@@ -95,7 +95,7 @@ export class CommentsService {
   }
 
   async existComment(id: string): Promise<CommentDocument> {
-    const commentDocument = await this.commentsSqlRepository.findById(id);
+    const commentDocument = await this.commentsRepositorySql.findById(id);
 
     if (!commentDocument) throw new NotFoundException();
 

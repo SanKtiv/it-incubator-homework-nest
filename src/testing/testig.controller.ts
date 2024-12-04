@@ -10,7 +10,7 @@ import { RequestApiSqlRepository } from '../features/requests/infrastructure/pos
 import { DevicesRepositorySql } from '../features/security/infrastructure/postgresqldb/devices.repository-sql';
 import { BlogsRepositorySql } from '../features/blogs/infrastructure/postgresdb/blogs.repository-sql';
 import { PostsRepositorySql } from '../features/posts/infrastructure/postgresql/posts.repository-sql';
-import { CommentsSqlRepository } from '../features/comments/infrastructure/postgresql/comments.repository-sql';
+import { CommentsRepositorySql } from '../features/comments/infrastructure/postgresql/comments.repository-sql';
 import { StatusesRepositorySql } from '../features/statuses/infrastructure/statuses.repository-sql';
 
 @Controller('testing/all-data')
@@ -23,7 +23,7 @@ export class TestingController {
     private readonly postsRepository: PostsRepositoryMongo,
     private readonly postsSqlRepository: PostsRepositorySql,
     private readonly commentsRepository: CommentsRepositoryMongo,
-    private readonly commentsSqlRepository: CommentsSqlRepository,
+    private readonly commentsSqlRepository: CommentsRepositorySql,
     private readonly requestApiRepository: RequestApiRepository,
     private readonly requestApiSqlRepository: RequestApiSqlRepository,
     private readonly devicesRepository: DevicesRepositoryMongo,

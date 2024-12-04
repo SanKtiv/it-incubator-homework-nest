@@ -37,7 +37,7 @@ import { RequestApiSqlRepository } from '../../requests/infrastructure/postgresq
 import { BlogsQueryRepositorySql } from '../infrastructure/postgresdb/blogs.query.repository-sql';
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
-import { CommentsSqlRepository } from '../../comments/infrastructure/postgresql/comments.repository-sql';
+import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 
 @Controller('blogs')
 export class BlogsController {
@@ -52,7 +52,7 @@ export class BlogsController {
     private readonly accessJwtToken: AccessJwtToken,
     private readonly usersSqlRepository: UsersRepositorySql,
     private readonly statusesSqlRepository: StatusesRepositorySql,
-    private readonly commentsSqlRepository: CommentsSqlRepository,
+    private readonly commentsSqlRepository: CommentsRepositorySql,
   ) {}
 
   @Get('/blogs')

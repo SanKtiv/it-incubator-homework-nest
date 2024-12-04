@@ -111,7 +111,7 @@ export class UsersRepositorySql {
     }
   }
 
-  async findById_RAW(id: string): Promise<UsersTable | null> {
+  async findById_RAW(id: string): Promise<AccountDataTable | null> {
     const findUserByIdQuery = `
     SELECT u."id", "login", "email", "createdAt"
     FROM "users" AS u

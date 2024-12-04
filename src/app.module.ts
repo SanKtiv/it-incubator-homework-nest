@@ -74,7 +74,7 @@ import { SaBlogsController } from './features/blogs/api/sa.blogscontroller';
 import { PostsRepositorySql } from './features/posts/infrastructure/postgresql/posts.repository-sql';
 import { PostsQueryRepositorySql } from './features/posts/infrastructure/postgresql/posts.query.repository-sql';
 import { CommentsTable } from './features/comments/domain/comments.entity';
-import { CommentsSqlRepository } from './features/comments/infrastructure/postgresql/comments.repository-sql';
+import { CommentsRepositorySql } from './features/comments/infrastructure/postgresql/comments.repository-sql';
 import { CommentsSqlQueryRepository } from './features/comments/infrastructure/postgresql/comments.query.repository-sql';
 import { StatusesTable } from './features/statuses/domain/statuses.entity';
 import { StatusesRepositorySql } from './features/statuses/infrastructure/statuses.repository-sql';
@@ -107,7 +107,7 @@ const repositories = [
   PostsQueryRepositorySql,
   CommentsRepositoryMongo,
   CommentsQueryRepositoryMongo,
-  CommentsSqlRepository,
+  CommentsRepositorySql,
   CommentsSqlQueryRepository,
   UsersRepositoryMongo,
   UsersQueryRepositoryMongo,

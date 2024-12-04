@@ -1,6 +1,6 @@
 export class CommentServiceDto {
   content: string;
   userId: string;
-  userLogin: string = 'login';
+  //userLogin: string = 'login';
   postId: string;
 }
