@@ -25,7 +25,7 @@ import { DataSource } from 'typeorm';
 export class CommentsSqlQueryRepository {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
-  async findById(
+  async findById_RAW(
     id: string,
     userId?: string | null,
   ): Promise<CommentOutputDto> {
