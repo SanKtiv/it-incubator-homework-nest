@@ -68,7 +68,7 @@ export class UsersRepositorySql {
 
   async deleteAll_RAW() {
     await this.dataSource
-        .query(`TRUNCATE "users" CASCADE`)
+        .query(`TRUNCATE "passwordRecovery", "emailConfirmation", "accountData", "users" RESTART IDENTITY CASCADE`)
   }
 
   async create(
