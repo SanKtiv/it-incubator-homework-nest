@@ -30,17 +30,26 @@ export class CommentsSqlQueryRepository {
     userId?: string | null,
   ): Promise<CommentOutputDto> {
     const findCommentsByIdQuery = `
-    SELECT "id", "content", "createdAt", "userId", a."login" AS "userLogin",
-    (SELECT COUNT(*) FROM "statuses" AS s
-        WHERE "id" = s."commentId" AND s."userStatus" = 'Like') AS "likesCount",
-      (SELECT COUNT(*) FROM "statuses" AS s
-        WHERE "id" = s."commentId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
-      (SELECT s."userStatus" FROM "statuses" AS s
-        WHERE "id" = s."commentId" AND s."userId" = $2) AS "myStatus"
-    FROM "comments"
-    LEFT JOIN "users" AS u ON u."id" = "userId"
+    SELECT c."id", c."content", c."createdAt", c."userId", a."login" AS "userLogin",
+          (
+            SELECT COUNT(*) 
+            FROM "statuses" AS s
+            WHERE "id" = s."commentId" AND s."userStatus" = 'Like'
+          ) AS "likesCount",
+          (
+            SELECT COUNT(*) 
+            FROM "statuses" AS s
+            WHERE "id" = s."commentId" AND s."userStatus" = 'Dislike'
+          ) AS "dislikesCount",
+          (
+           SELECT s."userStatus" 
+           FROM "statuses" AS s
+           WHERE "id" = s."commentId" AND s."userId" = $2
+          ) AS "myStatus"
+    FROM "comments" AS c
+    LEFT JOIN "users" AS u ON u."id" = c."userId"
     LEFT JOIN "accountData" AS a ON a."id" = u."accountDataId"
-    WHERE "id" = $1`;
+    WHERE c."id" = $1`;
 
     const parameters = [id, userId];
 
@@ -63,7 +72,7 @@ export class CommentsSqlQueryRepository {
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
-    const rawQuery = `
+    const commentsPagingQuery = `
     SELECT c."id", c."content", c."createdAt", c."userId",
       (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id") AS "userLogin",
       (SELECT COUNT(*) FROM "statuses" AS s
@@ -88,7 +97,7 @@ export class CommentsSqlQueryRepository {
 
       const totalPosts = totalCommentsArr[0].count;
 
-      const commentsArray = await this.dataSource.query(rawQuery, parameters);
+      const commentsArray = await this.dataSource.query(commentsPagingQuery, parameters);
 
       return commentsSqlPaging(query, totalPosts, commentsArray);
     } catch (e) {
