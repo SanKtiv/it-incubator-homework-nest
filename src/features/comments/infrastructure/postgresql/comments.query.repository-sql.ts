@@ -29,23 +29,24 @@ export class CommentsSqlQueryRepository {
     id: string,
     userId?: string | null,
   ): Promise<CommentOutputDto> {
-    const rawQuery = `
-    SELECT c."id", c."content", c."createdAt", c."userId",
-      (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id") AS "userLogin",
+    const findCommentsByIdQuery = `
+    SELECT "id", "content", "createdAt", "userId", a."login" AS "userLogin",
+    (SELECT COUNT(*) FROM "statuses" AS s
+        WHERE "id" = s."commentId" AND s."userStatus" = 'Like') AS "likesCount",
       (SELECT COUNT(*) FROM "statuses" AS s
-        WHERE c."id" = s."commentId" AND s."userStatus" = 'Like') AS "likesCount",
-      (SELECT COUNT(*) FROM "statuses" AS s
-        WHERE c."id" = s."commentId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
+        WHERE "id" = s."commentId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
       (SELECT s."userStatus" FROM "statuses" AS s
-        WHERE c."id" = s."commentId" AND s."userId" = $2) AS "myStatus"  
-    FROM "comments" AS c
-    WHERE c."id" = $1`;
+        WHERE "id" = s."commentId" AND s."userId" = $2) AS "myStatus"
+    FROM "comments"
+    LEFT JOIN "users" AS u ON u."id" = "userId"
+    LEFT JOIN "accountData" AS a ON a."id" = u."accountDataId"
+    WHERE "id" = $1`;
 
     const parameters = [id, userId];
 
-    const commentDocument = await this.dataSource.query(rawQuery, parameters);
+    const [commentDocument] = await this.dataSource.query(findCommentsByIdQuery, parameters);
 
-    if (commentDocument.length === 0) throw new NotFoundException();
+    if (!commentDocument) throw new NotFoundException();
 
     return commentOutputModelRawSql(commentDocument);
   }

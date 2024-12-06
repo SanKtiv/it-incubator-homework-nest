@@ -109,20 +109,20 @@ export class CommentOutputSqlModel {
   public myStatus: string;
 }
 
-export const commentOutputModelRawSql = (comment: any[]): CommentOutputDto => ({
-  id: comment[0].id,
-  content: comment[0].content,
-  createdAt: comment[0].createdAt.toISOString(),
+export const commentOutputModelRawSql = (comment: any): CommentOutputDto => ({
+  id: comment.id,
+  content: comment.content,
+  createdAt: comment.createdAt.toISOString(),
   commentatorInfo: {
-    userId: comment[0].userId,
-    userLogin: comment[0].userLogin,
+    userId: comment.userId,
+    userLogin: comment.userLogin,
   },
   likesInfo: {
-    likesCount: comment[0].likesCount ? Number(comment[0].likesCount) : 0,
-    dislikesCount: comment[0].dislikesCount
-      ? Number(comment[0].dislikesCount)
+    likesCount: comment.likesCount ? Number(comment.likesCount) : 0,
+    dislikesCount: comment.dislikesCount
+      ? Number(comment.dislikesCount)
       : 0,
-    myStatus: comment[0].myStatus || 'None',
+    myStatus: comment.myStatus || 'None',
   },
 });
 
