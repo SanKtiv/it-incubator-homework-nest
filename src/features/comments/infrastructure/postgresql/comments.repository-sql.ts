@@ -96,15 +96,15 @@ export class CommentsRepositorySql {
     }
   }
 
-  async deleteById(id: string) {
-    const rawQuery = `
+  async deleteById_RAW(id: string) {
+    const deleteCommentByIdQuery = `
     DELETE FROM "comments" AS c
     WHERE c."id" = $1`;
 
     const parameters = [id];
 
     try {
-      await this.dataSource.query(rawQuery, parameters);
+      await this.dataSource.query(deleteCommentByIdQuery, parameters);
     } catch (e) {
       throw new InternalServerErrorException();
     }

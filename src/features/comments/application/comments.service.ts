@@ -61,7 +61,7 @@ export class CommentsService {
 
     if (commentDocument.userId !== userId) throw new ForbiddenException();
 
-    await this.commentsRepositorySql.deleteById(id);
+    await this.commentsRepositorySql.deleteById_RAW(id);
   }
 
   async createStatusOfComment(

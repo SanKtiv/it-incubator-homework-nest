@@ -83,16 +83,16 @@ export class PostController {
   }
 
   @Post(':postId/comments')
-      //@UseGuards(JWTAccessAuthGuard)
+  @UseGuards(JWTAccessAuthGuard)
   async createCommentForPost(
     @Param('postId', paramIdIsMongoIdPipe) id: string,
     @Body() inputDto: CommentInputDto,
-    //@CurrentUserId() userId: string,
+    @CurrentUserId() userId: string,
   ): Promise<CommentOutputDto> {
     const dto = new CommentServiceDto();
 
     dto.content = inputDto.content;
-    dto.userId = '00e79016-f27b-4121-98f3-a9856026542c'//userId;
+    dto.userId = userId;
     dto.postId = id;
 
     return this.commentsService.createComment(dto);
