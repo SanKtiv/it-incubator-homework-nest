@@ -73,16 +73,26 @@ export class CommentsSqlQueryRepository {
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
     const commentsPagingQuery = `
-    SELECT c."id", c."content", c."createdAt", c."userId",
-      (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id") AS "userLogin",
-      (SELECT COUNT(*) FROM "statuses" AS s
-        WHERE c."id" = s."commentId" AND s."userStatus" = 'Like') AS "likesCount",
-      (SELECT COUNT(*) FROM "statuses" AS s
-        WHERE c."id" = s."commentId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
-      (SELECT s."userStatus" FROM "statuses" AS s
-        WHERE c."id" = s."commentId" AND s."userId" = $1) AS "myStatus"  
+    SELECT c."id", c."content", c."createdAt", c."userId", a."login" AS "userLogin",
+          (
+            SELECT COUNT(*) 
+            FROM "statuses" AS s
+            WHERE "id" = s."commentId" AND s."userStatus" = 'Like'
+          ) AS "likesCount",
+          (
+            SELECT COUNT(*) 
+            FROM "statuses" AS s
+            WHERE "id" = s."commentId" AND s."userStatus" = 'Dislike'
+          ) AS "dislikesCount",
+          (
+           SELECT s."userStatus" 
+           FROM "statuses" AS s
+           WHERE "id" = s."commentId" AND s."userId" = $1
+          ) AS "myStatus"
     FROM "comments" AS c
-    WHERE c."postId" = $4
+    LEFT JOIN "users" AS u ON u."id" = c."userId"
+    LEFT JOIN "accountData" AS a ON a."id" = u."accountDataId"
+    WHERE c."id" = $4
     ORDER BY c."${query.sortBy}" ${query.sortDirection}
     LIMIT $2
     OFFSET $3`;
@@ -90,16 +100,14 @@ export class CommentsSqlQueryRepository {
     const parameters = [userId, pageSize, pageOffSet, postId];
 
     try {
-      const totalCommentsArr = await this.dataSource.query(
+      const [totalComments] = await this.dataSource.query(
         `SELECT COUNT(*) FROM "comments" WHERE "postId" = $1`,
         [postId],
       );
 
-      const totalPosts = totalCommentsArr[0].count;
-
       const commentsArray = await this.dataSource.query(commentsPagingQuery, parameters);
 
-      return commentsSqlPaging(query, totalPosts, commentsArray);
+      return commentsSqlPaging(query, totalComments.count, commentsArray);
     } catch (e) {
       throw new InternalServerErrorException();
     }

@@ -48,34 +48,40 @@ export class CommentsRepositorySql {
     }
   }
 
-  async findById(id: string, userId?: string | null) {
+  async findById_RAW(id: string, userId?: string | null) {
     userId = userId ? userId : null;
 
-    const rawQuery = `
-    SELECT c."id", c."content", c."createdAt", c."userId",
-    
-      (SELECT u."login" FROM "users" AS u WHERE c."userId" = u."id") AS "userLogin",
-      
-      (SELECT COUNT(*) FROM "statuses" AS s
-       WHERE c."id" = s."commentId" AND s."userStatus" = 'Like') AS "likesCount",
-        
-      (SELECT COUNT(*) FROM "statuses" AS s
-       WHERE c."id" = s."commentId" AND s."userStatus" = 'Dislike') AS "dislikesCount",
-        
-      (SELECT s."userStatus" FROM "statuses" AS s
-       WHERE c."id" = s."commentId" AND s."userId" = $2) AS "myStatus"
+    const findCommentsByIdQuery = `
+    SELECT c."id", c."content", c."createdAt", c."userId", a."login" AS "userLogin",
+          (
+            SELECT COUNT(*) 
+            FROM "statuses" AS s
+            WHERE "id" = s."commentId" AND s."userStatus" = 'Like'
+          ) AS "likesCount",
+          (
+            SELECT COUNT(*) 
+            FROM "statuses" AS s
+            WHERE "id" = s."commentId" AND s."userStatus" = 'Dislike'
+          ) AS "dislikesCount",
+          (
+           SELECT s."userStatus" 
+           FROM "statuses" AS s
+           WHERE "id" = s."commentId" AND s."userId" = $2
+          ) AS "myStatus"
     FROM "comments" AS c
+    LEFT JOIN "users" AS u ON u."id" = c."userId"
+    LEFT JOIN "accountData" AS a ON a."id" = u."accountDataId"
     WHERE c."id" = $1`;
 
     const parameters = [id, userId];
 
     try {
-      const arrayOfFoundComments = await this.dataSource.query(
-        rawQuery,
-        parameters,
+      const [arrayOfFoundComments] = await this.dataSource.query(
+          findCommentsByIdQuery,
+          parameters
       );
 
-      return arrayOfFoundComments[0];
+      return arrayOfFoundComments;
     } catch (e) {
       throw new InternalServerErrorException();
     }

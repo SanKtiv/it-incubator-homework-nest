@@ -95,7 +95,7 @@ export class CommentsService {
   }
 
   async existComment(id: string): Promise<CommentDocument> {
-    const commentDocument = await this.commentsRepositorySql.findById(id);
+    const commentDocument = await this.commentsRepositorySql.findById_RAW(id);
 
     if (!commentDocument) throw new NotFoundException();
 
