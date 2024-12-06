@@ -17,10 +17,20 @@ export class CommentsRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   async create_RAW(dto: CommentServiceDto): Promise<CommentsTable> {
-    const rawQuery = `
-        INSERT INTO "comments" ("content", "userId", "createdAt", "postId")
-        VALUES ($1, $2, $3, $4)
-        RETURNING *;`;
+    const createCommentQuery = `
+    WITH "findUser" AS (
+        SELECT "accountDataId"
+        FROM "users" 
+        WHERE "id" = $2
+    ),
+    "userLogin" AS (
+        SELECT "login" 
+        FROM "accountData" 
+        WHERE "id" = (SELECT "accountDataId" FROM "findUser")
+    )
+    INSERT INTO "comments" ("content", "userId", "createdAt", "postId")
+    VALUES ($1, $2, $3, $4)
+    RETURNING comments.*, (SELECT "login" FROM "userLogin") AS "userLogin"`;
 
     const parameters = [
       dto.content,
@@ -30,9 +40,9 @@ export class CommentsRepositorySql {
     ];
 
     try {
-      const [commentsArray] = await this.dataSource.query(rawQuery, parameters);
+      const [comment] = await this.dataSource.query(createCommentQuery, parameters);
 
-      return commentsArray;
+      return comment;
     } catch (e) {
       throw new InternalServerErrorException();
     }
