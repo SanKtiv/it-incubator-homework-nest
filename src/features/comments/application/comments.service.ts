@@ -50,7 +50,7 @@ export class CommentsService {
 
     if (commentDocument.userId !== userId) throw new ForbiddenException();
 
-    await this.commentsRepositorySql.updateById(id, dto.content);
+    await this.commentsRepositorySql.updateById_RAW(id, dto.content);
     // commentDocument.content = dto.content;
     //
     // await this.commentsRepository.save(commentDocument);

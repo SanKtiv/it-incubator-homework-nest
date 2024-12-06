@@ -65,11 +65,11 @@ export class CommentsController {
 
   @Delete(':commentId')
   @HttpCode(204)
-  //@UseGuards(JWTAccessAuthGuard)
+  @UseGuards(JWTAccessAuthGuard)
   async removeCommentById(
     @Param('commentId', paramIdIsMongoIdPipe) id: string,
-    //@CurrentUserId() userId: string,
+    @CurrentUserId() userId: string,
   ) {
-    await this.commentsService.removeCommentById(id, '3e2c667f-f19d-4c84-92b9-e1635b8ceb72');
+    await this.commentsService.removeCommentById(id, userId);
   }
 }

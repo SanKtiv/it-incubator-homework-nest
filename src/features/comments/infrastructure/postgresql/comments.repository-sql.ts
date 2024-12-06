@@ -87,8 +87,8 @@ export class CommentsRepositorySql {
     }
   }
 
-  async updateById(commentId: string, content: string) {
-    const rawQuery = `
+  async updateById_RAW(commentId: string, content: string) {
+    const commentUpdateQuery = `
     UPDATE "comments"
     SET "content" = $2
     WHERE "id" = $1`;
@@ -96,7 +96,7 @@ export class CommentsRepositorySql {
     const parameters = [commentId, content];
 
     try {
-      await this.dataSource.query(rawQuery, parameters);
+      await this.dataSource.query(commentUpdateQuery, parameters);
     } catch (e) {
       throw new InternalServerErrorException();
     }
