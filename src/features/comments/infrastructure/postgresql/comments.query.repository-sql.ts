@@ -73,7 +73,7 @@ export class CommentsSqlQueryRepository {
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
     const commentsPagingQuery = `
-    SELECT c."id", c."content", c."createdAt", c."userId", a."login" AS "userLogin",
+    SELECT c."id", c."content", c."createdAt", c."userId", c."postId", a."login" AS "userLogin",
           (
             SELECT COUNT(*) 
             FROM "statuses" AS s
@@ -92,7 +92,7 @@ export class CommentsSqlQueryRepository {
     FROM "comments" AS c
     LEFT JOIN "users" AS u ON u."id" = c."userId"
     LEFT JOIN "accountData" AS a ON a."id" = u."accountDataId"
-    WHERE c."id" = $4
+    WHERE c."postId" = $4
     ORDER BY c."${query.sortBy}" ${query.sortDirection}
     LIMIT $2
     OFFSET $3`;

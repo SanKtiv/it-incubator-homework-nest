@@ -76,12 +76,12 @@ export class CommentsRepositorySql {
     const parameters = [id, userId];
 
     try {
-      const [arrayOfFoundComments] = await this.dataSource.query(
+      const [comment] = await this.dataSource.query(
           findCommentsByIdQuery,
           parameters
       );
 
-      return arrayOfFoundComments;
+      return comment;
     } catch (e) {
       throw new InternalServerErrorException();
     }
