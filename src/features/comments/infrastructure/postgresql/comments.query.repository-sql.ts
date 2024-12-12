@@ -33,17 +33,17 @@ export class CommentsSqlQueryRepository {
     SELECT c."id", c."content", c."createdAt", c."userId", a."login" AS "userLogin",
           (
             SELECT COUNT(*) 
-            FROM "statuses" AS s
+            FROM "statuses_comments" AS s
             WHERE "id" = s."commentId" AND s."userStatus" = 'Like'
           ) AS "likesCount",
           (
             SELECT COUNT(*) 
-            FROM "statuses" AS s
+            FROM "statuses_comments" AS s
             WHERE "id" = s."commentId" AND s."userStatus" = 'Dislike'
           ) AS "dislikesCount",
           (
            SELECT s."userStatus" 
-           FROM "statuses" AS s
+           FROM "statuses_comments" AS s
            WHERE "id" = s."commentId" AND s."userId" = $2
           ) AS "myStatus"
     FROM "comments" AS c
@@ -76,17 +76,17 @@ export class CommentsSqlQueryRepository {
     SELECT c."id", c."content", c."createdAt", c."userId", c."postId", a."login" AS "userLogin",
           (
             SELECT COUNT(*) 
-            FROM "statuses" AS s
+            FROM "statuses_comments" AS s
             WHERE "id" = s."commentId" AND s."userStatus" = 'Like'
           ) AS "likesCount",
           (
             SELECT COUNT(*) 
-            FROM "statuses" AS s
+            FROM "statuses_comments" AS s
             WHERE "id" = s."commentId" AND s."userStatus" = 'Dislike'
           ) AS "dislikesCount",
           (
            SELECT s."userStatus" 
-           FROM "statuses" AS s
+           FROM "statuses_comments" AS s
            WHERE "id" = s."commentId" AND s."userId" = $1
           ) AS "myStatus"
     FROM "comments" AS c

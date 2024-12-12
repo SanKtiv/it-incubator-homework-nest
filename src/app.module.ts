@@ -76,7 +76,7 @@ import { PostsQueryRepositorySql } from './features/posts/infrastructure/postgre
 import { CommentsTable } from './features/comments/domain/comments.entity';
 import { CommentsRepositorySql } from './features/comments/infrastructure/postgresql/comments.repository-sql';
 import { CommentsSqlQueryRepository } from './features/comments/infrastructure/postgresql/comments.query.repository-sql';
-import { StatusesTable } from './features/statuses/domain/statuses.entity';
+import {StatusesCommentsTable, StatusesPostsTable, StatusesTable} from './features/statuses/domain/statuses.entity';
 import { StatusesRepositorySql } from './features/statuses/infrastructure/statuses.repository-sql';
 import { AccountDataTable } from './features/users/domain/account-data.table';
 import { EmailConfirmationTable } from './features/users/domain/email-сonfirmation.table';
@@ -157,6 +157,8 @@ const strategies = [
         PasswordRecoveryTable,
         CommentsTable,
         StatusesTable,
+        StatusesCommentsTable,
+        StatusesPostsTable
       ],
       ssl: true,
       //autoLoadEntities: false,
@@ -174,6 +176,8 @@ const strategies = [
       PasswordRecoveryTable,
       CommentsTable,
       StatusesTable,
+      StatusesCommentsTable,
+      StatusesPostsTable
     ]),
     MongooseModule.forRoot(
       appSettings.env.isTesting()

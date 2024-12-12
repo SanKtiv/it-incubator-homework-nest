@@ -30,7 +30,7 @@ export class PostsService {
     private readonly usersRepository: UsersRepositoryMongo,
     private readonly usersSqlRepository: UsersRepositorySql,
     private readonly blogsService: BlogsService,
-    private readonly statusesSqlRepository: StatusesRepositorySql,
+    private readonly statusesRepositorySql: StatusesRepositorySql,
   ) {}
 
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
@@ -157,20 +157,22 @@ export class PostsService {
 
     const newStatus = dto.likeStatus;
 
-    const currentStatus =
-      await this.statusesSqlRepository.getCurrentStatusOfPost(userId, id);
+    const statusesPost =
+      await this.statusesRepositorySql.statusOfPost(userId, id);
 
-    if (!currentStatus) {
-      if (newStatus === 'None') return;
-
-      await this.statusesSqlRepository.insertStatusForPost(
+    if (!statusesPost) {
+      await this.statusesRepositorySql.insertStatusForPost(
         userId,
         id,
         newStatus,
       );
+
+      return;
     }
 
-    await this.statusesSqlRepository.updateStatusForPost(userId, id, newStatus);
+    if (statusesPost.userStatus === newStatus) return;
+
+    await this.statusesRepositorySql.updateStatusForPost(userId, id, newStatus);
   }
 
   async deletePostById(id: string): Promise<void> {

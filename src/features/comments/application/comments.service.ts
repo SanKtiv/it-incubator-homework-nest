@@ -28,7 +28,7 @@ export class CommentsService {
     private readonly postsRepository: PostsRepositoryMongo,
     private readonly usersRepository: UsersRepositoryMongo,
     private readonly usersRepositorySql: UsersRepositorySql,
-    private readonly statusesSqlRepository: StatusesRepositorySql,
+    private readonly statusesRepositorySql: StatusesRepositorySql,
     private readonly postsService: PostsService,
   ) {}
 
@@ -73,21 +73,25 @@ export class CommentsService {
 
     const newStatus = dto.likeStatus;
 
-    const currentStatus = await this.statusesSqlRepository.getStatusOfComment(
+    const statusOfComment = await this.statusesRepositorySql.statusOfComment(
       userId,
       id,
+
     );
 
-    if (!currentStatus) {
-      if (newStatus === 'None') return;
-
-      await this.statusesSqlRepository.insertStatusOfComment(
+    if (!statusOfComment) {
+      await this.statusesRepositorySql.insertStatusOfComment(
         userId,
         id,
         newStatus,
       );
+
+      return
     }
-    await this.statusesSqlRepository.updateStatusForComment(
+
+    if (statusOfComment.userStatus === newStatus) return
+
+    await this.statusesRepositorySql.updateStatusForComment(
       userId,
       id,
       newStatus,

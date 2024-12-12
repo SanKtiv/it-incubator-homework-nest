@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { StatusesTable } from '../domain/statuses.entity';
+import {StatusesCommentsTable, StatusesPostsTable, StatusesTable} from '../domain/statuses.entity';
 import { NewestLikes } from '../../posts/api/models/output/posts.output.dto';
 
 @Injectable()
@@ -13,14 +13,14 @@ export class StatusesRepositorySql {
     postId: string,
     status: string,
   ): Promise<void> {
-    const querySql = `
-        INSERT INTO "statuses" ("userId", "postId", "userStatus", "addedAt")
-        VALUES ($1, $2, $3, $4)
-        `;
-    const queryParams = [userId, postId, status, new Date()];
+    const insertStatusForPostQuery = `
+        INSERT INTO "statuses_posts" ("userId", "postId", "userStatus", "addedAt")
+        VALUES ($1, $2, $3, $4)`;
+
+    const parameters = [userId, postId, status, new Date()];
 
     try {
-      await this.dataSource.query(querySql, queryParams);
+      await this.dataSource.query(insertStatusForPostQuery, parameters);
     } catch (e) {
       throw new InternalServerErrorException();
     }
@@ -31,14 +31,14 @@ export class StatusesRepositorySql {
     commentId: string,
     status: string,
   ): Promise<void> {
-    const querySql = `
-        INSERT INTO "statuses" ("userId", "commentId", "userStatus", "addedAt")
+    const insertStatusOfCommentQuery = `
+        INSERT INTO "statuses_comments" ("userId", "commentId", "userStatus", "addedAt")
         VALUES ($1, $2, $3, $4)
         `;
-    const queryParams = [userId, commentId, status, new Date()];
+    const parameters = [userId, commentId, status, new Date()];
 
     try {
-      await this.dataSource.query(querySql, queryParams);
+      await this.dataSource.query(insertStatusOfCommentQuery, parameters);
     } catch (e) {
       throw new InternalServerErrorException();
     }
@@ -49,15 +49,15 @@ export class StatusesRepositorySql {
     postId: string,
     status: string,
   ): Promise<void> {
-    const querySql = `
-        UPDATE "statuses"
+    const updateStatusForPostQuery = `
+        UPDATE "statuses_posts"
         SET ("userStatus", "addedAt") = ($1, $2)
-        WHERE "userId" = $3 AND "postId" = $4
-        `;
-    const queryParams = [status, new Date(), userId, postId];
+        WHERE "userId" = $3 AND "postId" = $4`;
+
+    const parameters = [status, new Date(), userId, postId];
 
     try {
-      await this.dataSource.query(querySql, queryParams);
+      await this.dataSource.query(updateStatusForPostQuery, parameters);
     } catch (e) {
       throw new InternalServerErrorException();
     }
@@ -68,57 +68,61 @@ export class StatusesRepositorySql {
     commentId: string,
     status: string,
   ): Promise<void> {
-    const querySql = `
-        UPDATE "statuses"
+    const updateQuery = `
+        UPDATE "statuses_comments"
         SET ("userStatus", "addedAt") = ($1, $2)
         WHERE "userId" = $3 AND "commentId" = $4`;
 
-    const queryParams = [status, new Date(), userId, commentId];
+    const parameters = [status, new Date(), userId, commentId];
 
     try {
-      await this.dataSource.query(querySql, queryParams);
+      await this.dataSource.query(updateQuery, parameters);
     } catch (e) {
       throw new InternalServerErrorException();
     }
   }
 
-  async getCurrentStatusOfPost(
+  async statusOfPost(
     userId: string,
     postId: string,
-  ): Promise<string | null> {
-    const querySql = `
-        SELECT status."userStatus"
-        FROM "statuses" AS status
-        WHERE status."userId" = $1 AND status."postId" = $2
-        `;
-    const queryParams = [userId, postId];
+  ): Promise<StatusesPostsTable | null> {
+    const getPostStatusQuery = `
+        SELECT *
+        FROM "statuses_posts"
+        WHERE "userId" = $1 AND "postId" = $2`;
+
+    const parameters = [userId, postId];
+
+
     try {
-      const statusesArray = await this.dataSource.query(querySql, queryParams);
+      const [postStatus] = await this.dataSource
+          .query(getPostStatusQuery, parameters);
 
-      if (statusesArray.length === 0) return null;
+      if (!postStatus) return null;
 
-      return statusesArray[0].userStatus;
+      return postStatus;
     } catch (e) {
       throw new InternalServerErrorException();
     }
   }
 
-  async getStatusOfComment(
+  async statusOfComment(
     userId: string,
     commentId: string,
-  ): Promise<string | null> {
-    const rawQuery = `
-        SELECT status."userStatus"
-        FROM "statuses" AS status
-        WHERE status."userId" = $1 AND status."commentId" = $2`;
+  ): Promise<StatusesCommentsTable | null> {
+    const statusOfCommentQuery = `
+        SELECT "userStatus"
+        FROM "statuses_comments"
+        WHERE "userId" = $1 AND "commentId" = $2`;
 
     const parameters = [userId, commentId];
     try {
-      const statusesArray = await this.dataSource.query(rawQuery, parameters);
+      const [statusesComment] = await this.dataSource
+          .query(statusOfCommentQuery, parameters);
 
-      if (statusesArray.length === 0) return null;
+      if (!statusesComment) return null;
 
-      return statusesArray[0].userStatus;
+      return statusesComment;
     } catch (e) {
       throw new InternalServerErrorException();
     }
@@ -144,6 +148,6 @@ export class StatusesRepositorySql {
 
   async deleteAll_RAW() {
     await this.dataSource
-        .query(`TRUNCATE "statuses" CASCADE`)
+        .query(`TRUNCATE "statuses_posts", "statuses_comments"`)
   }
 }

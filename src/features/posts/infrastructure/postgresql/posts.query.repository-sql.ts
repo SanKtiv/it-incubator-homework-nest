@@ -45,28 +45,27 @@ export class PostsQueryRepositorySql {
     //if (!userId) userId = null;
 
     const findByIdQuery = `
-    WITH
-    "post" AS
-    (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
-      b."name" AS "blogName", s."userStatus" AS "myStatus",
-      (SELECT COUNT(*) FROM "statuses" WHERE p."id" = "postId" AND "userStatus" = 'Like') AS "likesCount",
-      (SELECT COUNT(*) FROM "statuses" WHERE p."id" = "postId" AND "userStatus" = 'Dislike') AS "dislikesCount"
-    FROM "posts" AS p
-    LEFT JOIN "blogs" AS b ON p."blogId" = b."id"
-    LEFT JOIN "statuses" AS s ON p."id" = s."postId" AND s."userId" = $2
-    WHERE p."id" = $1),
-    
-    "newestLikes" AS
-    (SELECT "addedAt", "login", "userId", "postId",
-    ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"
-    FROM "statuses"
-    LEFT JOIN "users" ON users."id" = "userId"
-    LEFT JOIN "accountData" AS a ON a."id" = users."accountDataId"
-    WHERE "userStatus" = 'Like' AND "postId" is distinct from null),
-    
-    "newestLikesSorted" AS
-    (SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3)
-    
+    WITH "post" AS (
+      SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
+            b."name" AS "blogName", s."userStatus" AS "myStatus",
+            (SELECT COUNT(*) FROM "statuses_posts" WHERE p."id" = "postId" AND "userStatus" = 'Like') AS "likesCount",
+            (SELECT COUNT(*) FROM "statuses_posts" WHERE p."id" = "postId" AND "userStatus" = 'Dislike') AS "dislikesCount"
+      FROM "posts" AS p
+      LEFT JOIN "blogs" AS b ON p."blogId" = b."id"
+      LEFT JOIN "statuses_posts" AS s ON p."id" = s."postId" AND s."userId" = $2
+      WHERE p."id" = $1
+      ),
+    "newestLikes" AS (
+      SELECT "addedAt", "login", "userId", "postId",
+          ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"
+      FROM "statuses_posts"
+      LEFT JOIN "users" ON users."id" = "userId"
+      LEFT JOIN "accountData" AS a ON a."id" = users."accountDataId"
+      WHERE "userStatus" = 'Like' AND "postId" is distinct from null
+      ),
+    "newestLikesSorted" AS (
+      SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3
+      )
     SELECT p.*, n.* FROM "post" AS p
     LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"`;
 
@@ -93,30 +92,29 @@ export class PostsQueryRepositorySql {
     const stringSelectByBlogId: string = blogId ? 'WHERE p."blogId" = $4' : ''
 
     const postPagingQuery = `
-    WITH
-    "postsPaging" AS
-    (SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
-      b."name" AS "blogName", s."userStatus" AS "myStatus",
-      (SELECT COUNT(*) FROM "statuses" WHERE p."id" = "postId" AND "userStatus" = 'Like') AS "likesCount",
-      (SELECT COUNT(*) FROM "statuses" WHERE p."id" = "postId" AND "userStatus" = 'Dislike') AS "dislikesCount"
+    WITH "postsPaging" AS (
+      SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
+            b."name" AS "blogName", s."userStatus" AS "myStatus",
+            (SELECT COUNT(*) FROM "statuses_posts" WHERE p."id" = "postId" AND "userStatus" = 'Like') AS "likesCount",
+            (SELECT COUNT(*) FROM "statuses_posts" WHERE p."id" = "postId" AND "userStatus" = 'Dislike') AS "dislikesCount"
     FROM "posts" AS p
     LEFT JOIN "blogs" AS b ON p."blogId" = b."id"
-    LEFT JOIN "statuses" AS s ON p."id" = s."postId" AND s."userId" = $1
+    LEFT JOIN "statuses_posts" AS s ON p."id" = s."postId" AND s."userId" = $1
     ${stringSelectByBlogId}
     ORDER BY p."${query.sortBy}" ${query.sortDirection}
-    LIMIT $2 OFFSET $3),
-    
-    "newestLikes" AS
-    (SELECT "addedAt", "login", "userId", "postId",
-    ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"
-    FROM "statuses"
+    LIMIT $2 OFFSET $3
+    ),
+    "newestLikes" AS (
+      SELECT "addedAt", "login", "userId", "postId",
+            ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"
+    FROM "statuses_posts"
     LEFT JOIN "users" ON users."id" = "userId"
     LEFT JOIN "accountData" AS a ON a."id" = users."accountDataId"
-    WHERE "userStatus" = 'Like' AND "postId" is distinct from null),
-    
-    "newestLikesSorted" AS
-    (SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3)
-    
+    WHERE "userStatus" = 'Like' AND "postId" is distinct from null
+    ),
+    "newestLikesSorted" AS (
+      SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3
+      )
     SELECT p.*, n.* FROM "postsPaging" AS p
     LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"`;
 
