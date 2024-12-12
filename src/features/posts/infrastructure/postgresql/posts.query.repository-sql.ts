@@ -31,9 +31,9 @@ export class PostsQueryRepositorySql {
     const rawQuery = `SELECT COUNT (*) FROM "posts" WHERE "id" = $1`;
 
     try {
-      const countPostsArray = await this.dataSource.query(rawQuery, [postId]);
+      const [countPostsArray] = await this.dataSource.query(rawQuery, [postId]);
 
-      return countPostsArray[0].count;
+      return countPostsArray.count;
     } catch (e) {
       throw new InternalServerErrorException();
     }

@@ -34,7 +34,7 @@ import { CommentServiceDto } from '../../comments/api/models/input/comment-servi
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { PostsQueryRepositorySql } from '../infrastructure/postgresql/posts.query.repository-sql';
-import { CommentsSqlQueryRepository } from '../../comments/infrastructure/postgresql/comments.query.repository-sql';
+import { CommentsQueryRepositorySql } from '../../comments/infrastructure/postgresql/comments.query.repository-sql';
 
 @Controller('posts')
 export class PostController {
@@ -42,10 +42,10 @@ export class PostController {
     private readonly postsService: PostsService,
     private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
     private readonly postsQueryRepository: PostsQueryRepositoryMongo,
-    private readonly postsSqlQueryRepository: PostsQueryRepositorySql,
+    private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly commentsService: CommentsService,
     private readonly commentsQueryRepository: CommentsQueryRepositoryMongo,
-    private readonly commentsSqlQueryRepository: CommentsSqlQueryRepository,
+    private readonly commentsSqlQueryRepository: CommentsQueryRepositorySql,
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
@@ -64,7 +64,7 @@ export class PostController {
       req.headers.authorization,
     );
 
-    const post = await this.postsSqlQueryRepository.findById_RAW(id, userId);
+    const post = await this.postsQueryRepositorySql.findById_RAW(id, userId);
 
     if (!post) throw new NotFoundException();
 
@@ -107,7 +107,7 @@ export class PostController {
       req.headers.authorization,
     );
 
-    return this.postsSqlQueryRepository.findPaging_RAW(query, null, userId);
+    return this.postsQueryRepositorySql.findPaging_RAW(query, null, userId);
   }
 
   @Get(':postId/comments')
@@ -116,9 +116,9 @@ export class PostController {
     @Query() query: QueryDto,
     @Req() req: Request,
   ) {
-    const count = await this.postsSqlQueryRepository.countById(postId);
+    const countPost = await this.postsQueryRepositorySql.countById(postId);
 
-    if (count === 0) throw new NotFoundException();
+    if (+countPost === 0) throw new NotFoundException();
 
     const userId = await this.accessJwtToken.getUserIdFromHeaders(
       req.headers.authorization,

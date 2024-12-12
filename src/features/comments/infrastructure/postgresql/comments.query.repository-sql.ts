@@ -22,7 +22,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
 @Injectable()
-export class CommentsSqlQueryRepository {
+export class CommentsQueryRepositorySql {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   async findById_RAW(
@@ -34,17 +34,17 @@ export class CommentsSqlQueryRepository {
           (
             SELECT COUNT(*) 
             FROM "statuses_comments" AS s
-            WHERE "id" = s."commentId" AND s."userStatus" = 'Like'
+            WHERE c."id" = s."commentId" AND s."userStatus" = 'Like'
           ) AS "likesCount",
           (
             SELECT COUNT(*) 
             FROM "statuses_comments" AS s
-            WHERE "id" = s."commentId" AND s."userStatus" = 'Dislike'
+            WHERE c."id" = s."commentId" AND s."userStatus" = 'Dislike'
           ) AS "dislikesCount",
           (
            SELECT s."userStatus" 
            FROM "statuses_comments" AS s
-           WHERE "id" = s."commentId" AND s."userId" = $2
+           WHERE c."id" = s."commentId" AND s."userId" = $2
           ) AS "myStatus"
     FROM "comments" AS c
     LEFT JOIN "users" AS u ON u."id" = c."userId"
@@ -77,17 +77,17 @@ export class CommentsSqlQueryRepository {
           (
             SELECT COUNT(*) 
             FROM "statuses_comments" AS s
-            WHERE "id" = s."commentId" AND s."userStatus" = 'Like'
+            WHERE c."id" = s."commentId" AND s."userStatus" = 'Like'
           ) AS "likesCount",
           (
             SELECT COUNT(*) 
             FROM "statuses_comments" AS s
-            WHERE "id" = s."commentId" AND s."userStatus" = 'Dislike'
+            WHERE c."id" = s."commentId" AND s."userStatus" = 'Dislike'
           ) AS "dislikesCount",
           (
            SELECT s."userStatus" 
            FROM "statuses_comments" AS s
-           WHERE "id" = s."commentId" AND s."userId" = $1
+           WHERE c."id" = s."commentId" AND s."userId" = $1
           ) AS "myStatus"
     FROM "comments" AS c
     LEFT JOIN "users" AS u ON u."id" = c."userId"

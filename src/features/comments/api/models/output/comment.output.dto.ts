@@ -122,7 +122,7 @@ export const commentOutputModelRawSql = (comment: any): CommentOutputDto => ({
     dislikesCount: comment.dislikesCount
       ? Number(comment.dislikesCount)
       : 0,
-    myStatus: comment.myStatus || 'None',
+    myStatus: comment.myStatus,
   },
 });
 
