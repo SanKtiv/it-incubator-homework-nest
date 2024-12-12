@@ -38,7 +38,7 @@ export class CommentsController {
       req.headers.authorization,
     );
 
-    return this.commentsQueryRepositorySql.findById_RAW(id, 'b99bafa9-7973-4320-b3d3-12078d960edf');
+    return this.commentsQueryRepositorySql.findById_RAW(id, userId);
   }
 
   @Put(':commentId/like-status')
