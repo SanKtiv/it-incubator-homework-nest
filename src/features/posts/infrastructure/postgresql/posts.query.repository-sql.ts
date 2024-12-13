@@ -140,7 +140,7 @@ export class PostsQueryRepositorySql {
           postPagingQuery,
         parametersPaging,
       );
-console.log('postsPaging =', postsPaging)
+
       return postsSqlPaging(query, totalPosts.count, postsPaging);
     } catch (e) {
       throw new InternalServerErrorException();
