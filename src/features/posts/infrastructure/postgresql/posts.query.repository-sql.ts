@@ -67,7 +67,8 @@ export class PostsQueryRepositorySql {
       SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3
       )
     SELECT p.*, n.* FROM "post" AS p
-    LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"`;
+    LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"
+    ORDER BY n."addedAt" DESC`;
 
     const parameters = [id, userId];
 
@@ -97,26 +98,27 @@ export class PostsQueryRepositorySql {
             b."name" AS "blogName", s."userStatus" AS "myStatus",
             (SELECT COUNT(*) FROM "statuses_posts" WHERE p."id" = "postId" AND "userStatus" = 'Like') AS "likesCount",
             (SELECT COUNT(*) FROM "statuses_posts" WHERE p."id" = "postId" AND "userStatus" = 'Dislike') AS "dislikesCount"
-    FROM "posts" AS p
-    LEFT JOIN "blogs" AS b ON p."blogId" = b."id"
-    LEFT JOIN "statuses_posts" AS s ON p."id" = s."postId" AND s."userId" = $1
-    ${stringSelectByBlogId}
-    ORDER BY p."${query.sortBy}" ${query.sortDirection}
-    LIMIT $2 OFFSET $3
+      FROM "posts" AS p
+      LEFT JOIN "blogs" AS b ON p."blogId" = b."id"
+      LEFT JOIN "statuses_posts" AS s ON p."id" = s."postId" AND s."userId" = $1
+      ${stringSelectByBlogId}
+      ORDER BY p."${query.sortBy}" ${query.sortDirection}
+      LIMIT $2 OFFSET $3
     ),
     "newestLikes" AS (
       SELECT "addedAt", "login", "userId", "postId",
             ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"
-    FROM "statuses_posts"
-    LEFT JOIN "users" ON users."id" = "userId"
-    LEFT JOIN "accountData" AS a ON a."id" = users."accountDataId"
-    WHERE "userStatus" = 'Like' AND "postId" is distinct from null
+      FROM "statuses_posts"
+      LEFT JOIN "users" ON users."id" = "userId"
+      LEFT JOIN "accountData" AS a ON a."id" = users."accountDataId"
+      WHERE "userStatus" = 'Like' AND "postId" is distinct from null
     ),
     "newestLikesSorted" AS (
       SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3
       )
-    SELECT p.*, n.* FROM "postsPaging" AS p
-    LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"`;
+    SELECT p.*, n.*  FROM "postsPaging" AS p
+    LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"
+    ORDER BY p."${query.sortBy}" ${query.sortDirection}, n."addedAt" DESC`;
 
     const countPostsQuery = blogId
       ? `SELECT COUNT(*) FROM "posts" WHERE "blogId" = $1`
@@ -138,7 +140,7 @@ export class PostsQueryRepositorySql {
           postPagingQuery,
         parametersPaging,
       );
-
+console.log('postsPaging =', postsPaging)
       return postsSqlPaging(query, totalPosts.count, postsPaging);
     } catch (e) {
       throw new InternalServerErrorException();
