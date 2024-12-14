@@ -112,8 +112,7 @@ export class UsersQueryRepositorySql {
 
     const [usersCount] = await this.dataSource
         .query(usersCountQuery, usersCountParameters)
-console.log('usersPaging =',usersPaging)
-    console.log('usersCount =',usersCount)
+
     return usersPagingDto(usersCount.count, query, usersPaging)
   }
 }

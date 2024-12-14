@@ -92,6 +92,9 @@ export class PostsQueryRepositorySql {
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
     const stringSelectByBlogId: string = blogId ? 'WHERE p."blogId" = $4' : ''
 
+    console.log('userId =', userId)
+    console.log('query =', query)
+
     const postPagingQuery = `
     WITH "postsPaging" AS (
       SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
