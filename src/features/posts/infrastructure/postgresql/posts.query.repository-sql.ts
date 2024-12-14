@@ -105,7 +105,7 @@ export class PostsQueryRepositorySql {
       LEFT JOIN "blogs" AS b ON p."blogId" = b."id"
       LEFT JOIN "statuses_posts" AS s ON p."id" = s."postId" AND s."userId" = $1
       ${stringSelectByBlogId}
-      ORDER BY p."${query.sortBy}" ${query.sortDirection}
+      ORDER BY "${query.sortBy}" ${query.sortDirection}
       LIMIT $2 OFFSET $3
     ),
     "newestLikes" AS (
