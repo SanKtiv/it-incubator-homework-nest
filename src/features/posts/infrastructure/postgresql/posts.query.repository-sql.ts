@@ -61,7 +61,7 @@ export class PostsQueryRepositorySql {
       FROM "statuses_posts"
       LEFT JOIN "users" ON users."id" = "userId"
       LEFT JOIN "accountData" AS a ON a."id" = users."accountDataId"
-      WHERE "userStatus" = 'Like' AND "postId" is distinct from null
+      WHERE "userStatus" = 'Like' AND "postId" = $1
       ORDER BY "addedAt" DESC
       ),
     "newestLikesSorted" AS (
@@ -144,6 +144,7 @@ export class PostsQueryRepositorySql {
 
       return postsSqlPaging(query, totalPosts.count, postsPaging);
     } catch (e) {
+      console.log('Error findPaging_RAW: ', e)
       throw new InternalServerErrorException();
     }
   }
