@@ -67,7 +67,7 @@ export class PostController {
     const post = await this.postsQueryRepositorySql.findById_RAW(id, userId);
 
     if (!post) throw new NotFoundException();
-
+console.log('PostById =',post)
     return post;
   }
 
