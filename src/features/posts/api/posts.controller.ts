@@ -67,7 +67,8 @@ export class PostController {
     const post = await this.postsQueryRepositorySql.findById_RAW(id, userId);
 
     if (!post) throw new NotFoundException();
-console.log('PostById =',post)
+console.log('PostById =',post.id)
+    console.log('PostById =',post.extendedLikesInfo.newestLikes)
     return post;
   }
 
