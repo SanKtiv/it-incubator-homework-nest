@@ -62,6 +62,7 @@ export class PostsQueryRepositorySql {
       LEFT JOIN "users" ON users."id" = "userId"
       LEFT JOIN "accountData" AS a ON a."id" = users."accountDataId"
       WHERE "userStatus" = 'Like' AND "postId" is distinct from null
+      ORDER BY "addedAt" DESC
       ),
     "newestLikesSorted" AS (
       SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3
@@ -91,9 +92,6 @@ export class PostsQueryRepositorySql {
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
     const stringSelectByBlogId: string = blogId ? 'WHERE p."blogId" = $4' : ''
-
-    console.log('userId =', userId)
-    console.log('query =', query)
 
     const postPagingQuery = `
     WITH "postsPaging" AS (
