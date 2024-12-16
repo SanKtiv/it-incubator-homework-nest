@@ -60,7 +60,7 @@ import configuration from './settings/configuration';
 import { DevicesController } from './features/security/api/devices.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlogsRepositorySql } from './features/blogs/infrastructure/postgresdb/blogs.repository-sql';
-import { BlogsTable} from './features/blogs/domain/blog.entity';
+import { BlogsTable } from './features/blogs/domain/blog.entity';
 import { UsersTable } from './features/users/domain/users.table';
 import { UsersRepositorySql } from './features/users/infrastructure/postgresqldb/users.repository-sql';
 import { DeviceTable } from './features/security/domain/device.table';
@@ -76,7 +76,11 @@ import { PostsQueryRepositorySql } from './features/posts/infrastructure/postgre
 import { CommentsTable } from './features/comments/domain/comments.entity';
 import { CommentsRepositorySql } from './features/comments/infrastructure/postgresql/comments.repository-sql';
 import { CommentsQueryRepositorySql } from './features/comments/infrastructure/postgresql/comments.query.repository-sql';
-import {StatusesCommentsTable, StatusesPostsTable, StatusesTable} from './features/statuses/domain/statuses.entity';
+import {
+  StatusesCommentsTable,
+  StatusesPostsTable,
+  StatusesTable,
+} from './features/statuses/domain/statuses.entity';
 import { StatusesRepositorySql } from './features/statuses/infrastructure/statuses.repository-sql';
 import { AccountDataTable } from './features/users/domain/account-data.table';
 import { EmailConfirmationTable } from './features/users/domain/email-сonfirmation.table';
@@ -158,7 +162,7 @@ const strategies = [
         CommentsTable,
         StatusesTable,
         StatusesCommentsTable,
-        StatusesPostsTable
+        StatusesPostsTable,
       ],
       ssl: true,
       //autoLoadEntities: false,
@@ -177,7 +181,7 @@ const strategies = [
       CommentsTable,
       StatusesTable,
       StatusesCommentsTable,
-      StatusesPostsTable
+      StatusesPostsTable,
     ]),
     MongooseModule.forRoot(
       appSettings.env.isTesting()

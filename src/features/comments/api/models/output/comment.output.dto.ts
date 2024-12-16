@@ -119,9 +119,7 @@ export const commentOutputModelRawSql = (comment: any): CommentOutputDto => ({
   },
   likesInfo: {
     likesCount: comment.likesCount ? Number(comment.likesCount) : 0,
-    dislikesCount: comment.dislikesCount
-      ? Number(comment.dislikesCount)
-      : 0,
+    dislikesCount: comment.dislikesCount ? Number(comment.dislikesCount) : 0,
     myStatus: comment.myStatus || 'None',
   },
 });

@@ -81,9 +81,18 @@ export class BlogsRepositorySql {
     VALUES ($1, $2, $3, $4, $5)
     RETURNING *;`;
 
-    const parameters = [dto.name, dto.description, dto.websiteUrl, new Date(), isMembership];
+    const parameters = [
+      dto.name,
+      dto.description,
+      dto.websiteUrl,
+      new Date(),
+      isMembership,
+    ];
 
-    const [createdRowsArray] = await this.dataSource.query(createBlogQuery, parameters);
+    const [createdRowsArray] = await this.dataSource.query(
+      createBlogQuery,
+      parameters,
+    );
 
     return createdRowsArray;
   }
@@ -122,7 +131,9 @@ export class BlogsRepositorySql {
     RETURNING *`;
 
     try {
-      const [deletedBlogArray] = await this.dataSource.query(deleteBlogQuery, [blog.id]);
+      const [deletedBlogArray] = await this.dataSource.query(deleteBlogQuery, [
+        blog.id,
+      ]);
 
       return deletedBlogArray;
     } catch (e) {
@@ -131,7 +142,6 @@ export class BlogsRepositorySql {
   }
 
   async deleteAll_RAW() {
-    await this.dataSource
-        .query(`TRUNCATE "blogs" CASCADE`)
+    await this.dataSource.query(`TRUNCATE "blogs" CASCADE`);
   }
 }

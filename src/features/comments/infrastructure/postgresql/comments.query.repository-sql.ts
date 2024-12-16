@@ -53,7 +53,10 @@ export class CommentsQueryRepositorySql {
 
     const parameters = [id, userId];
 
-    const [commentDocument] = await this.dataSource.query(findCommentsByIdQuery, parameters);
+    const [commentDocument] = await this.dataSource.query(
+      findCommentsByIdQuery,
+      parameters,
+    );
 
     if (!commentDocument) throw new NotFoundException();
 
@@ -105,7 +108,10 @@ export class CommentsQueryRepositorySql {
         [postId],
       );
 
-      const commentsArray = await this.dataSource.query(commentsPagingQuery, parameters);
+      const commentsArray = await this.dataSource.query(
+        commentsPagingQuery,
+        parameters,
+      );
 
       return commentsSqlPaging(query, totalComments.count, commentsArray);
     } catch (e) {

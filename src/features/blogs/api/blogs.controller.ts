@@ -57,8 +57,10 @@ export class BlogsController {
 
   @Get('/blogs')
   async findUserByUserId() {
-    const user = await this.usersSqlRepository.findById_RAW('433d1a84-e5d6-48ff-916e-c8ba8b6d3df3')
-  console.log(user)
+    const user = await this.usersSqlRepository.findById_RAW(
+      '433d1a84-e5d6-48ff-916e-c8ba8b6d3df3',
+    );
+    console.log(user);
   }
 
   @Post()

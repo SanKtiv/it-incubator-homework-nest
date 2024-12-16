@@ -98,21 +98,30 @@ export class UsersQueryRepositorySql {
     WHERE "login" ~* $1 OR "email" ~* $2
     ORDER BY "${query.sortBy}" ${query.sortDirection}
     LIMIT $3
-    OFFSET $4`
+    OFFSET $4`;
 
-    const pagingParameters = [searchLoginTerm, searchEmailTerm, query.pageSize, pageOffSet]
+    const pagingParameters = [
+      searchLoginTerm,
+      searchEmailTerm,
+      query.pageSize,
+      pageOffSet,
+    ];
 
     const usersCountQuery = `
-    SELECT COUNT(*) FROM "accountData" WHERE "login" ~* $1 OR "email" ~* $2`
+    SELECT COUNT(*) FROM "accountData" WHERE "login" ~* $1 OR "email" ~* $2`;
 
-    const usersCountParameters = [searchLoginTerm, searchEmailTerm]
+    const usersCountParameters = [searchLoginTerm, searchEmailTerm];
 
-    const usersPaging = await this.dataSource
-        .query(findPagingUsersQuery, pagingParameters)
+    const usersPaging = await this.dataSource.query(
+      findPagingUsersQuery,
+      pagingParameters,
+    );
 
-    const [usersCount] = await this.dataSource
-        .query(usersCountQuery, usersCountParameters)
+    const [usersCount] = await this.dataSource.query(
+      usersCountQuery,
+      usersCountParameters,
+    );
 
-    return usersPagingDto(usersCount.count, query, usersPaging)
+    return usersPagingDto(usersCount.count, query, usersPaging);
   }
 }

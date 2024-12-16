@@ -19,15 +19,12 @@ export class UsersOutputDto {
 //     userDocument.accountData.createdAt,
 //   ); for mongo
 
-export const usersOutputDto = (user: any): UsersOutputDto =>
-  (
-      {
-        id: user.id,
-        login: user.login,
-        email: user.email,
-        createdAt: user.createdAt.toISOString(),
-      }
-  );
+export const usersOutputDto = (user: any): UsersOutputDto => ({
+  id: user.id,
+  login: user.login,
+  email: user.email,
+  createdAt: user.createdAt.toISOString(),
+});
 
 export class UsersPagingDto {
   constructor(

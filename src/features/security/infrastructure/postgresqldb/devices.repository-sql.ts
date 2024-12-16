@@ -46,7 +46,6 @@ export class DevicesRepositorySql {
   }
 
   async deleteAll_RAW() {
-    await this.dataSource
-        .query(`TRUNCATE "devices" CASCADE`)
+    await this.dataSource.query(`TRUNCATE "devices" CASCADE`);
   }
 }

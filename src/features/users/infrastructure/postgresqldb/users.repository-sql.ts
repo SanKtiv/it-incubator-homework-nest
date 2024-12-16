@@ -30,7 +30,7 @@ export class UsersRepositorySql {
       dto.login,
       dto.email,
       new Date(),
-      passwordHash
+      passwordHash,
     ];
 
     const emailConfirmationQuery = `
@@ -43,39 +43,49 @@ export class UsersRepositorySql {
     const passwordRecoveryQuery = `
     INSERT INTO "passwordRecovery"
     DEFAULT VALUES
-    RETURNING *`
+    RETURNING *`;
 
-    const [accountData] = await this.dataSource
-        .query(accountDataQuery, accountDataParameters);
+    const [accountData] = await this.dataSource.query(
+      accountDataQuery,
+      accountDataParameters,
+    );
 
-    const [emailConfirmation] = await this.dataSource
-        .query(emailConfirmationQuery, emailConfirmationParameters)
+    const [emailConfirmation] = await this.dataSource.query(
+      emailConfirmationQuery,
+      emailConfirmationParameters,
+    );
 
-    const [passwordRecovery] = await this.dataSource
-        .query(passwordRecoveryQuery)
+    const [passwordRecovery] = await this.dataSource.query(
+      passwordRecoveryQuery,
+    );
 
     const insertUserQuery = `
     INSERT INTO "users" ("accountDataId", "emailConfirmationId", "passwordRecoveryId")
     VALUES ($1, $2, $3)
-    RETURNING *`
+    RETURNING *`;
 
-    const userParameters = [accountData.id, emailConfirmation.id, passwordRecovery.id]
+    const userParameters = [
+      accountData.id,
+      emailConfirmation.id,
+      passwordRecovery.id,
+    ];
 
-    const [user] = await this.dataSource.query(insertUserQuery, userParameters)
+    const [user] = await this.dataSource.query(insertUserQuery, userParameters);
 
-    return this.findById_RAW(user.id)
+    return this.findById_RAW(user.id);
   }
 
   async deleteAll_RAW() {
-    await this.dataSource
-        .query(`TRUNCATE "passwordRecovery", "emailConfirmation", "accountData", "users" RESTART IDENTITY CASCADE`)
+    await this.dataSource.query(
+      `TRUNCATE "passwordRecovery", "emailConfirmation", "accountData", "users" RESTART IDENTITY CASCADE`,
+    );
   }
 
   async create(
-      dto: UsersInputDto,
-      passwordHash: string,
-      confirmationCode: string,
-      expirationDate: Date,
+    dto: UsersInputDto,
+    passwordHash: string,
+    confirmationCode: string,
+    expirationDate: Date,
   ): Promise<UsersTable> {
     const user = new UsersTable();
     const accountData = new AccountDataTable();
@@ -116,9 +126,9 @@ export class UsersRepositorySql {
     SELECT u."id", "login", "email", "createdAt"
     FROM "users" AS u
     LEFT JOIN "accountData" AS a ON a."id" = u."accountDataId"
-    WHERE u."id" = $1`
+    WHERE u."id" = $1`;
 
-    const parameters = [id]
+    const parameters = [id];
     try {
       const [user] = await this.dataSource.query(findUserByIdQuery, parameters);
 
@@ -156,17 +166,16 @@ export class UsersRepositorySql {
   }
 
   async findByLogin_RAW(login: string): Promise<UsersTable | null> {
-
     const findByLoginQuery = `
     SELECT *
     FROM "accountData" 
     WHERE "login" = $1`;
 
-    const [usersLogin] = await this.dataSource.query(findByLoginQuery, [login])
+    const [usersLogin] = await this.dataSource.query(findByLoginQuery, [login]);
 
-    if (usersLogin) return usersLogin
+    if (usersLogin) return usersLogin;
 
-    return null
+    return null;
   }
 
   async findByEmail(email: string): Promise<UsersTable | null> {
@@ -182,13 +191,13 @@ export class UsersRepositorySql {
     const findByEmailQuery = `
     SELECT *
     FROM "accountData"
-    WHERE "email" = $1`
+    WHERE "email" = $1`;
 
-    const [user] = await this.dataSource.query(findByEmailQuery, [email])
+    const [user] = await this.dataSource.query(findByEmailQuery, [email]);
 
-    if (user) return user
+    if (user) return user;
 
-    return null
+    return null;
   }
 
   async findByLoginOrEmail(loginOrEmail: string): Promise<UsersTable | null> {
@@ -216,5 +225,4 @@ export class UsersRepositorySql {
   async removeAll() {
     await this.repository.clear();
   }
-
 }

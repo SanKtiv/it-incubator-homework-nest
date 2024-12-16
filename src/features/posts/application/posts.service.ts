@@ -157,8 +157,10 @@ export class PostsService {
 
     const newStatus = dto.likeStatus;
 
-    const statusesPost =
-      await this.statusesRepositorySql.statusOfPost(userId, id);
+    const statusesPost = await this.statusesRepositorySql.statusOfPost(
+      userId,
+      id,
+    );
 
     if (!statusesPost) {
       await this.statusesRepositorySql.insertStatusForPost(

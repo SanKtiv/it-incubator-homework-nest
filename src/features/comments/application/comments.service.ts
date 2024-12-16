@@ -76,7 +76,6 @@ export class CommentsService {
     const statusOfComment = await this.statusesRepositorySql.statusOfComment(
       userId,
       id,
-
     );
 
     if (!statusOfComment) {
@@ -86,10 +85,10 @@ export class CommentsService {
         newStatus,
       );
 
-      return
+      return;
     }
 
-    if (statusOfComment.userStatus === newStatus) return
+    if (statusOfComment.userStatus === newStatus) return;
 
     await this.statusesRepositorySql.updateStatusForComment(
       userId,

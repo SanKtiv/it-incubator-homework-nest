@@ -32,7 +32,7 @@ export class StatusesCommentsTable {
   @Column('uuid')
   commentId: string;
 
-  @Column({type:'character varying', default: 'None'})
+  @Column({ type: 'character varying', default: 'None' })
   userStatus: string;
 
   @Column('timestamp with time zone')
@@ -48,9 +48,9 @@ export class StatusesPostsTable {
   userId: string;
 
   @Column('uuid')
-  postId: string ;
+  postId: string;
 
-  @Column({type:'character varying', default: 'None'})
+  @Column({ type: 'character varying', default: 'None' })
   userStatus: string;
 
   @Column('timestamp with time zone')

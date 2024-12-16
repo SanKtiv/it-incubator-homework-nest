@@ -32,15 +32,13 @@ export class CommentsRepositorySql {
     VALUES ($1, $2, $3, $4)
     RETURNING comments.*, (SELECT "login" FROM "userLogin") AS "userLogin"`;
 
-    const parameters = [
-      dto.content,
-      dto.userId,
-      new Date(),
-      dto.postId,
-    ];
+    const parameters = [dto.content, dto.userId, new Date(), dto.postId];
 
     try {
-      const [comment] = await this.dataSource.query(createCommentQuery, parameters);
+      const [comment] = await this.dataSource.query(
+        createCommentQuery,
+        parameters,
+      );
 
       return comment;
     } catch (e) {
@@ -77,8 +75,8 @@ export class CommentsRepositorySql {
 
     try {
       const [comment] = await this.dataSource.query(
-          findCommentsByIdQuery,
-          parameters
+        findCommentsByIdQuery,
+        parameters,
       );
 
       return comment;
@@ -127,7 +125,6 @@ export class CommentsRepositorySql {
   }
 
   async deleteAll_RAW() {
-    await this.dataSource
-        .query(`TRUNCATE "comments" CASCADE`)
+    await this.dataSource.query(`TRUNCATE "comments" CASCADE`);
   }
 }

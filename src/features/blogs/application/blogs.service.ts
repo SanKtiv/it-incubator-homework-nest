@@ -17,8 +17,14 @@ export class BlogsService {
     private readonly blogsRepositorySql: BlogsRepositorySql,
   ) {}
 
-  async createBlog(dto: BlogsInputDto, isMembership?: boolean): Promise<BlogsViewDto> {
-    const blogDocument = await this.blogsRepositorySql.create_RAW(dto, isMembership);
+  async createBlog(
+    dto: BlogsInputDto,
+    isMembership?: boolean,
+  ): Promise<BlogsViewDto> {
+    const blogDocument = await this.blogsRepositorySql.create_RAW(
+      dto,
+      isMembership,
+    );
 
     return sqlBlogsViewDto(blogDocument);
   }

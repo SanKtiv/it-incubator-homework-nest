@@ -39,7 +39,10 @@ export class PostsQueryRepositorySql {
     }
   }
 
-  async findById_RAW(id: string, userId?: string | null): Promise<PostsOutputDto | null> {
+  async findById_RAW(
+    id: string,
+    userId?: string | null,
+  ): Promise<PostsOutputDto | null> {
     // const postDocument = await this.repository.findOneBy({ id: id });
 
     //if (!userId) userId = null;
@@ -98,11 +101,14 @@ export class PostsQueryRepositorySql {
 
     const parameters = [id, userId];
 
-    const newestLikes = await this.dataSource.query(getNewestLikes, parameters)
+    const newestLikes = await this.dataSource.query(getNewestLikes, parameters);
 
     try {
-      const [postDocument] = await this.dataSource.query(findByIdQuery, parameters);
-console.log('[postDocument] =', [postDocument])
+      const [postDocument] = await this.dataSource.query(
+        findByIdQuery,
+        parameters,
+      );
+      console.log('[postDocument] =', [postDocument]);
       if (!postDocument) return null;
 
       return postOutputModelFromSql([postDocument])[0];
@@ -118,7 +124,7 @@ console.log('[postDocument] =', [postDocument])
   ): Promise<PostsPaging> {
     const pageSize = query.pageSize;
     const pageOffSet = (query.pageNumber - 1) * query.pageSize;
-    const stringSelectByBlogId: string = blogId ? 'WHERE p."blogId" = $4' : ''
+    const stringSelectByBlogId: string = blogId ? 'WHERE p."blogId" = $4' : '';
 
     const postPagingQuery = `
     WITH "postsPaging" AS (
@@ -165,13 +171,13 @@ console.log('[postDocument] =', [postDocument])
       );
 
       const postsPaging = await this.dataSource.query(
-          postPagingQuery,
+        postPagingQuery,
         parametersPaging,
       );
 
       return postsSqlPaging(query, totalPosts.count, postsPaging);
     } catch (e) {
-      console.log('Error findPaging_RAW: ', e)
+      console.log('Error findPaging_RAW: ', e);
       throw new InternalServerErrorException();
     }
   }

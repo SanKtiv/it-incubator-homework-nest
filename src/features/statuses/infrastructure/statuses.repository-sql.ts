@@ -1,7 +1,11 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import {StatusesCommentsTable, StatusesPostsTable, StatusesTable} from '../domain/statuses.entity';
+import {
+  StatusesCommentsTable,
+  StatusesPostsTable,
+  StatusesTable,
+} from '../domain/statuses.entity';
 import { NewestLikes } from '../../posts/api/models/output/posts.output.dto';
 
 @Injectable()
@@ -93,10 +97,11 @@ export class StatusesRepositorySql {
 
     const parameters = [userId, postId];
 
-
     try {
-      const [postStatus] = await this.dataSource
-          .query(getPostStatusQuery, parameters);
+      const [postStatus] = await this.dataSource.query(
+        getPostStatusQuery,
+        parameters,
+      );
 
       if (!postStatus) return null;
 
@@ -117,8 +122,10 @@ export class StatusesRepositorySql {
 
     const parameters = [userId, commentId];
     try {
-      const [statusesComment] = await this.dataSource
-          .query(statusOfCommentQuery, parameters);
+      const [statusesComment] = await this.dataSource.query(
+        statusOfCommentQuery,
+        parameters,
+      );
 
       if (!statusesComment) return null;
 
@@ -147,7 +154,8 @@ export class StatusesRepositorySql {
   }
 
   async deleteAll_RAW() {
-    await this.dataSource
-        .query(`TRUNCATE "statuses_posts", "statuses_comments"`)
+    await this.dataSource.query(
+      `TRUNCATE "statuses_posts", "statuses_comments"`,
+    );
   }
 }
