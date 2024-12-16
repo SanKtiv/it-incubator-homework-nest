@@ -96,7 +96,7 @@ export class PostsQueryRepositorySql {
       SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3
       )
     SELECT p.*, n.* FROM "post" AS p
-    LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"
+    RIGHT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"
     ORDER BY n."addedAt" DESC`;
 
     const parameters = [id, userId];
