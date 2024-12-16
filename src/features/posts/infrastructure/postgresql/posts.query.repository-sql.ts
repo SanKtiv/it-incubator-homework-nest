@@ -67,7 +67,7 @@ export class PostsQueryRepositorySql {
       SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3
       )
     SELECT * FROM "newestLikesSorted"
-    ORDER BY n."addedAt" DESC`;
+    ORDER BY "addedAt" DESC`;
 
     const findByIdQuery = `
     WITH "post" AS (
