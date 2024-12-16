@@ -96,19 +96,19 @@ export class PostsQueryRepositorySql {
       SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3
       )
     SELECT p.*, n.* FROM "post" AS p
-    RIGHT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"
+    LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"
     ORDER BY n."addedAt" DESC`;
 
     const parameters = [id, userId];
 
-    const newestLikes = await this.dataSource.query(getNewestLikes, parameters);
-
+    const newestLikes = await this.dataSource.query(findByIdQuery, parameters);
+    console.log('post =', newestLikes);
     try {
       const [postDocument] = await this.dataSource.query(
         findByIdQuery,
         parameters,
       );
-      console.log('[postDocument] =', [postDocument]);
+
       if (!postDocument) return null;
 
       return postOutputModelFromSql([postDocument])[0];
