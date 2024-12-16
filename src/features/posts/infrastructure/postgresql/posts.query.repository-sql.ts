@@ -99,10 +99,10 @@ export class PostsQueryRepositorySql {
     const parameters = [id, userId];
 
     const newestLikes = await this.dataSource.query(getNewestLikes, parameters)
-console.log('newestLikes =', newestLikes)
+
     try {
       const [postDocument] = await this.dataSource.query(findByIdQuery, parameters);
-
+console.log('[postDocument] =', [postDocument])
       if (!postDocument) return null;
 
       return postOutputModelFromSql([postDocument])[0];
