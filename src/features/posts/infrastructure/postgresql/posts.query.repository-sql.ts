@@ -104,14 +104,14 @@ export class PostsQueryRepositorySql {
     const newestLikes = await this.dataSource.query(findByIdQuery, parameters);
     console.log('post =', newestLikes);
     try {
-      const [postDocument] = await this.dataSource.query(
+      const postDocument = await this.dataSource.query(
         findByIdQuery,
         parameters,
       );
 
       if (!postDocument) return null;
 
-      return postOutputModelFromSql([postDocument])[0];
+      return postOutputModelFromSql(postDocument)[0];
     } catch (e) {
       throw new InternalServerErrorException();
     }
