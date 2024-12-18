@@ -97,7 +97,7 @@ export class BlogsRepositorySql {
     return createdRowsArray;
   }
 
-  async findById_RAW(id: string): Promise<BlogsTable | null> {
+  async findById_RAW(id: string): Promise<BlogsTable | undefined> {
     const getBlogQuery = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM "blogs" AS b
