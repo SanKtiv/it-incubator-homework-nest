@@ -85,7 +85,7 @@ export const postsSqlOutputDto = (postDocument: any) => ({
   },
 });
 
-export function postOutputModelFromSql(postFromSQL): PostsOutputDto[] {
+export function postViewModel_SQL(postFromSQL): PostsOutputDto[] {
   const resultArray: PostsOutputDto[] = [];
 
   postFromSQL.forEach((row) =>
@@ -159,5 +159,5 @@ export const postsSqlPaging = (
     +query.pageNumber,
     +query.pageSize,
     +totalPosts,
-    postOutputModelFromSql(postDocuments),
+    postViewModel_SQL(postDocuments),
   );

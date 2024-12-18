@@ -18,7 +18,7 @@ import {
   BlogsViewDto,
   BlogsViewPagingDto,
 } from './models/output/blogs.view.dto';
-import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import {
   PostQuery,
   PostsInputDto,
@@ -68,7 +68,7 @@ export class SaBlogsController {
 
   @Post(':blogId/posts')
   async createPostForBlog(
-    @Param('blogId', paramIdIsMongoIdPipe) id: string,
+    @Param('blogId', paramIdIsUUIdPipe) id: string,
     @Body() dto: InputDto,
   ) {
     const postsInputDto: PostsInputDto = {
@@ -86,14 +86,14 @@ export class SaBlogsController {
 
   @Get(':blogId')
   async getBlogById(
-    @Param('blogId', paramIdIsMongoIdPipe) id: string,
+    @Param('blogId', paramIdIsUUIdPipe) id: string,
   ): Promise<BlogsViewDto> {
     return this.blogsSqlQueryRepository.findById_RAW(id);
   }
 
   @Get(':blogId/posts')
   async getPostsByBlogId(
-    @Param('blogId', paramIdIsMongoIdPipe) blogId: string,
+    @Param('blogId', paramIdIsUUIdPipe) blogId: string,
     @Query() query: PostQuery,
     @Req() req: Request,
   ): Promise<PostsPaging> {
@@ -105,7 +105,7 @@ export class SaBlogsController {
   @Put(':blogId')
   @HttpCode(204)
   async updateBlogById(
-    @Param('blogId', paramIdIsMongoIdPipe) id: string,
+    @Param('blogId', paramIdIsUUIdPipe) id: string,
     @Body() inputUpdate: BlogsInputDto,
   ): Promise<void> {
     await this.blogsService.updateBlog(id, inputUpdate);
@@ -114,8 +114,8 @@ export class SaBlogsController {
   @Put(':blogId/posts/:postId')
   @HttpCode(204)
   async updatePostIdForBlog(
-    @Param('blogId', paramIdIsMongoIdPipe) blogId: string,
-    @Param('postId', paramIdIsMongoIdPipe) postId: string,
+    @Param('blogId', paramIdIsUUIdPipe) blogId: string,
+    @Param('postId', paramIdIsUUIdPipe) postId: string,
     @Body() inputUpdate: InputDto,
   ): Promise<void> {
     await this.postsService.updatePostForBlog(postId, blogId, inputUpdate);
@@ -124,7 +124,7 @@ export class SaBlogsController {
   @Delete(':blogId')
   @HttpCode(204)
   async deleteBlogById(
-    @Param('blogId', paramIdIsMongoIdPipe) id: string,
+    @Param('blogId', paramIdIsUUIdPipe) id: string,
   ): Promise<void> {
     await this.blogsService.deleteBlogById(id);
   }
@@ -132,8 +132,8 @@ export class SaBlogsController {
   @Delete(':blogId/posts/:postId')
   @HttpCode(204)
   async deletePostByIdForBlog(
-    @Param('blogId', paramIdIsMongoIdPipe) blogId: string,
-    @Param('postId', paramIdIsMongoIdPipe) postId: string,
+    @Param('blogId', paramIdIsUUIdPipe) blogId: string,
+    @Param('postId', paramIdIsUUIdPipe) postId: string,
   ): Promise<void> {
     await this.postsService.deletePostByIdForBlog(postId, blogId);
   }

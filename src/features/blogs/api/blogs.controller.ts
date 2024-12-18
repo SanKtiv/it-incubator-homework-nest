@@ -18,7 +18,7 @@ import {
   BlogsViewDto,
   BlogsViewPagingDto,
 } from './models/output/blogs.view.dto';
-import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import {
   PostQuery,
   PostsInputDto,
@@ -55,14 +55,6 @@ export class BlogsController {
     private readonly commentsSqlRepository: CommentsRepositorySql,
   ) {}
 
-  @Get('/blogs')
-  async findUserByUserId() {
-    const user = await this.usersSqlRepository.findById_RAW(
-      '433d1a84-e5d6-48ff-916e-c8ba8b6d3df3',
-    );
-    console.log(user);
-  }
-
   @Post()
   @UseGuards(BasicAuthGuard)
   async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {
@@ -72,7 +64,7 @@ export class BlogsController {
   @Post(':blogId/posts')
   @UseGuards(BasicAuthGuard)
   async createPostForBlog(
-    @Param('blogId', paramIdIsMongoIdPipe) id: string,
+    @Param('blogId', paramIdIsUUIdPipe) id: string,
     @Body() dto: InputDto,
   ) {
     const postsInputDto: PostsInputDto = {
@@ -90,14 +82,14 @@ export class BlogsController {
 
   @Get(':blogId')
   async getBlogById(
-    @Param('blogId', paramIdIsMongoIdPipe) id: string,
+    @Param('blogId', paramIdIsUUIdPipe) id: string,
   ): Promise<BlogsViewDto> {
     return this.blogsSqlQueryRepository.findById_RAW(id);
   }
 
   @Get(':blogId/posts')
   async getPostsByBlogId(
-    @Param('blogId', paramIdIsMongoIdPipe) blogId: string,
+    @Param('blogId', paramIdIsUUIdPipe) blogId: string,
     @Query() query: PostQuery,
     @Req() req: Request,
   ): Promise<PostsPaging> {
@@ -114,7 +106,7 @@ export class BlogsController {
   @HttpCode(204)
   @UseGuards(BasicAuthGuard)
   async updateBlogById(
-    @Param('blogId', paramIdIsMongoIdPipe) id: string,
+    @Param('blogId', paramIdIsUUIdPipe) id: string,
     @Body() inputUpdate: BlogsInputDto,
   ): Promise<void> {
     await this.blogsService.updateBlog(id, inputUpdate);
@@ -124,7 +116,7 @@ export class BlogsController {
   @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   async deleteBlogById(
-    @Param('blogId', paramIdIsMongoIdPipe) id: string,
+    @Param('blogId', paramIdIsUUIdPipe) id: string,
   ): Promise<void> {
     await this.blogsService.deleteBlogById(id);
   }

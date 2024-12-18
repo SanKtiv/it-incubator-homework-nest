@@ -104,11 +104,11 @@ export class BlogsRepositorySql {
     WHERE b."id" = $1;`;
 
     try {
-      const [foundBlogArray] = await this.dataSource.query(getBlogQuery, [id]);
+      const [blog] = await this.dataSource.query(getBlogQuery, [id]);
 
-      return foundBlogArray;
+      return blog;
     } catch (e) {
-      throw new Error('Error finding blog by blogId');
+      console.log(e);
     }
   }
 

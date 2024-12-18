@@ -4,7 +4,7 @@ import { PostDocument } from '../../../../posts/domain/posts.schema';
 import { CommentsTable } from '../../../domain/comments.entity';
 import { PostQuery } from '../../../../posts/api/models/input/posts.input.dto';
 import {
-  postOutputModelFromSql,
+  postViewModel_SQL,
   PostsOutputDto,
   PostsPaging,
 } from '../../../../posts/api/models/output/posts.output.dto';

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CommentsQueryRepositoryMongo } from '../infrastructure/mongodb/comments.query.repository-mongo';
-import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { CommentsService } from '../application/comments.service';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
@@ -31,7 +31,7 @@ export class CommentsController {
 
   @Get(':commentId')
   async getCommentById(
-    @Param('commentId', paramIdIsMongoIdPipe) id: string,
+    @Param('commentId', paramIdIsUUIdPipe) id: string,
     @Req() req: Request,
   ) {
     const userId = await this.accessJwtToken.getUserIdFromHeaders(
@@ -45,7 +45,7 @@ export class CommentsController {
   @HttpCode(204)
   @UseGuards(JWTAccessAuthGuard)
   async createLikeStatusForComment(
-    @Param('commentId', paramIdIsMongoIdPipe) id: string,
+    @Param('commentId', paramIdIsUUIdPipe) id: string,
     @CurrentUserId() userId: string,
     @Body() dto: PostLikeStatusDto,
   ) {
@@ -56,7 +56,7 @@ export class CommentsController {
   @HttpCode(204)
   @UseGuards(JWTAccessAuthGuard)
   async updateCommentById(
-    @Param('commentId', paramIdIsMongoIdPipe) id: string,
+    @Param('commentId', paramIdIsUUIdPipe) id: string,
     @CurrentUserId() userId: string,
     @Body() dto: CommentInputDto,
   ) {
@@ -67,7 +67,7 @@ export class CommentsController {
   @HttpCode(204)
   @UseGuards(JWTAccessAuthGuard)
   async removeCommentById(
-    @Param('commentId', paramIdIsMongoIdPipe) id: string,
+    @Param('commentId', paramIdIsUUIdPipe) id: string,
     @CurrentUserId() userId: string,
   ) {
     await this.commentsService.removeCommentById(id, userId);

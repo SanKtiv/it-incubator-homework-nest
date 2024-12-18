@@ -21,12 +21,21 @@ export class bodyPipe implements PipeTransform {
 }
 
 @Injectable()
-export class paramIdIsMongoIdPipe implements PipeTransform {
+export class paramIdIsUUIdPipe implements PipeTransform {
   constructor() {}
 
   async transform(value: any, metadata: ArgumentMetadata) {
-    // if (Types.ObjectId.isValid(value)) return value;for mongo
     if (Types.UUID.isValid(value)) return value;
+    throw new NotFoundException();
+  }
+}
+
+@Injectable()
+export class paramIdIsObjectIdPipe implements PipeTransform {
+  constructor() {}
+
+  async transform(value: any, metadata: ArgumentMetadata) {
+    if (Types.ObjectId.isValid(value)) return value;
     throw new NotFoundException();
   }
 }

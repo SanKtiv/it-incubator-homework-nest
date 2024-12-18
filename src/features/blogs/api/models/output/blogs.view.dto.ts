@@ -34,7 +34,7 @@ export const blogsViewDto = (blogDocument: BlogDocument): BlogsViewDto => ({
   isMembership: blogDocument.isMembership,
 });
 
-export const sqlBlogsViewDto = (blogDocument: BlogsTable): BlogsViewDto =>
+export const blogsViewDto_SQL = (blogDocument: BlogsTable): BlogsViewDto =>
   new BlogsViewDto(
     blogDocument.id,
     blogDocument.name,
@@ -67,5 +67,5 @@ export const sqlBlogPagingViewModel = (
     query.pageNumber,
     query.pageSize,
     +totalBlogs,
-    blogsPaging.map((blog) => sqlBlogsViewDto(blog)),
+    blogsPaging.map((blog) => blogsViewDto_SQL(blog)),
   );

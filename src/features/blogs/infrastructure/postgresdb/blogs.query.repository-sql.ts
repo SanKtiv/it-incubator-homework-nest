@@ -10,7 +10,7 @@ import {
   BlogsViewDto,
   BlogsViewPagingDto,
   sqlBlogPagingViewModel,
-  sqlBlogsViewDto,
+  blogsViewDto_SQL,
 } from '../../api/models/output/blogs.view.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -28,7 +28,7 @@ export class BlogsQueryRepositorySql {
 
     if (!blogDocument) throw new NotFoundException();
 
-    return sqlBlogsViewDto(blogDocument);
+    return blogsViewDto_SQL(blogDocument);
   }
 
   // async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
@@ -62,7 +62,7 @@ export class BlogsQueryRepositorySql {
 
     if (!blog) throw new NotFoundException();
 
-    return sqlBlogsViewDto(blog);
+    return blogsViewDto_SQL(blog);
   }
 
   async getBlogsPaging_RAW(query: BlogQuery): Promise<BlogsViewPagingDto> {

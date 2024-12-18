@@ -10,7 +10,7 @@ import { JWTRefreshAuthGuard } from '../../../infrastructure/guards/jwt-refresh-
 import { RefreshTokenPayload } from '../../auth/infrastructure/decorators/refresh-token-payload.decorator';
 import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
 import { DevicesService } from '../application/devices.service';
-import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 
 @Controller('security/devices')
 @UseGuards(JWTRefreshAuthGuard)
@@ -26,7 +26,7 @@ export class DevicesController {
   @Delete(':deviceId')
   @HttpCode(204)
   async deleteDeviceById(
-    @Param('deviceId', paramIdIsMongoIdPipe) id: string,
+    @Param('deviceId', paramIdIsUUIdPipe) id: string,
     @CurrentUserId() userId: string,
   ) {
     await this.devicesService.deleteDeviceCurrentUserByDeviceId(id, userId);

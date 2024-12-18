@@ -5,7 +5,7 @@ import { BlogDocument } from '../domain/blogs.schema';
 import {
   BlogsViewDto,
   blogsViewDto,
-  sqlBlogsViewDto,
+  blogsViewDto_SQL,
 } from '../api/models/output/blogs.view.dto';
 import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repository-sql';
 import { BlogsTable } from '../domain/blog.entity';
@@ -26,7 +26,7 @@ export class BlogsService {
       isMembership,
     );
 
-    return sqlBlogsViewDto(blogDocument);
+    return blogsViewDto_SQL(blogDocument);
   }
 
   async updateBlog(id: string, inputUpdate: BlogsInputDto) {

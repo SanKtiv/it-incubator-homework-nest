@@ -17,7 +17,7 @@ import {
   usersOutputDto,
   usersPagingDto,
 } from './models/output/users.output.dto';
-import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { UsersQueryRepositoryMongo } from '../infrastructure/mongodb/users.query.repository-mongo';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
@@ -51,7 +51,7 @@ export class UsersController {
 
   @Delete(':userId')
   @HttpCode(204)
-  @UsePipes(paramIdIsMongoIdPipe)
+  @UsePipes(paramIdIsUUIdPipe)
   async deleteUserById(@Param('userId') id: string) {
     const result = await this.usersService.deleteUserById(id);
     if (!result) throw new NotFoundException();

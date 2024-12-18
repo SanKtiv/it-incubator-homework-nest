@@ -11,21 +11,25 @@ import { InputDto } from '../../../../infrastructure/models/input.dto';
 export class PostsRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
-  private get repository() {
+  private get repository_ORM() {
     return this.dataSource.getRepository(PostsTable);
   }
 
-  // async create(inputDto: PostsInputDto, blogName: string): Promise<PostsTable> {
-  //   const postDocument = {
-  //     ...inputDto,
-  //     blogName: blogName,
-  //     createdAt: new Date(),
-  //   };
-  //   return this.repository.save(postDocument);
-  // }
+  async create_ORM(inputDto: PostsInputDto, blogName: string): Promise<PostsTable> {
+    const postDocument = {
+      ...inputDto,
+      blogName: blogName,
+      createdAt: new Date(),
+    };
+    return this.repository_ORM.save(postDocument);
+  }
+
+  async findById_ORM(id: string): Promise<PostsTable | null> {
+    return this.repository_ORM.findOneBy({ id: id });
+  }
 
   async create_RAW(dto: PostsInputDto) {
-    const createPostQuery = `
+    const insertPostQuery = `
     INSERT INTO "posts" AS p ("title", "shortDescription", "content", "blogId", "createdAt")
     VALUES ($1, $2, $3, $4, $5)
     RETURNING p."id", p."title", p."shortDescription", p."content", p."blogId", p."createdAt",
@@ -40,18 +44,15 @@ export class PostsRepositorySql {
     ];
 
     try {
-      return await this.dataSource.query(createPostQuery, parameters);
+      return await this.dataSource.query(insertPostQuery, parameters);
     } catch (e) {
+      console.log(e)
       throw new InternalServerErrorException();
     }
   }
 
   async deleteAll_RAW() {
     await this.dataSource.query(`TRUNCATE "posts" CASCADE`);
-  }
-
-  async findById(id: string): Promise<PostsTable | null> {
-    return this.repository.findOneBy({ id: id });
   }
 
   async findById_RAW(id: string): Promise<PostsTable | null> {
@@ -70,7 +71,7 @@ export class PostsRepositorySql {
   async deleteById(id: string) {}
 
   async savePost(postDocument: PostsTable): Promise<PostsTable> {
-    return this.repository.save(postDocument);
+    return this.repository_ORM.save(postDocument);
   }
 
   async updatePost_RAW(
@@ -102,11 +103,11 @@ export class PostsRepositorySql {
   }
 
   async deletePost(post: PostsTable): Promise<void> {
-    await this.repository.remove(post);
+    await this.repository_ORM.remove(post);
   }
 
   async deleteAll(): Promise<void> {
-    await this.repository.clear();
+    await this.repository_ORM.clear();
     //await this.dataSource.getRepository(PostsTable);
   }
 }

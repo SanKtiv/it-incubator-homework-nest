@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostModelType } from '../../domain/posts.schema';
 import { PostQuery } from '../../api/models/input/posts.input.dto';
 import {
-  postOutputModelFromSql,
+  postViewModel_SQL,
   PostsOutputDto,
   postsOutputDto,
   PostsPaging,
@@ -111,7 +111,7 @@ export class PostsQueryRepositorySql {
 
       if (!postDocument) return null;
 
-      return postOutputModelFromSql(postDocument)[0];
+      return postViewModel_SQL(postDocument)[0];
     } catch (e) {
       throw new InternalServerErrorException();
     }

@@ -6,7 +6,7 @@ import {
 } from '../api/models/input/posts.input.dto';
 import { BlogsRepositoryMongo } from '../../blogs/infrastructure/mongodb/blogs.repository-mongo';
 import {
-  postOutputModelFromSql,
+  postViewModel_SQL,
   PostsOutputDto,
   postsOutputDto,
   postsSqlOutputDto,
@@ -26,7 +26,6 @@ export class PostsService {
     private readonly postsRepository: PostsRepositoryMongo,
     private readonly postsRepositorySql: PostsRepositorySql,
     private readonly blogsRepository: BlogsRepositoryMongo,
-    //private readonly blogsSqlRepository: BlogsRepositorySql,
     private readonly usersRepository: UsersRepositoryMongo,
     private readonly usersSqlRepository: UsersRepositorySql,
     private readonly blogsService: BlogsService,
@@ -36,9 +35,9 @@ export class PostsService {
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
     await this.blogsService.existBlog(dto.blogId);
 
-    const postDocument = await this.postsRepositorySql.create_RAW(dto);
+    const post = await this.postsRepositorySql.create_RAW(dto);
 
-    return postOutputModelFromSql(postDocument)[0];
+    return postViewModel_SQL(post)[0];
   }
 
   async existPost(id: string): Promise<PostsTable> {

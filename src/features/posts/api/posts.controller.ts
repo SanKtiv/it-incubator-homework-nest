@@ -21,7 +21,7 @@ import {
 import { PostsOutputDto, PostsPaging } from './models/output/posts.output.dto';
 import { BlogsQueryRepositoryMongo } from '../../blogs/infrastructure/mongodb/blogs.query.repository-mongo';
 import { PostsQueryRepositoryMongo } from '../infrastructure/mongodb/posts.query.repository-mongo';
-import { paramIdIsMongoIdPipe } from '../../../infrastructure/pipes/validation.pipe';
+import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { CommentInputDto } from '../../comments/api/models/input/comment.input.dto';
 import { CommentsService } from '../../comments/application/comments.service';
 import { CommentOutputDto } from '../../comments/api/models/output/comment.output.dto';
@@ -57,7 +57,7 @@ export class PostController {
 
   @Get(':postId')
   async getPostById(
-    @Param('postId', paramIdIsMongoIdPipe) id: string,
+    @Param('postId', paramIdIsUUIdPipe) id: string,
     @Req() req: Request,
   ): Promise<PostsOutputDto> {
     const userId = await this.accessJwtToken.getUserIdFromHeaders(
@@ -75,7 +75,7 @@ export class PostController {
   @HttpCode(204)
   @UseGuards(JWTAccessAuthGuard)
   async createStatus(
-    @Param('postId', paramIdIsMongoIdPipe) id: string,
+    @Param('postId', paramIdIsUUIdPipe) id: string,
     @Body() dto: PostLikeStatusDto,
     @CurrentUserId() userId: string,
   ): Promise<void> {
@@ -85,7 +85,7 @@ export class PostController {
   @Post(':postId/comments')
   @UseGuards(JWTAccessAuthGuard)
   async createCommentForPost(
-    @Param('postId', paramIdIsMongoIdPipe) id: string,
+    @Param('postId', paramIdIsUUIdPipe) id: string,
     @Body() inputDto: CommentInputDto,
     @CurrentUserId() userId: string,
   ): Promise<CommentOutputDto> {
@@ -112,7 +112,7 @@ export class PostController {
 
   @Get(':postId/comments')
   async getCommentsByPostId(
-    @Param('postId', paramIdIsMongoIdPipe) postId: string,
+    @Param('postId', paramIdIsUUIdPipe) postId: string,
     @Query() query: QueryDto,
     @Req() req: Request,
   ) {
@@ -131,7 +131,7 @@ export class PostController {
   @HttpCode(204)
   @UseGuards(BasicAuthGuard)
   async updatePostById(
-    @Param('postId', paramIdIsMongoIdPipe) id: string,
+    @Param('postId', paramIdIsUUIdPipe) id: string,
     @Body() postUpdateDto: PostsInputDto,
   ): Promise<void> {
     await this.postsService.updatePost(id, postUpdateDto);
@@ -141,7 +141,7 @@ export class PostController {
   @HttpCode(204)
   @UseGuards(BasicAuthGuard)
   async deletePostById(
-    @Param('postId', paramIdIsMongoIdPipe) id: string,
+    @Param('postId', paramIdIsUUIdPipe) id: string,
   ): Promise<void> {
     await this.postsService.deletePostById(id);
   }
