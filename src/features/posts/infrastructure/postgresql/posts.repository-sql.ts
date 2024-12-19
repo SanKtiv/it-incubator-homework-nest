@@ -68,7 +68,36 @@ export class PostsRepositorySql {
     return post;
   }
 
-  async deleteById(id: string) {}
+  async findPostByIdWithBlogId(postId: string, blogId: string) {
+    try {
+      const [post] = await this.dataSource.query(
+          `SELECT * FROM "posts" WHERE "id" = $1 AND "blogId" = $2`, [postId, blogId]
+      )
+
+      return post
+    }
+    catch (e) {
+      console.log(e)
+      throw new InternalServerErrorException()
+    }
+  }
+
+  async deleteById_RAW(id: string, blogId: string) {
+    const deletePstByIdQuery = `
+    DELETE FROM "posts"
+    WHERE "id" = $1 AND "blogId" = $2`
+
+    const parameters = [id, blogId]
+
+    try {
+      await this.dataSource.query(deletePstByIdQuery, parameters)
+    }
+    catch (e) {
+      console.log(e)
+      throw new InternalServerErrorException()
+    }
+
+  }
 
   async savePost(postDocument: PostsTable): Promise<PostsTable> {
     return this.repository_ORM.save(postDocument);

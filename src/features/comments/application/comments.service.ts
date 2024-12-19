@@ -33,7 +33,7 @@ export class CommentsService {
   ) {}
 
   async createComment(dto: CommentServiceDto): Promise<CommentOutputDto> {
-    await this.postsService.existPost(dto.postId);
+    await this.postsService.existPostById(dto.postId);
 
     //const user = await this.usersRepositorySql.findById_RAW(dto.userId);
 
@@ -56,7 +56,7 @@ export class CommentsService {
     // await this.commentsRepository.save(commentDocument);
   }
 
-  async removeCommentById(id: string, userId: string) {
+  async deleteCommentById(id: string, userId: string) {
     const commentDocument = await this.existComment(id);
 
     if (commentDocument.userId !== userId) throw new ForbiddenException();

@@ -70,6 +70,6 @@ export class CommentsController {
     @Param('commentId', paramIdIsUUIdPipe) id: string,
     @CurrentUserId() userId: string,
   ) {
-    await this.commentsService.removeCommentById(id, userId);
+    await this.commentsService.deleteCommentById(id, userId);
   }
 }

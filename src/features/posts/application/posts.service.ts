@@ -19,6 +19,7 @@ import { PostsTable } from '../domain/posts.table';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
+import {CommentsRepositorySql} from "../../comments/infrastructure/postgresql/comments.repository-sql";
 
 @Injectable()
 export class PostsService {
@@ -30,6 +31,7 @@ export class PostsService {
     private readonly usersRepositorySql: UsersRepositorySql,
     private readonly blogsService: BlogsService,
     private readonly statusesRepositorySql: StatusesRepositorySql,
+    private readonly commentsRepositorySql: CommentsRepositorySql
   ) {}
 
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
@@ -40,7 +42,7 @@ export class PostsService {
     return postViewModel_SQL(post)[0];
   }
 
-  async existPost(id: string): Promise<PostsTable> {
+  async existPostById(id: string): Promise<PostsTable> {
     const postDocument = await this.postsRepositorySql.findById_RAW(id);
 
     if (!postDocument) throw new NotFoundException();
@@ -48,11 +50,19 @@ export class PostsService {
     return postDocument;
   }
 
+  async existPostByIdForBlogId(postId: string, blogId: string) {
+    const post = await this.postsRepositorySql.findPostByIdWithBlogId(postId, blogId)
+
+    if (!post) throw new NotFoundException()
+
+    return
+  }
+
   async updatePost(id: string, postUpdateDto: PostsInputDto) {
     // const postDocument = await this.postsRepository.findById(id);
     //
     // if (!postDocument) throw new NotFoundException();
-    const postDocument = await this.existPost(id);
+    const postDocument = await this.existPostById(id);
 
     Object.assign(postDocument, postUpdateDto);
 
@@ -63,7 +73,7 @@ export class PostsService {
     // const postDocument = await this.postsRepository.findById(id);
     //
     // if (!postDocument) throw new NotFoundException();
-    const post = await this.existPost(postId);
+    const post = await this.existPostById(postId);
 
     if (post!.blogId !== blogId) throw new NotFoundException();
 
@@ -152,7 +162,7 @@ export class PostsService {
     dto: PostLikeStatusDto,
     userId: string,
   ): Promise<void> {
-    await this.existPost(id);
+    await this.existPostById(id);
 
     const newStatus = dto.likeStatus;
 
@@ -186,10 +196,10 @@ export class PostsService {
     postId: string,
     blogId: string,
   ): Promise<void | HttpException> {
-    const post = await this.existPost(postId);
+    await this.existPostByIdForBlogId(postId, blogId);
 
-    if (post.blogId !== blogId) throw new NotFoundException();
+    await this.commentsRepositorySql.deleteByPostId_RAW(postId)
 
-    await this.postsRepositorySql.deletePost(post);
+    await this.postsRepositorySql.deleteById_RAW(postId, blogId);
   }
 }

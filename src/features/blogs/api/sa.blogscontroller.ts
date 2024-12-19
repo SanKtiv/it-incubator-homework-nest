@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
+  HttpCode, NotFoundException,
   Param,
   Post,
   Put,
@@ -29,37 +29,20 @@ import { PostsService } from '../../posts/application/posts.service';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { Request } from 'express';
-import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
-import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repository-sql';
-import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
-import { DevicesRepositorySql } from '../../security/infrastructure/postgresqldb/devices.repository-sql';
-import { RequestApiSqlRepository } from '../../requests/infrastructure/postgresqldb/request.repository-sql';
 import { BlogsQueryRepositorySql } from '../infrastructure/postgresdb/blogs.query.repository-sql';
-import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
-import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 
 @Controller('sa/blogs')
 @UseGuards(BasicAuthGuard)
 export class SaBlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
-    private readonly blogsSqlQueryRepository: BlogsQueryRepositorySql,
+    private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
     private readonly blogsService: BlogsService,
     private readonly postsQueryRepository: PostsQueryRepositoryMongo,
-    private readonly postsSqlQueryRepository: PostsQueryRepositorySql,
+    private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsService: PostsService,
-    private readonly accessJwtToken: AccessJwtToken,
-    private readonly usersSqlRepository: RequestApiSqlRepository,
-    private readonly commentsSqlRepository: CommentsRepositorySql,
   ) {}
-
-  // @Get('/blogs')
-  // async createBlogInSql() {
-  //
-  //   await this.commentsSqlRepository
-  //       .updateById('0208b79e-85ba-465c-b9c7-f776abeff611', 'Hello')
-  // }
 
   @Post()
   async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {
@@ -81,14 +64,18 @@ export class SaBlogsController {
 
   @Get()
   async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto> {
-    return this.blogsSqlQueryRepository.getBlogsPaging_RAW(query);
+    return this.blogsQueryRepositorySql.getBlogsPaging_RAW(query);
   }
 
   @Get(':blogId')
   async getBlogById(
     @Param('blogId', paramIdIsUUIdPipe) id: string,
   ): Promise<BlogsViewDto> {
-    return this.blogsSqlQueryRepository.findById_RAW(id);
+    const blog = await this.blogsQueryRepositorySql.findById_RAW(id);
+
+    if (!blog) throw new NotFoundException()
+
+    return blog
   }
 
   @Get(':blogId/posts')
@@ -97,9 +84,11 @@ export class SaBlogsController {
     @Query() query: PostQuery,
     @Req() req: Request,
   ): Promise<PostsPaging> {
-    await this.blogsSqlQueryRepository.findById_RAW(blogId);
+    const blog = await this.blogsQueryRepositorySql.findById_RAW(blogId);
 
-    return this.postsSqlQueryRepository.findPaging_RAW(query, blogId, null);
+    if (!blog) throw new NotFoundException()
+
+    return this.postsQueryRepositorySql.findPaging_RAW(query, blogId, null);
   }
 
   @Put(':blogId')
