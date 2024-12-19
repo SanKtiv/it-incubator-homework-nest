@@ -1,10 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BlogsInputDto } from '../api/models/input/blogs.input.dto';
 import { BlogsRepositoryMongo } from '../infrastructure/mongodb/blogs.repository-mongo';
-import { BlogDocument } from '../domain/blogs.schema';
 import {
   BlogsViewDto,
-  blogsViewDto,
   blogsViewDto_SQL,
 } from '../api/models/output/blogs.view.dto';
 import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repository-sql';
@@ -44,8 +42,8 @@ export class BlogsService {
   }
 
   async deleteBlogById(id: string): Promise<void> {
-    const blogDocument = await this.existBlog(id);
+    await this.existBlog(id);
 
-    await this.blogsRepositorySql.deleteOne_RAW(blogDocument);
+    await this.blogsRepositorySql.deleteById_RAW(id);
   }
 }

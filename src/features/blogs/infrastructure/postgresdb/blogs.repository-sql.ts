@@ -51,31 +51,6 @@ export class BlogsRepositorySql {
     await this.blogsRepository.clear();
   }
 
-  async createForBlog(name: string, blogId: string) {
-    // const blog = await this.findById(blogId)
-    //
-    // await this.dataSource.getRepository(ForBlogsTable)
-    //     .save({name: name, forBlog: blog!})
-
-    return (
-      this.dataSource
-        .getRepository(BlogsTable)
-        .createQueryBuilder('b')
-        //.select(['b', 'f.id AS forid'])
-        .leftJoinAndSelect(PostsTable, 'f', 'b.name = f.blogId')
-        //.addSelect(['f.id AS forid', 'f.name AS forname'])
-        .select(['b.*', 'f.title'])
-        .getRawMany()
-    );
-
-    // return this.dataSource.query(`
-    //   SELECT b.*, f."title"
-    //   FROM "blogs" as b
-    //   LEFT JOIN "posts" as f
-    //   ON b."id" = f."blogId";`
-    // )
-  }
-
   async create_RAW(dto, isMembership?: boolean): Promise<BlogsTable> {
     const createBlogQuery = `
     INSERT INTO public."blogs" ("name", "description", "websiteUrl", "createdAt", "isMembership")
@@ -116,7 +91,7 @@ export class BlogsRepositorySql {
   async updateById_RAW(id: string, dto: BlogsInputDto): Promise<void>  {
     const updateBlogByIdQuery = `
     UPDATE "blogs"
-    SET ("name", "description", "websiteUrl") = ($2, $3, $4, $5)
+    SET ("name", "description", "websiteUrl") = ($2, $3, $4)
     WHERE "id" = $1`
 
     const parameters = [id, dto.name, dto.description, dto.websiteUrl]
@@ -142,20 +117,20 @@ export class BlogsRepositorySql {
     }
   }
 
-  async deleteOne_RAW(blog: BlogsTable): Promise<BlogsTable> {
+  async deleteById_RAW(id: string): Promise<BlogsTable> {
     const deleteBlogQuery = `
     DELETE FROM "blogs" AS b
     WHERE b."id" = $1
     RETURNING *`;
 
     try {
-      const [deletedBlogArray] = await this.dataSource.query(deleteBlogQuery, [
-        blog.id,
-      ]);
+      const [deletedBlogArray] = await this.dataSource
+          .query(deleteBlogQuery, [id]);
 
       return deletedBlogArray;
     } catch (e) {
-      throw new Error('Error DB');
+      console.log(e)
+      throw new InternalServerErrorException();
     }
   }
 

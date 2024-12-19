@@ -21,7 +21,7 @@ import { UUID } from 'typeorm/driver/mongodb/bson.typings';
 export class BlogsQueryRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
-  async findById(id: string): Promise<BlogsViewDto> {
+  async findById_ORM(id: string): Promise<BlogsViewDto> {
     const blogDocument = await this.dataSource
       .getRepository(BlogsTable)
       .findOneBy({ id: id });
@@ -31,26 +31,26 @@ export class BlogsQueryRepositorySql {
     return blogsViewDto_SQL(blogDocument);
   }
 
-  // async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
-  //   const searchName = query.searchNameTerm;
-  //
-  //   const blogs = this.dataSource
-  //     .getRepository(BlogsTable)
-  //     .createQueryBuilder('blog');
-  //
-  //   if (searchName)
-  //     blogs.where('blog.name ~* :nameTerm', { nameTerm: searchName });
-  //
-  //   const totalBlogs = await blogs.getCount();
-  //
-  //   const pagingBlogs = await blogs
-  //     .orderBy(`blog.${query.sortBy}`, query.sortDirection)
-  //     .skip((query.pageNumber - 1) * query.pageSize)
-  //     .take(query.pageSize)
-  //     .getMany();
-  //
-  //   return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
-  // }
+  async getBlogsPaging_ORM(query: BlogQuery): Promise<BlogsViewPagingDto> {
+    const searchName = query.searchNameTerm;
+
+    const blogs = this.dataSource
+      .getRepository(BlogsTable)
+      .createQueryBuilder('blog');
+
+    if (searchName)
+      blogs.where('blog.name ~* :nameTerm', { nameTerm: searchName });
+
+    const totalBlogs = await blogs.getCount();
+
+    const pagingBlogs = await blogs
+      .orderBy(`blog.${query.sortBy}`, query.sortDirection)
+      .skip((query.pageNumber - 1) * query.pageSize)
+      .take(query.pageSize)
+      .getMany();
+
+    return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
+  }
 
   async findById_RAW(id: string): Promise<BlogsViewDto> {
     const query = `
@@ -82,8 +82,8 @@ export class BlogsQueryRepositorySql {
 
     const countBlogsQuery = `
     SELECT COUNT(*)
-    FROM "blogs" AS b
-    WHERE b."name" ~* $1`;
+    FROM "blogs"
+    WHERE "name" ~* $1`;
 
     const parametersCount = [searchNameTerm];
 
