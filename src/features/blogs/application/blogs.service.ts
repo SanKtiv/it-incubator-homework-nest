@@ -30,11 +30,9 @@ export class BlogsService {
   }
 
   async updateBlog(id: string, inputUpdate: BlogsInputDto) {
-    const blogDocument = await this.existBlog(id);
+    await this.existBlog(id);
 
-    Object.assign(blogDocument, inputUpdate);
-
-    await this.blogsRepositorySql.save(blogDocument);
+    await this.blogsRepositorySql.updateById_RAW(id, inputUpdate)
   }
 
   async existBlog(id: string): Promise<BlogsTable> {

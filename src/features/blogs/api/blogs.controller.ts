@@ -43,11 +43,11 @@ import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/
 export class BlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
-    private readonly blogsSqlQueryRepository: BlogsQueryRepositorySql,
-    private readonly blogsSqlRepository: BlogsRepositorySql,
+    private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
+    private readonly blogsRepositorySql: BlogsRepositorySql,
     private readonly blogsService: BlogsService,
     private readonly postsQueryRepository: PostsQueryRepositoryMongo,
-    private readonly postsSqlQueryRepository: PostsQueryRepositorySql,
+    private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
     private readonly usersSqlRepository: UsersRepositorySql,
@@ -77,14 +77,14 @@ export class BlogsController {
 
   @Get()
   async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto> {
-    return this.blogsSqlQueryRepository.getBlogsPaging_RAW(query);
+    return this.blogsQueryRepositorySql.getBlogsPaging_RAW(query);
   }
 
   @Get(':blogId')
   async getBlogById(
     @Param('blogId', paramIdIsUUIdPipe) id: string,
   ): Promise<BlogsViewDto> {
-    return this.blogsSqlQueryRepository.findById_RAW(id);
+    return this.blogsQueryRepositorySql.findById_RAW(id);
   }
 
   @Get(':blogId/posts')
@@ -93,13 +93,13 @@ export class BlogsController {
     @Query() query: PostQuery,
     @Req() req: Request,
   ): Promise<PostsPaging> {
-    await this.blogsSqlQueryRepository.findById_RAW(blogId);
+    await this.blogsQueryRepositorySql.findById_RAW(blogId);
 
     const userId = await this.accessJwtToken.getUserIdFromHeaders(
       req.headers.authorization,
     );
 
-    return this.postsSqlQueryRepository.findPaging_RAW(query, blogId, userId);
+    return this.postsQueryRepositorySql.findPaging_RAW(query, blogId, userId);
   }
 
   @Put(':blogId')

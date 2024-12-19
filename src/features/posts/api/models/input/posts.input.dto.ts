@@ -1,4 +1,4 @@
-import { IsMongoId, IsString, IsUUID, Matches } from 'class-validator';
+import { IsString, Matches } from 'class-validator';
 import { QueryDto } from '../../../../../infrastructure/models/query.dto';
 import { InputDto } from '../../../../../infrastructure/models/input.dto';
 import { Trim } from '../../../../../infrastructure/decorators/transform/trim-custom.decorator';
@@ -6,7 +6,6 @@ import { BlogIdIsExist } from '../../../../../infrastructure/decorators/validati
 
 export class PostsInputDto extends InputDto {
   @BlogIdIsExist()
-  //@IsUUID(3, {message: 'BlogId incorrect'})
   @Trim()
   @IsString()
   blogId: string;

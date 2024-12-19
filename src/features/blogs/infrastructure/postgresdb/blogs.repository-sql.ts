@@ -3,6 +3,7 @@ import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BlogsTable } from '../../domain/blog.entity';
 import { PostsTable } from '../../../posts/domain/posts.table';
+import {BlogsInputDto} from "../../api/models/input/blogs.input.dto";
 
 @Injectable()
 export class BlogsRepositorySql {
@@ -109,6 +110,23 @@ export class BlogsRepositorySql {
       return blog;
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async updateById_RAW(id: string, dto: BlogsInputDto): Promise<void>  {
+    const updateBlogByIdQuery = `
+    UPDATE "blogs"
+    SET ("name", "description", "websiteUrl") = ($2, $3, $4, $5)
+    WHERE "id" = $1`
+
+    const parameters = [id, dto.name, dto.description, dto.websiteUrl]
+
+    try {
+      await this.dataSource.query(updateBlogByIdQuery, parameters)
+    }
+    catch (e) {
+      console.log(e)
+      throw new InternalServerErrorException()
     }
   }
 

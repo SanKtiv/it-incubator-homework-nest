@@ -27,7 +27,7 @@ export class PostsService {
     private readonly postsRepositorySql: PostsRepositorySql,
     private readonly blogsRepository: BlogsRepositoryMongo,
     private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersSqlRepository: UsersRepositorySql,
+    private readonly usersRepositorySql: UsersRepositorySql,
     private readonly blogsService: BlogsService,
     private readonly statusesRepositorySql: StatusesRepositorySql,
   ) {}
