@@ -100,8 +100,8 @@ export function postViewModel_SQL(postFromSQL): PostsOutputDto[] {
           blogName: row.blogName,
           createdAt: row.createdAt.toISOString(),
           extendedLikesInfo: {
-            likesCount: row.likesCount ? Number(row.likesCount) : 0,
-            dislikesCount: row.dislikesCount ? Number(row.dislikesCount) : 0,
+            likesCount: row.likesCount ? +row.likesCount : 0,
+            dislikesCount: row.dislikesCount ? +row.dislikesCount : 0,
             myStatus: row.myStatus ? row.myStatus : 'None',
             newestLikes: [],
           },

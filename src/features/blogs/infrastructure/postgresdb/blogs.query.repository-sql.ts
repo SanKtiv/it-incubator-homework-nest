@@ -9,7 +9,7 @@ import { BlogQuery } from '../../api/models/input/blogs.input.dto';
 import {
   BlogsViewDto,
   BlogsViewPagingDto,
-  sqlBlogPagingViewModel,
+  blogsPagingViewModel_SQL,
   blogsViewDto_SQL,
 } from '../../api/models/output/blogs.view.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -49,7 +49,7 @@ export class BlogsQueryRepositorySql {
       .take(query.pageSize)
       .getMany();
 
-    return sqlBlogPagingViewModel(query, totalBlogs, pagingBlogs);
+    return blogsPagingViewModel_SQL(query, totalBlogs, pagingBlogs);
   }
 
   async findById_RAW(id: string): Promise<BlogsViewDto | undefined> {
@@ -104,7 +104,7 @@ export class BlogsQueryRepositorySql {
         parametersBlogsPaging,
       );
 
-      return sqlBlogPagingViewModel(query, totalBlogs.count, pagingBlogs);
+      return blogsPagingViewModel_SQL(query, totalBlogs.count, pagingBlogs);
     }
     catch (e) {
       console.log(e)

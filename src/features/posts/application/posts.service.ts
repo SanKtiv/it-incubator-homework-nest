@@ -9,7 +9,6 @@ import {
   postViewModel_SQL,
   PostsOutputDto,
   postsOutputDto,
-  postsSqlOutputDto,
 } from '../api/models/output/posts.output.dto';
 import { UsersRepositoryMongo } from '../../users/infrastructure/mongodb/users.repository-mongo';
 import { BlogsService } from '../../blogs/application/blogs.service';

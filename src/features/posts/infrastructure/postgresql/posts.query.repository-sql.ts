@@ -12,7 +12,6 @@ import {
   postsOutputDto,
   PostsPaging,
   postsPaging,
-  postsSqlOutputDto,
   postsSqlPaging,
 } from '../../api/models/output/posts.output.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
