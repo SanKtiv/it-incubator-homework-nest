@@ -110,9 +110,7 @@ export function postViewModel_SQL(postFromSQL): PostsOutputDto[] {
 
   resultArray.forEach((post) =>
     postFromSQL.forEach((row) =>
-      post.id === row.id &&
-      row.userId &&
-      post.extendedLikesInfo.newestLikes.length < 3
+      post.id === row.id && row.userId
         ? post.extendedLikesInfo.newestLikes.push({
             userId: row.userId,
             login: row.login,
