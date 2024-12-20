@@ -65,26 +65,6 @@ export const postsOutputDto = (postDocument: PostDocument, userId?: string) =>
     ),
   );
 
-export const postsSqlOutputDto = (postDocument: any) => ({
-  id: postDocument[0].id,
-  title: postDocument[0].title,
-  shortDescription: postDocument[0].shortDescription,
-  content: postDocument[0].content,
-  blogId: postDocument[0].blogId,
-  blogName: postDocument[0].blogName,
-  createdAt: postDocument[0].createdAt.toISOString(),
-  extendedLikesInfo: {
-    likesCount: postDocument[0].likesCount,
-    dislikesCount: postDocument[0].dislikesCount,
-    myStatus: postDocument[0].myStatus || 'None',
-    newestLikes: postDocument.map((post) => ({
-      userId: post.userId,
-      login: post.login,
-      addedAt: post.addedAt,
-    })),
-  },
-});
-
 export function postViewModel_SQL(postFromSQL): PostsOutputDto[] {
   const resultArray: PostsOutputDto[] = [];
 
@@ -147,7 +127,7 @@ export const postsPaging = (
     postDocuments.map((document) => postsOutputDto(document, userId)),
   );
 
-export const postsSqlPaging = (
+export const postsPagingViewModel_SQL = (
   query: PostQuery,
   totalPosts: number,
   postDocuments: any[],

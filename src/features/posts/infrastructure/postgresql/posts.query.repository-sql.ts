@@ -12,7 +12,7 @@ import {
   postsOutputDto,
   PostsPaging,
   postsPaging,
-  postsSqlPaging,
+  postsPagingViewModel_SQL,
 } from '../../api/models/output/posts.output.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -174,7 +174,7 @@ export class PostsQueryRepositorySql {
         parametersPaging,
       );
 
-      return postsSqlPaging(query, totalPosts.count, postsPaging);
+      return postsPagingViewModel_SQL(query, totalPosts.count, postsPaging);
     } catch (e) {
       console.log('Error findPaging_RAW: ', e);
       throw new InternalServerErrorException();
