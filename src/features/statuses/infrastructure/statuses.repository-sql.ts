@@ -12,7 +12,7 @@ import { NewestLikes } from '../../posts/api/models/output/posts.output.dto';
 export class StatusesRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
-  async insertStatusForPost(
+  async insertStatusForPost_RAW(
     userId: string,
     postId: string,
     status: string,
@@ -48,7 +48,7 @@ export class StatusesRepositorySql {
     }
   }
 
-  async updateStatusForPost(
+  async updateStatusForPost_RAW(
     userId: string,
     postId: string,
     status: string,
@@ -86,7 +86,7 @@ export class StatusesRepositorySql {
     }
   }
 
-  async statusOfPost(
+  async statusOfPost_RAW(
     userId: string,
     postId: string,
   ): Promise<StatusesPostsTable | null> {

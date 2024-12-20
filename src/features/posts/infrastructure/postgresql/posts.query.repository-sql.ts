@@ -1,17 +1,12 @@
 import {
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostModelType } from '../../domain/posts.schema';
 import { PostQuery } from '../../api/models/input/posts.input.dto';
 import {
   postViewModel_SQL,
   PostsOutputDto,
-  postsOutputDto,
   PostsPaging,
-  postsPaging,
   postsPagingViewModel_SQL,
 } from '../../api/models/output/posts.output.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -42,34 +37,6 @@ export class PostsQueryRepositorySql {
     id: string,
     userId?: string | null,
   ): Promise<PostsOutputDto | null> {
-    // const postDocument = await this.repository.findOneBy({ id: id });
-
-    //if (!userId) userId = null;
-    const getNewestLikes = `
-    WITH "post" AS (
-      SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
-            b."name" AS "blogName", s."userStatus" AS "myStatus",
-            (SELECT COUNT(*) FROM "statuses_posts" WHERE p."id" = "postId" AND "userStatus" = 'Like') AS "likesCount",
-            (SELECT COUNT(*) FROM "statuses_posts" WHERE p."id" = "postId" AND "userStatus" = 'Dislike') AS "dislikesCount"
-      FROM "posts" AS p
-      LEFT JOIN "blogs" AS b ON p."blogId" = b."id"
-      LEFT JOIN "statuses_posts" AS s ON p."id" = s."postId" AND s."userId" = $2
-      WHERE p."id" = $1
-      ),
-    "newestLikes" AS (
-      SELECT "addedAt", "login", "userId", "postId",
-          ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"
-      FROM "statuses_posts"
-      LEFT JOIN "users" ON users."id" = "userId"
-      LEFT JOIN "accountData" AS a ON a."id" = users."accountDataId"
-      WHERE "userStatus" = 'Like' AND "postId" = $1
-      ORDER BY "addedAt" DESC
-      ),
-    "newestLikesSorted" AS (
-      SELECT "addedAt", "login", "userId", "postId" FROM "newestLikes" WHERE "rowNumber" <= 3
-      )
-    SELECT * FROM "newestLikesSorted"
-    ORDER BY "addedAt" DESC`;
 
     const findByIdQuery = `
     WITH "post" AS (
@@ -100,18 +67,17 @@ export class PostsQueryRepositorySql {
 
     const parameters = [id, userId];
 
-    const newestLikes = await this.dataSource.query(findByIdQuery, parameters);
-    console.log('post =', newestLikes);
     try {
-      const postDocument = await this.dataSource.query(
+      const post = await this.dataSource.query(
         findByIdQuery,
         parameters,
       );
 
-      if (!postDocument) return null;
+      if (!post[0]) return null;
 
-      return postViewModel_SQL(postDocument)[0];
+      return postViewModel_SQL(post)[0];
     } catch (e) {
+      console.log(e)
       throw new InternalServerErrorException();
     }
   }
@@ -176,7 +142,7 @@ export class PostsQueryRepositorySql {
 
       return postsPagingViewModel_SQL(query, totalPosts.count, postsPaging);
     } catch (e) {
-      console.log('Error findPaging_RAW: ', e);
+      console.log(e);
       throw new InternalServerErrorException();
     }
   }

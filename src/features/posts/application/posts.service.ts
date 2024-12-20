@@ -42,11 +42,11 @@ export class PostsService {
   }
 
   async existPostById(id: string): Promise<PostsTable> {
-    const postDocument = await this.postsRepositorySql.findById_RAW(id);
+    const post = await this.postsRepositorySql.findById_RAW(id);
 
-    if (!postDocument) throw new NotFoundException();
+    if (!post) throw new NotFoundException();
 
-    return postDocument;
+    return post;
   }
 
   async existPostByIdForBlogId(postId: string, blogId: string) {
@@ -165,13 +165,13 @@ export class PostsService {
 
     const newStatus = dto.likeStatus;
 
-    const statusesPost = await this.statusesRepositorySql.statusOfPost(
+    const statusesPost = await this.statusesRepositorySql.statusOfPost_RAW(
       userId,
       id,
     );
 
     if (!statusesPost) {
-      await this.statusesRepositorySql.insertStatusForPost(
+      await this.statusesRepositorySql.insertStatusForPost_RAW(
         userId,
         id,
         newStatus,
@@ -182,7 +182,7 @@ export class PostsService {
 
     if (statusesPost.userStatus === newStatus) return;
 
-    await this.statusesRepositorySql.updateStatusForPost(userId, id, newStatus);
+    await this.statusesRepositorySql.updateStatusForPost_RAW(userId, id, newStatus);
   }
 
   async deletePostById(id: string): Promise<void> {

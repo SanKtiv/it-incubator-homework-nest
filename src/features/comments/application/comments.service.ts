@@ -35,14 +35,9 @@ export class CommentsService {
   async createComment(dto: CommentServiceDto): Promise<CommentOutputDto> {
     await this.postsService.existPostById(dto.postId);
 
-    //const user = await this.usersRepositorySql.findById_RAW(dto.userId);
+    const comment = await this.commentsRepositorySql.create_RAW(dto);
 
-    //if (user) dto.userLogin = user.login;
-    // dto.userLogin = userDocument!.accountData.login; for mongo
-
-    const commentDocument = await this.commentsRepositorySql.create_RAW(dto);
-
-    return sqlCommentOutputDto(commentDocument);
+    return sqlCommentOutputDto(comment);
   }
 
   async updateCommentById(id: string, userId: string, dto: CommentInputDto) {

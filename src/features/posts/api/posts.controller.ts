@@ -49,12 +49,6 @@ export class PostController {
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
-  // @Post()
-  // @UseGuards(BasicAuthGuard)
-  // async createPost(@Body() inputDto: PostsInputDto): Promise<PostsOutputDto> {
-  //   return this.postsService.createPost(inputDto);
-  // }
-
   @Get(':postId')
   async getPostById(
     @Param('postId', paramIdIsUUIdPipe) id: string,
@@ -107,7 +101,9 @@ export class PostController {
       req.headers.authorization,
     );
 
-    return this.postsQueryRepositorySql.findPaging_RAW(query, null, userId);
+    const blogId = null;
+
+    return this.postsQueryRepositorySql.findPaging_RAW(query, blogId, userId);
   }
 
   @Get(':postId/comments')
