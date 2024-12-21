@@ -58,13 +58,6 @@ export class PostsService {
   }
 
   async updatePost(id: string, postUpdateDto: PostsInputDto) {
-    // const postDocument = await this.postsRepository.findById(id);
-    //
-    // if (!postDocument) throw new NotFoundException();
-    const postDocument = await this.existPostById(id);
-
-    Object.assign(postDocument, postUpdateDto);
-
     await this.postsRepositorySql.updatePost_RAW(id, postUpdateDto);
   }
 
@@ -186,9 +179,9 @@ export class PostsService {
   }
 
   async deletePostById(id: string): Promise<void> {
-    const result = await this.postsRepository.remove(id);
+    const result = await this.postsRepositorySql.deleteById_RAW(id);
 
-    if (!result) throw new NotFoundException();
+    if (result === 0) throw new NotFoundException();
   }
 
   async deletePostByIdForBlog(
@@ -199,6 +192,6 @@ export class PostsService {
 
     await this.commentsRepositorySql.deleteByPostId_RAW(postId)
 
-    await this.postsRepositorySql.deleteById_RAW(postId, blogId);
+    await this.postsRepositorySql.deleteByIdAndBlogId_RAW(postId, blogId);
   }
 }

@@ -30,7 +30,7 @@ export class StatusesRepositorySql {
     }
   }
 
-  async insertStatusOfComment(
+  async insertStatusOfComment_RAW(
     userId: string,
     commentId: string,
     status: string,
@@ -111,7 +111,7 @@ export class StatusesRepositorySql {
     }
   }
 
-  async statusOfComment(
+  async statusOfComment_RAW(
     userId: string,
     commentId: string,
   ): Promise<StatusesCommentsTable | null> {

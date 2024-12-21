@@ -126,16 +126,6 @@ export class CommentsRepositorySql {
     }
   }
 
-  async deleteAll() {
-    const rawQuery = `TRUNCATE "comments"`;
-
-    try {
-      await this.dataSource.query(rawQuery);
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
-  }
-
   async deleteAll_RAW() {
     await this.dataSource.query(`TRUNCATE "comments" CASCADE`);
   }

@@ -21,18 +21,6 @@ export class PostsQueryRepositorySql {
     return this.dataSource.getRepository(PostsTable);
   }
 
-  async countById(postId: string) {
-    const rawQuery = `SELECT COUNT (*) FROM "posts" WHERE "id" = $1`;
-
-    try {
-      const [countPostsArray] = await this.dataSource.query(rawQuery, [postId]);
-
-      return countPostsArray.count;
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
-  }
-
   async findById_RAW(
     id: string,
     userId?: string | null,

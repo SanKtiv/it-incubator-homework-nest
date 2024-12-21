@@ -1,6 +1,4 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument, PostModelType } from '../../domain/posts.schema';
 import { PostsInputDto } from '../../api/models/input/posts.input.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -26,6 +24,18 @@ export class PostsRepositorySql {
 
   async findById_ORM(id: string): Promise<PostsTable | null> {
     return this.repository_ORM.findOneBy({ id: id });
+  }
+
+  async savePost_ORM(postDocument: PostsTable): Promise<PostsTable> {
+    return this.repository_ORM.save(postDocument);
+  }
+
+  async deletePost_ORM(post: PostsTable): Promise<void> {
+    await this.repository_ORM.remove(post);
+  }
+
+  async deleteAll_ORM(): Promise<void> {
+    await this.repository_ORM.clear();
   }
 
   async create_RAW(dto: PostsInputDto) {
@@ -82,7 +92,7 @@ export class PostsRepositorySql {
     }
   }
 
-  async deleteById_RAW(id: string, blogId: string) {
+  async deleteByIdAndBlogId_RAW(id: string, blogId: string) {
     const deletePstByIdQuery = `
     DELETE FROM "posts"
     WHERE "id" = $1 AND "blogId" = $2`
@@ -90,7 +100,7 @@ export class PostsRepositorySql {
     const parameters = [id, blogId]
 
     try {
-      await this.dataSource.query(deletePstByIdQuery, parameters)
+      return await this.dataSource.query(deletePstByIdQuery, parameters)
     }
     catch (e) {
       console.log(e)
@@ -99,8 +109,23 @@ export class PostsRepositorySql {
 
   }
 
-  async savePost(postDocument: PostsTable): Promise<PostsTable> {
-    return this.repository_ORM.save(postDocument);
+  async deleteById_RAW(id: string) {
+    const deletePstByIdQuery = `
+    DELETE FROM "posts"
+    WHERE "id" = $1`
+
+    const parameters = [id]
+
+    try {
+      const [[], result] = await this.dataSource.query(deletePstByIdQuery, parameters)
+
+      return result
+    }
+    catch (e) {
+      console.log(e)
+      throw new InternalServerErrorException()
+    }
+
   }
 
   async updatePost_RAW(
@@ -129,14 +154,5 @@ export class PostsRepositorySql {
     ${whereQuery}`;
 
     await this.dataSource.query(updatePostQuery, parameters);
-  }
-
-  async deletePost(post: PostsTable): Promise<void> {
-    await this.repository_ORM.remove(post);
-  }
-
-  async deleteAll(): Promise<void> {
-    await this.repository_ORM.clear();
-    //await this.dataSource.getRepository(PostsTable);
   }
 }

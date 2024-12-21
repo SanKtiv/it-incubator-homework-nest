@@ -8,7 +8,6 @@ import { PostsRepositoryMongo } from '../../posts/infrastructure/mongodb/posts.r
 import { UsersRepositoryMongo } from '../../users/infrastructure/mongodb/users.repository-mongo';
 import {
   CommentOutputDto,
-  commentOutputDto,
   sqlCommentOutputDto,
 } from '../api/models/output/comment.output.dto';
 import { CommentServiceDto } from '../api/models/input/comment-service.dto';
@@ -41,20 +40,17 @@ export class CommentsService {
   }
 
   async updateCommentById(id: string, userId: string, dto: CommentInputDto) {
-    const commentDocument = await this.existComment(id);
+    const comment = await this.existComment(id);
 
-    if (commentDocument.userId !== userId) throw new ForbiddenException();
+    if (comment.userId !== userId) throw new ForbiddenException();
 
     await this.commentsRepositorySql.updateById_RAW(id, dto.content);
-    // commentDocument.content = dto.content;
-    //
-    // await this.commentsRepository.save(commentDocument);
   }
 
   async deleteCommentById(id: string, userId: string) {
-    const commentDocument = await this.existComment(id);
+    const comment = await this.existComment(id);
 
-    if (commentDocument.userId !== userId) throw new ForbiddenException();
+    if (comment.userId !== userId) throw new ForbiddenException();
 
     await this.commentsRepositorySql.deleteById_RAW(id);
   }
@@ -68,13 +64,13 @@ export class CommentsService {
 
     const newStatus = dto.likeStatus;
 
-    const statusOfComment = await this.statusesRepositorySql.statusOfComment(
+    const statusOfComment = await this.statusesRepositorySql.statusOfComment_RAW(
       userId,
       id,
     );
 
     if (!statusOfComment) {
-      await this.statusesRepositorySql.insertStatusOfComment(
+      await this.statusesRepositorySql.insertStatusOfComment_RAW(
         userId,
         id,
         newStatus,
@@ -93,11 +89,11 @@ export class CommentsService {
   }
 
   async existComment(id: string): Promise<CommentDocument> {
-    const commentDocument = await this.commentsRepositorySql.findById_RAW(id);
+    const comment = await this.commentsRepositorySql.findById_RAW(id);
 
-    if (!commentDocument) throw new NotFoundException();
+    if (!comment) throw new NotFoundException();
 
-    return commentDocument;
+    return comment;
   }
 
   // async createLikeStatus(id: string, userId: string, dto: PostLikeStatusDto) {

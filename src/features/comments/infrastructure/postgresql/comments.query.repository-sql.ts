@@ -3,19 +3,11 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import {
-  Comment,
-  CommentDocument,
-  CommentModelType,
-} from '../../domain/comment.schema';
 import { QueryDto } from '../../../../infrastructure/models/query.dto';
 import {
   CommentOutputDto,
-  commentOutputDto,
   commentOutputModelRawSql,
   CommentsPagingDto,
-  commentsPagingDto,
   commentsSqlPaging,
 } from '../../api/models/output/comment.output.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -63,11 +55,7 @@ export class CommentsQueryRepositorySql {
     return commentOutputModelRawSql(commentDocument);
   }
 
-  // async countDocuments(id: string): Promise<number> {
-  //   return this.CommentModel.countDocuments({ postId: id });
-  // }
-
-  async findPaging(
+  async findPaging_RAW(
     query: QueryDto,
     postId: string | null,
     userId: string | null,

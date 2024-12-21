@@ -112,15 +112,15 @@ export class PostController {
     @Query() query: QueryDto,
     @Req() req: Request,
   ) {
-    const countPost = await this.postsQueryRepositorySql.countById(postId);
+    const post = await this.postsQueryRepositorySql.findById_RAW(postId);
 
-    if (+countPost === 0) throw new NotFoundException();
+    if (!post) throw new NotFoundException();
 
     const userId = await this.accessJwtToken.getUserIdFromHeaders(
       req.headers.authorization,
     );
 
-    return this.commentsSqlQueryRepository.findPaging(query, postId, userId);
+    return this.commentsSqlQueryRepository.findPaging_RAW(query, postId, userId);
   }
 
   @Put(':postId')
