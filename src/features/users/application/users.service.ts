@@ -16,6 +16,10 @@ export class UsersService {
   ) {}
 
   async createUser(dto: UsersInputDto): Promise<UsersTable | any> {
+    await this.existUserLogin(dto.login);
+
+    await this.existUserEmail(dto.email);
+
     const passwordHash = await this.genHash(dto.password);
 
     const code = this.createCodeWithExpireDate();

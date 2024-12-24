@@ -1,16 +1,11 @@
 import {
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { CommentServiceDto } from '../../api/models/input/comment-service.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { CommentsTable } from '../../domain/comments.entity';
-import {
-  commentOutputDto,
-  CommentOutputDto,
-} from '../../api/models/output/comment.output.dto';
 
 @Injectable()
 export class CommentsRepositorySql {
