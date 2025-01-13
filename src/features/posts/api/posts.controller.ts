@@ -40,11 +40,11 @@ import { CommentsQueryRepositorySql } from '../../comments/infrastructure/postgr
 export class PostController {
   constructor(
     private readonly postsService: PostsService,
-    private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
-    private readonly postsQueryRepository: PostsQueryRepositoryMongo,
+    //private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
+    //private readonly postsQueryRepository: PostsQueryRepositoryMongo,
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly commentsService: CommentsService,
-    private readonly commentsQueryRepository: CommentsQueryRepositoryMongo,
+    //private readonly commentsQueryRepository: CommentsQueryRepositoryMongo,
     private readonly commentsSqlQueryRepository: CommentsQueryRepositorySql,
     private readonly accessJwtToken: AccessJwtToken,
   ) {}

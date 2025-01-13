@@ -11,7 +11,7 @@ import { UsersTable } from '../domain/users.table';
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly usersRepository: UsersRepositoryMongo,
+    //private readonly usersRepository: UsersRepositoryMongo,
     private readonly usersRepositorySql: UsersRepositorySql,
   ) {}
 
@@ -34,9 +34,9 @@ export class UsersService {
     //return this.saveUser(userDocument); for mongo
   }
 
-  async saveUser(userDocument: UserDocument) {
-    return this.usersRepository.save(userDocument);
-  }
+  // async saveUser(userDocument: UserDocument) {
+  //   return this.usersRepository.save(userDocument);
+  // }
 
   createCodeWithExpireDate() {
     return {
@@ -64,7 +64,7 @@ export class UsersService {
   }
 
   async existUserById(id: string): Promise<boolean> {
-    const result = await this.usersRepository.findById(id);
+    const result = await this.usersRepositorySql.findById(id);
 
     return !!result;
   }

@@ -22,10 +22,10 @@ import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.re
 @Injectable()
 export class CommentsService {
   constructor(
-    private readonly commentsRepository: CommentsRepositoryMongo,
+    //private readonly commentsRepository: CommentsRepositoryMongo,
     private readonly commentsRepositorySql: CommentsRepositorySql,
-    private readonly postsRepository: PostsRepositoryMongo,
-    private readonly usersRepository: UsersRepositoryMongo,
+    //private readonly postsRepository: PostsRepositoryMongo,
+    //private readonly usersRepository: UsersRepositoryMongo,
     private readonly usersRepositorySql: UsersRepositorySql,
     private readonly statusesRepositorySql: StatusesRepositorySql,
     private readonly postsService: PostsService,

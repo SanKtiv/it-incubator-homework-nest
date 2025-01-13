@@ -1,5 +1,5 @@
 import { IsString, Matches } from 'class-validator';
-import { EmailIsConfirmed } from '../../../../../infrastructure/decorators/email-is-confimed.decorator';
+//import { EmailIsConfirmed } from '../../../../../infrastructure/decorators/email-is-confimed.decorator';
 
 export class EmailResendingDto {
   //@EmailIsConfirmed()

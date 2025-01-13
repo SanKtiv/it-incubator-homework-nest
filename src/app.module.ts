@@ -33,8 +33,8 @@ import { AuthService } from './features/auth/application/auth.service';
 import { EmailAdapter } from './features/auth/infrastructure/mail.adapter';
 import { LoginIsExistConstraint } from './infrastructure/decorators/login-is-exist.decorator';
 import { EmailIsExistConstraint } from './infrastructure/decorators/email-is-exist.decorator';
-import { EmailIsConfirmedConstraint } from './infrastructure/decorators/email-is-confimed.decorator';
-import { ConfirmationCodeIsValidConstraint } from './infrastructure/decorators/confirmation-code-is-valid.decorator';
+//import { EmailIsConfirmedConstraint } from './infrastructure/decorators/email-is-confimed.decorator';
+//import { ConfirmationCodeIsValidConstraint } from './infrastructure/decorators/confirmation-code-is-valid.decorator';
 import { LocalStrategy } from './features/auth/infrastructure/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { TooManyRequestsMiddleware } from './infrastructure/middlewares/count-requests-api.middleware';
@@ -43,7 +43,7 @@ import {
   RequestToApi,
   RequestToApiSchema,
 } from './features/requests/domain/request.schema';
-import { RequestApiRepository } from './features/requests/infrastructure/mongodb/request.repository-mongo';
+import { RequestApiRepositoryMongo } from './features/requests/infrastructure/mongodb/request.repository-mongo';
 import {
   JwtAccessStrategy,
   JwtRefreshStrategy,
@@ -100,28 +100,36 @@ const services = [
   RequestApiService,
 ];
 
-const repositories = [
+const mongoRepositories = [
   BlogsRepositoryMongo,
   BlogsQueryRepositoryMongo,
-  BlogsRepositorySql,
-  BlogsQueryRepositorySql,
   PostsRepositoryMongo,
-  PostsRepositorySql,
   PostsQueryRepositoryMongo,
-  PostsQueryRepositorySql,
   CommentsRepositoryMongo,
   CommentsQueryRepositoryMongo,
-  CommentsRepositorySql,
-  CommentsQueryRepositorySql,
   UsersRepositoryMongo,
   UsersQueryRepositoryMongo,
   DevicesRepositoryMongo,
-  RequestApiRepository,
+  RequestApiRepositoryMongo,
+]
+
+const sqlRepositories = [
+  BlogsRepositorySql,
+  BlogsQueryRepositorySql,
+  PostsRepositorySql,
+  PostsQueryRepositorySql,
+  CommentsRepositorySql,
+  CommentsQueryRepositorySql,
   UsersRepositorySql,
   UsersQueryRepositorySql,
   DevicesRepositorySql,
   RequestApiSqlRepository,
   StatusesRepositorySql,
+]
+
+const repositories = [
+  //...mongoRepositories,
+  ...sqlRepositories
 ];
 
 const strategies = [
@@ -145,29 +153,8 @@ const strategies = [
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: 'postgresql://neondb_owner:gnyfzHjQ0T9J@ep-damp-morning-a2vbq6mf.eu-central-1.aws.neon.tech/neondb?sslmode=require',
-      // host: 'ep-damp-morning-a2vbq6mf.eu-central-1.aws.neon.tech',
-      // port: 5432,
-      // username: 'neondb_owner',
-      // password: 'gnyfzHjQ0T9J',
-      // database: 'neondb',
-      entities: [
-        BlogsTable,
-        PostsTable,
-        DeviceTable,
-        RequestTable,
-        UsersTable,
-        AccountDataTable,
-        EmailConfirmationTable,
-        PasswordRecoveryTable,
-        CommentsTable,
-        StatusesTable,
-        StatusesCommentsTable,
-        StatusesPostsTable,
-      ],
       ssl: true,
-      //autoLoadEntities: false,
       synchronize: true,
-      // logging: ['query', 'error', 'warn'],
     }),
     TypeOrmModule.forFeature([
       BlogsTable,
@@ -183,19 +170,19 @@ const strategies = [
       StatusesCommentsTable,
       StatusesPostsTable,
     ]),
-    MongooseModule.forRoot(
-      appSettings.env.isTesting()
-        ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
-        : appSettings.api.MONGO_CONNECTION_URI,
-    ),
-    MongooseModule.forFeature([
-      { name: Blog.name, schema: BlogSchema },
-      { name: Post.name, schema: PostSchema },
-      { name: User.name, schema: UsersSchema },
-      { name: Comment.name, schema: CommentSchema },
-      { name: RequestToApi.name, schema: RequestToApiSchema },
-      { name: Device.name, schema: DeviceSchema },
-    ]),
+    // MongooseModule.forRoot(
+    //   appSettings.env.isTesting()
+    //     ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
+    //     : appSettings.api.MONGO_CONNECTION_URI,
+    // ),
+    // MongooseModule.forFeature([
+    //   { name: Blog.name, schema: BlogSchema },
+    //   { name: Post.name, schema: PostSchema },
+    //   { name: User.name, schema: UsersSchema },
+    //   { name: Comment.name, schema: CommentSchema },
+    //   { name: RequestToApi.name, schema: RequestToApiSchema },
+    //   { name: Device.name, schema: DeviceSchema },
+    // ]),
   ],
   controllers: [
     AppController,
@@ -213,12 +200,12 @@ const strategies = [
     ...repositories,
     ...strategies,
     ...cases,
-    BlogIdIsExistConstraint,
+    //BlogIdIsExistConstraint,
     TooManyRequestsMiddleware,
-    LoginIsExistConstraint,
-    EmailIsExistConstraint,
-    EmailIsConfirmedConstraint,
-    ConfirmationCodeIsValidConstraint,
+    //LoginIsExistConstraint,
+    //EmailIsExistConstraint,
+    //EmailIsConfirmedConstraint,
+    //ConfirmationCodeIsValidConstraint,
     AppService,
     EmailAdapter,
   ],

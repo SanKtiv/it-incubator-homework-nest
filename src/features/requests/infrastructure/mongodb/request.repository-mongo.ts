@@ -8,7 +8,7 @@ import {
 import { RequestApiInputDto } from '../../api/models/input.dto';
 
 @Injectable()
-export class RequestApiRepository {
+export class RequestApiRepositoryMongo {
   constructor(
     @InjectModel(RequestToApi.name)
     private RequestToApiModel: RequestToApiModelType,

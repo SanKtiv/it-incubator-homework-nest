@@ -23,10 +23,10 @@ import {CommentsRepositorySql} from "../../comments/infrastructure/postgresql/co
 @Injectable()
 export class PostsService {
   constructor(
-    private readonly postsRepository: PostsRepositoryMongo,
+    //private readonly postsRepository: PostsRepositoryMongo,
     private readonly postsRepositorySql: PostsRepositorySql,
-    private readonly blogsRepository: BlogsRepositoryMongo,
-    private readonly usersRepository: UsersRepositoryMongo,
+    //private readonly blogsRepository: BlogsRepositoryMongo,
+    //private readonly usersRepository: UsersRepositoryMongo,
     private readonly usersRepositorySql: UsersRepositorySql,
     private readonly blogsService: BlogsService,
     private readonly statusesRepositorySql: StatusesRepositorySql,

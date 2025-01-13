@@ -18,7 +18,7 @@ import { DeviceTable } from '../domain/device.table';
 @Injectable()
 export class DevicesService {
   constructor(
-    private readonly devicesRepository: DevicesRepositoryMongo,
+    //private readonly devicesRepository: DevicesRepositoryMongo,
     private readonly devicesSqlRepository: DevicesRepositorySql,
     private readonly jwtService: JwtService,
   ) {}

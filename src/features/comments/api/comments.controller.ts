@@ -23,7 +23,7 @@ import { CommentsQueryRepositorySql } from '../infrastructure/postgresql/comment
 @Controller('comments')
 export class CommentsController {
   constructor(
-    private readonly commentsQueryRepository: CommentsQueryRepositoryMongo,
+    //private readonly commentsQueryRepository: CommentsQueryRepositoryMongo,
     private readonly commentsQueryRepositorySql: CommentsQueryRepositorySql,
     private readonly commentsService: CommentsService,
     private readonly accessJwtToken: AccessJwtToken,

@@ -32,7 +32,8 @@ export const initSettings = async (
   await app.init();
 
   //const databaseConnection = app.get<Connection>(getConnectionToken());
-  const databaseConnection = app.get<DataSource>(getDataSourceName);
+  //const databaseConnection = app.get<DataSource>(getDataSourceName);
+  const databaseConnection = app.get<DataSource>(getConnectionToken());
 
   const httpServer = app.getHttpServer();
   const blogsTestManager = new BlogsTestManager(app);

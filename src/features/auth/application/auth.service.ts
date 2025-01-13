@@ -14,8 +14,8 @@ import { UsersTable } from '../../users/domain/users.table';
 export class AuthService {
   constructor(
     private readonly emailAdapter: EmailAdapter,
-    private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersSqlRepository: UsersRepositorySql,
+    //private readonly usersRepository: UsersRepositoryMongo,
+    private readonly usersRepositorySql: UsersRepositorySql,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   async registrationConfirmation(code: string) {
-    const user = await this.usersSqlRepository.findByConfirmationCode(code);
+    const user = await this.usersRepositorySql.findByConfirmationCode(code);
 
     if (
       !user ||
@@ -47,11 +47,11 @@ export class AuthService {
     // userDocument!.emailConfirmation.isConfirmed = true; for mongo
     user.emailConfirmation.isConfirmed = true;
 
-    await this.usersSqlRepository.save(user);
+    await this.usersRepositorySql.save(user);
   }
 
   async resendConfirmCode(email: string): Promise<void> {
-    const userDocument = await this.usersSqlRepository.findByEmail(email);
+    const userDocument = await this.usersRepositorySql.findByEmail(email);
 
     // if (!userDocument || userDocument.emailConfirmation.isConfirmed) {
     //   throw new BadRequestException({
@@ -85,28 +85,28 @@ export class AuthService {
     // await this.usersSqlRepository.save(userDocument);
   }
 
-  async emailIsConfirmed(email: string) {
-    const userDocument = await this.usersRepository.findByEmail(email);
+  // async emailIsConfirmed(email: string) {
+  //   const userDocument = await this.usersRepository.findByEmail(email);
+  //
+  //   return userDocument!.emailConfirmation.isConfirmed;
+  // }
 
-    return userDocument!.emailConfirmation.isConfirmed;
-  }
-
-  async confirmationCodeIsValid(code: string): Promise<boolean> {
-    const userDocument =
-      await this.usersRepository.findByConfirmationCode(code);
-
-    return !(
-      !userDocument ||
-      userDocument.emailConfirmation.expirationDate < new Date() ||
-      userDocument.emailConfirmation.isConfirmed
-    );
-  }
+  // async confirmationCodeIsValid(code: string): Promise<boolean> {
+  //   const userDocument =
+  //     await this.usersRepository.findByConfirmationCode(code);
+  //
+  //   return !(
+  //     !userDocument ||
+  //     userDocument.emailConfirmation.expirationDate < new Date() ||
+  //     userDocument.emailConfirmation.isConfirmed
+  //   );
+  // }
 
   async validateUser(
     loginOrEmail: string,
     password: string,
   ): Promise<UsersTable | null> {
-    const user = await this.usersSqlRepository.findByLoginOrEmail(loginOrEmail);
+    const user = await this.usersRepositorySql.findByLoginOrEmail(loginOrEmail);
 
     if (!user) return null;
 
@@ -148,7 +148,7 @@ export class AuthService {
   async passwordRecovery(email: string) {
     const code = this.usersService.createCodeWithExpireDate();
 
-    const userDocument = await this.usersSqlRepository.findByEmail(email);
+    const userDocument = await this.usersRepositorySql.findByEmail(email);
 
     if (userDocument) {
       // userDocument.passwordRecovery!.recoveryCode = code.confirmationCode;
@@ -159,7 +159,7 @@ export class AuthService {
       //
       // userDocument.expirationDate = code.expirationDate;
 
-      await this.usersSqlRepository.save(userDocument);
+      await this.usersRepositorySql.save(userDocument);
     }
 
     await this.emailAdapter.sendRecoveryConfirmationCode(
@@ -169,7 +169,7 @@ export class AuthService {
   }
 
   async saveNewPassword(dto: NewPasswordInputDto) {
-    const recoveryInfo = await this.usersSqlRepository.findByRecoveryCode(
+    const recoveryInfo = await this.usersRepositorySql.findByRecoveryCode(
       dto.recoveryCode,
     );
 

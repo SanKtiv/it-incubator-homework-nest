@@ -11,7 +11,7 @@ import { BlogsTable } from '../domain/blog.entity';
 @Injectable()
 export class BlogsService {
   constructor(
-    private readonly blogsRepositoryMongo: BlogsRepositoryMongo,
+    //private readonly blogsRepositoryMongo: BlogsRepositoryMongo,
     private readonly blogsRepositorySql: BlogsRepositorySql,
   ) {}
 

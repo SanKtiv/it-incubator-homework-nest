@@ -28,7 +28,7 @@ import { UsersQueryRepositorySql } from '../infrastructure/postgresqldb/users.qu
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly usersQueryRepository: UsersQueryRepositoryMongo,
+    //private readonly usersQueryRepository: UsersQueryRepositoryMongo,
     private readonly usersQueryRepositorySql: UsersQueryRepositorySql,
   ) {}
 

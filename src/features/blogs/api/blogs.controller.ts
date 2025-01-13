@@ -42,11 +42,11 @@ import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/
 @Controller('blogs')
 export class BlogsController {
   constructor(
-    private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
+    //private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
     private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
     private readonly blogsRepositorySql: BlogsRepositorySql,
     private readonly blogsService: BlogsService,
-    private readonly postsQueryRepository: PostsQueryRepositoryMongo,
+    //private readonly postsQueryRepository: PostsQueryRepositoryMongo,
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,

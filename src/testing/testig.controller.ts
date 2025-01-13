@@ -3,7 +3,7 @@ import { BlogsRepositoryMongo } from '../features/blogs/infrastructure/mongodb/b
 import { UsersRepositoryMongo } from '../features/users/infrastructure/mongodb/users.repository-mongo';
 import { PostsRepositoryMongo } from '../features/posts/infrastructure/mongodb/posts.repository-mongo';
 import { CommentsRepositoryMongo } from '../features/comments/infrastructure/mongodb/comments.repository-mongo';
-import { RequestApiRepository } from '../features/requests/infrastructure/mongodb/request.repository-mongo';
+import { RequestApiRepositoryMongo } from '../features/requests/infrastructure/mongodb/request.repository-mongo';
 import { DevicesRepositoryMongo } from '../features/security/infrastructure/mongodb/devices.repository-mongo';
 import { UsersRepositorySql } from '../features/users/infrastructure/postgresqldb/users.repository-sql';
 import { RequestApiSqlRepository } from '../features/requests/infrastructure/postgresqldb/request.repository-sql';
@@ -16,17 +16,17 @@ import { StatusesRepositorySql } from '../features/statuses/infrastructure/statu
 @Controller('testing/all-data')
 export class TestingController {
   constructor(
-    private readonly blogsRepository: BlogsRepositoryMongo,
+    //private readonly blogsRepository: BlogsRepositoryMongo,
     private readonly blogsSqlRepository: BlogsRepositorySql,
-    private readonly usersRepository: UsersRepositoryMongo,
+    //private readonly usersRepository: UsersRepositoryMongo,
     private readonly usersRepositorySql: UsersRepositorySql,
-    private readonly postsRepository: PostsRepositoryMongo,
+    //private readonly postsRepository: PostsRepositoryMongo,
     private readonly postsSqlRepository: PostsRepositorySql,
-    private readonly commentsRepository: CommentsRepositoryMongo,
+    //private readonly commentsRepository: CommentsRepositoryMongo,
     private readonly commentsSqlRepository: CommentsRepositorySql,
-    private readonly requestApiRepository: RequestApiRepository,
+    //private readonly requestApiRepository: RequestApiRepositoryMongo,
     private readonly requestApiSqlRepository: RequestApiSqlRepository,
-    private readonly devicesRepository: DevicesRepositoryMongo,
+    //private readonly devicesRepository: DevicesRepositoryMongo,
     private readonly devicesSqlRepository: DevicesRepositorySql,
     private readonly statusesSqlRepository: StatusesRepositorySql,
   ) {}

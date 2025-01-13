@@ -32,7 +32,7 @@ import { UsersQueryRepositorySql } from '../../users/infrastructure/postgresqldb
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly usersQueryRepository: UsersQueryRepositoryMongo,
+    //private readonly usersQueryRepository: UsersQueryRepositoryMongo,
     private readonly usersSqlQueryRepository: UsersQueryRepositorySql,
     private readonly authService: AuthService,
     private readonly usersService: UsersService,

@@ -36,10 +36,10 @@ import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/p
 @UseGuards(BasicAuthGuard)
 export class SaBlogsController {
   constructor(
-    private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
+    //private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
     private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
     private readonly blogsService: BlogsService,
-    private readonly postsQueryRepository: PostsQueryRepositoryMongo,
+    //private readonly postsQueryRepository: PostsQueryRepositoryMongo,
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsService: PostsService,
   ) {}
