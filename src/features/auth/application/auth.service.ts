@@ -91,16 +91,16 @@ export class AuthService {
   //   return userDocument!.emailConfirmation.isConfirmed;
   // }
 
-  // async confirmationCodeIsValid(code: string): Promise<boolean> {
-  //   const userDocument =
-  //     await this.usersRepository.findByConfirmationCode(code);
-  //
-  //   return !(
-  //     !userDocument ||
-  //     userDocument.emailConfirmation.expirationDate < new Date() ||
-  //     userDocument.emailConfirmation.isConfirmed
-  //   );
-  // }
+  async confirmationCodeIsValid(code: string): Promise<boolean> {
+    const user =
+      await this.usersRepositorySql.findByConfirmationCode(code);
+
+    return !(
+      !user ||
+      user.emailConfirmation.expirationDate < new Date() ||
+      user.emailConfirmation.isConfirmed
+    );
+  }
 
   async validateUser(
     loginOrEmail: string,
