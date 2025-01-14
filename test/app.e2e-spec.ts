@@ -13,6 +13,12 @@ describe('AppController (e2e)', () => {
   let blogsTestManager: BlogsTestManager;
   //let userTestManger: UsersTestManager;
 
+  const blog = {
+    name: 'newBlog',
+    description: 'description',
+    websiteUrl: 'abc@mail.com'
+  }
+
   beforeAll(async () => {
     const result = await initSettings(); //(moduleBuilder) =>
     //override UsersService еще раз
@@ -46,6 +52,14 @@ describe('AppController (e2e)', () => {
       .get('/')
       .expect(200)
       .expect('Hello World!');
+  });
+
+  it('/sa/blogs (POST)', () => {
+    return request(app.getHttpServer())
+        .post('/sa/blogs')
+        .send(blog)
+        .expect(201)
+        .expect({...blog});
   });
 
   // it('/blogs (POST)', async () => {
