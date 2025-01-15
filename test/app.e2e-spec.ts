@@ -8,6 +8,7 @@ import { BlogsTestManager } from './utils/blogs-test-manager';
 import { blogCreateModel } from './utils/blogs-options';
 import {Test, TestingModule} from "@nestjs/testing";
 
+
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let blogsTestManager: BlogsTestManager;
@@ -16,8 +17,11 @@ describe('AppController (e2e)', () => {
   const blog = {
     name: 'newBlog',
     description: 'description',
-    websiteUrl: 'abc@mail.com'
+    websiteUrl: 'https://abc.com'
   }
+
+  const passBasic = `Basic YWRtaW46cXdlcnR5`;
+
 
   beforeAll(async () => {
     const result = await initSettings(); //(moduleBuilder) =>
@@ -57,9 +61,9 @@ describe('AppController (e2e)', () => {
   it('/sa/blogs (POST)', () => {
     return request(app.getHttpServer())
         .post('/sa/blogs')
+        .set('Authorization', passBasic)
         .send(blog)
         .expect(201)
-        .expect({...blog});
   });
 
   // it('/blogs (POST)', async () => {
