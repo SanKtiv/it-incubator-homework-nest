@@ -51,19 +51,27 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/ (GET)', async () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
       .expect('Hello World!');
   });
 
-  it('/sa/blogs (POST)', () => {
-    return request(app.getHttpServer())
+  it('/sa/blogs (POST)', async () => {
+    const createUser = await request(app.getHttpServer())
         .post('/sa/blogs')
         .set('Authorization', passBasic)
         .send(blog)
-        .expect(201)
+        //.expect(201)
+
+    await expect(createUser.statusCode).toBe(201)
+    await expect(createUser.body).toEqual({
+      ...blog,
+      id: expect.any(String),
+      createdAt: expect.any(String),
+      isMembership: false
+    })
   });
 
   // it('/blogs (POST)', async () => {
