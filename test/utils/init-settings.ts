@@ -7,6 +7,7 @@ import {deleteAllData, deleteAllDataSQL} from './delete-all-data';
 import {BlogsTestManager} from './blogs-test-manager';
 import {DataSource} from 'typeorm';
 import {getDataSourceName} from '@nestjs/typeorm';
+import {AuthTestManager} from "./auth-test-manager";
 
 export const initSettings = async (
     //передаем callback, который получает ModuleBuilder,
@@ -37,6 +38,7 @@ export const initSettings = async (
 
         const httpServer = app.getHttpServer();
         const blogsTestManager = new BlogsTestManager(app);
+        const authTestManager = new AuthTestManager(app);
         //const userTestManger = new UsersTestManager(app);
 
         //чистим БД
@@ -49,6 +51,7 @@ export const initSettings = async (
             databaseConnection,
             httpServer,
             blogsTestManager,
+            authTestManager,
             //userTestManger,
         };
     } catch (error) {

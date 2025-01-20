@@ -42,8 +42,6 @@ export class AuthController {
   @Post('registration')
   @HttpCode(204)
   async authCreateUser(@Body() dto: UsersInputDto): Promise<void> {
-    await this.usersService.existUserLogin(dto.login);
-    await this.usersService.existUserEmail(dto.email);
     await this.authService.registrationUser(dto);
   }
 
