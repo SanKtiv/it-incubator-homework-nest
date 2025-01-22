@@ -28,6 +28,8 @@ import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-au
 import { InfoCurrentUserDto } from './models/output/info-current-user.dto';
 import { UsersService } from '../../users/application/users.service';
 import { UsersQueryRepositorySql } from '../../users/infrastructure/postgresqldb/users.query.repository-sql';
+import {AccessJwtToken} from "../application/use-cases/access-jwt-token";
+import {RefreshJwtToken} from "../application/use-cases/refresh-jwt-token";
 
 @Controller('auth')
 export class AuthController {
@@ -37,6 +39,8 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly devicesService: DevicesService,
+    private readonly accessTokenService: AccessJwtToken,
+    private readonly refreshTokenService: RefreshJwtToken
   ) {}
 
   @Post('registration')
@@ -76,19 +80,18 @@ export class AuthController {
       userId: userId,
     };
 
-    const deviceDocument = await this.devicesService.create(deviceDto);
+    const device = await this.devicesService.create(deviceDto);
 
-    // const deviceId = deviceDocument._id.toString(); for mongo
-    const deviceId = deviceDocument.id;
+    const deviceId = device.id;
 
-    const accessToken = await this.authService.createAccessToken(userId);
+    const accessToken = await this.accessTokenService.create(userId);
 
-    const refreshToken = await this.authService.createRefreshToken(
+    const refreshToken = await this.refreshTokenService.create(
       userId,
       deviceId,
     );
 
-    await this.devicesService.save(deviceDocument, refreshToken);
+    await this.devicesService.save(device, refreshToken);
 
     return res
       .cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })

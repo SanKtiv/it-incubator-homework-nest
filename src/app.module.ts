@@ -85,6 +85,8 @@ import { StatusesRepositorySql } from './features/statuses/infrastructure/status
 import { AccountDataTable } from './features/users/domain/account-data.table';
 import { EmailConfirmationTable } from './features/users/domain/email-сonfirmation.table';
 import { PasswordRecoveryTable } from './features/users/domain/password-recovery.table';
+import {UsersRepositoryORM} from "./features/users/infrastructure/postgresqldb/users.repository-TypeORM";
+import {DevicesRepositoryORM} from "./features/security/infrastructure/postgresqldb/devices.repository-TypeORM";
 
 dotenv.config();
 
@@ -125,6 +127,8 @@ const sqlRepositories = [
   DevicesRepositorySql,
   RequestApiSqlRepository,
   StatusesRepositorySql,
+  UsersRepositoryORM,
+  DevicesRepositoryORM,
 ]
 
 const repositories = [

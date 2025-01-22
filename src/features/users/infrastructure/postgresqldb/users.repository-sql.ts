@@ -81,30 +81,6 @@ export class UsersRepositorySql {
     );
   }
 
-  async create(
-    dto: UsersInputDto,
-    passwordHash: string,
-    confirmationCode: string,
-    expirationDate: Date,
-  ): Promise<UsersTable> {
-    const user = new UsersTable();
-    const accountData = new AccountDataTable();
-    const emailConfirmation = new EmailConfirmationTable();
-
-    accountData.login = dto.login;
-    accountData.email = dto.email;
-    accountData.createdAt = new Date();
-    accountData.passwordHash = passwordHash;
-
-    emailConfirmation.confirmationCode = confirmationCode;
-    emailConfirmation.expirationDate = expirationDate;
-
-    user.accountData = accountData;
-    user.emailConfirmation = emailConfirmation;
-
-    return await this.repository.save(user);
-  }
-
   async save(user: UsersTable): Promise<UsersTable> {
     return this.repository.save(user);
   }

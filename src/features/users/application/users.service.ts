@@ -7,31 +7,40 @@ import add from 'date-fns/add';
 import { UserDocument } from '../domain/users.schema';
 import { UsersRepositorySql } from '../infrastructure/postgresqldb/users.repository-sql';
 import { UsersTable } from '../domain/users.table';
+import {UsersRepositoryORM} from "../infrastructure/postgresqldb/users.repository-TypeORM";
+import {AccountDataTable} from "../domain/account-data.table";
+import {EmailConfirmationTable} from "../domain/email-сonfirmation.table";
 
 @Injectable()
 export class UsersService {
   constructor(
     //private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersRepositorySql: UsersRepositorySql,
+    private readonly usersRepository: UsersRepositoryORM,
   ) {}
 
   async createUser(dto: UsersInputDto): Promise<UsersTable | any> {
     await this.existUserLogin(dto.login);
-
     await this.existUserEmail(dto.email);
 
     const passwordHash = await this.genHash(dto.password);
-
     const code = this.createCodeWithExpireDate();
 
-    return this.usersRepositorySql.create_RAW(
-      dto,
-      passwordHash,
-      code.confirmationCode,
-      code.expirationDate,
-    );
+    const user = new UsersTable();
+    const accountData = new AccountDataTable();
+    const emailConfirmation = new EmailConfirmationTable();
 
-    //return this.saveUser(userDocument); for mongo
+    accountData.login = dto.login;
+    accountData.email = dto.email;
+    accountData.createdAt = new Date();
+    accountData.passwordHash = passwordHash;
+
+    emailConfirmation.confirmationCode = code.confirmationCode;
+    emailConfirmation.expirationDate = code.expirationDate;
+
+    user.accountData = accountData;
+    user.emailConfirmation = emailConfirmation;
+
+    return this.usersRepository.create(user);
   }
 
   // async saveUser(userDocument: UserDocument) {
@@ -46,7 +55,7 @@ export class UsersService {
   }
 
   async existUserLogin(login: string): Promise<BadRequestException | void> {
-    const user = await this.usersRepositorySql.findByLogin_RAW(login);
+    const user = await this.usersRepository.findByLogin_RAW(login);
     if (user) {
       throw new BadRequestException({
         message: [{ message: 'login is already exist', field: 'login' }],
@@ -55,7 +64,7 @@ export class UsersService {
   }
 
   async existUserEmail(email: string): Promise<BadRequestException | void> {
-    const userDocument = await this.usersRepositorySql.findByEmail_RAW(email);
+    const userDocument = await this.usersRepository.findByEmail_RAW(email);
     if (userDocument) {
       throw new BadRequestException({
         message: [{ message: 'email is already exist', field: 'email' }],
@@ -64,13 +73,13 @@ export class UsersService {
   }
 
   async existUserById(id: string): Promise<boolean> {
-    const result = await this.usersRepositorySql.findById(id);
+    const result = await this.usersRepository.findById(id);
 
     return !!result;
   }
 
   async deleteUserById(id: string): Promise<boolean> {
-    const result = await this.usersRepositorySql.remove(id);
+    const result = await this.usersRepository.remove(id);
 
     return !!result;
   }

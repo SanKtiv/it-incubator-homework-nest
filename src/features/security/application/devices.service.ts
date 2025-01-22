@@ -14,33 +14,39 @@ import {
 } from '../api/models/output-device.dto';
 import { DevicesRepositorySql } from '../infrastructure/postgresqldb/devices.repository-sql';
 import { DeviceTable } from '../domain/device.table';
+import {DevicesRepositoryORM} from "../infrastructure/postgresqldb/devices.repository-TypeORM";
+import {AccessJwtToken} from "../../auth/application/use-cases/access-jwt-token";
+import {RefreshJwtToken} from "../../auth/application/use-cases/refresh-jwt-token";
 
 @Injectable()
 export class DevicesService {
   constructor(
     //private readonly devicesRepository: DevicesRepositoryMongo,
-    private readonly devicesSqlRepository: DevicesRepositorySql,
+    private readonly devicesRepository: DevicesRepositoryORM,
     private readonly jwtService: JwtService,
+    private readonly accessTokenService: AccessJwtToken,
+    private readonly refreshTokenService: RefreshJwtToken
   ) {}
 
   async create(dto: DeviceDto): Promise<DeviceTable> {
-    return this.devicesSqlRepository.create(dto);
+    return this.devicesRepository.create(dto);
+
   }
 
   async save(device: DeviceTable, token: string): Promise<void> {
     const payload = await this.jwtService.verifyAsync(token);
     device.expirationDate = new Date(payload.exp * 1000).toISOString();
     device.lastActiveDate = new Date(payload.iat * 1000).toISOString();
-    await this.devicesSqlRepository.save(device);
+    await this.devicesRepository.save(device);
   }
 
   async updateDates(deviceId: string, refreshToken: string) {
-    const deviceDocument = await this.devicesSqlRepository.findById(deviceId);
+    const deviceDocument = await this.devicesRepository.findById(deviceId);
     await this.save(deviceDocument!, refreshToken);
   }
 
   async checkExpirationDate(payload: any) {
-    const deviceDocument = await this.devicesSqlRepository.findById(
+    const deviceDocument = await this.devicesRepository.findById(
       payload.deviceId,
     );
     if (
@@ -54,23 +60,23 @@ export class DevicesService {
 
   async findByUserId(userId: string): Promise<OutputDeviceDto[]> {
     const deviceDocumentsArray =
-      await this.devicesSqlRepository.findByUserId(userId);
+      await this.devicesRepository.findByUserId(userId);
     return devicesViewModel(deviceDocumentsArray);
   }
 
   async deleteDeviceCurrentUserByDeviceId(deviceId: string, userId: string) {
-    const deviceDocument = await this.devicesSqlRepository.findById(deviceId);
+    const deviceDocument = await this.devicesRepository.findById(deviceId);
     if (!deviceDocument) throw new NotFoundException();
     if (deviceDocument.userId !== userId) throw new ForbiddenException();
-    await this.devicesSqlRepository.deleteDeviceById(deviceId);
+    await this.devicesRepository.deleteDeviceById(deviceId);
   }
 
   async deleteDeviceById(id: string) {
-    await this.devicesSqlRepository.deleteDeviceById(id);
+    await this.devicesRepository.deleteDeviceById(id);
   }
 
   async deleteAllDevicesWithoutCurrent(payload: any) {
-    await this.devicesSqlRepository.deleteDevices(
+    await this.devicesRepository.deleteDevices(
       payload.sub,
       payload.deviceId,
     );

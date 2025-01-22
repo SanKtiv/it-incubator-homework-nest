@@ -88,11 +88,11 @@ describe('AppController (e2e)', () => {
   // Tests Auth
 
   it('/auth/registration (Post)', async () => {
-    const result = await authTestManager.registration(user)
+    const result = await authTestManager.registration(userTest)
     console.log('result =', result.text)
 
     await expect(result.statusCode).toBe(204)
-    await expect(result.body).toBeUndefined()
+    await expect(result.body).toEqual({})
   });
 
   // it('/blogs (POST)', async () => {
