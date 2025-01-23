@@ -154,7 +154,7 @@ export class AuthService {
     const recoveryInfo = await this.usersRepository.findByRecoveryCode(
       dto.recoveryCode,
     );
-
+console.log('recoveryInfo =', recoveryInfo)
     // const userDocument = await this.usersSqlRepository.findById(recoveryInfo!.id)
 
     // userDocument!.accountData.passwordHash = await this.usersService.genHash(

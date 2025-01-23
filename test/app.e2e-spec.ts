@@ -89,7 +89,7 @@ describe('AppController (e2e)', () => {
 
   it('/auth/registration (Post)', async () => {
     const result = await authTestManager.registration(userTest)
-    console.log('result =', result.text)
+    // const resultChangePassword = await authTestManager.changePassword({})
 
     await expect(result.statusCode).toBe(204)
     await expect(result.body).toEqual({})
