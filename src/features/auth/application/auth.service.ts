@@ -9,9 +9,10 @@ import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto'
 import { UserDocument } from '../../users/domain/users.schema';
 import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
 import { UsersTable } from '../../users/domain/users.table';
-import {UsersRepositoryORM} from "../../users/infrastructure/postgresqldb/users.repository-TypeORM";
+import {UsersRepositoryORM} from "../../users/infrastructure/postgresqldb/users.repository-typeorm";
 import {AccessJwtToken} from "./use-cases/access-jwt-token";
 import {RefreshJwtToken} from "./use-cases/refresh-jwt-token";
+import {PasswordRecoveryTable} from "../../users/domain/password-recovery.table";
 
 @Injectable()
 export class AuthService {
@@ -132,17 +133,18 @@ export class AuthService {
   }
 
   async passwordRecovery(email: string) {
-    const code = this.usersService.createCodeWithExpireDate();
-
     const user = await this.usersRepository.findByEmail(email);
 
-    if (user) {
-      user.passwordRecovery.recoveryCode = code.confirmationCode;
+    if (!user) return;
 
-      user.passwordRecovery.expirationDateRecovery = code.expirationDate;
+    const code = this.usersService.createCodeWithExpireDate();
+    const passwordRecovery = new PasswordRecoveryTable();
 
-      await this.usersRepository.save(user);
-    }
+    passwordRecovery.recoveryCode = code.confirmationCode;
+    passwordRecovery.expirationDateRecovery = code.expirationDate;
+    user.passwordRecovery = passwordRecovery;
+
+    await this.usersRepository.save(user);
 
     await this.emailAdapter.sendRecoveryConfirmationCode(
       email,
@@ -151,20 +153,15 @@ export class AuthService {
   }
 
   async saveNewPassword(dto: NewPasswordInputDto) {
-    const recoveryInfo = await this.usersRepository.findByRecoveryCode(
+    const user = await this.usersRepository.findByRecoveryCode(
       dto.recoveryCode,
     );
-console.log('recoveryInfo =', recoveryInfo)
-    // const userDocument = await this.usersSqlRepository.findById(recoveryInfo!.id)
 
-    // userDocument!.accountData.passwordHash = await this.usersService.genHash(
-    //   dto.newPassword,
-    // );for mongo
+    if(!user) throw new BadRequestException();
 
-    // userDocument!.passwordHash = await this.usersService.genHash(
-    //   dto.newPassword,
-    // );
+    user.accountData.passwordHash =
+        await this.usersService.genHash(dto.newPassword)
 
-    // await this.usersSqlRepository.save(userDocument!);
+    await this.usersRepository.save(user);
   }
 }

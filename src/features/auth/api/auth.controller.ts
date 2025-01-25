@@ -30,12 +30,13 @@ import { UsersService } from '../../users/application/users.service';
 import { UsersQueryRepositorySql } from '../../users/infrastructure/postgresqldb/users.query.repository-sql';
 import {AccessJwtToken} from "../application/use-cases/access-jwt-token";
 import {RefreshJwtToken} from "../application/use-cases/refresh-jwt-token";
+import {UsersQueryRepositoryOrm} from "../../users/infrastructure/postgresqldb/users.query.repository-typeorm";
 
 @Controller('auth')
 export class AuthController {
   constructor(
     //private readonly usersQueryRepository: UsersQueryRepositoryMongo,
-    private readonly usersSqlQueryRepository: UsersQueryRepositorySql,
+    private readonly usersQueryRepository: UsersQueryRepositoryOrm,
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly devicesService: DevicesService,
@@ -118,16 +119,8 @@ export class AuthController {
     @RefreshTokenPayload() payload: any,
     @Res() res: Response,
   ) {
-    await this.devicesService.checkExpirationDate(payload);
-
-    const accessToken = await this.authService.createAccessToken(userId);
-
-    const refreshToken = await this.authService.createRefreshToken(
-      userId,
-      payload.deviceId,
-    );
-
-    await this.devicesService.updateDates(payload.deviceId, refreshToken);
+    const {accessToken, refreshToken} =
+        await this.devicesService.updateDevice(payload, userId);
 
     return res
       .cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })
@@ -138,8 +131,7 @@ export class AuthController {
   @HttpCode(204)
   @UseGuards(JWTRefreshAuthGuard)
   async logout(@RefreshTokenPayload() payload: any) {
-    await this.devicesService.checkExpirationDate(payload);
-    await this.devicesService.deleteDeviceById(payload.deviceId);
+    await this.devicesService.deleteDeviceById(payload);
   }
 
   @Get('me')
@@ -148,7 +140,7 @@ export class AuthController {
   async getInfoCurrentUser(
     @CurrentUserId() userId: string,
   ): Promise<InfoCurrentUserDto> {
-    return this.usersSqlQueryRepository.infoCurrentUser(userId);
+    return this.usersQueryRepository.infoCurrentUser(userId);
   }
 
   @Post('test')

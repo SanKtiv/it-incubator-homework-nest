@@ -40,22 +40,39 @@ export class DevicesService {
     await this.devicesRepository.save(device);
   }
 
-  async updateDates(deviceId: string, refreshToken: string) {
-    const deviceDocument = await this.devicesRepository.findById(deviceId);
-    await this.save(deviceDocument!, refreshToken);
+  async updateDevice(payload: any, userId: string) {
+    const device = await this.checkExpirationDate(payload);
+
+    const refreshToken = await this.refreshTokenService.create(
+        userId,
+        payload.deviceId,
+    );
+
+    const newPayload = await this.refreshTokenService.verify(refreshToken);
+
+    device.expirationDate = new Date(newPayload.exp * 1000).toISOString();
+    device.lastActiveDate = new Date(newPayload.iat * 1000).toISOString();
+
+    await this.devicesRepository.save(device);
+
+    const accessToken = await this.accessTokenService.create(userId);
+
+    return {accessToken, refreshToken}
   }
 
   async checkExpirationDate(payload: any) {
-    const deviceDocument = await this.devicesRepository.findById(
+    const device = await this.devicesRepository.findById(
       payload.deviceId,
     );
     if (
-      !deviceDocument ||
-      !deviceDocument.expirationDate ||
-      deviceDocument.expirationDate !==
+      !device ||
+      !device.expirationDate ||
+      device.expirationDate !==
         new Date(payload.exp * 1000).toISOString()
     )
       throw new UnauthorizedException();
+
+    return device;
   }
 
   async findByUserId(userId: string): Promise<OutputDeviceDto[]> {
@@ -71,8 +88,9 @@ export class DevicesService {
     await this.devicesRepository.deleteDeviceById(deviceId);
   }
 
-  async deleteDeviceById(id: string) {
-    await this.devicesRepository.deleteDeviceById(id);
+  async deleteDeviceById(payload: any) {
+    const device = await this.checkExpirationDate(payload);
+    await this.devicesRepository.deleteDeviceById(device.id);
   }
 
   async deleteAllDevicesWithoutCurrent(payload: any) {

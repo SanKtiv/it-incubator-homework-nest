@@ -7,7 +7,7 @@ import add from 'date-fns/add';
 import { UserDocument } from '../domain/users.schema';
 import { UsersRepositorySql } from '../infrastructure/postgresqldb/users.repository-sql';
 import { UsersTable } from '../domain/users.table';
-import {UsersRepositoryORM} from "../infrastructure/postgresqldb/users.repository-TypeORM";
+import {UsersRepositoryORM} from "../infrastructure/postgresqldb/users.repository-typeorm";
 import {AccountDataTable} from "../domain/account-data.table";
 import {EmailConfirmationTable} from "../domain/email-сonfirmation.table";
 

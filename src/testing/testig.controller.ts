@@ -16,30 +16,24 @@ import { StatusesRepositorySql } from '../features/statuses/infrastructure/statu
 @Controller('testing/all-data')
 export class TestingController {
   constructor(
-    //private readonly blogsRepository: BlogsRepositoryMongo,
-    private readonly blogsSqlRepository: BlogsRepositorySql,
-    //private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersRepositorySql: UsersRepositorySql,
-    //private readonly postsRepository: PostsRepositoryMongo,
-    private readonly postsSqlRepository: PostsRepositorySql,
-    //private readonly commentsRepository: CommentsRepositoryMongo,
-    private readonly commentsSqlRepository: CommentsRepositorySql,
-    //private readonly requestApiRepository: RequestApiRepositoryMongo,
-    private readonly requestApiSqlRepository: RequestApiSqlRepository,
-    //private readonly devicesRepository: DevicesRepositoryMongo,
-    private readonly devicesSqlRepository: DevicesRepositorySql,
-    private readonly statusesSqlRepository: StatusesRepositorySql,
+    private readonly blogsRepository: BlogsRepositorySql,
+    private readonly usersRepository: UsersRepositorySql,
+    private readonly postsRepository: PostsRepositorySql,
+    private readonly commentsRepository: CommentsRepositorySql,
+    private readonly requestApiRepository: RequestApiSqlRepository,
+    private readonly devicesRepository: DevicesRepositorySql,
+    private readonly statusesRepository: StatusesRepositorySql,
   ) {}
 
   @Delete()
   @HttpCode(204)
   async deleteAllData(): Promise<void> {
-    await this.blogsSqlRepository.deleteAll_RAW();
-    await this.usersRepositorySql.deleteAll_RAW();
-    await this.postsSqlRepository.deleteAll_RAW();
-    await this.commentsSqlRepository.deleteAll_RAW();
-    await this.requestApiSqlRepository.deleteAll_RAW();
-    await this.devicesSqlRepository.deleteAll_RAW();
-    await this.statusesSqlRepository.deleteAll_RAW();
+    await this.blogsRepository.deleteAll_RAW();
+    await this.usersRepository.deleteAll_RAW();
+    await this.postsRepository.deleteAll_RAW();
+    await this.commentsRepository.deleteAll_RAW();
+    await this.requestApiRepository.deleteAll_RAW();
+    await this.devicesRepository.deleteAll_RAW();
+    await this.statusesRepository.deleteAll_RAW();
   }
 }

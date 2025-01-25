@@ -9,7 +9,7 @@ export class UsersTable {
   id: string;
 
   @OneToOne(() => AccountDataTable, (accountData) => accountData.user, {
-    cascade: ['insert'],
+    cascade: true,
     eager: true,
     onDelete: 'CASCADE',
   })
@@ -19,7 +19,7 @@ export class UsersTable {
   @OneToOne(
     () => EmailConfirmationTable,
     (emailConfirmation) => emailConfirmation.user,
-    { cascade: ['insert'], eager: true, onDelete: 'CASCADE' },
+    { cascade: true, eager: true, onDelete: 'CASCADE' },
   )
   @JoinColumn()
   emailConfirmation: EmailConfirmationTable;
@@ -27,7 +27,7 @@ export class UsersTable {
   @OneToOne(
     () => PasswordRecoveryTable,
     (passwordRecovery) => passwordRecovery.user,
-    { cascade: ['insert'], eager: true, onDelete: 'CASCADE' },
+    { cascade: true, eager: true, onDelete: 'CASCADE' },
   )
   @JoinColumn()
   passwordRecovery: PasswordRecoveryTable;

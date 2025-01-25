@@ -99,7 +99,6 @@ export class UsersRepositoryORM {
     }
 
     async findByEmail(email: string): Promise<UsersTable | null> {
-        console.log('Hello')
         return this.repository.findOne({
             where: {
                 accountData: { email: email },
