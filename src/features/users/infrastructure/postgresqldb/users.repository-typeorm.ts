@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { UsersTable } from '../../domain/users.table';
@@ -8,7 +8,7 @@ import { AccountDataTable } from '../../domain/account-data.table';
 import { PasswordRecoveryTable } from '../../domain/password-recovery.table';
 
 @Injectable()
-export class UsersRepositoryORM {
+export class UsersRepositoryOrm {
     constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
     private get repository() {
@@ -132,13 +132,16 @@ export class UsersRepositoryORM {
 
     async remove(id: string): Promise<UsersTable | null> {
         try {
-            const user = await this.repository.findOneBy({ id: id });
+            const user = await this.findById(id);
 
-            if (user) await this.dataSource.getRepository(UsersTable).remove(user);
+            if(!user) return null;
+
+            await this.repository.remove(user);
 
             return user;
         } catch (e) {
-            throw new Error('Error DB');
+            return null;
+            console.log(e);
         }
     }
 

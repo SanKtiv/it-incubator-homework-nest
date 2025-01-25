@@ -9,7 +9,7 @@ import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto'
 import { UserDocument } from '../../users/domain/users.schema';
 import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
 import { UsersTable } from '../../users/domain/users.table';
-import {UsersRepositoryORM} from "../../users/infrastructure/postgresqldb/users.repository-typeorm";
+import {UsersRepositoryOrm} from "../../users/infrastructure/postgresqldb/users.repository-typeorm";
 import {AccessJwtToken} from "./use-cases/access-jwt-token";
 import {RefreshJwtToken} from "./use-cases/refresh-jwt-token";
 import {PasswordRecoveryTable} from "../../users/domain/password-recovery.table";
@@ -19,7 +19,7 @@ export class AuthService {
   constructor(
     private readonly emailAdapter: EmailAdapter,
     //private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersRepository: UsersRepositoryORM,
+    private readonly usersRepository: UsersRepositoryOrm,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly accessTokenService: AccessJwtToken,

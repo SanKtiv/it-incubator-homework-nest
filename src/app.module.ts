@@ -85,7 +85,7 @@ import { StatusesRepositorySql } from './features/statuses/infrastructure/status
 import { AccountDataTable } from './features/users/domain/account-data.table';
 import { EmailConfirmationTable } from './features/users/domain/email-сonfirmation.table';
 import { PasswordRecoveryTable } from './features/users/domain/password-recovery.table';
-import {UsersRepositoryORM} from "./features/users/infrastructure/postgresqldb/users.repository-typeorm";
+import {UsersRepositoryOrm} from "./features/users/infrastructure/postgresqldb/users.repository-typeorm";
 import {DevicesRepositoryORM} from "./features/security/infrastructure/postgresqldb/devices.repository-TypeORM";
 import {UsersQueryRepositoryOrm} from "./features/users/infrastructure/postgresqldb/users.query.repository-typeorm";
 
@@ -128,7 +128,7 @@ const sqlRepositories = [
   DevicesRepositorySql,
   RequestApiSqlRepository,
   StatusesRepositorySql,
-  UsersRepositoryORM,
+  UsersRepositoryOrm,
   DevicesRepositoryORM,
   UsersQueryRepositoryOrm
 ]

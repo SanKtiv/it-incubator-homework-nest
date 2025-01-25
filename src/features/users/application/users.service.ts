@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import { UsersInputDto } from '../api/models/input/users.input.dto';
 import bcrypt from 'bcrypt';
 import { UsersRepositoryMongo } from '../infrastructure/mongodb/users.repository-mongo';
@@ -7,7 +7,7 @@ import add from 'date-fns/add';
 import { UserDocument } from '../domain/users.schema';
 import { UsersRepositorySql } from '../infrastructure/postgresqldb/users.repository-sql';
 import { UsersTable } from '../domain/users.table';
-import {UsersRepositoryORM} from "../infrastructure/postgresqldb/users.repository-typeorm";
+import {UsersRepositoryOrm} from "../infrastructure/postgresqldb/users.repository-typeorm";
 import {AccountDataTable} from "../domain/account-data.table";
 import {EmailConfirmationTable} from "../domain/email-сonfirmation.table";
 
@@ -15,7 +15,7 @@ import {EmailConfirmationTable} from "../domain/email-сonfirmation.table";
 export class UsersService {
   constructor(
     //private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersRepository: UsersRepositoryORM,
+    private readonly usersRepository: UsersRepositoryOrm,
   ) {}
 
   async createUser(dto: UsersInputDto): Promise<UsersTable | any> {
@@ -78,10 +78,9 @@ export class UsersService {
     return !!result;
   }
 
-  async deleteUserById(id: string): Promise<boolean> {
-    const result = await this.usersRepository.remove(id);
-
-    return !!result;
+  async deleteUserById(id: string): Promise<void> {
+    const user = await this.usersRepository.remove(id);
+    if (!user) throw new NotFoundException();
   }
 
   async genHash(password: string): Promise<string> {
