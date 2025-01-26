@@ -137,6 +137,7 @@ export class UsersRepositoryOrm {
             if(!user) return null;
 
             await this.repository.remove(user);
+            console.log('user =', user)
 
             return user;
         } catch (e) {
