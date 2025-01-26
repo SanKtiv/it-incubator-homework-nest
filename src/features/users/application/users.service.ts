@@ -18,7 +18,7 @@ export class UsersService {
     private readonly usersRepository: UsersRepositoryOrm,
   ) {}
 
-  async createUser(dto: UsersInputDto): Promise<UsersTable | any> {
+  async createUser(dto: UsersInputDto): Promise<UsersTable> {
     await this.existUserLogin(dto.login);
     await this.existUserEmail(dto.email);
 
@@ -39,7 +39,7 @@ export class UsersService {
 
     user.accountData = accountData;
     user.emailConfirmation = emailConfirmation;
-
+console.log('users services')
     return this.usersRepository.create(user);
   }
 
