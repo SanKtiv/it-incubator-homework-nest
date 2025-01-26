@@ -66,19 +66,30 @@ export class UsersQueryRepositoryOrm {
         const loginTerm = query.searchLoginTerm;
         const emailTerm = query.searchEmailTerm;
 
-        const users = this.repository.createQueryBuilder('user');
+        const users = this.repository.createQueryBuilder('user')
+            .leftJoinAndSelect('user.accountData', 'accountData');
 
         if (loginTerm || emailTerm) {
-            const filter = 'user.login ~* :login OR user.email ~* :email';
-            const paramFilter = { login: loginTerm, email: emailTerm };
+            const conditions: string[] = [];
+            const params = {};
 
-            users.where(filter, paramFilter);
+            if (loginTerm) {
+                conditions.push('accountData.login ~* :login');
+                params['login'] = loginTerm;
+            }
+
+            if (emailTerm) {
+                conditions.push('accountData.email ~* :email');
+                params['email'] = emailTerm;
+            }
+
+            users.where(conditions.join(' OR '), params);
         }
 
         const totalUsers = await users.getCount();
 
         const usersPaging = await users
-            .orderBy(`user.${query.sortBy}`, query.sortDirection)
+            .orderBy(`accountData.${query.sortBy}`, query.sortDirection)
             .skip((query.pageNumber - 1) * query.pageSize)
             .take(query.pageSize)
             .getMany();

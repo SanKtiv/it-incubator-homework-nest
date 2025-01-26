@@ -39,7 +39,7 @@ export class UsersService {
 
     user.accountData = accountData;
     user.emailConfirmation = emailConfirmation;
-console.log('users services')
+
     return this.usersRepository.create(user);
   }
 
