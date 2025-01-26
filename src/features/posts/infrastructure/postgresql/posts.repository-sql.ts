@@ -13,7 +13,10 @@ export class PostsRepositorySql {
     return this.dataSource.getRepository(PostsTable);
   }
 
-  async create_ORM(inputDto: PostsInputDto, blogName: string): Promise<PostsTable> {
+  async create_ORM(
+    inputDto: PostsInputDto,
+    blogName: string,
+  ): Promise<PostsTable> {
     const postDocument = {
       ...inputDto,
       blogName: blogName,
@@ -56,7 +59,7 @@ export class PostsRepositorySql {
     try {
       return await this.dataSource.query(insertPostQuery, parameters);
     } catch (e) {
-      console.log(e)
+      console.log(e);
       throw new InternalServerErrorException();
     }
   }
@@ -81,51 +84,50 @@ export class PostsRepositorySql {
   async findPostByIdWithBlogId(postId: string, blogId: string) {
     try {
       const [post] = await this.dataSource.query(
-          `SELECT * FROM "posts" WHERE "id" = $1 AND "blogId" = $2`, [postId, blogId]
-      )
+        `SELECT * FROM "posts" WHERE "id" = $1 AND "blogId" = $2`,
+        [postId, blogId],
+      );
 
-      return post
-    }
-    catch (e) {
-      console.log(e)
-      throw new InternalServerErrorException()
+      return post;
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
     }
   }
 
   async deleteByIdAndBlogId_RAW(id: string, blogId: string) {
     const deletePstByIdQuery = `
     DELETE FROM "posts"
-    WHERE "id" = $1 AND "blogId" = $2`
+    WHERE "id" = $1 AND "blogId" = $2`;
 
-    const parameters = [id, blogId]
+    const parameters = [id, blogId];
 
     try {
-      return await this.dataSource.query(deletePstByIdQuery, parameters)
+      return await this.dataSource.query(deletePstByIdQuery, parameters);
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
     }
-    catch (e) {
-      console.log(e)
-      throw new InternalServerErrorException()
-    }
-
   }
 
   async deleteById_RAW(id: string) {
     const deletePstByIdQuery = `
     DELETE FROM "posts"
-    WHERE "id" = $1`
+    WHERE "id" = $1`;
 
-    const parameters = [id]
+    const parameters = [id];
 
     try {
-      const [[], result] = await this.dataSource.query(deletePstByIdQuery, parameters)
+      const [[], result] = await this.dataSource.query(
+        deletePstByIdQuery,
+        parameters,
+      );
 
-      return result
+      return result;
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
     }
-    catch (e) {
-      console.log(e)
-      throw new InternalServerErrorException()
-    }
-
   }
 
   async updatePost_RAW(

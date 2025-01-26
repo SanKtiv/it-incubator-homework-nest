@@ -18,7 +18,7 @@ import { PostsTable } from '../domain/posts.table';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
-import {CommentsRepositorySql} from "../../comments/infrastructure/postgresql/comments.repository-sql";
+import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 
 @Injectable()
 export class PostsService {
@@ -30,7 +30,7 @@ export class PostsService {
     private readonly usersRepositorySql: UsersRepositorySql,
     private readonly blogsService: BlogsService,
     private readonly statusesRepositorySql: StatusesRepositorySql,
-    private readonly commentsRepositorySql: CommentsRepositorySql
+    private readonly commentsRepositorySql: CommentsRepositorySql,
   ) {}
 
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
@@ -50,11 +50,14 @@ export class PostsService {
   }
 
   async existPostByIdForBlogId(postId: string, blogId: string) {
-    const post = await this.postsRepositorySql.findPostByIdWithBlogId(postId, blogId)
+    const post = await this.postsRepositorySql.findPostByIdWithBlogId(
+      postId,
+      blogId,
+    );
 
-    if (!post) throw new NotFoundException()
+    if (!post) throw new NotFoundException();
 
-    return
+    return;
   }
 
   async updatePost(id: string, postUpdateDto: PostsInputDto) {
@@ -175,7 +178,11 @@ export class PostsService {
 
     if (statusesPost.userStatus === newStatus) return;
 
-    await this.statusesRepositorySql.updateStatusForPost_RAW(userId, id, newStatus);
+    await this.statusesRepositorySql.updateStatusForPost_RAW(
+      userId,
+      id,
+      newStatus,
+    );
   }
 
   async deletePostById(id: string): Promise<void> {
@@ -190,7 +197,7 @@ export class PostsService {
   ): Promise<void | HttpException> {
     await this.existPostByIdForBlogId(postId, blogId);
 
-    await this.commentsRepositorySql.deleteByPostId_RAW(postId)
+    await this.commentsRepositorySql.deleteByPostId_RAW(postId);
 
     await this.postsRepositorySql.deleteByIdAndBlogId_RAW(postId, blogId);
   }

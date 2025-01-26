@@ -4,9 +4,7 @@ import { RequestApiRepositoryMongo } from '../infrastructure/mongodb/request.rep
 
 @Injectable()
 export class RequestApiService {
-  constructor(
-      //private readonly requestApiRepository: RequestApiRepositoryMongo
-  ) {}
+  constructor() {} //private readonly requestApiRepository: RequestApiRepositoryMongo
 
   // async createReq(dto: RequestApiInputDto) {
   //   return this.requestApiRepository.create(dto);

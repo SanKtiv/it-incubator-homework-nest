@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersQuery } from '../../api/models/input/users.query.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import {
-  usersPagingDto,
-} from '../../api/models/output/users.output.dto';
+import { usersPagingDto } from '../../api/models/output/users.output.dto';
 
 @Injectable()
 export class UsersQueryRepositorySql {

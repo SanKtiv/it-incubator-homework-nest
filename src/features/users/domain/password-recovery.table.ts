@@ -7,6 +7,7 @@ export class PasswordRecoveryTable {
   id: string;
 
   @OneToOne(() => UsersTable, (user) => user.passwordRecovery, {
+    //cascade: true,
     onDelete: 'CASCADE',
   })
   user: UsersTable;

@@ -9,10 +9,10 @@ import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto'
 import { UserDocument } from '../../users/domain/users.schema';
 import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
 import { UsersTable } from '../../users/domain/users.table';
-import {UsersRepositoryOrm} from "../../users/infrastructure/postgresqldb/users.repository-typeorm";
-import {AccessJwtToken} from "./use-cases/access-jwt-token";
-import {RefreshJwtToken} from "./use-cases/refresh-jwt-token";
-import {PasswordRecoveryTable} from "../../users/domain/password-recovery.table";
+import { UsersRepositoryOrm } from '../../users/infrastructure/postgresqldb/users.repository-typeorm';
+import { AccessJwtToken } from './use-cases/access-jwt-token';
+import { RefreshJwtToken } from './use-cases/refresh-jwt-token';
+import { PasswordRecoveryTable } from '../../users/domain/password-recovery.table';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +23,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly accessTokenService: AccessJwtToken,
-    private readonly refreshTokenService: RefreshJwtToken
+    private readonly refreshTokenService: RefreshJwtToken,
   ) {}
 
   async registrationUser(dto: UsersInputDto) {
@@ -66,8 +66,7 @@ export class AuthService {
     user.emailConfirmation.confirmationCode =
       emailConfirmation.confirmationCode;
 
-    user.emailConfirmation.expirationDate =
-      emailConfirmation.expirationDate;
+    user.emailConfirmation.expirationDate = emailConfirmation.expirationDate;
 
     await this.usersRepository.save(user);
   }
@@ -79,8 +78,7 @@ export class AuthService {
   // }
 
   async confirmationCodeIsValid(code: string): Promise<boolean> {
-    const user =
-      await this.usersRepository.findByConfirmationCode(code);
+    const user = await this.usersRepository.findByConfirmationCode(code);
 
     return !(
       !user ||
@@ -157,10 +155,11 @@ export class AuthService {
       dto.recoveryCode,
     );
 
-    if(!user) throw new BadRequestException();
+    if (!user) throw new BadRequestException();
 
-    user.accountData.passwordHash =
-        await this.usersService.genHash(dto.newPassword)
+    user.accountData.passwordHash = await this.usersService.genHash(
+      dto.newPassword,
+    );
 
     await this.usersRepository.save(user);
   }

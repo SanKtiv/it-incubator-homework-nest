@@ -1,4 +1,8 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UsersInputDto } from '../api/models/input/users.input.dto';
 import bcrypt from 'bcrypt';
 import { UsersRepositoryMongo } from '../infrastructure/mongodb/users.repository-mongo';
@@ -7,9 +11,9 @@ import add from 'date-fns/add';
 import { UserDocument } from '../domain/users.schema';
 import { UsersRepositorySql } from '../infrastructure/postgresqldb/users.repository-sql';
 import { UsersTable } from '../domain/users.table';
-import {UsersRepositoryOrm} from "../infrastructure/postgresqldb/users.repository-typeorm";
-import {AccountDataTable} from "../domain/account-data.table";
-import {EmailConfirmationTable} from "../domain/email-сonfirmation.table";
+import { UsersRepositoryOrm } from '../infrastructure/postgresqldb/users.repository-typeorm';
+import { AccountDataTable } from '../domain/account-data.table';
+import { EmailConfirmationTable } from '../domain/email-сonfirmation.table';
 
 @Injectable()
 export class UsersService {

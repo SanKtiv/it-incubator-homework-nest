@@ -28,9 +28,9 @@ import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-au
 import { InfoCurrentUserDto } from './models/output/info-current-user.dto';
 import { UsersService } from '../../users/application/users.service';
 import { UsersQueryRepositorySql } from '../../users/infrastructure/postgresqldb/users.query.repository-sql';
-import {AccessJwtToken} from "../application/use-cases/access-jwt-token";
-import {RefreshJwtToken} from "../application/use-cases/refresh-jwt-token";
-import {UsersQueryRepositoryOrm} from "../../users/infrastructure/postgresqldb/users.query.repository-typeorm";
+import { AccessJwtToken } from '../application/use-cases/access-jwt-token';
+import { RefreshJwtToken } from '../application/use-cases/refresh-jwt-token';
+import { UsersQueryRepositoryOrm } from '../../users/infrastructure/postgresqldb/users.query.repository-typeorm';
 
 @Controller('auth')
 export class AuthController {
@@ -41,7 +41,7 @@ export class AuthController {
     private readonly usersService: UsersService,
     private readonly devicesService: DevicesService,
     private readonly accessTokenService: AccessJwtToken,
-    private readonly refreshTokenService: RefreshJwtToken
+    private readonly refreshTokenService: RefreshJwtToken,
   ) {}
 
   @Post('registration')
@@ -119,8 +119,8 @@ export class AuthController {
     @RefreshTokenPayload() payload: any,
     @Res() res: Response,
   ) {
-    const {accessToken, refreshToken} =
-        await this.devicesService.updateDevice(payload, userId);
+    const { accessToken, refreshToken } =
+      await this.devicesService.updateDevice(payload, userId);
 
     return res
       .cookie('refreshToken', refreshToken, { httpOnly: true, secure: true })

@@ -85,9 +85,9 @@ import { StatusesRepositorySql } from './features/statuses/infrastructure/status
 import { AccountDataTable } from './features/users/domain/account-data.table';
 import { EmailConfirmationTable } from './features/users/domain/email-сonfirmation.table';
 import { PasswordRecoveryTable } from './features/users/domain/password-recovery.table';
-import {UsersRepositoryOrm} from "./features/users/infrastructure/postgresqldb/users.repository-typeorm";
-import {DevicesRepositoryORM} from "./features/security/infrastructure/postgresqldb/devices.repository-TypeORM";
-import {UsersQueryRepositoryOrm} from "./features/users/infrastructure/postgresqldb/users.query.repository-typeorm";
+import { UsersRepositoryOrm } from './features/users/infrastructure/postgresqldb/users.repository-typeorm';
+import { DevicesRepositoryORM } from './features/security/infrastructure/postgresqldb/devices.repository-TypeORM';
+import { UsersQueryRepositoryOrm } from './features/users/infrastructure/postgresqldb/users.query.repository-typeorm';
 
 dotenv.config();
 
@@ -114,7 +114,7 @@ const mongoRepositories = [
   UsersQueryRepositoryMongo,
   DevicesRepositoryMongo,
   RequestApiRepositoryMongo,
-]
+];
 
 const sqlRepositories = [
   BlogsRepositorySql,
@@ -130,12 +130,12 @@ const sqlRepositories = [
   StatusesRepositorySql,
   UsersRepositoryOrm,
   DevicesRepositoryORM,
-  UsersQueryRepositoryOrm
-]
+  UsersQueryRepositoryOrm,
+];
 
 const repositories = [
   //...mongoRepositories,
-  ...sqlRepositories
+  ...sqlRepositories,
 ];
 
 const strategies = [
@@ -160,20 +160,20 @@ const strategies = [
       type: 'postgres',
       url: 'postgresql://neondb_owner:gnyfzHjQ0T9J@ep-damp-morning-a2vbq6mf.eu-central-1.aws.neon.tech/neondb?sslmode=require',
       ssl: true,
-        entities: [
-            BlogsTable,
-            PostsTable,
-            DeviceTable,
-            RequestTable,
-            UsersTable,
-            AccountDataTable,
-            EmailConfirmationTable,
-            PasswordRecoveryTable,
-            CommentsTable,
-            StatusesTable,
-            StatusesCommentsTable,
-            StatusesPostsTable,
-        ],
+      entities: [
+        BlogsTable,
+        PostsTable,
+        DeviceTable,
+        RequestTable,
+        UsersTable,
+        AccountDataTable,
+        EmailConfirmationTable,
+        PasswordRecoveryTable,
+        CommentsTable,
+        StatusesTable,
+        StatusesCommentsTable,
+        StatusesPostsTable,
+      ],
       synchronize: true,
     }),
     TypeOrmModule.forFeature([

@@ -120,7 +120,11 @@ export class PostController {
       req.headers.authorization,
     );
 
-    return this.commentsSqlQueryRepository.findPaging_RAW(query, postId, userId);
+    return this.commentsSqlQueryRepository.findPaging_RAW(
+      query,
+      postId,
+      userId,
+    );
   }
 
   @Put(':postId')

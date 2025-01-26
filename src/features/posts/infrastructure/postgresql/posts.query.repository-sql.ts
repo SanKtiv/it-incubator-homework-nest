@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PostQuery } from '../../api/models/input/posts.input.dto';
 import {
   postViewModel_SQL,
@@ -25,7 +22,6 @@ export class PostsQueryRepositorySql {
     id: string,
     userId?: string | null,
   ): Promise<PostsOutputDto | null> {
-
     const findByIdQuery = `
     WITH "post" AS (
       SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
@@ -56,16 +52,13 @@ export class PostsQueryRepositorySql {
     const parameters = [id, userId];
 
     try {
-      const post = await this.dataSource.query(
-        findByIdQuery,
-        parameters,
-      );
+      const post = await this.dataSource.query(findByIdQuery, parameters);
 
       if (!post[0]) return null;
 
       return postViewModel_SQL(post)[0];
     } catch (e) {
-      console.log(e)
+      console.log(e);
       throw new InternalServerErrorException();
     }
   }

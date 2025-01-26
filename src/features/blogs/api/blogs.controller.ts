@@ -3,7 +3,8 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode, NotFoundException,
+  HttpCode,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -86,9 +87,9 @@ export class BlogsController {
   ): Promise<BlogsViewDto> {
     const blog = await this.blogsQueryRepositorySql.findById_RAW(id);
 
-    if (!blog) throw new NotFoundException()
+    if (!blog) throw new NotFoundException();
 
-    return blog
+    return blog;
   }
 
   @Get(':blogId/posts')
@@ -99,7 +100,7 @@ export class BlogsController {
   ): Promise<PostsPaging> {
     const blog = await this.blogsQueryRepositorySql.findById_RAW(blogId);
 
-    if (!blog) throw new NotFoundException()
+    if (!blog) throw new NotFoundException();
 
     const userId = await this.accessJwtToken.getUserIdFromHeaders(
       req.headers.authorization,

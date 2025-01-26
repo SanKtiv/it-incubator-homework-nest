@@ -7,6 +7,7 @@ export class EmailConfirmationTable {
   id: string;
 
   @OneToOne(() => UsersTable, (user) => user.emailConfirmation, {
+    //cascade: true,
     onDelete: 'CASCADE',
   })
   user: UsersTable;

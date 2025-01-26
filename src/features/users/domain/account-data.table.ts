@@ -19,6 +19,7 @@ export class AccountDataTable {
   passwordHash: string;
 
   @OneToOne(() => UsersTable, (user) => user.accountData, {
+    //cascade: true,
     onDelete: 'CASCADE',
   })
   user: UsersTable;

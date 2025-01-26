@@ -10,7 +10,7 @@ export const deleteAllData = async (databaseConnection: Connection) => {
 export const deleteAllDataSQL = async (databaseConnection: DataSource) => {
   // await databaseConnection.getRepository(BlogsTable).clear();
   await databaseConnection.query(
-      `TRUNCATE "blogs",
+    `TRUNCATE "blogs",
       "posts",
       "comments",
       "statuses",
@@ -20,6 +20,6 @@ export const deleteAllDataSQL = async (databaseConnection: DataSource) => {
       "accountData", 
       "emailConfirmation",
       "passwordRecovery"
-      CASCADE;`
-  )
+      CASCADE;`,
+  );
 };

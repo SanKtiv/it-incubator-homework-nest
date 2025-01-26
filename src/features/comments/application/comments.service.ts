@@ -64,10 +64,8 @@ export class CommentsService {
 
     const newStatus = dto.likeStatus;
 
-    const statusOfComment = await this.statusesRepositorySql.statusOfComment_RAW(
-      userId,
-      id,
-    );
+    const statusOfComment =
+      await this.statusesRepositorySql.statusOfComment_RAW(userId, id);
 
     if (!statusOfComment) {
       await this.statusesRepositorySql.insertStatusOfComment_RAW(

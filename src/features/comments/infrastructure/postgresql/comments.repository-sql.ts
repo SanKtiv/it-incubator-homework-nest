@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CommentServiceDto } from '../../api/models/input/comment-service.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -112,12 +109,12 @@ export class CommentsRepositorySql {
   async deleteByPostId_RAW(postId: string) {
     try {
       await this.dataSource.query(
-          `DELETE FROM "comments" WHERE "postId" = $1`, [postId]
-      )
-    }
-    catch (e) {
-      console.log(e)
-      throw new InternalServerErrorException()
+        `DELETE FROM "comments" WHERE "postId" = $1`,
+        [postId],
+      );
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
     }
   }
 

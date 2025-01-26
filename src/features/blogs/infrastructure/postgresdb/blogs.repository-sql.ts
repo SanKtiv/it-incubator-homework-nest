@@ -3,7 +3,7 @@ import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BlogsTable } from '../../domain/blog.entity';
 import { PostsTable } from '../../../posts/domain/posts.table';
-import {BlogsInputDto} from "../../api/models/input/blogs.input.dto";
+import { BlogsInputDto } from '../../api/models/input/blogs.input.dto';
 
 @Injectable()
 export class BlogsRepositorySql {
@@ -88,20 +88,19 @@ export class BlogsRepositorySql {
     }
   }
 
-  async updateById_RAW(id: string, dto: BlogsInputDto): Promise<void>  {
+  async updateById_RAW(id: string, dto: BlogsInputDto): Promise<void> {
     const updateBlogByIdQuery = `
     UPDATE "blogs"
     SET ("name", "description", "websiteUrl") = ($2, $3, $4)
-    WHERE "id" = $1`
+    WHERE "id" = $1`;
 
-    const parameters = [id, dto.name, dto.description, dto.websiteUrl]
+    const parameters = [id, dto.name, dto.description, dto.websiteUrl];
 
     try {
-      await this.dataSource.query(updateBlogByIdQuery, parameters)
-    }
-    catch (e) {
-      console.log(e)
-      throw new InternalServerErrorException()
+      await this.dataSource.query(updateBlogByIdQuery, parameters);
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
     }
   }
 
@@ -124,12 +123,13 @@ export class BlogsRepositorySql {
     RETURNING *`;
 
     try {
-      const [deletedBlogArray] = await this.dataSource
-          .query(deleteBlogQuery, [id]);
+      const [deletedBlogArray] = await this.dataSource.query(deleteBlogQuery, [
+        id,
+      ]);
 
       return deletedBlogArray;
     } catch (e) {
-      console.log(e)
+      console.log(e);
       throw new InternalServerErrorException();
     }
   }

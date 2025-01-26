@@ -64,10 +64,9 @@ export class BlogsQueryRepositorySql {
       if (!blog) return blog;
 
       return blogsViewDto_SQL(blog);
-    }
-    catch (e) {
-      console.log(e)
-      throw new InternalServerErrorException()
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
     }
   }
 
@@ -105,9 +104,8 @@ export class BlogsQueryRepositorySql {
       );
 
       return blogsPagingViewModel_SQL(query, totalBlogs.count, pagingBlogs);
-    }
-    catch (e) {
-      console.log(e)
+    } catch (e) {
+      console.log(e);
       throw new InternalServerErrorException();
     }
   }
