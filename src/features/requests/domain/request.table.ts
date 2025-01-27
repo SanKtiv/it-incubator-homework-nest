@@ -8,6 +8,6 @@ export class RequestTable {
   ip: string;
   @Column('text')
   url: string;
-  @Column('date')
+  @Column('timestamp with time zone')
   date: Date;
 }

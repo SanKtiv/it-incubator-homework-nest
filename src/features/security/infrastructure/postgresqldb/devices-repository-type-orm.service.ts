@@ -5,7 +5,7 @@ import { DataSource, Not } from 'typeorm';
 import { DeviceTable } from '../../domain/device.table';
 
 @Injectable()
-export class DevicesRepositoryORM {
+export class DevicesRepositoryTypeOrm {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   private get repository() {
@@ -21,7 +21,7 @@ export class DevicesRepositoryORM {
   }
 
   async findById(id: string): Promise<DeviceTable | null> {
-    return this.repository.findOneBy({ id: id });
+    return this.repository.findOneBy({ id });
   }
 
   async findByUserId(userId: string): Promise<DeviceTable[]> {
@@ -43,7 +43,7 @@ export class DevicesRepositoryORM {
     return this.repository.remove(devices);
   }
 
-  async removeAll(): Promise<void> {
+  async deleteAll(): Promise<void> {
     await this.repository.clear();
   }
 }

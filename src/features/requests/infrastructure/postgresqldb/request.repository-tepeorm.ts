@@ -5,15 +5,19 @@ import { DataSource, MoreThanOrEqual } from 'typeorm';
 import { RequestTable } from '../../domain/request.table';
 
 @Injectable()
-export class RequestApiSqlRepository {
+export class RequestApiRepositoryTypeOrm {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
+  private get repository() {
+    return this.dataSource.getRepository(RequestTable)
+  }
+
   async create(dto: RequestTable) {
-    await this.dataSource.getRepository(RequestTable).save(dto);
+    await this.repository.save(dto);
   }
 
   async findByIp(dto: RequestApiInputDto, date: Date) {
-    return this.dataSource.getRepository(RequestTable).findBy({
+    return this.repository.countBy({
       ip: dto.ip,
       url: dto.url,
       date: MoreThanOrEqual(date),
@@ -21,7 +25,7 @@ export class RequestApiSqlRepository {
   }
 
   async removeAll() {
-    await this.dataSource.getRepository(RequestTable).clear();
+    await this.repository.clear();
   }
 
   async deleteAll_RAW() {

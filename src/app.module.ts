@@ -62,12 +62,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlogsRepositorySql } from './features/blogs/infrastructure/postgresdb/blogs.repository-sql';
 import { BlogsTable } from './features/blogs/domain/blog.entity';
 import { UsersTable } from './features/users/domain/users.table';
-import { UsersRepositorySql } from './features/users/infrastructure/postgresqldb/users.repository-sql';
+import { UsersRepositoryRawsql } from './features/users/infrastructure/postgresqldb/users.repository-rawsql';
 import { DeviceTable } from './features/security/domain/device.table';
-import { DevicesRepositorySql } from './features/security/infrastructure/postgresqldb/devices.repository-sql';
-import { RequestApiSqlRepository } from './features/requests/infrastructure/postgresqldb/request.repository-sql';
+import { DevicesRepositoryRawsql } from './features/security/infrastructure/postgresqldb/devices.repository-rawsql';
+import { RequestApiRepositoryTypeOrm } from './features/requests/infrastructure/postgresqldb/request.repository-tepeorm';
 import { RequestTable } from './features/requests/domain/request.table';
-import { UsersQueryRepositorySql } from './features/users/infrastructure/postgresqldb/users.query.repository-sql';
+import { UsersQueryRepositoryRawsql } from './features/users/infrastructure/postgresqldb/users.query.repository-rawsql';
 import { BlogsQueryRepositorySql } from './features/blogs/infrastructure/postgresdb/blogs.query.repository-sql';
 import { PostsTable } from './features/posts/domain/posts.table';
 import { SaBlogsController } from './features/blogs/api/sa.blogscontroller';
@@ -86,7 +86,7 @@ import { AccountDataTable } from './features/users/domain/account-data.table';
 import { EmailConfirmationTable } from './features/users/domain/email-сonfirmation.table';
 import { PasswordRecoveryTable } from './features/users/domain/password-recovery.table';
 import { UsersRepositoryOrm } from './features/users/infrastructure/postgresqldb/users.repository-typeorm';
-import { DevicesRepositoryORM } from './features/security/infrastructure/postgresqldb/devices.repository-TypeORM';
+import { DevicesRepositoryTypeOrm } from './features/security/infrastructure/postgresqldb/devices-repository-type-orm.service';
 import { UsersQueryRepositoryOrm } from './features/users/infrastructure/postgresqldb/users.query.repository-typeorm';
 
 dotenv.config();
@@ -123,13 +123,13 @@ const sqlRepositories = [
   PostsQueryRepositorySql,
   CommentsRepositorySql,
   CommentsQueryRepositorySql,
-  UsersRepositorySql,
-  UsersQueryRepositorySql,
-  DevicesRepositorySql,
-  RequestApiSqlRepository,
+  UsersRepositoryRawsql,
+  UsersQueryRepositoryRawsql,
+  DevicesRepositoryRawsql,
+  RequestApiRepositoryTypeOrm,
   StatusesRepositorySql,
   UsersRepositoryOrm,
-  DevicesRepositoryORM,
+  DevicesRepositoryTypeOrm,
   UsersQueryRepositoryOrm,
 ];
 
@@ -233,14 +233,14 @@ const strategies = [
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(/*TooManyRequestsMiddleware*/)
-      .forRoutes
-      // '/auth/registration',
-      // '/auth/login',
-      // '/auth/password-recovery',
-      // '/auth/new-password',
-      // '/auth/registration-confirmation',
-      // '/auth/registration-email-resending',
-      ();
+        .apply(TooManyRequestsMiddleware)
+        .forRoutes(
+            '/auth/registration',
+            '/auth/login',
+            '/auth/password-recovery',
+            '/auth/new-password',
+            '/auth/registration-confirmation',
+            '/auth/registration-email-resending',
+        );
   }
 }

@@ -8,7 +8,7 @@ export class RefreshJwtToken {
   async create(userId: string, deviceId: string) {
     const payload = { sub: userId, deviceId: deviceId };
 
-    return this.jwtService.signAsync(payload, { expiresIn: '20m' });
+    return this.jwtService.signAsync(payload, { expiresIn: '20s' });
   }
 
   async verify(refreshToken: string) {

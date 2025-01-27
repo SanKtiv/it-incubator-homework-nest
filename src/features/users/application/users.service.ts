@@ -9,7 +9,7 @@ import { UsersRepositoryMongo } from '../infrastructure/mongodb/users.repository
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import { UserDocument } from '../domain/users.schema';
-import { UsersRepositorySql } from '../infrastructure/postgresqldb/users.repository-sql';
+import { UsersRepositoryRawsql } from '../infrastructure/postgresqldb/users.repository-rawsql';
 import { UsersTable } from '../domain/users.table';
 import { UsersRepositoryOrm } from '../infrastructure/postgresqldb/users.repository-typeorm';
 import { AccountDataTable } from '../domain/account-data.table';

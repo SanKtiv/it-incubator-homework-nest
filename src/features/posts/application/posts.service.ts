@@ -16,7 +16,7 @@ import { PostsRepositorySql } from '../infrastructure/postgresql/posts.repositor
 import { BlogsRepositorySql } from '../../blogs/infrastructure/postgresdb/blogs.repository-sql';
 import { PostsTable } from '../domain/posts.table';
 import { InputDto } from '../../../infrastructure/models/input.dto';
-import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
+import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 
@@ -27,7 +27,7 @@ export class PostsService {
     private readonly postsRepositorySql: PostsRepositorySql,
     //private readonly blogsRepository: BlogsRepositoryMongo,
     //private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersRepositorySql: UsersRepositorySql,
+    private readonly usersRepositorySql: UsersRepositoryRawsql,
     private readonly blogsService: BlogsService,
     private readonly statusesRepositorySql: StatusesRepositorySql,
     private readonly commentsRepositorySql: CommentsRepositorySql,

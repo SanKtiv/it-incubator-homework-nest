@@ -15,7 +15,7 @@ import { CommentInputDto } from '../api/models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
 import { CommentDocument } from '../domain/comment.schema';
 import { PostsService } from '../../posts/application/posts.service';
-import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
+import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
 import { CommentsRepositorySql } from '../infrastructure/postgresql/comments.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 
@@ -26,7 +26,7 @@ export class CommentsService {
     private readonly commentsRepositorySql: CommentsRepositorySql,
     //private readonly postsRepository: PostsRepositoryMongo,
     //private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersRepositorySql: UsersRepositorySql,
+    private readonly usersRepositorySql: UsersRepositoryRawsql,
     private readonly statusesRepositorySql: StatusesRepositorySql,
     private readonly postsService: PostsService,
   ) {}

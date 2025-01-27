@@ -32,9 +32,9 @@ import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repository-sql';
-import { UsersRepositorySql } from '../../users/infrastructure/postgresqldb/users.repository-sql';
-import { DevicesRepositorySql } from '../../security/infrastructure/postgresqldb/devices.repository-sql';
-import { RequestApiSqlRepository } from '../../requests/infrastructure/postgresqldb/request.repository-sql';
+import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
+import { DevicesRepositoryRawsql } from '../../security/infrastructure/postgresqldb/devices.repository-rawsql';
+import { RequestApiRepositoryTypeOrm } from '../../requests/infrastructure/postgresqldb/request.repository-tepeorm';
 import { BlogsQueryRepositorySql } from '../infrastructure/postgresdb/blogs.query.repository-sql';
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
@@ -51,7 +51,7 @@ export class BlogsController {
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
-    private readonly usersSqlRepository: UsersRepositorySql,
+    private readonly usersSqlRepository: UsersRepositoryRawsql,
     private readonly statusesSqlRepository: StatusesRepositorySql,
     private readonly commentsSqlRepository: CommentsRepositorySql,
   ) {}

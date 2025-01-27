@@ -8,7 +8,7 @@ import { AccountDataTable } from '../../domain/account-data.table';
 import { PasswordRecoveryTable } from '../../domain/password-recovery.table';
 
 @Injectable()
-export class UsersRepositorySql {
+export class UsersRepositoryRawsql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   private get repository() {

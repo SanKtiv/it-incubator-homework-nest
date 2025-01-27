@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm';
 import { usersPagingDto } from '../../api/models/output/users.output.dto';
 
 @Injectable()
-export class UsersQueryRepositorySql {
+export class UsersQueryRepositoryRawsql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   async findPaging(query: UsersQuery) {

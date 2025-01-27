@@ -12,9 +12,9 @@ import {
   devicesViewModel,
   OutputDeviceDto,
 } from '../api/models/output-device.dto';
-import { DevicesRepositorySql } from '../infrastructure/postgresqldb/devices.repository-sql';
+import { DevicesRepositoryRawsql } from '../infrastructure/postgresqldb/devices.repository-rawsql';
 import { DeviceTable } from '../domain/device.table';
-import { DevicesRepositoryORM } from '../infrastructure/postgresqldb/devices.repository-TypeORM';
+import { DevicesRepositoryTypeOrm } from '../infrastructure/postgresqldb/devices-repository-type-orm.service';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { RefreshJwtToken } from '../../auth/application/use-cases/refresh-jwt-token';
 
@@ -22,7 +22,7 @@ import { RefreshJwtToken } from '../../auth/application/use-cases/refresh-jwt-to
 export class DevicesService {
   constructor(
     //private readonly devicesRepository: DevicesRepositoryMongo,
-    private readonly devicesRepository: DevicesRepositoryORM,
+    private readonly devicesRepository: DevicesRepositoryTypeOrm,
     private readonly jwtService: JwtService,
     private readonly accessTokenService: AccessJwtToken,
     private readonly refreshTokenService: RefreshJwtToken,
