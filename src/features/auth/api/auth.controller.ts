@@ -10,7 +10,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersInputDto } from '../../users/api/models/input/users.input.dto';
-import { UsersQueryRepositoryMongo } from '../../users/infrastructure/mongodb/users.query.repository-mongo';
 import { AuthService } from '../application/auth.service';
 import { UserLoginDto } from './models/input/input.dto';
 import { EmailResendingDto } from './models/input/email-resending.input.dto';
@@ -27,7 +26,6 @@ import { DeviceDto } from '../../security/api/models/device.dto';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 import { InfoCurrentUserDto } from './models/output/info-current-user.dto';
 import { UsersService } from '../../users/application/users.service';
-import { UsersQueryRepositorySql } from '../../users/infrastructure/postgresqldb/users.query.repository-sql';
 import { AccessJwtToken } from '../application/use-cases/access-jwt-token';
 import { RefreshJwtToken } from '../application/use-cases/refresh-jwt-token';
 import { UsersQueryRepositoryOrm } from '../../users/infrastructure/postgresqldb/users.query.repository-typeorm';
@@ -35,7 +33,6 @@ import { UsersQueryRepositoryOrm } from '../../users/infrastructure/postgresqldb
 @Controller('auth')
 export class AuthController {
   constructor(
-    //private readonly usersQueryRepository: UsersQueryRepositoryMongo,
     private readonly usersQueryRepository: UsersQueryRepositoryOrm,
     private readonly authService: AuthService,
     private readonly usersService: UsersService,

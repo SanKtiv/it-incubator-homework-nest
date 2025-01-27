@@ -27,7 +27,12 @@ export class AuthService {
   ) {}
 
   async registrationUser(dto: UsersInputDto) {
-    await this.usersService.createUser(dto);
+    const user = await this.usersService.createUser(dto);
+    const confirmationCode = user.emailConfirmation.confirmationCode;
+    await this.emailAdapter.sendConfirmationCode(
+        dto.email,
+        confirmationCode,
+    );
   }
 
   async registrationConfirmation(code: string) {
@@ -104,16 +109,6 @@ export class AuthService {
     if (!compareHash) return null;
 
     return user;
-  }
-
-  async createAccessToken(userId: string) {
-    const payload = { sub: userId };
-
-    const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '5m',
-    });
-
-    return { accessToken: accessToken };
   }
 
   async getPayloadAccessToken(accessToken: string) {
