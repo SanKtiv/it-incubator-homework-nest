@@ -132,14 +132,18 @@ export class UsersRepositoryOrm {
 
   async remove(id: string): Promise<UsersTable | null> {
     try {
-      const user = await this.findById(id);
+      const user = await this.repository
+          .findOne({
+            where: { id },
+            relations: ['accountData', 'emailConfirmation', 'passwordRecovery'],
+          });
 
       if (!user) return null;
 
-      return this.repository.softRemove(user);
+      return await this.repository.softRemove(user);
     } catch (e) {
-      return null;
       console.log(e);
+      return null;
     }
   }
 

@@ -20,7 +20,7 @@ export class UsersOutputDto {
 //   ); for mongo
 
 export const usersOutputDto = (user: UsersTable): UsersOutputDto => ({
-  id: user.accountData.id,
+  id: user.id,
   login: user.accountData.login,
   email: user.accountData.email,
   createdAt: user.accountData.createdAt.toISOString(),
@@ -61,3 +61,4 @@ export const usersPagingDto = (
     totalUsers,
     usersPaging.map((user) => usersOutputDto(user)),
   );
+
