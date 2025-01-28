@@ -19,10 +19,10 @@ export class RequestApiService {
   }
 
   async tooManyAttempts(dto: RequestApiInputDto) {
-    const date = new Date(Number(new Date()) - 10000);
+    const date = new Date(Number(new Date()) - 12000);
 
     const documents = await this.requestApiRepository.findByIp(dto, date);
-console.log('request adn time:', documents, new Date())
+console.log('request adn time:', documents.length, new Date())
     return documents.length > 5;
   }
 }
