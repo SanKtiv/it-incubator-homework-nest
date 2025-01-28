@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { RequestApiInputDto } from '../api/models/input.dto';
-import { RequestApiRepositoryMongo } from '../infrastructure/mongodb/request.repository-mongo';
 import {RequestApiRepositoryTypeOrm} from "../infrastructure/postgresqldb/request.repository-tepeorm";
 import {RequestTable} from "../domain/request.table";
 
 @Injectable()
 export class RequestApiService {
-  constructor() {} private readonly requestApiRepository: RequestApiRepositoryTypeOrm
+  constructor(private readonly requestApiRepository: RequestApiRepositoryTypeOrm) {}
 
 
   async createReq(dto: RequestApiInputDto) {
-    const date = new Date();
-    const requestInfo = {...dto, date} as  RequestTable;
+    const requestInfo = new RequestTable();
 
-    return this.requestApiRepository.create(requestInfo);
+    requestInfo.ip = dto.ip;
+    requestInfo.url = dto.url;
+    requestInfo.date = new Date();
+
+    await this.requestApiRepository.createReqApi(requestInfo)
   }
 
   async tooManyAttempts(dto: RequestApiInputDto) {

@@ -12,8 +12,8 @@ export class RequestApiRepositoryTypeOrm {
     return this.dataSource.getRepository(RequestTable)
   }
 
-  async create(dto: RequestTable) {
-    await this.repository.save(dto);
+  async createReqApi(dto: RequestTable) {
+      await this.repository.save(dto);
   }
 
   async findByIp(dto: RequestApiInputDto, date: Date) {

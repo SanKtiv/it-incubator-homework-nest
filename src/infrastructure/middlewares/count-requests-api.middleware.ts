@@ -17,7 +17,6 @@ export class TooManyRequestsMiddleware implements NestMiddleware {
       ip: req.header('x-forwarded-for') || req.ip || '',
       url: req.originalUrl || req.baseUrl,
     };
-
     await this.requestApiService.createReq(dto);
 
     const countAttempts = await this.requestApiService.tooManyAttempts(dto);
