@@ -23,6 +23,6 @@ export class RequestApiService {
 
     const documents = await this.requestApiRepository.findByIp(dto, date);
 
-    return documents > 5;
+    return documents.length > 5;
   }
 }

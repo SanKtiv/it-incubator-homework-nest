@@ -17,7 +17,7 @@ export class RequestApiRepositoryTypeOrm {
   }
 
   async findByIp(dto: RequestApiInputDto, date: Date) {
-    return this.repository.countBy({
+    return this.repository.findBy({
       ip: dto.ip,
       url: dto.url,
       date: MoreThanOrEqual(date),
