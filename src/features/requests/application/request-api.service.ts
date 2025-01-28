@@ -22,7 +22,7 @@ export class RequestApiService {
     const date = new Date(Number(new Date()) - 10000);
 
     const documents = await this.requestApiRepository.findByIp(dto, date);
-
+console.log('request adn time:', documents, new Date())
     return documents.length > 5;
   }
 }
