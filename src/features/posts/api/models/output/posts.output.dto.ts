@@ -65,6 +65,12 @@ export const postsOutputDto = (postDocument: PostDocument, userId?: string) =>
     ),
   );
 
+// export const postCreatedViewModel = (post: PostsTable):PostsOutputDto  => ({
+//     id: post.id,
+//
+// })
+
+
 export function postViewModel_SQL(postFromSQL): PostsOutputDto[] {
   const resultArray: PostsOutputDto[] = [];
 

@@ -19,14 +19,13 @@ import { InputDto } from '../../../infrastructure/models/input.dto';
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
+import {PostsRepository} from "../infrastructure/posts.repository";
 
 @Injectable()
 export class PostsService {
   constructor(
-    //private readonly postsRepository: PostsRepositoryMongo,
     private readonly postsRepositorySql: PostsRepositorySql,
-    //private readonly blogsRepository: BlogsRepositoryMongo,
-    //private readonly usersRepository: UsersRepositoryMongo,
+    private readonly postsRepository: PostsRepository,
     private readonly usersRepositorySql: UsersRepositoryRawsql,
     private readonly blogsService: BlogsService,
     private readonly statusesRepositorySql: StatusesRepositorySql,
@@ -34,10 +33,18 @@ export class PostsService {
   ) {}
 
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
-    await this.blogsService.existBlog(dto.blogId);
+    const blog = await this.blogsService.existBlog(dto.blogId);
 
-    const post = await this.postsRepositorySql.create_RAW(dto);
+    const postEntity = new PostsTable()
 
+    postEntity.blogId = blog.id
+    postEntity.title = dto.title
+    postEntity.content = dto.content
+    postEntity.shortDescription = dto.shortDescription
+    postEntity.createdAt = new Date()
+
+    const post = await this.postsRepository.create(postEntity);
+console.log('Post =', post)
     return postViewModel_SQL(post)[0];
   }
 
@@ -77,80 +84,7 @@ export class PostsService {
     await this.postsRepositorySql.updatePost_RAW(postId, UpdateDto, blogId);
   }
 
-  // async createStatusForPost(
-  //   id: string,
-  //   dto: PostLikeStatusDto,
-  //   userId: string,
-  // ): Promise<void> {
-  //   const postDocument = await this.existPost(id);
-  //
-  //   const userDocument = await this.usersRepository.findById(userId);
-  //
-  //   const userLogin = userDocument!.accountData.login;
-  //
-  //   const newStatus = dto.likeStatus;
-  //
-  //   const newStatusIsLike = newStatus === 'Like';
-  //
-  //   const newStatusIsDislike = newStatus === 'Dislike';
-  //
-  //   const currentUser = postDocument.likesUsers.find(
-  //     (e) => e.userId === userId,
-  //   );
-  //
-  //   if (newStatus === 'None' && !currentUser) return;
-  //
-  //   if (newStatus === 'None' && currentUser) {
-  //     if (currentUser.userStatus === 'Like') postDocument.likesCount--;
-  //
-  //     if (currentUser.userStatus === 'Dislike') postDocument.dislikesCount--;
-  //
-  //     postDocument.likesUsers = postDocument.likesUsers.filter(
-  //       (e) => e.userId !== userId,
-  //     );
-  //
-  //     await this.postsRepository.save(postDocument);
-  //
-  //     return;
-  //   }
-  //
-  //   const likeUser = {
-  //     userStatus: newStatus,
-  //     addedAt: new Date().toISOString(),
-  //     userId: userId,
-  //     login: userLogin,
-  //   };
-  //
-  //   if (!currentUser) {
-  //     if (newStatusIsLike) postDocument.likesCount++;
-  //
-  //     if (newStatusIsDislike) postDocument.dislikesCount++;
-  //
-  //     postDocument.likesUsers.push(likeUser);
-  //
-  //     await this.postsRepository.save(postDocument);
-  //
-  //     return;
-  //   }
-  //
-  //   if (newStatusIsLike && currentUser.userStatus === 'Dislike') {
-  //     postDocument.likesCount++;
-  //     postDocument.dislikesCount--;
-  //   }
-  //
-  //   if (newStatusIsDislike && currentUser.userStatus === 'Like') {
-  //     postDocument.likesCount--;
-  //     postDocument.dislikesCount++;
-  //   }
-  //
-  //   postDocument.likesUsers = postDocument.likesUsers.map((e) =>
-  //     e.userId === userId ? likeUser : e,
-  //   );
-  //
-  //   await this.postsRepository.save(postDocument);
-  //
-  //   return;
-  // }
+
 
   async createStatusForPost(
     id: string,

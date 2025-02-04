@@ -88,6 +88,10 @@ import { PasswordRecoveryTable } from './features/users/domain/password-recovery
 import { UsersRepositoryOrm } from './features/users/infrastructure/postgresqldb/users.repository-typeorm';
 import { DevicesRepositoryTypeOrm } from './features/security/infrastructure/postgresqldb/devices-repository-type-orm.service';
 import { UsersQueryRepositoryOrm } from './features/users/infrastructure/postgresqldb/users.query.repository-typeorm';
+import {BlogsRepository} from "./features/blogs/infrastructure/blogs.repository";
+import {BlogsRepositoryTypeOrm} from "./features/blogs/infrastructure/postgresdb/blogs.repository-typeorm";
+import {PostsRepositoryTypeOrm} from "./features/posts/infrastructure/postgresql/posts.repository-typeorm";
+import {PostsRepository} from "./features/posts/infrastructure/posts.repository";
 
 dotenv.config();
 
@@ -117,9 +121,14 @@ const mongoRepositories = [
 ];
 
 const sqlRepositories = [
+  BlogsRepository,
+  BlogsRepositoryTypeOrm,
   BlogsRepositorySql,
   BlogsQueryRepositorySql,
+  PostsRepository,
   PostsRepositorySql,
+
+  PostsRepositoryTypeOrm,
   PostsQueryRepositorySql,
   CommentsRepositorySql,
   CommentsQueryRepositorySql,
@@ -131,6 +140,7 @@ const sqlRepositories = [
   UsersRepositoryOrm,
   DevicesRepositoryTypeOrm,
   UsersQueryRepositoryOrm,
+
 ];
 
 const repositories = [
@@ -175,6 +185,7 @@ const strategies = [
         StatusesPostsTable,
       ],
       synchronize: true,
+      logging: ['query'],
     }),
     TypeOrmModule.forFeature([
       BlogsTable,

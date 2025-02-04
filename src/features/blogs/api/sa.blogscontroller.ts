@@ -37,17 +37,15 @@ import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/p
 @UseGuards(BasicAuthGuard)
 export class SaBlogsController {
   constructor(
-    //private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
     private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
     private readonly blogsService: BlogsService,
-    //private readonly postsQueryRepository: PostsQueryRepositoryMongo,
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsService: PostsService,
   ) {}
 
   @Post()
   async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {
-    return this.blogsService.createBlog(dto, false);
+    return this.blogsService.createBlog(dto);
   }
 
   @Post(':blogId/posts')

@@ -2,7 +2,6 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BlogsTable } from '../../domain/blog.entity';
-import { PostsTable } from '../../../posts/domain/posts.table';
 import { BlogsInputDto } from '../../api/models/input/blogs.input.dto';
 
 @Injectable()
@@ -13,43 +12,6 @@ export class BlogsRepositorySql {
     @InjectRepository(BlogsTable)
     protected blogsRepository: Repository<BlogsTable>,
   ) {}
-
-  private get repository() {
-    return this.dataSource.getRepository(BlogsTable);
-  }
-
-  async create_ORM(dto) {
-    const blog: BlogsTable = {
-      ...dto,
-      createdAt: new Date(),
-      isMembership: false,
-    };
-    return this.save(blog);
-  }
-
-  async save(blog: BlogsTable) {
-    return this.blogsRepository.save(blog);
-  }
-
-  async findById_ORM(id: string): Promise<BlogsTable | null> {
-    try {
-      return this.blogsRepository.findOneBy({ id: id });
-    } catch (e) {
-      throw new Error('Error finding blog by blogId');
-    }
-  }
-
-  async deleteOne_ORM(blog: BlogsTable): Promise<BlogsTable> {
-    try {
-      return this.blogsRepository.remove(blog);
-    } catch (e) {
-      throw new Error('Error DB');
-    }
-  }
-
-  async deleteAll_ORM(): Promise<void> {
-    await this.blogsRepository.clear();
-  }
 
   async create_RAW(dto, isMembership?: boolean): Promise<BlogsTable> {
     const createBlogQuery = `

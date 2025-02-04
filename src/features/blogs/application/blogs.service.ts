@@ -7,43 +7,50 @@ import {
 } from '../api/models/output/blogs.view.dto';
 import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repository-sql';
 import { BlogsTable } from '../domain/blog.entity';
+import {BlogsRepository} from "../infrastructure/blogs.repository";
+import {BlogsServicesDto} from "../api/models/input/blogs.services.dto";
 
 @Injectable()
 export class BlogsService {
   constructor(
-    //private readonly blogsRepositoryMongo: BlogsRepositoryMongo,
-    private readonly blogsRepositorySql: BlogsRepositorySql,
+    private readonly blogsRepository: BlogsRepository,
   ) {}
 
   async createBlog(
     dto: BlogsInputDto,
-    isMembership?: boolean,
   ): Promise<BlogsViewDto> {
-    const blogDocument = await this.blogsRepositorySql.create_RAW(
-      dto,
-      isMembership,
+    const blogEntity = new BlogsTable()
+
+    blogEntity.name = dto.name
+    blogEntity.websiteUrl = dto.websiteUrl
+    blogEntity.description = dto.description
+    blogEntity.isMembership = false
+    blogEntity.createdAt = new Date()
+
+    const blog = await this.blogsRepository.create(
+        blogEntity,
     );
 
-    return blogsViewDto_SQL(blogDocument);
+    return blogsViewDto_SQL(blog);
   }
 
   async updateBlog(id: string, inputUpdate: BlogsInputDto) {
     await this.existBlog(id);
 
-    await this.blogsRepositorySql.updateById_RAW(id, inputUpdate);
+    //await this.blogsRepository.updateById_RAW(id, inputUpdate);
   }
 
   async existBlog(id: string): Promise<BlogsTable> {
-    const blogDocument = await this.blogsRepositorySql.findById_RAW(id);
+    const blog = await this.blogsRepository.find(id);
 
-    if (!blogDocument) throw new NotFoundException();
+    if (!blog) throw new NotFoundException();
 
-    return blogDocument;
+    return blog;
   }
 
   async deleteBlogById(id: string): Promise<void> {
     await this.existBlog(id);
 
-    await this.blogsRepositorySql.deleteById_RAW(id);
+    //await this.blogsRepository.deleteById_RAW(id);
   }
 }
