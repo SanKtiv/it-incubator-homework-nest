@@ -31,13 +31,14 @@ export class PostsRepositoryTypeOrm {
                     createdAt: dto.createdAt,
                     blogId: dto.blogId
                 })
+                //.select(["*", `(SELECT "name" FROM "blogs" WHERE "id" = posts."id") AS "blogName"`])
                 .returning([
                     "title",
                     "shortDescription",
                     "content",
                     "createdAt",
                     "blogId",
-                    `(SELECT "name" FROM "blogs" WHERE "id" = $4) AS "blogName"`])
+                    `(SELECT "name" FROM "blogs" WHERE "id" = posts."id") AS "blogName"`])
                 .execute();
             return undefined
         }
