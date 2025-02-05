@@ -21,15 +21,18 @@ import { UUID } from 'typeorm/driver/mongodb/bson.typings';
 export class BlogsQueryRepositoryTypeOrm {
     constructor(@InjectRepository(BlogsTable) protected repository: Repository<BlogsTable>) {}
 
+    private get builder() {
+        return this.repository.createQueryBuilder('b')
+    }
+
     async findById(id: string): Promise<BlogsTable | null> {
         return this.repository.findOneBy({ id });
     }
 
-    async getBlogsPaging_ORM(query: BlogQuery): Promise<BlogsViewPagingDto> {
+    async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
         const searchName = query.searchNameTerm;
 
-        const blogs = this.repository
-            .createQueryBuilder('blog');
+        const blogs = this.builder
 
         if (searchName)
             blogs.where('blog.name ~* :nameTerm', { nameTerm: searchName });

@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { BlogQuery, BlogsInputDto } from './models/input/blogs.input.dto';
 import { BlogsService } from '../application/blogs.service';
-import { BlogsQueryRepositoryMongo } from '../infrastructure/mongodb/blogs.query.repository-mongo';
 import {
   BlogsViewDto,
   BlogsViewPagingDto,
@@ -24,7 +23,6 @@ import {
   PostQuery,
   PostsInputDto,
 } from '../../posts/api/models/input/posts.input.dto';
-import { PostsQueryRepositoryMongo } from '../../posts/infrastructure/mongodb/posts.query.repository-mongo';
 import { PostsPaging } from '../../posts/api/models/output/posts.output.dto';
 import { PostsService } from '../../posts/application/posts.service';
 import { InputDto } from '../../../infrastructure/models/input.dto';
@@ -39,11 +37,12 @@ import {BlogsQueryRepository} from "../infrastructure/blogs.query.repository";
 export class SaBlogsController {
   constructor(
       private readonly blogsQueryRepository: BlogsQueryRepository,
-    private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
-    private readonly blogsService: BlogsService,
-    private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
-    private readonly postsService: PostsService,
-  ) {}
+      private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
+      private readonly blogsService: BlogsService,
+      private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
+      private readonly postsService: PostsService,
+  ) {
+  }
 
   @Post()
   async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {
@@ -65,7 +64,7 @@ export class SaBlogsController {
 
   @Get()
   async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto> {
-    return this.blogsQueryRepositorySql.getBlogsPaging_RAW(query);
+    return this.blogsQueryRepository.findBlogs(query);
   }
 
   @Get(':blogId')
