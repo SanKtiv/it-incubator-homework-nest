@@ -1,26 +1,20 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
-import { PostsRepositoryMongo } from '../infrastructure/mongodb/posts.repository-mongo';
 import {
   PostLikeStatusDto,
   PostsInputDto,
 } from '../api/models/input/posts.input.dto';
-import { BlogsRepositoryMongo } from '../../blogs/infrastructure/mongodb/blogs.repository-mongo';
 import {
-  postViewModel_SQL,
   PostsOutputDto,
-  postsOutputDto, postCreatedViewModel,
+  postCreatedViewModel,
 } from '../api/models/output/posts.output.dto';
-import { UsersRepositoryMongo } from '../../users/infrastructure/mongodb/users.repository-mongo';
 import { BlogsService } from '../../blogs/application/blogs.service';
 import { PostsRepositorySql } from '../infrastructure/postgresql/posts.repository-sql';
-import { BlogsRepositorySql } from '../../blogs/infrastructure/postgresdb/blogs.repository-sql';
 import { PostsTable } from '../domain/posts.table';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 import {PostsRepository} from "../infrastructure/posts.repository";
-import {name} from "ts-jest/dist/transformers/hoist-jest";
 
 @Injectable()
 export class PostsService {

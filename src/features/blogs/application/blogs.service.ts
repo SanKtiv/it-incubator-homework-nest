@@ -3,7 +3,7 @@ import { BlogsInputDto } from '../api/models/input/blogs.input.dto';
 import { BlogsRepositoryMongo } from '../infrastructure/mongodb/blogs.repository-mongo';
 import {
   BlogsViewDto,
-  blogsViewDto_SQL,
+  blogsViewModel,
 } from '../api/models/output/blogs.view.dto';
 import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repository-sql';
 import { BlogsTable } from '../domain/blog.entity';
@@ -31,7 +31,7 @@ export class BlogsService {
         blogEntity,
     );
 
-    return blogsViewDto_SQL(blog);
+    return blogsViewModel(blog);
   }
 
   async updateBlog(id: string, inputUpdate: BlogsInputDto) {

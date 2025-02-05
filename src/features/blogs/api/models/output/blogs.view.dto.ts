@@ -34,15 +34,17 @@ export const blogsViewDto = (blogDocument: BlogDocument): BlogsViewDto => ({
   isMembership: blogDocument.isMembership,
 });
 
-export const blogsViewDto_SQL = (blogDocument: BlogsTable): BlogsViewDto =>
-  new BlogsViewDto(
-    blogDocument.id,
-    blogDocument.name,
-    blogDocument.description,
-    blogDocument.websiteUrl,
-    blogDocument.createdAt.toISOString(),
-    blogDocument.isMembership,
-  );
+export const blogsViewModel = (blog: BlogsTable): BlogsViewDto =>
+    (
+        {
+          id: blog.id,
+          name: blog.name,
+          description: blog.description,
+          websiteUrl: blog.websiteUrl,
+          createdAt: blog.createdAt.toISOString(),
+          isMembership: blog.isMembership,
+        }
+    );
 
 export const blogPagingViewModel = (
   query: BlogQuery,
@@ -67,5 +69,5 @@ export const blogsPagingViewModel_SQL = (
     query.pageNumber,
     query.pageSize,
     +totalBlogs,
-    blogsPaging.map((blog) => blogsViewDto_SQL(blog)),
+    blogsPaging.map((blog) => blogsViewModel(blog)),
   );

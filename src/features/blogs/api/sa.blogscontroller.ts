@@ -32,11 +32,13 @@ import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { Request } from 'express';
 import { BlogsQueryRepositorySql } from '../infrastructure/postgresdb/blogs.query.repository-sql';
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
+import {BlogsQueryRepository} from "../infrastructure/blogs.query.repository";
 
 @Controller('sa/blogs')
 @UseGuards(BasicAuthGuard)
 export class SaBlogsController {
   constructor(
+      private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
     private readonly blogsService: BlogsService,
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
@@ -70,7 +72,7 @@ export class SaBlogsController {
   async getBlogById(
     @Param('blogId', paramIdIsUUIdPipe) id: string,
   ): Promise<BlogsViewDto> {
-    const blog = await this.blogsQueryRepositorySql.findById_RAW(id);
+    const blog = await this.blogsQueryRepository.findById(id);
 
     if (!blog) throw new NotFoundException();
 

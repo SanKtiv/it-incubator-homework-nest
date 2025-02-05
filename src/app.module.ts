@@ -92,6 +92,8 @@ import {BlogsRepository} from "./features/blogs/infrastructure/blogs.repository"
 import {BlogsRepositoryTypeOrm} from "./features/blogs/infrastructure/postgresdb/blogs.repository-typeorm";
 import {PostsRepositoryTypeOrm} from "./features/posts/infrastructure/postgresql/posts.repository-typeorm";
 import {PostsRepository} from "./features/posts/infrastructure/posts.repository";
+import {BlogsQueryRepositoryTypeOrm} from "./features/blogs/infrastructure/postgresdb/blogs.query.repository-typeorm";
+import {BlogsQueryRepository} from "./features/blogs/infrastructure/blogs.query.repository";
 
 dotenv.config();
 
@@ -122,7 +124,9 @@ const mongoRepositories = [
 
 const sqlRepositories = [
   BlogsRepository,
+  BlogsQueryRepository,
   BlogsRepositoryTypeOrm,
+  BlogsQueryRepositoryTypeOrm,
   BlogsRepositorySql,
   BlogsQueryRepositorySql,
   PostsRepository,
