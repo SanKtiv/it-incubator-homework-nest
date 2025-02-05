@@ -12,35 +12,14 @@ export class PostsRepositoryTypeOrm {
                 @InjectRepository(PostsTable) protected repository: Repository<PostsTable>) {
     }
 
-    private get queryBuilder() {
-        return this.dataSource
-            .createQueryBuilder();
+    private get builder() {
+        return this.repository
+            .createQueryBuilder("p");
     }
 
-    async create(
-        dto: PostsTable,
-    ): Promise<PostsTable | InsertResult | undefined> {
+    async create(dto: PostsTable) {
         try {
-            const insertResult = await this.queryBuilder
-                .insert()
-                .into(PostsTable)
-                .values({
-                    title: dto.title,
-                    shortDescription: dto.shortDescription,
-                    content: dto.content,
-                    createdAt: dto.createdAt,
-                    blogId: dto.blogId
-                })
-                //.select(["*", `(SELECT "name" FROM "blogs" WHERE "id" = posts."id") AS "blogName"`])
-                .returning([
-                    "title",
-                    "shortDescription",
-                    "content",
-                    "createdAt",
-                    "blogId",
-                    `(SELECT "name" FROM "blogs" WHERE "id" = posts."id") AS "blogName"`])
-                .execute();
-            return undefined
+            return this.repository.save(dto)
         }
         catch (e) {
             console.log(e)

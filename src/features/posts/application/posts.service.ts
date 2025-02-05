@@ -8,7 +8,7 @@ import { BlogsRepositoryMongo } from '../../blogs/infrastructure/mongodb/blogs.r
 import {
   postViewModel_SQL,
   PostsOutputDto,
-  postsOutputDto,
+  postsOutputDto, postCreatedViewModel,
 } from '../api/models/output/posts.output.dto';
 import { UsersRepositoryMongo } from '../../users/infrastructure/mongodb/users.repository-mongo';
 import { BlogsService } from '../../blogs/application/blogs.service';
@@ -20,6 +20,7 @@ import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/u
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 import {PostsRepository} from "../infrastructure/posts.repository";
+import {name} from "ts-jest/dist/transformers/hoist-jest";
 
 @Injectable()
 export class PostsService {
@@ -44,8 +45,10 @@ export class PostsService {
     postEntity.createdAt = new Date()
 
     const post = await this.postsRepository.create(postEntity);
-console.log('Post =', post)
-    return postViewModel_SQL(post)[0];
+
+    const blogName = blog.name
+
+    return postCreatedViewModel({...post!, blogName});
   }
 
   async existPostById(id: string): Promise<PostsTable> {
