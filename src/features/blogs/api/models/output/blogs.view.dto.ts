@@ -25,7 +25,7 @@ export class BlogsViewPagingDto {
   ) {}
 }
 
-export const blogsViewDto = (blogDocument: BlogDocument): BlogsViewDto => ({
+export const blogsOutputDto = (blogDocument: BlogDocument): BlogsViewDto => ({
   id: blogDocument._id.toString(),
   name: blogDocument.name,
   description: blogDocument.description,
@@ -46,7 +46,7 @@ export const blogsViewModel = (blog: BlogsTable): BlogsViewDto =>
         }
     );
 
-export const blogPagingViewModel = (
+export const blogPagingOutputModel = (
   query: BlogQuery,
   totalBlogs: number,
   blogsPaging: BlogDocument[],
@@ -56,10 +56,10 @@ export const blogPagingViewModel = (
     query.pageNumber,
     query.pageSize,
     totalBlogs,
-    blogsPaging.map((blog) => blogsViewDto(blog)),
+    blogsPaging.map((blog) => blogsOutputDto(blog)),
   );
 
-export const blogsPagingViewModel_SQL = (
+export const blogsPagingViewModel = (
   query: BlogQuery,
   totalBlogs: number,
   blogsPaging: BlogsTable[],

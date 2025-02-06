@@ -3,9 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogsModelType } from '../../domain/blogs.schema';
 import { BlogQuery } from '../../api/models/input/blogs.input.dto';
 import {
-  blogPagingViewModel,
+  blogPagingOutputModel,
   BlogsViewDto,
-  blogsViewDto,
+  blogsOutputDto,
   BlogsViewPagingDto,
 } from '../../api/models/output/blogs.view.dto';
 
@@ -18,7 +18,7 @@ export class BlogsQueryRepositoryMongo {
 
     if (!blogDocument) throw new NotFoundException();
 
-    return blogsViewDto(blogDocument);
+    return blogsOutputDto(blogDocument);
   }
 
   async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
@@ -34,6 +34,6 @@ export class BlogsQueryRepositoryMongo {
       .skip((query.pageNumber - 1) * query.pageSize)
       .limit(query.pageSize);
 
-    return blogPagingViewModel(query, totalBlogs, pagingBlogs);
+    return blogPagingOutputModel(query, totalBlogs, pagingBlogs);
   }
 }
