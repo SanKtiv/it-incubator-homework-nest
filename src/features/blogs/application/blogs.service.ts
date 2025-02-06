@@ -35,9 +35,9 @@ export class BlogsService {
   }
 
   async updateBlog(id: string, inputUpdate: BlogsInputDto) {
-    await this.existBlog(id);
+    const updateInfo = await this.blogsRepository.update(id, inputUpdate);
 
-    //await this.blogsRepository.updateById_RAW(id, inputUpdate);
+    if (updateInfo.affected != 1) throw new NotFoundException();
   }
 
   async existBlog(id: string): Promise<BlogsTable> {

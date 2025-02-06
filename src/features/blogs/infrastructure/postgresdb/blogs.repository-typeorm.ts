@@ -15,8 +15,8 @@ export class BlogsRepositoryTypeOrm {
         protected blogsRepository: Repository<BlogsTable>,
     ) {}
 
-    private get repository() {
-        return this.dataSource.getRepository(BlogsTable);
+    private get builder() {
+        return this.blogsRepository.createQueryBuilder('b');
     }
 
     async createBlog(dto: BlogsTable) {
@@ -34,6 +34,10 @@ export class BlogsRepositoryTypeOrm {
             console.log(e)
             throw new Error('Error finding blog by blogId');
         }
+    }
+
+    async updateBlogById(id: string, inputUpdate: BlogsInputDto) {
+        return this.blogsRepository.update({id}, inputUpdate)
     }
 
     async deleteOne(blog: BlogsTable): Promise<BlogsTable> {
