@@ -1,9 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { BlogsTable } from '../../domain/blog.entity';
-import { PostsTable } from '../../../posts/domain/posts.table';
-import { BlogsInputDto } from '../../api/models/input/blogs.input.dto';
+import {Injectable, InternalServerErrorException} from '@nestjs/common';
+import {DataSource, Repository, UpdateResult} from 'typeorm';
+import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
+import {BlogsTable} from '../../domain/blog.entity';
+import {PostsTable} from '../../../posts/domain/posts.table';
+import {BlogsInputDto} from '../../api/models/input/blogs.input.dto';
 import {BlogsServicesDto} from "../../api/models/input/blogs.services.dto";
 
 @Injectable()
@@ -13,13 +13,14 @@ export class BlogsRepositoryTypeOrm {
         protected dataSource: DataSource,
         @InjectRepository(BlogsTable)
         protected blogsRepository: Repository<BlogsTable>,
-    ) {}
+    ) {
+    }
 
     private get builder() {
         return this.blogsRepository.createQueryBuilder('b');
     }
 
-    async createBlog(dto: BlogsTable) {
+    async createBlog(dto: BlogsTable): Promise<BlogsTable> {
         return this.blogsRepository.save(dto);
     }
 
@@ -27,25 +28,21 @@ export class BlogsRepositoryTypeOrm {
         return this.blogsRepository.save(blog);
     }
 
-    async findById(id: string): Promise<BlogsTable | null> {
+    async findById(id: string): Promise<BlogsTable | null | undefined> {
         try {
             return this.blogsRepository.findOneBy({id});
         } catch (e) {
             console.log(e)
-            throw new Error('Error finding blog by blogId');
         }
     }
 
-    async updateBlogById(id: string, inputUpdate: BlogsInputDto) {
+    async updateBlogById(id: string, inputUpdate: BlogsInputDto): Promise<UpdateResult> {
         return this.blogsRepository.update({id}, inputUpdate)
     }
 
-    async deleteOne(blog: BlogsTable): Promise<BlogsTable> {
-        try {
-            return this.blogsRepository.remove(blog);
-        } catch (e) {
-            throw new Error('Error DB');
-        }
+    async deleteOne(id: string): Promise<UpdateResult> {
+            return this.blogsRepository.softDelete({id});
+
     }
 
     async deleteAll(): Promise<void> {

@@ -12,16 +12,16 @@ export class BlogsRepository {
         return this.blogsRepository.createBlog(dto)
     }
 
-    async find(id: string) {
+    async findById(id: string) {
         return this.blogsRepository.findById(id)
     }
 
-    async update(id: string, inputUpdate: BlogsInputDto) {
+    async updateById(id: string, inputUpdate: BlogsInputDto) {
         return this.blogsRepository.updateBlogById(id, inputUpdate)
     }
 
-    async delete() {
-
+    async deleteById(id: string) {
+        return this.blogsRepository.deleteOne(id)
     }
 
     async clear() {

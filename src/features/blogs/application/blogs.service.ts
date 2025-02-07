@@ -9,6 +9,7 @@ import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repositor
 import { BlogsTable } from '../domain/blog.entity';
 import {BlogsRepository} from "../infrastructure/blogs.repository";
 import {BlogsServicesDto} from "../api/models/input/blogs.services.dto";
+import {UpdateResult} from "typeorm";
 
 @Injectable()
 export class BlogsService {
@@ -34,14 +35,14 @@ export class BlogsService {
     return blogsViewModel(blog);
   }
 
-  async updateBlog(id: string, inputUpdate: BlogsInputDto) {
-    const updateInfo = await this.blogsRepository.update(id, inputUpdate);
+  async updateBlog(id: string, inputUpdate: BlogsInputDto): Promise<void> {
+    const updateInfo = await this.blogsRepository.updateById(id, inputUpdate);
 
     if (updateInfo.affected != 1) throw new NotFoundException();
   }
 
   async existBlog(id: string): Promise<BlogsTable> {
-    const blog = await this.blogsRepository.find(id);
+    const blog = await this.blogsRepository.findById(id);
 
     if (!blog) throw new NotFoundException();
 
@@ -49,8 +50,8 @@ export class BlogsService {
   }
 
   async deleteBlogById(id: string): Promise<void> {
-    await this.existBlog(id);
+    const result = await this.blogsRepository.deleteById(id);
 
-    //await this.blogsRepository.deleteById_RAW(id);
+    if (result.affected != 1) throw new NotFoundException();
   }
 }
