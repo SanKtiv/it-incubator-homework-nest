@@ -2,8 +2,6 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BlogsController } from './features/blogs/api/blogs.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Blog, BlogSchema } from './features/blogs/domain/blogs.schema';
 import { BlogsRepositoryMongo } from './features/blogs/infrastructure/mongodb/blogs.repository-mongo';
 import { TestingController } from './testing/testig.controller';
 import { BlogsService } from './features/blogs/application/blogs.service';
@@ -11,17 +9,11 @@ import { BlogsQueryRepositoryMongo } from './features/blogs/infrastructure/mongo
 import { UsersService } from './features/users/application/users.service';
 import { UsersRepositoryMongo } from './features/users/infrastructure/mongodb/users.repository-mongo';
 import { UsersController } from './features/users/api/users.controller';
-import { User, UsersSchema } from './features/users/domain/users.schema';
 import { UsersQueryRepositoryMongo } from './features/users/infrastructure/mongodb/users.query.repository-mongo';
 import { PostController } from './features/posts/api/posts.controller';
 import { PostsService } from './features/posts/application/posts.service';
 import { PostsRepositoryMongo } from './features/posts/infrastructure/mongodb/posts.repository-mongo';
-import { Post, PostSchema } from './features/posts/domain/posts.schema';
 import { PostsQueryRepositoryMongo } from './features/posts/infrastructure/mongodb/posts.query.repository-mongo';
-import {
-  Comment,
-  CommentSchema,
-} from './features/comments/domain/comment.schema';
 import { CommentsRepositoryMongo } from './features/comments/infrastructure/mongodb/comments.repository-mongo';
 import { CommentsService } from './features/comments/application/comments.service';
 import { CommentsController } from './features/comments/api/comments.controller';
@@ -31,18 +23,10 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './features/auth/api/auth.controller';
 import { AuthService } from './features/auth/application/auth.service';
 import { EmailAdapter } from './features/auth/infrastructure/mail.adapter';
-import { LoginIsExistConstraint } from './infrastructure/decorators/login-is-exist.decorator';
-import { EmailIsExistConstraint } from './infrastructure/decorators/email-is-exist.decorator';
-//import { EmailIsConfirmedConstraint } from './infrastructure/decorators/email-is-confimed.decorator';
-//import { ConfirmationCodeIsValidConstraint } from './infrastructure/decorators/confirmation-code-is-valid.decorator';
 import { LocalStrategy } from './features/auth/infrastructure/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { TooManyRequestsMiddleware } from './infrastructure/middlewares/count-requests-api.middleware';
 import { RequestApiService } from './features/requests/application/request-api.service';
-import {
-  RequestToApi,
-  RequestToApiSchema,
-} from './features/requests/domain/request.schema';
 import { RequestApiRepositoryMongo } from './features/requests/infrastructure/mongodb/request.repository-mongo';
 import {
   JwtAccessStrategy,
@@ -50,12 +34,9 @@ import {
 } from './features/auth/infrastructure/jwt.strategy';
 import { BasicStrategy } from './features/auth/infrastructure/basic.strategy';
 import { DevicesRepositoryMongo } from './features/security/infrastructure/mongodb/devices.repository-mongo';
-import { Device, DeviceSchema } from './features/security/domain/device.schema';
 import { DevicesService } from './features/security/application/devices.service';
-import { appSettings } from './settings/app-settings';
 import { AccessJwtToken } from './features/auth/application/use-cases/access-jwt-token';
 import { RefreshJwtToken } from './features/auth/application/use-cases/refresh-jwt-token';
-import { BlogIdIsExistConstraint } from './infrastructure/decorators/validation/blogId-is-exist.decorator';
 import configuration from './settings/configuration';
 import { DevicesController } from './features/security/api/devices.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -94,6 +75,8 @@ import {PostsRepositoryTypeOrm} from "./features/posts/infrastructure/postgresql
 import {PostsRepository} from "./features/posts/infrastructure/posts.repository";
 import {BlogsQueryRepositoryTypeOrm} from "./features/blogs/infrastructure/postgresdb/blogs.query.repository-typeorm";
 import {BlogsQueryRepository} from "./features/blogs/infrastructure/blogs.query.repository";
+import {PostsQueryRepositoryTypeOrm} from "./features/posts/infrastructure/postgresql/posts.query.repository-typeorm";
+import {PostsQueryRepository} from "./features/posts/infrastructure/posts.query.repository";
 
 dotenv.config();
 
@@ -131,8 +114,9 @@ const sqlRepositories = [
   BlogsQueryRepositorySql,
   PostsRepository,
   PostsRepositorySql,
-
+  PostsQueryRepository,
   PostsRepositoryTypeOrm,
+    PostsQueryRepositoryTypeOrm,
   PostsQueryRepositorySql,
   CommentsRepositorySql,
   CommentsQueryRepositorySql,

@@ -31,6 +31,7 @@ import { Request } from 'express';
 import { BlogsQueryRepositorySql } from '../infrastructure/postgresdb/blogs.query.repository-sql';
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
 import {BlogsQueryRepository} from "../infrastructure/blogs.query.repository";
+import {PostsQueryRepository} from "../../posts/infrastructure/posts.query.repository";
 
 @Controller('sa/blogs')
 @UseGuards(BasicAuthGuard)
@@ -40,6 +41,7 @@ export class SaBlogsController {
       private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
       private readonly blogsService: BlogsService,
       private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
+      private readonly postsQueryRepository: PostsQueryRepository,
       private readonly postsService: PostsService,
   ) {
   }
@@ -84,11 +86,11 @@ export class SaBlogsController {
     @Query() query: PostQuery,
     @Req() req: Request,
   ): Promise<PostsPaging> {
-    const blog = await this.blogsQueryRepositorySql.findById_RAW(blogId);
+    const blog = await this.blogsQueryRepository.findById(blogId);
 
     if (!blog) throw new NotFoundException();
 
-    return this.postsQueryRepositorySql.findPaging_RAW(query, blogId, null);
+    return this.postsQueryRepository.getPostsPaging(query, blogId, null);
   }
 
   @Put(':blogId')
