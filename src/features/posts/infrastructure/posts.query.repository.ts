@@ -1,5 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PostsQueryRepositoryTypeOrm} from "./postgresql/posts.query.repository-typeorm";
+import {PostQuery} from "../api/models/input/posts.input.dto";
 
 @Injectable()
 export class PostsQueryRepository {
@@ -10,7 +11,7 @@ export class PostsQueryRepository {
         await this.postsQueryRepository.findById_RAW(id)
     }
 
-    async getPostsPaging() {
-        await this.postsQueryRepository.getMany()
+    async getPostsPaging(query: PostQuery, blogId: string, userId?: string) {
+        await this.postsQueryRepository.getMany(query, blogId )
     }
 }

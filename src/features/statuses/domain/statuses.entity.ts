@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {PostsTable} from "../../posts/domain/posts.table";
 
 @Entity('statuses')
 export class StatusesTable {
@@ -47,7 +48,8 @@ export class StatusesPostsTable {
   @Column('uuid')
   userId: string;
 
-  @Column('uuid')
+  @ManyToOne(() => PostsTable)
+  @JoinColumn({ name: 'postId' })
   postId: string;
 
   @Column({ type: 'character varying', default: 'None' })

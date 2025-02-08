@@ -9,6 +9,7 @@ import {
 import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
 import {DataSource, Repository} from 'typeorm';
 import { PostsTable } from '../../domain/posts.table';
+import {StatusesPostsTable} from "../../../statuses/domain/statuses.entity";
 
 @Injectable()
 export class PostsQueryRepositoryTypeOrm {
@@ -135,17 +136,31 @@ export class PostsQueryRepositoryTypeOrm {
 
     async getMany(
       query: PostQuery,
-      dto: { userId?: string; blogId?: string },
-    ): Promise<PostsPaging> {
-      const filter = dto.blogId ? { blogId: dto.blogId } : {};
+      blogId: string,
+      userId?: string,
+    ): Promise<PostsPaging | void> {
+      //const filter = dto.blogId ? { blogId: dto.blogId } : {};
 
       const posts = this.builder;
 
-      if (dto.blogId) {
-        posts.where('p.blogId = :blogId', { blogId: dto.blogId });
+      if (userId) {
+          posts.select(qb =>
+              qb
+                  .subQuery()
+                  .from(StatusesPostsTable, 'p_statuses')
+                  .where('p_statuses.userId = :userId', {userId: userId})
+                  .getCount(),
+              'p_statuses_count'
+          )
+      }
+
+      if (blogId) {
+        posts.where('p.blogId = :blogId', { blogId: blogId });
       }
 
       const totalPosts = await posts.getCount();
+
+        //posts.leftJoin()
 
       const postsPaging = await posts
         .orderBy(`p.${query.sortBy}`, query.sortDirection)
@@ -153,6 +168,6 @@ export class PostsQueryRepositoryTypeOrm {
         .take(query.pageSize)
         .getMany();
 
-      return postsPaging(query, totalPosts, postsPaging, dto.userId);
+      //return postsPaging(query, totalPosts, postsPaging, dto.userId);
     }
 }

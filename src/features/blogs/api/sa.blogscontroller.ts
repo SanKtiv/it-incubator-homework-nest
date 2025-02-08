@@ -85,12 +85,12 @@ export class SaBlogsController {
     @Param('blogId', paramIdIsUUIdPipe) blogId: string,
     @Query() query: PostQuery,
     @Req() req: Request,
-  ): Promise<PostsPaging> {
+  ): Promise<PostsPaging | void> {
     const blog = await this.blogsQueryRepository.findById(blogId);
 
     if (!blog) throw new NotFoundException();
 
-    return this.postsQueryRepository.getPostsPaging(query, blogId, null);
+    await this.postsQueryRepository.getPostsPaging(query, blogId);
   }
 
   @Put(':blogId')
