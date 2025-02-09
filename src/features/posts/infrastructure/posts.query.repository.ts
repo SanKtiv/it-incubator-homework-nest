@@ -11,6 +11,6 @@ export class PostsQueryRepository {
   }
 
   async getPostsPaging(query: PostQuery, blogId: string, userId?: string) {
-    await this.postsQueryRepository.getMany(query, blogId);
+    return this.postsQueryRepository.getMany(query, blogId);
   }
 }

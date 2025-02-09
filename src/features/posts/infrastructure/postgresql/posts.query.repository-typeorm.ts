@@ -140,7 +140,7 @@ export class PostsQueryRepositoryTypeOrm {
     query: PostQuery,
     blogId: string,
     userId?: string,
-  ): Promise<PostsPaging | void> {
+  ): Promise<PostsTable[]> {
     //const filter = dto.blogId ? { blogId: dto.blogId } : {};
 
     const posts = this.repository.createQueryBuilder('p');
@@ -171,10 +171,10 @@ export class PostsQueryRepositoryTypeOrm {
     // const totalPosts = await posts.getCount();
     //
     const postsPaging = await posts
-      .select(['p.*', 'b."name" AS "blogName"'])
-      .addSelect(subQueryCountLikesPost, 'likesCount')
-      .addSelect(subQueryCountDislikesPost, 'dislikesCount')
-      .leftJoin('p.blogId', 'b')
+      // .select(['p.*'])
+      // .addSelect(subQueryCountLikesPost, 'likesCount')
+      // .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+      // .leftJoin('p.blogId', 'b')
       .leftJoinAndMapMany(
         'p.statuses',
         StatusesPostsTable,
@@ -184,8 +184,9 @@ export class PostsQueryRepositoryTypeOrm {
       .orderBy(`p.${query.sortBy}`, query.sortDirection)
       .skip((query.pageNumber - 1) * query.pageSize)
       .take(query.pageSize)
-      .getRawMany();
+      .getMany();
     console.log('postsPaging =', postsPaging);
+    return postsPaging;
 
     //return postsPaging(query, totalPosts, postsPaging, dto.userId);
   }

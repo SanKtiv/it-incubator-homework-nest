@@ -54,7 +54,7 @@ export class PostController {
   @Get('test')
   async get() {
     const query = new PostQuery();
-    await this.postsQueryRepository.getPostsPaging(query, 'tyt');
+    return this.postsQueryRepository.getPostsPaging(query, 'tyt');
   }
 
   @Get(':postId')
