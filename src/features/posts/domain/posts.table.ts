@@ -2,13 +2,11 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
+  ManyToOne, OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BlogsTable } from '../../blogs/domain/blog.entity';
-import { CommentsTable } from '../../comments/domain/comments.entity';
+import {StatusesPostsTable} from "../../statuses/domain/statuses.entity";
 
 @Entity('posts')
 export class PostsTable {
@@ -28,6 +26,13 @@ export class PostsTable {
   createdAt: Date;
 
   @ManyToOne(() => BlogsTable)
-  @JoinColumn({ name: 'blogId' })
+  @JoinColumn({name: 'blogId'})
   blogId: string; //BlogsTable;
+
+  @OneToMany(
+      () => StatusesPostsTable,
+      (StatusesPostsTable) => StatusesPostsTable.postId
+  )
+  @JoinColumn({name: 'statuses'})
+  statuses: StatusesPostsTable[]
 }
