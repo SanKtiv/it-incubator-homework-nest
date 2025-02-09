@@ -34,17 +34,14 @@ export const blogsOutputDto = (blogDocument: BlogDocument): BlogsViewDto => ({
   isMembership: blogDocument.isMembership,
 });
 
-export const blogsViewModel = (blog: BlogsTable): BlogsViewDto =>
-    (
-        {
-          id: blog.id,
-          name: blog.name,
-          description: blog.description,
-          websiteUrl: blog.websiteUrl,
-          createdAt: blog.createdAt.toISOString(),
-          isMembership: blog.isMembership,
-        }
-    );
+export const blogsViewModel = (blog: BlogsTable): BlogsViewDto => ({
+  id: blog.id,
+  name: blog.name,
+  description: blog.description,
+  websiteUrl: blog.websiteUrl,
+  createdAt: blog.createdAt.toISOString(),
+  isMembership: blog.isMembership,
+});
 
 export const blogPagingOutputModel = (
   query: BlogQuery,

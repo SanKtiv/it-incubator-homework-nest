@@ -12,7 +12,7 @@ import { BlogsRepositorySql } from '../features/blogs/infrastructure/postgresdb/
 import { PostsRepositorySql } from '../features/posts/infrastructure/postgresql/posts.repository-sql';
 import { CommentsRepositorySql } from '../features/comments/infrastructure/postgresql/comments.repository-sql';
 import { StatusesRepositorySql } from '../features/statuses/infrastructure/statuses.repository-sql';
-import {DevicesRepositoryTypeOrm} from "../features/security/infrastructure/postgresqldb/devices-repository-type-orm.service";
+import { DevicesRepositoryTypeOrm } from '../features/security/infrastructure/postgresqldb/devices-repository-type-orm.service';
 
 @Controller('testing/all-data')
 export class TestingController {

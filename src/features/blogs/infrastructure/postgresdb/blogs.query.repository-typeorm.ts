@@ -1,108 +1,110 @@
 import {
-    HttpException,
-    HttpStatus,
-    Injectable,
-    InternalServerErrorException,
-    NotFoundException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { BlogQuery } from '../../api/models/input/blogs.input.dto';
 import {
-    BlogsViewDto,
-    BlogsViewPagingDto,
-    blogsPagingViewModel,
-    blogsViewModel,
+  BlogsViewDto,
+  BlogsViewPagingDto,
+  blogsPagingViewModel,
+  blogsViewModel,
 } from '../../api/models/output/blogs.view.dto';
-import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
-import {DataSource, Repository} from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { BlogsTable } from '../../domain/blog.entity';
 import { UUID } from 'typeorm/driver/mongodb/bson.typings';
 
 @Injectable()
 export class BlogsQueryRepositoryTypeOrm {
-    constructor(@InjectRepository(BlogsTable) protected repository: Repository<BlogsTable>) {}
+  constructor(
+    @InjectRepository(BlogsTable) protected repository: Repository<BlogsTable>,
+  ) {}
 
-    private get builder() {
-        return this.repository.createQueryBuilder('b')
-    }
+  private get builder() {
+    return this.repository.createQueryBuilder('b');
+  }
 
-    async findById(id: string): Promise<BlogsTable | null> {
-        return this.repository.findOneBy({ id });
-    }
+  async findById(id: string): Promise<BlogsTable | null> {
+    return this.repository.findOneBy({ id });
+  }
 
-    async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
-        const searchName = query.searchNameTerm;
+  async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
+    const searchName = query.searchNameTerm;
 
-        const blogs = this.builder
+    const blogs = this.builder;
 
-        if (searchName)
-            blogs.where('blog.name ~* :nameTerm', { nameTerm: searchName });
+    if (searchName)
+      blogs.where('blog.name ~* :nameTerm', { nameTerm: searchName });
 
-        const totalBlogs = await blogs.getCount();
+    const totalBlogs = await blogs.getCount();
 
-        const pagingBlogs = await blogs
-            .orderBy(`b.${query.sortBy}`, query.sortDirection)
-            .skip((query.pageNumber - 1) * query.pageSize)
-            .take(query.pageSize)
-            .getMany();
+    const pagingBlogs = await blogs
+      .orderBy(`b.${query.sortBy}`, query.sortDirection)
+      .skip((query.pageNumber - 1) * query.pageSize)
+      .take(query.pageSize)
+      .getMany();
 
-        return blogsPagingViewModel(query, totalBlogs, pagingBlogs);
-    }
+    return blogsPagingViewModel(query, totalBlogs, pagingBlogs);
+  }
 
-    async findById_RAW(id: string): Promise<BlogsViewDto | undefined> {
-        const findBlogByIdQuery = `
+  async findById_RAW(id: string): Promise<BlogsViewDto | undefined> {
+    const findBlogByIdQuery = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM public."blogs" AS b
     WHERE b."id" = $1;`;
 
-        try {
-            const [blog] = await this.repository.query(findBlogByIdQuery, [id]);
+    try {
+      const [blog] = await this.repository.query(findBlogByIdQuery, [id]);
 
-            if (!blog) return blog;
+      if (!blog) return blog;
 
-            return blogsViewModel(blog);
-        } catch (e) {
-            console.log(e);
-            throw new InternalServerErrorException();
-        }
+      return blogsViewModel(blog);
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
     }
+  }
 
-    async getBlogsPaging_RAW(query: BlogQuery): Promise<BlogsViewPagingDto> {
-        const searchNameTerm =
-            query.searchNameTerm === null ? '' : query.searchNameTerm;
-        const pageSize = query.pageSize;
-        const pageOffSet = (query.pageNumber - 1) * query.pageSize;
+  async getBlogsPaging_RAW(query: BlogQuery): Promise<BlogsViewPagingDto> {
+    const searchNameTerm =
+      query.searchNameTerm === null ? '' : query.searchNameTerm;
+    const pageSize = query.pageSize;
+    const pageOffSet = (query.pageNumber - 1) * query.pageSize;
 
-        const blogsPagingQuery = `
+    const blogsPagingQuery = `
     SELECT b."id", b."name", b."description", b."websiteUrl", b."createdAt", b."isMembership"
     FROM "blogs" AS b
     WHERE b."name" ~* $1
     ORDER BY b."${query.sortBy}" ${query.sortDirection}
     LIMIT $2 OFFSET $3`;
 
-        const parametersBlogsPaging = [searchNameTerm, pageSize, pageOffSet];
+    const parametersBlogsPaging = [searchNameTerm, pageSize, pageOffSet];
 
-        const countBlogsQuery = `
+    const countBlogsQuery = `
     SELECT COUNT(*)
     FROM "blogs"
     WHERE "name" ~* $1`;
 
-        const parametersCount = [searchNameTerm];
+    const parametersCount = [searchNameTerm];
 
-        const [totalBlogs] = await this.repository.query(
-            countBlogsQuery,
-            parametersCount,
-        );
+    const [totalBlogs] = await this.repository.query(
+      countBlogsQuery,
+      parametersCount,
+    );
 
-        try {
-            const pagingBlogs = await this.repository.query(
-                blogsPagingQuery,
-                parametersBlogsPaging,
-            );
+    try {
+      const pagingBlogs = await this.repository.query(
+        blogsPagingQuery,
+        parametersBlogsPaging,
+      );
 
-            return blogsPagingViewModel(query, totalBlogs.count, pagingBlogs);
-        } catch (e) {
-            console.log(e);
-            throw new InternalServerErrorException();
-        }
+      return blogsPagingViewModel(query, totalBlogs.count, pagingBlogs);
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
     }
+  }
 }

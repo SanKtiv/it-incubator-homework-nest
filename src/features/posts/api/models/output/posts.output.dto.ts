@@ -65,22 +65,23 @@ export const postsOutputDto = (postDocument: PostDocument, userId?: string) =>
     ),
   );
 
-export const postCreatedViewModel = (post: PostsTable & {blogName: string}):PostsOutputDto  => ({
-    id: post.id,
-    title: post.title,
-    shortDescription: post.shortDescription,
-    content: post.content,
-    createdAt: post.createdAt.toISOString(),
-    blogId: post.blogId,
-    blogName: post.blogName,
-    extendedLikesInfo: {
-        likesCount: 0,
-        dislikesCount: 0,
-        myStatus: 'None',
-        newestLikes: [],
-    }
-})
-
+export const postCreatedViewModel = (
+  post: PostsTable & { blogName: string },
+): PostsOutputDto => ({
+  id: post.id,
+  title: post.title,
+  shortDescription: post.shortDescription,
+  content: post.content,
+  createdAt: post.createdAt.toISOString(),
+  blogId: post.blogId,
+  blogName: post.blogName,
+  extendedLikesInfo: {
+    likesCount: 0,
+    dislikesCount: 0,
+    myStatus: 'None',
+    newestLikes: [],
+  },
+});
 
 export function postViewModel_SQL(postFromSQL): PostsOutputDto[] {
   const resultArray: PostsOutputDto[] = [];

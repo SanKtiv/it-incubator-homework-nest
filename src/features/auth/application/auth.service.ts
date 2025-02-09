@@ -19,10 +19,7 @@ export class AuthService {
   async registrationUser(dto: UsersInputDto) {
     const user = await this.usersService.createUser(dto);
     const confirmationCode = user.emailConfirmation.confirmationCode;
-    await this.emailAdapter.sendConfirmationCode(
-        dto.email,
-        confirmationCode,
-    );
+    await this.emailAdapter.sendConfirmationCode(dto.email, confirmationCode);
   }
 
   async registrationConfirmation(code: string) {

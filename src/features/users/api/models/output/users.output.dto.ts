@@ -61,4 +61,3 @@ export const usersPagingDto = (
     totalUsers,
     usersPaging.map((user) => usersOutputDto(user)),
   );
-

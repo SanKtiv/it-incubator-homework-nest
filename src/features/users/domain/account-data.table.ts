@@ -1,4 +1,10 @@
-import {Column, DeleteDateColumn, Entity, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UsersTable } from './users.table';
 
 @Entity('accountData')

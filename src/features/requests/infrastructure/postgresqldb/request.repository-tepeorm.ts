@@ -9,11 +9,11 @@ export class RequestApiRepositoryTypeOrm {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   private get repository() {
-    return this.dataSource.getRepository(RequestTable)
+    return this.dataSource.getRepository(RequestTable);
   }
 
   async createReqApi(dto: RequestTable) {
-      await this.repository.save(dto);
+    await this.repository.save(dto);
   }
 
   async findByIp(dto: RequestApiInputDto, date: Date) {

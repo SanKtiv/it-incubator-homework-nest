@@ -69,14 +69,14 @@ import { PasswordRecoveryTable } from './features/users/domain/password-recovery
 import { UsersRepositoryOrm } from './features/users/infrastructure/postgresqldb/users.repository-typeorm';
 import { DevicesRepositoryTypeOrm } from './features/security/infrastructure/postgresqldb/devices-repository-type-orm.service';
 import { UsersQueryRepositoryOrm } from './features/users/infrastructure/postgresqldb/users.query.repository-typeorm';
-import {BlogsRepository} from "./features/blogs/infrastructure/blogs.repository";
-import {BlogsRepositoryTypeOrm} from "./features/blogs/infrastructure/postgresdb/blogs.repository-typeorm";
-import {PostsRepositoryTypeOrm} from "./features/posts/infrastructure/postgresql/posts.repository-typeorm";
-import {PostsRepository} from "./features/posts/infrastructure/posts.repository";
-import {BlogsQueryRepositoryTypeOrm} from "./features/blogs/infrastructure/postgresdb/blogs.query.repository-typeorm";
-import {BlogsQueryRepository} from "./features/blogs/infrastructure/blogs.query.repository";
-import {PostsQueryRepositoryTypeOrm} from "./features/posts/infrastructure/postgresql/posts.query.repository-typeorm";
-import {PostsQueryRepository} from "./features/posts/infrastructure/posts.query.repository";
+import { BlogsRepository } from './features/blogs/infrastructure/blogs.repository';
+import { BlogsRepositoryTypeOrm } from './features/blogs/infrastructure/postgresdb/blogs.repository-typeorm';
+import { PostsRepositoryTypeOrm } from './features/posts/infrastructure/postgresql/posts.repository-typeorm';
+import { PostsRepository } from './features/posts/infrastructure/posts.repository';
+import { BlogsQueryRepositoryTypeOrm } from './features/blogs/infrastructure/postgresdb/blogs.query.repository-typeorm';
+import { BlogsQueryRepository } from './features/blogs/infrastructure/blogs.query.repository';
+import { PostsQueryRepositoryTypeOrm } from './features/posts/infrastructure/postgresql/posts.query.repository-typeorm';
+import { PostsQueryRepository } from './features/posts/infrastructure/posts.query.repository';
 
 dotenv.config();
 
@@ -116,7 +116,7 @@ const sqlRepositories = [
   PostsRepositorySql,
   PostsQueryRepository,
   PostsRepositoryTypeOrm,
-    PostsQueryRepositoryTypeOrm,
+  PostsQueryRepositoryTypeOrm,
   PostsQueryRepositorySql,
   CommentsRepositorySql,
   CommentsQueryRepositorySql,
@@ -128,7 +128,6 @@ const sqlRepositories = [
   UsersRepositoryOrm,
   DevicesRepositoryTypeOrm,
   UsersQueryRepositoryOrm,
-
 ];
 
 const repositories = [
@@ -232,14 +231,14 @@ const strategies = [
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-        .apply(TooManyRequestsMiddleware)
-        .forRoutes(
-            '/auth/registration',
-            '/auth/login',
-            '/auth/password-recovery',
-            '/auth/new-password',
-            '/auth/registration-confirmation',
-            '/auth/registration-email-resending',
-        );
+      .apply(TooManyRequestsMiddleware)
+      .forRoutes(
+        '/auth/registration',
+        '/auth/login',
+        '/auth/password-recovery',
+        '/auth/new-password',
+        '/auth/registration-confirmation',
+        '/auth/registration-email-resending',
+      );
   }
 }

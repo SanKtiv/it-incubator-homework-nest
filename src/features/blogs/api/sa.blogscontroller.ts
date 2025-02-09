@@ -30,21 +30,20 @@ import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { Request } from 'express';
 import { BlogsQueryRepositorySql } from '../infrastructure/postgresdb/blogs.query.repository-sql';
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
-import {BlogsQueryRepository} from "../infrastructure/blogs.query.repository";
-import {PostsQueryRepository} from "../../posts/infrastructure/posts.query.repository";
+import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
+import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 
 @Controller('sa/blogs')
 @UseGuards(BasicAuthGuard)
 export class SaBlogsController {
   constructor(
-      private readonly blogsQueryRepository: BlogsQueryRepository,
-      private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
-      private readonly blogsService: BlogsService,
-      private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
-      private readonly postsQueryRepository: PostsQueryRepository,
-      private readonly postsService: PostsService,
-  ) {
-  }
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
+    private readonly blogsService: BlogsService,
+    private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly postsService: PostsService,
+  ) {}
 
   @Post()
   async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {

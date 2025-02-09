@@ -7,30 +7,24 @@ import {
 } from '../api/models/output/blogs.view.dto';
 import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repository-sql';
 import { BlogsTable } from '../domain/blog.entity';
-import {BlogsRepository} from "../infrastructure/blogs.repository";
-import {BlogsServicesDto} from "../api/models/input/blogs.services.dto";
-import {UpdateResult} from "typeorm";
+import { BlogsRepository } from '../infrastructure/blogs.repository';
+import { BlogsServicesDto } from '../api/models/input/blogs.services.dto';
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class BlogsService {
-  constructor(
-    private readonly blogsRepository: BlogsRepository,
-  ) {}
+  constructor(private readonly blogsRepository: BlogsRepository) {}
 
-  async createBlog(
-    dto: BlogsInputDto,
-  ): Promise<BlogsViewDto> {
-    const blogEntity = new BlogsTable()
+  async createBlog(dto: BlogsInputDto): Promise<BlogsViewDto> {
+    const blogEntity = new BlogsTable();
 
-    blogEntity.name = dto.name
-    blogEntity.websiteUrl = dto.websiteUrl
-    blogEntity.description = dto.description
-    blogEntity.isMembership = false
-    blogEntity.createdAt = new Date()
+    blogEntity.name = dto.name;
+    blogEntity.websiteUrl = dto.websiteUrl;
+    blogEntity.description = dto.description;
+    blogEntity.isMembership = false;
+    blogEntity.createdAt = new Date();
 
-    const blog = await this.blogsRepository.create(
-        blogEntity,
-    );
+    const blog = await this.blogsRepository.create(blogEntity);
 
     return blogsViewModel(blog);
   }

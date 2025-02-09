@@ -2,11 +2,12 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne, OneToMany,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BlogsTable } from '../../blogs/domain/blog.entity';
-import {StatusesPostsTable} from "../../statuses/domain/statuses.entity";
+import { StatusesPostsTable } from '../../statuses/domain/statuses.entity';
 
 @Entity('posts')
 export class PostsTable {
@@ -26,6 +27,6 @@ export class PostsTable {
   createdAt: Date;
 
   @ManyToOne(() => BlogsTable)
-  @JoinColumn({name: 'blogId'})
+  @JoinColumn({ name: 'blogId' })
   blogId: string; //BlogsTable;
 }

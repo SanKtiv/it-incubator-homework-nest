@@ -1,4 +1,10 @@
-import {DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { AccountDataTable } from './account-data.table';
 import { EmailConfirmationTable } from './email-сonfirmation.table';
 import { PasswordRecoveryTable } from './password-recovery.table';
@@ -22,8 +28,9 @@ export class UsersTable {
     {
       cascade: true,
       eager: true,
-      onDelete: 'CASCADE'
-    },)
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn()
   emailConfirmation: EmailConfirmationTable;
 
@@ -33,8 +40,9 @@ export class UsersTable {
     {
       cascade: true,
       eager: true,
-      onDelete: 'CASCADE'
-    },)
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn()
   passwordRecovery: PasswordRecoveryTable;
 

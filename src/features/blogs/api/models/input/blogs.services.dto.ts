@@ -1,6 +1,6 @@
-import {BlogsInputDto} from "./blogs.input.dto";
+import { BlogsInputDto } from './blogs.input.dto';
 
-export class BlogsServicesDto extends BlogsInputDto{
-    isMembership: boolean
-    createdAt: Date
+export class BlogsServicesDto extends BlogsInputDto {
+  isMembership: boolean;
+  createdAt: Date;
 }

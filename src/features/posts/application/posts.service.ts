@@ -14,7 +14,7 @@ import { InputDto } from '../../../infrastructure/models/input.dto';
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
-import {PostsRepository} from "../infrastructure/posts.repository";
+import { PostsRepository } from '../infrastructure/posts.repository';
 
 @Injectable()
 export class PostsService {
@@ -30,19 +30,19 @@ export class PostsService {
   async createPost(dto: PostsInputDto): Promise<PostsOutputDto> {
     const blog = await this.blogsService.existBlog(dto.blogId);
 
-    const postEntity = new PostsTable()
+    const postEntity = new PostsTable();
 
-    postEntity.blogId = blog.id
-    postEntity.title = dto.title
-    postEntity.content = dto.content
-    postEntity.shortDescription = dto.shortDescription
-    postEntity.createdAt = new Date()
+    postEntity.blogId = blog.id;
+    postEntity.title = dto.title;
+    postEntity.content = dto.content;
+    postEntity.shortDescription = dto.shortDescription;
+    postEntity.createdAt = new Date();
 
     const post = await this.postsRepository.create(postEntity);
 
-    const blogName = blog.name
+    const blogName = blog.name;
 
-    return postCreatedViewModel({...post!, blogName});
+    return postCreatedViewModel({ ...post!, blogName });
   }
 
   async existPostById(id: string): Promise<PostsTable> {
@@ -80,8 +80,6 @@ export class PostsService {
 
     await this.postsRepositorySql.updatePost_RAW(postId, UpdateDto, blogId);
   }
-
-
 
   async createStatusForPost(
     id: string,

@@ -35,7 +35,7 @@ import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { PostsQueryRepositorySql } from '../infrastructure/postgresql/posts.query.repository-sql';
 import { CommentsQueryRepositorySql } from '../../comments/infrastructure/postgresql/comments.query.repository-sql';
-import {PostsQueryRepository} from "../infrastructure/posts.query.repository";
+import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 
 @Controller('posts')
 export class PostController {
@@ -53,8 +53,8 @@ export class PostController {
 
   @Get('test')
   async get() {
-    const query = new PostQuery()
-    await this.postsQueryRepository.getPostsPaging(query, 'tyt')
+    const query = new PostQuery();
+    await this.postsQueryRepository.getPostsPaging(query, 'tyt');
   }
 
   @Get(':postId')

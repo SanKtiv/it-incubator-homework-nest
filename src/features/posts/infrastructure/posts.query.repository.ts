@@ -1,17 +1,16 @@
-import {Injectable} from "@nestjs/common";
-import {PostsQueryRepositoryTypeOrm} from "./postgresql/posts.query.repository-typeorm";
-import {PostQuery} from "../api/models/input/posts.input.dto";
+import { Injectable } from '@nestjs/common';
+import { PostsQueryRepositoryTypeOrm } from './postgresql/posts.query.repository-typeorm';
+import { PostQuery } from '../api/models/input/posts.input.dto';
 
 @Injectable()
 export class PostsQueryRepository {
-    constructor( protected postsQueryRepository: PostsQueryRepositoryTypeOrm) {
-    }
+  constructor(protected postsQueryRepository: PostsQueryRepositoryTypeOrm) {}
 
-    async getPostById(id: string) {
-        await this.postsQueryRepository.findById_RAW(id)
-    }
+  async getPostById(id: string) {
+    await this.postsQueryRepository.findById_RAW(id);
+  }
 
-    async getPostsPaging(query: PostQuery, blogId: string, userId?: string) {
-        await this.postsQueryRepository.getMany(query, blogId )
-    }
+  async getPostsPaging(query: PostQuery, blogId: string, userId?: string) {
+    await this.postsQueryRepository.getMany(query, blogId);
+  }
 }

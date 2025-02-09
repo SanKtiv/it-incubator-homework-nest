@@ -1,5 +1,11 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {PostsTable} from "../../posts/domain/posts.table";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { PostsTable } from '../../posts/domain/posts.table';
 
 @Entity('statuses')
 export class StatusesTable {
