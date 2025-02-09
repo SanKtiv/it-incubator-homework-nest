@@ -7,7 +7,7 @@ import {
     postsPagingViewModel_SQL,
 } from '../../api/models/output/posts.output.dto';
 import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
-import {DataSource, Repository} from 'typeorm';
+import {DataSource, Repository, SelectQueryBuilder} from 'typeorm';
 import { PostsTable } from '../../domain/posts.table';
 import {StatusesPostsTable} from "../../../statuses/domain/statuses.entity";
 
@@ -135,39 +135,45 @@ export class PostsQueryRepositoryTypeOrm {
     }
 
     async getMany(
-      query: PostQuery,
-      blogId: string,
-      userId?: string,
+        query: PostQuery,
+        blogId: string,
+        userId?: string,
     ): Promise<PostsPaging | void> {
-      //const filter = dto.blogId ? { blogId: dto.blogId } : {};
+        //const filter = dto.blogId ? { blogId: dto.blogId } : {};
 
-      const posts = this.builder;
+        const posts = this.repository.createQueryBuilder('p');
 
-      if (userId) {
-          posts.select(qb =>
-              qb
-                  .subQuery()
-                  .from(StatusesPostsTable, 'p_statuses')
-                  .where('p_statuses.userId = :userId', {userId: userId})
-                  .getCount(),
-              'p_statuses_count'
-          )
-      }
+        let subQueryCountLikesPost = (subQuery: SelectQueryBuilder<StatusesPostsTable>) =>
+            subQuery
+            .select('CAST (COUNT(*) AS INT)', 'likesCount')
+            .from(StatusesPostsTable, 'sp')
+            .where('p.id = sp."postId"')
+            .andWhere('sp."userStatus" = :status', {status: 'Like'})
 
-      if (blogId) {
-        posts.where('p.blogId = :blogId', { blogId: blogId });
-      }
+        let subQueryCountDislikesPost = (subQuery: SelectQueryBuilder<StatusesPostsTable>) =>
+            subQuery
+            .select('CAST (COUNT(*) AS INT)')
+            .from(StatusesPostsTable, 'sp')
+            .where('p.id = sp."postId"')
+            .andWhere('sp."userStatus" = :status', {status: 'Dislike'})
 
-      const totalPosts = await posts.getCount();
+        //console.log('subQuery =', subQueryCountLikesPost)
+        // if (blogId) {
+        //   posts.where('p.blogId = :blogId', { blogId: blogId });
+        // }
 
-        //posts.leftJoin()
+        // const totalPosts = await posts.getCount();
+        //
+        const postsPaging = await posts
+            .select(['p.*'])
+            .addSelect(subQueryCountLikesPost, 'likesCount')
+            .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+            .orderBy(`p.${query.sortBy}`, query.sortDirection)
+            .skip((query.pageNumber - 1) * query.pageSize)
+            .take(query.pageSize)
+            .getRawMany();
+        console.log('postsPaging =', postsPaging)
 
-      const postsPaging = await posts
-        .orderBy(`p.${query.sortBy}`, query.sortDirection)
-        .skip((query.pageNumber - 1) * query.pageSize)
-        .take(query.pageSize)
-        .getMany();
-
-      //return postsPaging(query, totalPosts, postsPaging, dto.userId);
+        //return postsPaging(query, totalPosts, postsPaging, dto.userId);
     }
 }
