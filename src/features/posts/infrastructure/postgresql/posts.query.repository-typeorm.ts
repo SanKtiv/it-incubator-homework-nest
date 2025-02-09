@@ -165,11 +165,11 @@ export class PostsQueryRepositoryTypeOrm {
         // const totalPosts = await posts.getCount();
         //
         const postsPaging = await posts
-            .select(['p.*', 'b."name" AS "blogName"', 's.userStatus'])
+            .select(['p.*', 'b."name" AS "blogName"',])
             .addSelect(subQueryCountLikesPost, 'likesCount')
             .addSelect(subQueryCountDislikesPost, 'dislikesCount')
             .leftJoin('p.blogId', 'b')
-            .leftJoinAndSelect('p.statuses', 's')
+            .leftJoinAndMapMany('p.statuses', StatusesPostsTable, 's', 'p.id = s."postId"')
             .orderBy(`p.${query.sortBy}`, query.sortDirection)
             .skip((query.pageNumber - 1) * query.pageSize)
             .take(query.pageSize)

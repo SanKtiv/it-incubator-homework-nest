@@ -48,10 +48,7 @@ export class StatusesPostsTable {
   @Column('uuid')
   userId: string;
 
-  @ManyToOne(
-      () => PostsTable,
-      (PostsTable) => PostsTable.statuses
-  )
+  @ManyToOne(() => PostsTable)
   @JoinColumn({ name: 'postId' })
   postId: string;
 

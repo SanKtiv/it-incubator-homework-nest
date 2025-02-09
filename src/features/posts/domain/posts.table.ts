@@ -28,11 +28,4 @@ export class PostsTable {
   @ManyToOne(() => BlogsTable)
   @JoinColumn({name: 'blogId'})
   blogId: string; //BlogsTable;
-
-  @OneToMany(
-      () => StatusesPostsTable,
-      (StatusesPostsTable) => StatusesPostsTable.postId
-  )
-  @JoinColumn({name: 'statuses'})
-  statuses: StatusesPostsTable[]
 }
