@@ -10,6 +10,8 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { PostsTable } from '../../domain/posts.table';
 import { StatusesPostsTable } from '../../../statuses/domain/statuses.entity';
+import {BlogsTable} from "../../../blogs/domain/blog.entity";
+import {UsersTable} from "../../../users/domain/users.table";
 
 @Injectable()
 export class PostsQueryRepositoryTypeOrm {
@@ -167,8 +169,9 @@ export class PostsQueryRepositoryTypeOrm {
         subQuery: SelectQueryBuilder<StatusesPostsTable>,
     ) =>
         subQuery
-            .select('nwl.id')
+            .select(['nwl.postId', 'nwl.'])
             .from(StatusesPostsTable, 'nwl')
+            .leftJoin(UsersTable, 'u', 'nwl.userId = u.')
             .where('p.id = nwl."postId"')
             .andWhere('nwl."userStatus" = :like1', { like1: 'Like' })
     //console.log('subQuery =', subQueryCountLikesPost)
@@ -182,12 +185,11 @@ export class PostsQueryRepositoryTypeOrm {
       .select(['p.*', 'b.name AS "blogName"'])
       .addSelect(subQueryCountLikesPost, 'likesCount')
       .addSelect(subQueryCountDislikesPost, 'dislikesCount')
-      //   .addSelect(subQueryNewestLikes, 'newestLikes')
       .leftJoin('p.blogId', 'b')
       .orderBy(`p.${query.sortBy}`, query.sortDirection)
       .skip((query.pageNumber - 1) * query.pageSize)
       .take(query.pageSize)
-      .getMany();
+      .getRawMany();
     console.log('postsPaging =', postsPaging);
     return postsPaging;
 
