@@ -152,7 +152,7 @@ export class PostsQueryRepositoryTypeOrm {
         .select('CAST (COUNT(*) AS INT)', 'likesCount')
         .from(StatusesPostsTable, 'sp')
         .where('p.id = sp."postId"')
-        .andWhere('sp."userStatus" = :status', { status: 'Like' });
+        .andWhere('sp."userStatus" = :like', { like: 'Like' });
 
     const subQueryCountDislikesPost = (
       subQuery: SelectQueryBuilder<StatusesPostsTable>,
@@ -161,8 +161,16 @@ export class PostsQueryRepositoryTypeOrm {
         .select('CAST (COUNT(*) AS INT)')
         .from(StatusesPostsTable, 'sp')
         .where('p.id = sp."postId"')
-        .andWhere('sp."userStatus" = :status', { status: 'Dislike' });
+        .andWhere('sp."userStatus" = :dislike', { dislike: 'Dislike' });
 
+    const subQueryNewestLikes = (
+        subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+        subQuery
+            .select('nwl.id')
+            .from(StatusesPostsTable, 'nwl')
+            .where('p.id = nwl."postId"')
+            .andWhere('nwl."userStatus" = :like1', { like1: 'Like' })
     //console.log('subQuery =', subQueryCountLikesPost)
     // if (blogId) {
     //   posts.where('p.blogId = :blogId', { blogId: blogId });
@@ -171,16 +179,11 @@ export class PostsQueryRepositoryTypeOrm {
     // const totalPosts = await posts.getCount();
     //
     const postsPaging = await posts
-      // .select(['p.*'])
-      // .addSelect(subQueryCountLikesPost, 'likesCount')
-      // .addSelect(subQueryCountDislikesPost, 'dislikesCount')
-      // .leftJoin('p.blogId', 'b')
-      .leftJoinAndMapMany(
-        'p.statuses',
-        StatusesPostsTable,
-        's',
-        'p.id = s."postId"',
-      )
+      .select(['p.*', 'b.name AS "blogName"'])
+      .addSelect(subQueryCountLikesPost, 'likesCount')
+      .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+      //   .addSelect(subQueryNewestLikes, 'newestLikes')
+      .leftJoin('p.blogId', 'b')
       .orderBy(`p.${query.sortBy}`, query.sortDirection)
       .skip((query.pageNumber - 1) * query.pageSize)
       .take(query.pageSize)
