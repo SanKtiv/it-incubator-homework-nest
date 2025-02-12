@@ -12,6 +12,7 @@ import { PostsTable } from '../../domain/posts.table';
 import { StatusesPostsTable } from '../../../statuses/domain/statuses.entity';
 import {BlogsTable} from "../../../blogs/domain/blog.entity";
 import {UsersTable} from "../../../users/domain/users.table";
+import {AccountDataTable} from "../../../users/domain/account-data.table";
 
 @Injectable()
 export class PostsQueryRepositoryTypeOrm {
@@ -169,11 +170,20 @@ export class PostsQueryRepositoryTypeOrm {
         subQuery: SelectQueryBuilder<StatusesPostsTable>,
     ) =>
         subQuery
-            .select(['nwl.postId', 'nwl.'])
-            .from(StatusesPostsTable, 'nwl')
-            .leftJoin(UsersTable, 'u', 'nwl.userId = u.')
-            .where('p.id = nwl."postId"')
-            .andWhere('nwl."userStatus" = :like1', { like1: 'Like' })
+            // .select(['nwl.postId', 'nwl.userId', 'nwl.addedAt'])
+            .from(StatusesPostsTable, 'st')
+            // .leftJoin(UsersTable, 'u', 'nwl.userId = u.id')
+            // .leftJoin(AccountDataTable, 'a', 'nwl.userId = u.id')
+            // .where('p.id = nwl."postId"')
+            .andWhere('st."userStatus" = :like1', { like1: 'Like' })
+
+    const newestLikes = await this.dataSource
+        .createQueryBuilder(StatusesPostsTable, 'st')
+        // .select(['st.*'])
+        // .from(StatusesPostsTable, 'st')
+        .where('st."userStatus" = :like1', { like1: 'Like' })
+        // .getMany()
+
     //console.log('subQuery =', subQueryCountLikesPost)
     // if (blogId) {
     //   posts.where('p.blogId = :blogId', { blogId: blogId });
@@ -181,15 +191,27 @@ export class PostsQueryRepositoryTypeOrm {
 
     // const totalPosts = await posts.getCount();
     //
+    // const postsPagingRaw = await posts
+    //   .select(['p.*', 'b.name AS "blogName"'])
+    //   .addSelect(subQueryCountLikesPost, 'likesCount')
+    //   .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+    //   .leftJoin('p.blogId', 'b')
+    //   .orderBy(`p.${query.sortBy}`, query.sortDirection)
+    //   .skip((query.pageNumber - 1) * query.pageSize)
+    //   .take(query.pageSize)
+    //   .getRawMany();
+
     const postsPaging = await posts
-      .select(['p.*', 'b.name AS "blogName"'])
-      .addSelect(subQueryCountLikesPost, 'likesCount')
-      .addSelect(subQueryCountDislikesPost, 'dislikesCount')
-      .leftJoin('p.blogId', 'b')
-      .orderBy(`p.${query.sortBy}`, query.sortDirection)
-      .skip((query.pageNumber - 1) * query.pageSize)
-      .take(query.pageSize)
-      .getRawMany();
+        // .addSelect(subQueryCountLikesPost, 'likesCount')
+        // .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+        // .leftJoin('p.blogId', 'b')
+        // .addSelect
+        .addSelect('nls."userStatus"', 'userStatus')
+        .leftJoin(subQueryNewestLikes, 'nls', 'nls."postId" = p.id')
+        .orderBy(`p.${query.sortBy}`, query.sortDirection)
+        .skip((query.pageNumber - 1) * query.pageSize)
+        .take(query.pageSize)
+        .getRawMany();
     console.log('postsPaging =', postsPaging);
     return postsPaging;
 
