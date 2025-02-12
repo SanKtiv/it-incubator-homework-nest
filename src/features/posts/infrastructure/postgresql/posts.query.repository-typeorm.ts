@@ -199,29 +199,38 @@ export class PostsQueryRepositoryTypeOrm {
       .where('st."userStatus" = :like1', { like1: 'Like' });
     // .getRawMany()
 
-    const postsPaging = await posts
-      .select(['p.*', 'b.name AS "blogName"'])
-      .addSelect('s."userStatus"', 'myStatus')
-      .addSelect(subQueryCountLikesPost, 'likesCount')
-      .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+    const subQueryPostsPaging = (
+      subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+      subQuery
+        .select(['p.*', 'b.name AS "blogName"'])
+        .addSelect('s."userStatus"', 'myStatus')
+        .addSelect(subQueryCountLikesPost, 'likesCount')
+        .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+        .from(PostsTable, 'p')
+        .leftJoin(
+          StatusesPostsTable,
+          's',
+          's."postId" = p."id" AND s."userId" = :userID',
+          { userID: userId },
+        )
+        .leftJoin('p.blogId', 'b')
+        .orderBy(`p.${query.sortBy}`, query.sortDirection)
+        .skip((query.pageNumber - 1) * query.pageSize)
+        .take(query.pageSize);
+
+    const postsPaging = await this.dataSource
+      .createQueryBuilder()
+      .select(['pg.*'])
       .addSelect('nls."login"', 'login')
       .addSelect('nls."userId"', 'userId')
       .addSelect('nls."addedAt"', 'addedAt')
-      .leftJoin(
-        StatusesPostsTable,
-        's',
-        's."postId" = p."id" AND s."userId" = :userID',
-        { userID: userId },
-      )
-      .leftJoin('p.blogId', 'b')
+      .from(subQueryPostsPaging, 'pg')
       .leftJoin(
         subQueryNewestLikes,
         'nls',
-        'nls."postId" = p."id" AND nls."rowNumber" <= 3',
+        'nls."postId" = pg."id" AND nls."rowNumber" <= 3',
       )
-      .orderBy(`p.${query.sortBy}`, query.sortDirection)
-      .skip((query.pageNumber - 1) * query.pageSize)
-      .take(query.pageSize)
       .getRawMany();
     console.log('postsPaging =', postsPaging);
     return postsPaging;
