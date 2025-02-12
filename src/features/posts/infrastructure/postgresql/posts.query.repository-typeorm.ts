@@ -140,42 +140,42 @@ export class PostsQueryRepositoryTypeOrm {
   }
 
   async getMany(
-    query: PostQuery,
-    blogId: string,
-    userId?: string,
+      query: PostQuery,
+      blogId: string,
+      userId?: string | null,
   ): Promise<PostsTable[]> {
-    //const filter = dto.blogId ? { blogId: dto.blogId } : {};
+    userId = userId ?? null
 
     const posts = this.repository.createQueryBuilder('p');
 
     const subQueryCountLikesPost = (
-      subQuery: SelectQueryBuilder<StatusesPostsTable>,
+        subQuery: SelectQueryBuilder<StatusesPostsTable>,
     ) =>
-      subQuery
-        .select('CAST (COUNT(*) AS INT)', 'likesCount')
-        .from(StatusesPostsTable, 'sp')
-        .where('p.id = sp."postId"')
-        .andWhere('sp."userStatus" = :like', { like: 'Like' });
+        subQuery
+            .select('CAST (COUNT(*) AS INT)', 'likesCount')
+            .from(StatusesPostsTable, 'sp')
+            .where('p.id = sp."postId"')
+            .andWhere('sp."userStatus" = :like', {like: 'Like'});
 
     const subQueryCountDislikesPost = (
-      subQuery: SelectQueryBuilder<StatusesPostsTable>,
+        subQuery: SelectQueryBuilder<StatusesPostsTable>,
     ) =>
-      subQuery
-        .select('CAST (COUNT(*) AS INT)')
-        .from(StatusesPostsTable, 'sp')
-        .where('p.id = sp."postId"')
-        .andWhere('sp."userStatus" = :dislike', { dislike: 'Dislike' });
+        subQuery
+            .select('CAST (COUNT(*) AS INT)')
+            .from(StatusesPostsTable, 'sp')
+            .where('p.id = sp."postId"')
+            .andWhere('sp."userStatus" = :dislike', {dislike: 'Dislike'});
 
     const subQueryNewestLikes = (
         subQuery: SelectQueryBuilder<StatusesPostsTable>,
     ) =>
         subQuery
-            .select(['st."postId"', 'st."userId"','st."addedAt"'])
+            .select(['st."postId"', 'st."userId"', 'st."addedAt"'])
             .from(StatusesPostsTable, 'st')
             .addSelect('ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"')
             .addSelect('"user"."login"')
             .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
-            .where('st."userStatus" = :like1', { like1: 'Like' })
+            .where('st."userStatus" = :like1', {like1: 'Like'})
 
     const usersWithLoginEntity = (subQuery: SelectQueryBuilder<StatusesPostsTable>) =>
         subQuery
@@ -183,43 +183,27 @@ export class PostsQueryRepositoryTypeOrm {
             .addSelect('acd."login" AS "login"')
             .from(UsersTable, 'u')
             .leftJoin('u.accountData', 'acd')
-        // .getRawMany()
 
     const newestLikes = await this.dataSource
         .createQueryBuilder(StatusesPostsTable, 'st')
-        .select(['st."postId"', 'st."userId"','st."addedAt"'])
+        .select(['st."postId"', 'st."userId"', 'st."addedAt"'])
         .addSelect('ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"')
         .addSelect('"user"."login"')
         .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
-        .where('st."userStatus" = :like1', { like1: 'Like' })
-        .getRawMany()
-
-    //console.log('subQuery =', subQueryCountLikesPost)
-    // if (blogId) {
-    //   posts.where('p.blogId = :blogId', { blogId: blogId });
-    // }
-
-    // const totalPosts = await posts.getCount();
-    //
-    // const postsPagingRaw = await posts
-    //   .select(['p.*', 'b.name AS "blogName"'])
-    //   .addSelect(subQueryCountLikesPost, 'likesCount')
-    //   .addSelect(subQueryCountDislikesPost, 'dislikesCount')
-    //   .leftJoin('p.blogId', 'b')
-    //   .orderBy(`p.${query.sortBy}`, query.sortDirection)
-    //   .skip((query.pageNumber - 1) * query.pageSize)
-    //   .take(query.pageSize)
-    //   .getRawMany();
+        .where('st."userStatus" = :like1', {like1: 'Like'})
+        // .getRawMany()
 
     const postsPaging = await posts
         .select(['p.*', 'b.name AS "blogName"'])
+        .addSelect('s."userStatus"', 'myStatus')
         .addSelect(subQueryCountLikesPost, 'likesCount')
         .addSelect(subQueryCountDislikesPost, 'dislikesCount')
         .addSelect('nls."login"', 'login')
         .addSelect('nls."userId"', 'userId')
         .addSelect('nls."addedAt"', 'addedAt')
+        .leftJoin(StatusesPostsTable, 's', 's."postId" = p."id" AND s."userId" = :userID', {userID: userId})
         .leftJoin('p.blogId', 'b')
-        .leftJoin(subQueryNewestLikes, 'nls', 'nls."postId" = p."id"')
+        .leftJoin(subQueryNewestLikes, 'nls', 'nls."postId" = p."id" AND nls."rowNumber" <= 3')
         .orderBy(`p.${query.sortBy}`, query.sortDirection)
         .skip((query.pageNumber - 1) * query.pageSize)
         .take(query.pageSize)
