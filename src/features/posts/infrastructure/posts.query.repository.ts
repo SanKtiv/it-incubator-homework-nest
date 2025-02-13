@@ -10,7 +10,11 @@ export class PostsQueryRepository {
     await this.postsQueryRepository.findById_RAW(id);
   }
 
-  async getPostsPaging(query: PostQuery, blogId: string, userId?: string) {
+  async getPostsPaging(
+    query: PostQuery,
+    blogId: string | null,
+    userId?: string | null,
+  ) {
     return this.postsQueryRepository.getMany(query, blogId);
   }
 }

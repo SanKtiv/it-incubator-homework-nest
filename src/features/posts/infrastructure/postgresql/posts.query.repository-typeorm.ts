@@ -1,40 +1,39 @@
-import {Injectable, InternalServerErrorException} from '@nestjs/common';
-import {PostQuery} from '../../api/models/input/posts.input.dto';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { PostQuery } from '../../api/models/input/posts.input.dto';
 import {
-    postViewModel_SQL,
-    PostsOutputDto,
-    PostsPaging,
-    postsPagingViewModel_SQL,
+  postViewModel_SQL,
+  PostsOutputDto,
+  PostsPaging,
+  postsPagingViewModel_SQL,
 } from '../../api/models/output/posts.output.dto';
-import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
-import {DataSource, Repository, SelectQueryBuilder} from 'typeorm';
-import {PostsTable} from '../../domain/posts.table';
-import {StatusesPostsTable} from '../../../statuses/domain/statuses.entity';
-import {BlogsTable} from '../../../blogs/domain/blog.entity';
-import {UsersTable} from '../../../users/domain/users.table';
-import {AccountDataTable} from '../../../users/domain/account-data.table';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
+import { PostsTable } from '../../domain/posts.table';
+import { StatusesPostsTable } from '../../../statuses/domain/statuses.entity';
+import { BlogsTable } from '../../../blogs/domain/blog.entity';
+import { UsersTable } from '../../../users/domain/users.table';
+import { AccountDataTable } from '../../../users/domain/account-data.table';
 
 @Injectable()
 export class PostsQueryRepositoryTypeOrm {
-    constructor(
-        @InjectDataSource() protected dataSource: DataSource,
-        @InjectRepository(PostsTable) protected repository: Repository<PostsTable>,
-    ) {
-    }
+  constructor(
+    @InjectDataSource() protected dataSource: DataSource,
+    @InjectRepository(PostsTable) protected repository: Repository<PostsTable>,
+  ) {}
 
-    // private get repository() {
-    //     return this.dataSource.getRepository(PostsTable);
-    // }
+  // private get repository() {
+  //     return this.dataSource.getRepository(PostsTable);
+  // }
 
-    private get builder() {
-        return this.repository.createQueryBuilder('p');
-    }
+  private get builder() {
+    return this.repository.createQueryBuilder('p');
+  }
 
-    async findById_RAW(
-        id: string,
-        userId?: string | null,
-    ): Promise<PostsOutputDto | null> {
-        const findByIdQuery = `
+  async findById_RAW(
+    id: string,
+    userId?: string | null,
+  ): Promise<PostsOutputDto | null> {
+    const findByIdQuery = `
     WITH "post" AS (
       SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
             b."name" AS "blogName", s."userStatus" AS "myStatus",
@@ -61,30 +60,30 @@ export class PostsQueryRepositoryTypeOrm {
     LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"
     ORDER BY n."addedAt" DESC`;
 
-        const parameters = [id, userId];
+    const parameters = [id, userId];
 
-        try {
-            const post = await this.dataSource.query(findByIdQuery, parameters);
+    try {
+      const post = await this.dataSource.query(findByIdQuery, parameters);
 
-            if (!post[0]) return null;
+      if (!post[0]) return null;
 
-            return postViewModel_SQL(post)[0];
-        } catch (e) {
-            console.log(e);
-            throw new InternalServerErrorException();
-        }
+      return postViewModel_SQL(post)[0];
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
     }
+  }
 
-    async findPaging_RAW(
-        query: PostQuery,
-        blogId: string | null,
-        userId: string | null,
-    ): Promise<PostsPaging> {
-        const pageSize = query.pageSize;
-        const pageOffSet = (query.pageNumber - 1) * query.pageSize;
-        const stringSelectByBlogId: string = blogId ? 'WHERE p."blogId" = $4' : '';
+  async findPaging_RAW(
+    query: PostQuery,
+    blogId: string | null,
+    userId: string | null,
+  ): Promise<PostsPaging> {
+    const pageSize = query.pageSize;
+    const pageOffSet = (query.pageNumber - 1) * query.pageSize;
+    const stringSelectByBlogId: string = blogId ? 'WHERE p."blogId" = $4' : '';
 
-        const postPagingQuery = `
+    const postPagingQuery = `
     WITH "postsPaging" AS (
       SELECT p."id", p."content", p."title", p."shortDescription", p."blogId", p."createdAt",
             b."name" AS "blogName", s."userStatus" AS "myStatus",
@@ -112,121 +111,125 @@ export class PostsQueryRepositoryTypeOrm {
     LEFT JOIN "newestLikesSorted" AS n ON p."id" = n."postId"
     ORDER BY p."${query.sortBy}" ${query.sortDirection}, n."addedAt" DESC`;
 
-        const countPostsQuery = blogId
-            ? `SELECT COUNT(*) FROM "posts" WHERE "blogId" = $1`
-            : `SELECT COUNT(*) FROM "posts"`;
+    const countPostsQuery = blogId
+      ? `SELECT COUNT(*) FROM "posts" WHERE "blogId" = $1`
+      : `SELECT COUNT(*) FROM "posts"`;
 
-        const parametersPaging = blogId
-            ? [userId, pageSize, pageOffSet, blogId]
-            : [userId, pageSize, pageOffSet];
+    const parametersPaging = blogId
+      ? [userId, pageSize, pageOffSet, blogId]
+      : [userId, pageSize, pageOffSet];
 
-        const parametersCount = blogId ? [blogId] : [];
+    const parametersCount = blogId ? [blogId] : [];
 
-        try {
-            const [totalPosts] = await this.dataSource.query(
-                countPostsQuery,
-                parametersCount,
-            );
+    try {
+      const [totalPosts] = await this.dataSource.query(
+        countPostsQuery,
+        parametersCount,
+      );
 
-            const postsPaging = await this.dataSource.query(
-                postPagingQuery,
-                parametersPaging,
-            );
+      const postsPaging = await this.dataSource.query(
+        postPagingQuery,
+        parametersPaging,
+      );
 
-            return postsPagingViewModel_SQL(query, totalPosts.count, postsPaging);
-        } catch (e) {
-            console.log(e);
-            throw new InternalServerErrorException();
-        }
+      return postsPagingViewModel_SQL(query, totalPosts.count, postsPaging);
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException();
     }
+  }
 
-    async getMany(
-        query: PostQuery,
-        blogId: string | null,
-        userId?: string | null,
-    ): Promise<PostsTable[]> {
-        userId = userId ?? null;
-        blogId = null
+  async getMany(
+    query: PostQuery,
+    blogId: string | null,
+    userId?: string | null,
+  ): Promise<PostsTable[]> {
+    userId = userId ?? null;
+    blogId = blogId ?? null;
 
-        const posts = this.repository.createQueryBuilder('p');
+    const posts = this.repository.createQueryBuilder('p');
 
-        const subQueryCountLikesPost = (
-            subQuery: SelectQueryBuilder<StatusesPostsTable>,
-        ) =>
-            subQuery
-                .select('CAST (COUNT(*) AS INT)', 'likesCount')
-                .from(StatusesPostsTable, 'sp')
-                .where('p.id = sp."postId"')
-                .andWhere('sp."userStatus" = :like', {like: 'Like'});
+    const totalPosts = await posts
+      .where('p.blogId = :blogId OR :blogId IS NULL', { blogId })
+      .getCount();
 
-        const subQueryCountDislikesPost = (
-            subQuery: SelectQueryBuilder<StatusesPostsTable>,
-        ) =>
-            subQuery
-                .select('CAST (COUNT(*) AS INT)')
-                .from(StatusesPostsTable, 'sp')
-                .where('p.id = sp."postId"')
-                .andWhere('sp."userStatus" = :dislike', {dislike: 'Dislike'});
+    const subQueryCountLikesPost = (
+      subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+      subQuery
+        .select('CAST (COUNT(*) AS INT)', 'likesCount')
+        .from(StatusesPostsTable, 'sp')
+        .where('p.id = sp."postId"')
+        .andWhere('sp."userStatus" = :like', { like: 'Like' });
 
-        const subQueryNewestLikes = (
-            subQuery: SelectQueryBuilder<StatusesPostsTable>,
-        ) =>
-            subQuery
-                .select(['st."postId"', 'st."userId"', 'st."addedAt"'])
-                .from(StatusesPostsTable, 'st')
-                .addSelect(
-                    'ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"',
-                )
-                .addSelect('"user"."login"')
-                .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
-                .where('st."userStatus" = :like1', {like1: 'Like'});
+    const subQueryCountDislikesPost = (
+      subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+      subQuery
+        .select('CAST (COUNT(*) AS INT)')
+        .from(StatusesPostsTable, 'sp')
+        .where('p.id = sp."postId"')
+        .andWhere('sp."userStatus" = :dislike', { dislike: 'Dislike' });
 
-        const usersWithLoginEntity = (
-            subQuery: SelectQueryBuilder<StatusesPostsTable>,
-        ) =>
-            subQuery
-                .select(['u."id"'])
-                .addSelect('acd."login" AS "login"')
-                .from(UsersTable, 'u')
-                .leftJoin('u.accountData', 'acd');
+    const subQueryNewestLikes = (
+      subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+      subQuery
+        .select(['st."postId"', 'st."userId"', 'st."addedAt"'])
+        .from(StatusesPostsTable, 'st')
+        .addSelect(
+          'ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"',
+        )
+        .addSelect('"user"."login"')
+        .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
+        .where('st."userStatus" = :like1', { like1: 'Like' });
 
-        const subQueryPostsPaging = (
-            subQuery: SelectQueryBuilder<StatusesPostsTable>,
-        ) =>
-            subQuery
-                .select(['p.*', 'b.name AS "blogName"'])
-                .addSelect('s."userStatus"', 'myStatus')
-                .addSelect(subQueryCountLikesPost, 'likesCount')
-                .addSelect(subQueryCountDislikesPost, 'dislikesCount')
-                .from(PostsTable, 'p')
-                .where('p."blogId" = :blogId OR :blogId IS NULL', {blogId: blogId})
-                .leftJoin(
-                    StatusesPostsTable,
-                    's',
-                    's."postId" = p."id" AND s."userId" = :userID',
-                    {userID: userId},
-                )
-                .leftJoin('p.blogId', 'b')
-                .orderBy(`p.${query.sortBy}`, query.sortDirection)
-                .skip((query.pageNumber - 1) * query.pageSize)
-                .take(query.pageSize);
+    const usersWithLoginEntity = (
+      subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+      subQuery
+        .select(['u."id"'])
+        .addSelect('acd."login" AS "login"')
+        .from(UsersTable, 'u')
+        .leftJoin('u.accountData', 'acd');
 
-        const postsPaging = await this.dataSource
-            .createQueryBuilder()
-            .select(['pg.*'])
-            .addSelect('nls."login"', 'login')
-            .addSelect('nls."userId"', 'userId')
-            .addSelect('nls."addedAt"', 'addedAt')
-            .from(subQueryPostsPaging, 'pg')
-            .leftJoin(
-                subQueryNewestLikes,
-                'nls',
-                'nls."postId" = pg."id" AND nls."rowNumber" <= 3',
-            )
-            .getRawMany();
-        console.log('postsPaging =', postsPaging);
-        return postsPaging;
+    const subQueryPostsPaging = (
+      subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+      subQuery
+        .select(['p.*', 'b.name AS "blogName"'])
+        .addSelect('s."userStatus"', 'myStatus')
+        .addSelect(subQueryCountLikesPost, 'likesCount')
+        .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+        .from(PostsTable, 'p')
+        .where('p."blogId" = :blogId OR :blogId IS NULL', { blogId })
+        .leftJoin(
+          StatusesPostsTable,
+          's',
+          's."postId" = p."id" AND s."userId" = :userID',
+          { userID: userId },
+        )
+        .leftJoin('p.blogId', 'b')
+        .orderBy(`p.${query.sortBy}`, query.sortDirection)
+        .skip((query.pageNumber - 1) * query.pageSize)
+        .take(query.pageSize);
 
-        //return postsPaging(query, totalPosts, postsPaging, dto.userId);
-    }
+    const postsPaging = await this.dataSource
+      .createQueryBuilder()
+      .select(['pg.*'])
+      .addSelect('nls."login"', 'login')
+      .addSelect('nls."userId"', 'userId')
+      .addSelect('nls."addedAt"', 'addedAt')
+      .from(subQueryPostsPaging, 'pg')
+      .leftJoin(
+        subQueryNewestLikes,
+        'nls',
+        'nls."postId" = pg."id" AND nls."rowNumber" <= 3',
+      )
+      .getRawMany();
+    console.log('postsPaging =', postsPaging);
+    return postsPaging;
+
+    //return postsPaging(query, totalPosts, postsPaging, dto.userId);
+  }
 }
