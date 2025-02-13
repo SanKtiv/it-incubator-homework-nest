@@ -214,6 +214,12 @@ export class PostsQueryRepositoryTypeOrm {
         .skip((query.pageNumber - 1) * query.pageSize)
         .take(query.pageSize);
 
+    const newestLikesSorted = await this.dataSource
+      .createQueryBuilder()
+      .from(subQueryNewestLikes, 'nl')
+      .where('nl."rowNumber" <= 3')
+      .getRawMany();
+
     const postsPaging = await this.dataSource
       .createQueryBuilder()
       .select(['pg.*'])
@@ -227,8 +233,8 @@ export class PostsQueryRepositoryTypeOrm {
         'nls."postId" = pg."id" AND nls."rowNumber" <= 3',
       )
       .getRawMany();
-    console.log('postsPaging =', postsPaging);
-    return postsPaging;
+    console.log('postsPaging =', newestLikesSorted);
+    return newestLikesSorted;
 
     //return postsPaging(query, totalPosts, postsPaging, dto.userId);
   }
