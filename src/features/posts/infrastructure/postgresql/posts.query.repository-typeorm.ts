@@ -199,7 +199,7 @@ export class PostsQueryRepositoryTypeOrm {
                 .addSelect(subQueryCountLikesPost, 'likesCount')
                 .addSelect(subQueryCountDislikesPost, 'dislikesCount')
                 .from(PostsTable, 'p')
-                .where('IF :blogId THEN p."blogId" = :blogId', {blogId: blogId})
+                .where('p."blogId" = :blogId OR :blogId IS NULL', {blogId: blogId})
                 .leftJoin(
                     StatusesPostsTable,
                     's',
