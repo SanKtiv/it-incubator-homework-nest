@@ -10,9 +10,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { PostsTable } from '../../domain/posts.table';
 import { StatusesPostsTable } from '../../../statuses/domain/statuses.entity';
-import { BlogsTable } from '../../../blogs/domain/blog.entity';
 import { UsersTable } from '../../../users/domain/users.table';
-import { AccountDataTable } from '../../../users/domain/account-data.table';
 
 @Injectable()
 export class PostsQueryRepositoryTypeOrm {
@@ -140,6 +138,90 @@ export class PostsQueryRepositoryTypeOrm {
   }
 
   async getMany(
+      query: PostQuery,
+      blogId: string | null,
+      userId?: string | null,
+  ): Promise<PostsTable[]> {
+    userId = userId ?? null;
+    blogId = blogId ?? null;
+
+    const subQueryCountLikesPost = (
+        subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+        subQuery
+            .select('CAST (COUNT(*) AS INT)', 'likesCount')
+            .from(StatusesPostsTable, 'sp')
+            .where('p.id = sp."postId"')
+            .andWhere('sp."userStatus" = :like', { like: 'Like' });
+
+    const subQueryCountDislikesPost = (
+        subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+        subQuery
+            .select('CAST (COUNT(*) AS INT)')
+            .from(StatusesPostsTable, 'sp')
+            .where('p.id = sp."postId"')
+            .andWhere('sp."userStatus" = :dislike', { dislike: 'Dislike' });
+
+    const subQueryNewestLikes = (
+        subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+        subQuery
+            .select(['st."postId"', 'st."userId"', 'st."addedAt"'])
+            .from(StatusesPostsTable, 'st')
+            .addSelect(
+                'ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"',
+            )
+            .addSelect('"user"."login"')
+            .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
+            .where('st."userStatus" = :like1', { like1: 'Like' });
+
+    const usersWithLoginEntity = (
+        subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+        subQuery
+            .select(['u."id"'])
+            .addSelect('acd."login" AS "login"')
+            .from(UsersTable, 'u')
+            .leftJoin('u.accountData', 'acd');
+
+    const posts = this.dataSource
+        .createQueryBuilder(PostsTable, 'p')
+        .select(['p.*'])
+        .where('p."blogId" = :blogId OR :blogId IS NULL', { blogId })
+
+    const postsPaging = await posts
+        .addSelect('b."name"', 'blogName')
+        .addSelect('s."userStatus"', 'myStatus')
+        .addSelect(subQueryCountLikesPost, 'likesCount')
+        .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+        .leftJoin(
+            StatusesPostsTable,
+            's',
+            's."postId" = p."id" AND s."userId" = :userID',
+            { userID: userId },
+        )
+        .leftJoin('p.blogId', 'b')
+        .orderBy(`p.${query.sortBy}`, query.sortDirection)
+        .skip((query.pageNumber - 1) * query.pageSize)
+        .take(query.pageSize)
+        .getRawMany();
+
+    const totalPosts = await posts.getCount()
+
+    const newestLikesSorted = await this.dataSource
+        .createQueryBuilder()
+        .from(subQueryNewestLikes, 'nl')
+        .where('nl."rowNumber" <= 3')
+        .getRawMany();
+
+    console.log('postsPaging =', newestLikesSorted);
+    return postsPaging;
+
+    //return postsPaging(query, totalPosts, postsPaging, dto.userId);
+  }
+
+  async getManyAllInOne(
     query: PostQuery,
     blogId: string | null,
     userId?: string | null,
