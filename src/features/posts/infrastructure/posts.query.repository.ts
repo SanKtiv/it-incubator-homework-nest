@@ -15,6 +15,6 @@ export class PostsQueryRepository {
     blogId: string | null,
     userId?: string | null,
   ) {
-    return this.postsQueryRepository.getMany(query, blogId);
+    return this.postsQueryRepository.getManyAllInOne(query, blogId);
   }
 }

@@ -4,7 +4,7 @@ import {
   postViewModel_SQL,
   PostsOutputDto,
   PostsPaging,
-  postsPagingViewModel_SQL,
+  postsPagingViewModel_SQL, postsModelOutput,
 } from '../../api/models/output/posts.output.dto';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
@@ -229,9 +229,8 @@ export class PostsQueryRepositoryTypeOrm {
     userId = userId ?? null;
     blogId = blogId ?? null;
 
-    const posts = this.repository.createQueryBuilder('p');
-
-    const totalPosts = await posts
+    const totalPosts = await this.repository
+        .createQueryBuilder('p')
       .where('p.blogId = :blogId OR :blogId IS NULL', { blogId })
       .getCount();
 
@@ -264,7 +263,7 @@ export class PostsQueryRepositoryTypeOrm {
         )
         .addSelect('"user"."login"')
         .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
-        .where('st."userStatus" = :like1', { like1: 'Like' });
+        .where('st."userStatus" = :like', { like: 'Like' });
 
     const usersWithLoginEntity = (
       subQuery: SelectQueryBuilder<StatusesPostsTable>,
@@ -288,35 +287,29 @@ export class PostsQueryRepositoryTypeOrm {
         .leftJoin(
           StatusesPostsTable,
           's',
-          's."postId" = p."id" AND s."userId" = :userID',
-          { userID: userId },
+          's."postId" = p."id" AND s."userId" = :userId',
+          { userId },
         )
         .leftJoin('p.blogId', 'b')
         .orderBy(`p.${query.sortBy}`, query.sortDirection)
         .skip((query.pageNumber - 1) * query.pageSize)
         .take(query.pageSize);
 
-    const newestLikesSorted = await this.dataSource
-      .createQueryBuilder()
-      .from(subQueryNewestLikes, 'nl')
-      .where('nl."rowNumber" <= 3')
-      .getRawMany();
-
     const postsPaging = await this.dataSource
       .createQueryBuilder()
       .select(['pg.*'])
-      .addSelect('nls."login"', 'login')
-      .addSelect('nls."userId"', 'userId')
-      .addSelect('nls."addedAt"', 'addedAt')
+      .addSelect('nl."login"', 'login')
+      .addSelect('nl."userId"', 'userId')
+      .addSelect('nl."addedAt"', 'addedAt')
       .from(subQueryPostsPaging, 'pg')
       .leftJoin(
         subQueryNewestLikes,
-        'nls',
-        'nls."postId" = pg."id" AND nls."rowNumber" <= 3',
+        'nl',
+        'nl."postId" = pg."id" AND nl."rowNumber" <= 3',
       )
       .getRawMany();
-    console.log('postsPaging =', newestLikesSorted);
-    return newestLikesSorted;
+    console.log('postsPaging =', postsModelOutput(postsPaging)[0].extendedLikesInfo);
+    return postsPaging;
 
     //return postsPaging(query, totalPosts, postsPaging, dto.userId);
   }

@@ -83,6 +83,41 @@ export const postCreatedViewModel = (
   },
 });
 
+export function postsModelOutput(posts: any[]) {
+    const outputModel: PostsOutputDto[] = [];
+
+    const newestLikes: NewestLikes[] = [];
+
+    posts.map(post =>
+        outputModel.find(e => e.id && e.id === post.id) ?
+            newestLikes.push({
+                userId: post.userId,
+                login: post.login,
+                addedAt: post.addedAt
+                }) :
+            outputModel.push({
+                id: post.id,
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName,
+                createdAt: post.createdAt.toISOString(),
+                extendedLikesInfo: {
+                    likesCount: post.likesCount ?? 0,
+                    dislikesCount: post.dislikesCount ?? 0,
+                    myStatus: post.myStatus ?? 'None',
+                    newestLikes: newestLikes.sort((a: any, b: any) => b - a),
+                }
+            }));
+
+    // posts.map(post =>
+    //     outputModel.find(e => )
+    // )
+
+    return outputModel;
+}
+
 export function postViewModel_SQL(postFromSQL): PostsOutputDto[] {
   const resultArray: PostsOutputDto[] = [];
 
