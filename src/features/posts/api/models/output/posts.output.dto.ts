@@ -86,8 +86,6 @@ export const postCreatedViewModel = (
 export function postsModelOutput(posts: any[]) {
     const outputModel: any = [];
 
-    //const newestLikes: NewestLikes[] = [];
-
     posts.map(post =>
         outputModel.find(e => e.id && e.id === post.id) ?
             outputModel :
@@ -109,24 +107,34 @@ export function postsModelOutput(posts: any[]) {
 
     posts.map(post =>
         outputModel.map(model =>
-        model.id !== post.id ?? model.extendedLikesInfo.newestLikes.push({
+            model.id === post.id && post.userId ? model.extendedLikesInfo.newestLikes.push({
                 userId: post.userId,
                 login: post.login,
                 addedAt: post.addedAt
-            })
+            }) : model
         )
     )
 
     outputModel.map(model =>
         model.extendedLikesInfo.newestLikes
             .sort((a: any, b: any) => b.addedAt - a.addedAt)
+            .map(e => e.addedAt.toISOString() ?? e)
     )
-
-    outputModel.map(model =>
-        model.extendedLikesInfo.newestLikes.map(e => e.addedAt.toISOString()))
 
     return outputModel;
 }
+
+export const postsPagingModelOutput = (
+    query: PostQuery,
+    totalPosts: number,
+    postsPaging: any[],
+): PostsPaging => ({
+    pagesCount: Math.ceil(totalPosts / +query.pageSize),
+    page: +query.pageNumber,
+    pageSize: +query.pageSize,
+    totalCount: +totalPosts,
+    items: postsModelOutput(postsPaging)
+})
 
 export function postViewModel_SQL(postFromSQL): PostsOutputDto[] {
   const resultArray: PostsOutputDto[] = [];

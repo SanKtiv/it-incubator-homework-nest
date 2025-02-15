@@ -4,7 +4,7 @@ import {
   postViewModel_SQL,
   PostsOutputDto,
   PostsPaging,
-  postsPagingViewModel_SQL, postsModelOutput,
+  postsPagingViewModel_SQL, postsModelOutput, postsPagingModelOutput,
 } from '../../api/models/output/posts.output.dto';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
@@ -221,11 +221,11 @@ export class PostsQueryRepositoryTypeOrm {
     //return postsPaging(query, totalPosts, postsPaging, dto.userId);
   }
 
-  async getManyAllInOne(
+  async getPostsPaging(
     query: PostQuery,
     blogId: string | null,
     userId?: string | null,
-  ): Promise<PostsTable[]> {
+  ): Promise<PostsPaging> {
     userId = userId ?? null;
     blogId = blogId ?? null;
 
@@ -308,8 +308,8 @@ export class PostsQueryRepositoryTypeOrm {
         'nl."postId" = pg."id" AND nl."rowNumber" <= 3',
       )
       .getRawMany();
-    console.log('postsPaging =', postsModelOutput(postsPaging)[0].extendedLikesInfo);
-    return postsPaging;
+    //console.log('postsPaging =', postsModelOutput(postsPaging)[0].extendedLikesInfo);
+    return postsPagingModelOutput(query, totalPosts, postsPaging);
 
     //return postsPaging(query, totalPosts, postsPaging, dto.userId);
   }
