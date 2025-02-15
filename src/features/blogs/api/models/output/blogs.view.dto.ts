@@ -56,7 +56,7 @@ export const blogPagingOutputModel = (
     blogsPaging.map((blog) => blogsOutputDto(blog)),
   );
 
-export const blogsPagingViewModel = (
+export const blogsPagingModelOutput = (
   query: BlogQuery,
   totalBlogs: number,
   blogsPaging: BlogsTable[],

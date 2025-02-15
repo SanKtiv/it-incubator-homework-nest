@@ -16,14 +16,14 @@ import { usersOutputDto } from './models/output/users.output.dto';
 import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
-import { UsersQueryRepositoryOrm } from '../infrastructure/postgresqldb/users.query.repository-typeorm';
+import { UsersQueryRepositoryTypeOrm } from '../infrastructure/postgresqldb/users.query.repository-typeorm';
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly usersQueryRepository: UsersQueryRepositoryOrm,
+    private readonly usersQueryRepository: UsersQueryRepositoryTypeOrm,
   ) {}
 
   @Post()

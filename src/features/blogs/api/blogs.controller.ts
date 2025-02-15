@@ -39,15 +39,17 @@ import { BlogsQueryRepositorySql } from '../infrastructure/postgresdb/blogs.quer
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
+import {BlogsQueryRepository} from "../infrastructure/blogs.query.repository";
+import {PostsQueryRepository} from "../../posts/infrastructure/posts.query.repository";
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
-    //private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
+      private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
     private readonly blogsRepositorySql: BlogsRepositorySql,
     private readonly blogsService: BlogsService,
-    //private readonly postsQueryRepository: PostsQueryRepositoryMongo,
+      private readonly postsQueryRepository: PostsQueryRepository,
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
@@ -78,14 +80,14 @@ export class BlogsController {
 
   @Get()
   async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto> {
-    return this.blogsQueryRepositorySql.getBlogsPaging_RAW(query);
+    return this.blogsQueryRepository.findBlogs(query);
   }
 
   @Get(':blogId')
   async getBlogById(
     @Param('blogId', paramIdIsUUIdPipe) id: string,
   ): Promise<BlogsViewDto> {
-    const blog = await this.blogsQueryRepositorySql.findById_RAW(id);
+    const blog = await this.blogsQueryRepository.findById(id);
 
     if (!blog) throw new NotFoundException();
 
@@ -98,7 +100,7 @@ export class BlogsController {
     @Query() query: PostQuery,
     @Req() req: Request,
   ): Promise<PostsPaging> {
-    const blog = await this.blogsQueryRepositorySql.findById_RAW(blogId);
+    const blog = await this.blogsQueryRepository.findById(blogId);
 
     if (!blog) throw new NotFoundException();
 
@@ -106,7 +108,7 @@ export class BlogsController {
       req.headers.authorization,
     );
 
-    return this.postsQueryRepositorySql.findPaging_RAW(query, blogId, userId);
+    return this.postsQueryRepository.getPostsPaging(query, blogId, userId);
   }
 
   @Put(':blogId')

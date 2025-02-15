@@ -27,12 +27,13 @@ import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-au
 import { InfoCurrentUserDto } from './models/output/info-current-user.dto';
 import { UsersService } from '../../users/application/users.service';
 import { AccessJwtToken } from '../application/use-cases/access-jwt-token';
-import { UsersQueryRepositoryOrm } from '../../users/infrastructure/postgresqldb/users.query.repository-typeorm';
+import { UsersQueryRepositoryTypeOrm } from '../../users/infrastructure/postgresqldb/users.query.repository-typeorm';
+import {UsersQueryRepository} from "../../users/infrastructure/users.query.repository";
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly usersQueryRepository: UsersQueryRepositoryOrm,
+    private readonly usersQueryRepository: UsersQueryRepository,
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly devicesService: DevicesService,
@@ -127,7 +128,7 @@ export class AuthController {
   async getInfoCurrentUser(
     @CurrentUserId() userId: string,
   ): Promise<InfoCurrentUserDto> {
-    return this.usersQueryRepository.infoCurrentUser(userId);
+    return this.usersQueryRepository.getInfoCurrentUser(userId);
   }
 
   @Post('test')

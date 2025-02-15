@@ -20,7 +20,7 @@ import {
 } from '../../api/models/output/users.output.dto';
 
 @Injectable()
-export class UsersQueryRepositoryOrm {
+export class UsersQueryRepositoryTypeOrm {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   private get repository() {

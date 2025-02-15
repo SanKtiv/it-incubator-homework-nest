@@ -41,12 +41,9 @@ import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 export class PostController {
   constructor(
     private readonly postsService: PostsService,
-    //private readonly blogsQueryRepository: BlogsQueryRepositoryMongo,
-    //private readonly postsQueryRepository: PostsQueryRepositoryMongo,
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsService: CommentsService,
-    //private readonly commentsQueryRepository: CommentsQueryRepositoryMongo,
     private readonly commentsSqlQueryRepository: CommentsQueryRepositorySql,
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
@@ -54,7 +51,7 @@ export class PostController {
   @Get('test')
   async get() {
     const query = new PostQuery();
-    return this.postsQueryRepository.getPostsPaging(query, null);
+    return this.postsQueryRepository.getPostById('46971ee9-d696-4561-86b6-57f48e7ecfb4');
   }
 
   @Get(':postId')
@@ -66,7 +63,7 @@ export class PostController {
       req.headers.authorization,
     );
 
-    const post = await this.postsQueryRepositorySql.findById_RAW(id, userId);
+    const post = await this.postsQueryRepository.getPostById(id, userId);
 
     if (!post) throw new NotFoundException();
 
@@ -111,7 +108,7 @@ export class PostController {
 
     const blogId = null;
 
-    return this.postsQueryRepositorySql.findPaging_RAW(query, blogId, userId);
+    return this.postsQueryRepository.getPostsPaging(query, blogId, userId);
   }
 
   @Get(':postId/comments')

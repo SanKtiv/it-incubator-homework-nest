@@ -83,7 +83,11 @@ export const postCreatedViewModel = (
   },
 });
 
-export function postsModelOutput(posts: any[]) {
+export const postModelOutput = () => ({
+
+})
+
+export function postsModelOutput(posts: any[]): PostsOutputDto[] {
     const outputModel: any = [];
 
     posts.map(post =>

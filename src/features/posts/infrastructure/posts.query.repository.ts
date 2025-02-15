@@ -6,8 +6,8 @@ import { PostQuery } from '../api/models/input/posts.input.dto';
 export class PostsQueryRepository {
   constructor(protected postsQueryRepository: PostsQueryRepositoryTypeOrm) {}
 
-  async getPostById(id: string) {
-    await this.postsQueryRepository.findById_RAW(id);
+  async getPostById(id: string, userId?: string | null) {
+    return this.postsQueryRepository.findById(id, userId);
   }
 
   async getPostsPaging(
