@@ -84,17 +84,13 @@ export const postCreatedViewModel = (
 });
 
 export function postsModelOutput(posts: any[]) {
-    const outputModel: PostsOutputDto[] = [];
+    const outputModel: any = [];
 
-    const newestLikes: NewestLikes[] = [];
+    //const newestLikes: NewestLikes[] = [];
 
     posts.map(post =>
         outputModel.find(e => e.id && e.id === post.id) ?
-            newestLikes.push({
-                userId: post.userId,
-                login: post.login,
-                addedAt: post.addedAt
-                }) :
+            outputModel :
             outputModel.push({
                 id: post.id,
                 title: post.title,
@@ -107,13 +103,27 @@ export function postsModelOutput(posts: any[]) {
                     likesCount: post.likesCount ?? 0,
                     dislikesCount: post.dislikesCount ?? 0,
                     myStatus: post.myStatus ?? 'None',
-                    newestLikes: newestLikes.sort((a: any, b: any) => b - a),
+                    newestLikes: []
                 }
             }));
 
-    // posts.map(post =>
-    //     outputModel.find(e => )
-    // )
+    posts.map(post =>
+        outputModel.map(model =>
+        model.id !== post.id ?? model.extendedLikesInfo.newestLikes.push({
+                userId: post.userId,
+                login: post.login,
+                addedAt: post.addedAt
+            })
+        )
+    )
+
+    outputModel.map(model =>
+        model.extendedLikesInfo.newestLikes
+            .sort((a: any, b: any) => b.addedAt - a.addedAt)
+    )
+
+    outputModel.map(model =>
+        model.extendedLikesInfo.newestLikes.map(e => e.addedAt.toISOString()))
 
     return outputModel;
 }
