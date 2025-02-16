@@ -18,7 +18,6 @@ import { EmailConfirmationTable } from '../domain/email-сonfirmation.table';
 @Injectable()
 export class UsersService {
   constructor(
-    //private readonly usersRepository: UsersRepositoryMongo,
     private readonly usersRepository: UsersRepositoryTypeOrm,
   ) {}
 
@@ -46,10 +45,6 @@ export class UsersService {
 
     return this.usersRepository.create(user);
   }
-
-  // async saveUser(userDocument: UserDocument) {
-  //   return this.usersRepository.save(userDocument);
-  // }
 
   createCodeWithExpireDate() {
     return {

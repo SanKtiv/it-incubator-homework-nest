@@ -27,7 +27,6 @@ import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-au
 import { InfoCurrentUserDto } from './models/output/info-current-user.dto';
 import { UsersService } from '../../users/application/users.service';
 import { AccessJwtToken } from '../application/use-cases/access-jwt-token';
-import { UsersQueryRepositoryTypeOrm } from '../../users/infrastructure/postgresqldb/users.query.repository-typeorm';
 import {UsersQueryRepository} from "../../users/infrastructure/users.query.repository";
 
 @Controller('auth')
