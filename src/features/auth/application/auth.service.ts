@@ -5,14 +5,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import b_crypt from 'bcrypt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
 import { UsersTable } from '../../users/domain/users.table';
-import { UsersRepositoryTypeOrm } from '../../users/infrastructure/postgresqldb/users.repository-typeorm';
 import { PasswordRecoveryTable } from '../../users/domain/password-recovery.table';
+import {UsersRepository} from "../../users/infrastructure/users.repository";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly emailAdapter: EmailAdapter,
-    private readonly usersRepository: UsersRepositoryTypeOrm,
+    private readonly usersRepository: UsersRepository,
     private readonly usersService: UsersService,
   ) {}
 
@@ -36,7 +36,7 @@ export class AuthService {
 
     user.emailConfirmation.isConfirmed = true;
 
-    await this.usersRepository.save(user);
+    await this.usersRepository.update(user);
   }
 
   async resendConfirmCode(email: string): Promise<void> {
@@ -60,7 +60,7 @@ export class AuthService {
 
     user.emailConfirmation.expirationDate = emailConfirmation.expirationDate;
 
-    await this.usersRepository.save(user);
+    await this.usersRepository.update(user);
   }
 
   // async emailIsConfirmed(email: string) {
@@ -109,7 +109,7 @@ export class AuthService {
     passwordRecovery.expirationDateRecovery = code.expirationDate;
     user.passwordRecovery = passwordRecovery;
 
-    await this.usersRepository.save(user);
+    await this.usersRepository.update(user);
 
     await this.emailAdapter.sendRecoveryConfirmationCode(
       email,
@@ -128,6 +128,6 @@ export class AuthService {
       dto.newPassword,
     );
 
-    await this.usersRepository.save(user);
+    await this.usersRepository.update(user);
   }
 }

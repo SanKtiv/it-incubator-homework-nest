@@ -5,20 +5,17 @@ import {
 } from '@nestjs/common';
 import { UsersInputDto } from '../api/models/input/users.input.dto';
 import bcrypt from 'bcrypt';
-import { UsersRepositoryMongo } from '../infrastructure/mongodb/users.repository-mongo';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
-import { UserDocument } from '../domain/users.schema';
-import { UsersRepositoryRawsql } from '../infrastructure/postgresqldb/users.repository-rawsql';
 import { UsersTable } from '../domain/users.table';
-import { UsersRepositoryTypeOrm } from '../infrastructure/postgresqldb/users.repository-typeorm';
 import { AccountDataTable } from '../domain/account-data.table';
 import { EmailConfirmationTable } from '../domain/email-сonfirmation.table';
+import {UsersRepository} from "../infrastructure/users.repository";
 
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly usersRepository: UsersRepositoryTypeOrm,
+    private readonly usersRepository: UsersRepository,
   ) {}
 
   async createUser(dto: UsersInputDto): Promise<UsersTable> {
@@ -53,8 +50,8 @@ export class UsersService {
     };
   }
 
-  async existUserLogin(login: string): Promise<BadRequestException | void> {
-    const user = await this.usersRepository.findByLogin_RAW(login);
+  async existUserLogin(login: string): Promise<void> {
+    const user = await this.usersRepository.findByLogin(login);
     if (user) {
       throw new BadRequestException({
         message: [{ message: 'login is already exist', field: 'login' }],
@@ -62,8 +59,8 @@ export class UsersService {
     }
   }
 
-  async existUserEmail(email: string): Promise<BadRequestException | void> {
-    const userDocument = await this.usersRepository.findByEmail_RAW(email);
+  async existUserEmail(email: string): Promise<void> {
+    const userDocument = await this.usersRepository.findByEmail(email);
     if (userDocument) {
       throw new BadRequestException({
         message: [{ message: 'email is already exist', field: 'email' }],
@@ -78,7 +75,7 @@ export class UsersService {
   }
 
   async deleteUserById(id: string): Promise<void> {
-    const user = await this.usersRepository.remove(id);
+    const user = await this.usersRepository.deleteById(id);
     if (!user) throw new NotFoundException();
   }
 
