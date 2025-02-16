@@ -13,25 +13,28 @@ import { PostsRepositorySql } from '../features/posts/infrastructure/postgresql/
 import { CommentsRepositorySql } from '../features/comments/infrastructure/postgresql/comments.repository-sql';
 import { StatusesRepositorySql } from '../features/statuses/infrastructure/statuses.repository-sql';
 import { DevicesRepositoryTypeOrm } from '../features/security/infrastructure/postgresqldb/devices-repository-type-orm.service';
+import {DevicesRepository} from "../features/security/infrastructure/devices.repository";
+import {BlogsRepository} from "../features/blogs/infrastructure/blogs.repository";
+import {PostsRepository} from "../features/posts/infrastructure/posts.repository";
 
 @Controller('testing/all-data')
 export class TestingController {
   constructor(
-    private readonly blogsRepository: BlogsRepositorySql,
+    private readonly blogsRepository: BlogsRepository,
     private readonly usersRepository: UsersRepositoryRawsql,
-    private readonly postsRepository: PostsRepositorySql,
+    private readonly postsRepository: PostsRepository,
     private readonly commentsRepository: CommentsRepositorySql,
     private readonly requestApiRepository: RequestApiRepositoryTypeOrm,
-    private readonly devicesRepository: DevicesRepositoryTypeOrm,
+    private readonly devicesRepository: DevicesRepository,
     private readonly statusesRepository: StatusesRepositorySql,
   ) {}
 
   @Delete()
   @HttpCode(204)
   async deleteAllData(): Promise<void> {
-    await this.blogsRepository.deleteAll_RAW();
+    await this.blogsRepository.deleteAll();
     await this.usersRepository.deleteAll_RAW();
-    await this.postsRepository.deleteAll_RAW();
+    await this.postsRepository.deleteAll();
     await this.commentsRepository.deleteAll_RAW();
     await this.requestApiRepository.deleteAll_RAW();
     await this.devicesRepository.deleteAll();

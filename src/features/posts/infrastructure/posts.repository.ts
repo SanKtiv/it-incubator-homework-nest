@@ -7,7 +7,11 @@ import { PostsTable } from '../domain/posts.table';
 export class PostsRepository {
   constructor(private readonly postsRepository: PostsRepositoryTypeOrm) {}
 
-  create(dto: PostsTable) {
+  async create(dto: PostsTable) {
     return this.postsRepository.create(dto);
+  }
+
+  async deleteAll(): Promise<void> {
+    await this.postsRepository.clear()
   }
 }

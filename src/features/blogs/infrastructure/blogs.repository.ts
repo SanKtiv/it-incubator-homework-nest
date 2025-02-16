@@ -24,5 +24,7 @@ export class BlogsRepository {
     return this.blogsRepository.deleteOne(id);
   }
 
-  async clear() {}
+  async deleteAll(): Promise<void> {
+    await this.blogsRepository.deleteAll()
+  }
 }

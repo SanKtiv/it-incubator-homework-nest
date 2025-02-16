@@ -11,14 +11,14 @@ import {
   OutputDeviceDto,
 } from '../api/models/output-device.dto';
 import { DeviceTable } from '../domain/device.table';
-import { DevicesRepositoryTypeOrm } from '../infrastructure/postgresqldb/devices-repository-type-orm.service';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { RefreshJwtToken } from '../../auth/application/use-cases/refresh-jwt-token';
+import {DevicesRepository} from "../infrastructure/devices.repository";
 
 @Injectable()
 export class DevicesService {
   constructor(
-    private readonly devicesRepository: DevicesRepositoryTypeOrm,
+    private readonly devicesRepository: DevicesRepository,
     private readonly jwtService: JwtService,
     private readonly accessTokenService: AccessJwtToken,
     private readonly refreshTokenService: RefreshJwtToken,
@@ -81,15 +81,15 @@ export class DevicesService {
     const deviceDocument = await this.devicesRepository.findById(deviceId);
     if (!deviceDocument) throw new NotFoundException();
     if (deviceDocument.userId !== userId) throw new ForbiddenException();
-    await this.devicesRepository.deleteDeviceById(deviceId);
+    await this.devicesRepository.deleteById(deviceId);
   }
 
   async deleteDeviceById(payload: any) {
     const device = await this.checkExpirationDate(payload);
-    await this.devicesRepository.deleteDeviceById(device.id);
+    await this.devicesRepository.deleteById(device.id);
   }
 
   async deleteAllDevicesWithoutCurrent(payload: any) {
-    await this.devicesRepository.deleteDevices(payload.sub, payload.deviceId);
+    await this.devicesRepository.deleteManyByUserId(payload.sub, payload.deviceId);
   }
 }

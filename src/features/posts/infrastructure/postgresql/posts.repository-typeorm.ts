@@ -25,6 +25,10 @@ export class PostsRepositoryTypeOrm {
     }
   }
 
+  async clear(): Promise<void> {
+    await this.repository.clear();
+  }
+
   // async findById_ORM(id: string): Promise<PostsTable | null> {
   //     return this.repository_ORM.findOneBy({id: id});
   // }
@@ -37,9 +41,6 @@ export class PostsRepositoryTypeOrm {
   //     await this.repository_ORM.remove(post);
   // }
   //
-  // async deleteAll_ORM(): Promise<void> {
-  //     await this.repository_ORM.clear();
-  // }
   //
   // async create_RAW(dto: PostsInputDto) {
   //     const insertPostQuery = `

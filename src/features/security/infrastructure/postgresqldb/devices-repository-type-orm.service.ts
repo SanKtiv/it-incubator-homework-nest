@@ -25,13 +25,13 @@ export class DevicesRepositoryTypeOrm {
     return this.repository.findBy({ userId: userId });
   }
 
-  async deleteDeviceById(id: string) {
+  async deleteDeviceById(id: string): Promise<DeviceTable | void> {
     const device = await this.findById(id);
     if (!device) return;
     return this.repository.remove(device);
   }
 
-  async deleteDevices(userId: string, deviceId: string) {
+  async deleteDevices(userId: string, deviceId: string): Promise<DeviceTable[] | void> {
     const devices = await this.repository.findBy({
       userId: userId,
       id: Not(deviceId),
