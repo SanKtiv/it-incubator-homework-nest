@@ -147,6 +147,6 @@ export class UsersRepositoryTypeOrm {
   }
 
   async clear(): Promise<void> {
-    await this.repository.clear();
+    await this.dataSource.query('TRUNCATE TABLE "users" CASCADE');
   }
 }

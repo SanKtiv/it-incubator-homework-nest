@@ -26,7 +26,7 @@ export class PostsRepositoryTypeOrm {
   }
 
   async clear(): Promise<void> {
-    await this.repository.clear();
+    await this.dataSource.query('TRUNCATE TABLE "posts" CASCADE');
   }
 
   // async findById_ORM(id: string): Promise<PostsTable | null> {

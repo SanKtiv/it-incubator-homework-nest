@@ -16,7 +16,7 @@ export class BlogsRepositoryTypeOrm {
   ) {}
 
   private get builder() {
-    return this.repository.createQueryBuilder('b');
+    return this.dataSource.createQueryBuilder();
   }
 
   async createBlog(dto: BlogsTable): Promise<BlogsTable> {
@@ -47,6 +47,6 @@ export class BlogsRepositoryTypeOrm {
   }
 
   async deleteAll(): Promise<void> {
-    await this.repository.clear();
+    await this.dataSource.query('TRUNCATE TABLE "blogs" CASCADE');
   }
 }
