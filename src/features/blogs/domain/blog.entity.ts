@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn} from 'typeorm';
 
 @Entity('blogs')
 export class BlogsTable {
@@ -19,4 +19,7 @@ export class BlogsTable {
 
   @Column({ default: true })
   isMembership: boolean;
+
+  @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
+  deletedAt?: Date; // Поле для хранения даты удаления для softRemove, softDelete
 }

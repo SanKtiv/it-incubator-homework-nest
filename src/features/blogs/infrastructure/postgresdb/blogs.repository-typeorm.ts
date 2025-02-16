@@ -42,8 +42,14 @@ export class BlogsRepositoryTypeOrm {
     return this.repository.update({ id }, inputUpdate);
   }
 
-  async deleteOne(id: string): Promise<UpdateResult> {
-    return this.repository.softDelete({ id });
+  async deleteOne(id: string): Promise<UpdateResult | void> {
+    try {
+      const s = await this.repository.softDelete({ id });
+      return s
+    }
+    catch (e) {
+      console.log(e)
+    }
   }
 
   async deleteAll(): Promise<void> {
