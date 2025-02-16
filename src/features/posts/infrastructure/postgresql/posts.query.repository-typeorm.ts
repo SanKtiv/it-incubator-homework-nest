@@ -256,7 +256,7 @@ export class PostsQueryRepositoryTypeOrm {
           { userId },
         )
         .leftJoin('p.blogId', 'b')
-        .orderBy(`p.${query.sortBy}`, query.sortDirection)
+        .orderBy(`p."${query.sortBy}"`, query.sortDirection)
         .skip((query.pageNumber - 1) * query.pageSize)
         .take(query.pageSize);
 
@@ -274,6 +274,13 @@ export class PostsQueryRepositoryTypeOrm {
         .orderBy(`pg."${query.sortBy}"`, query.sortDirection)
         .getRawMany();
 
+    const s = await this.dataSource
+        .createQueryBuilder()
+        .select(['pg.*'])
+        .from(subQueryPostsPaging, 'pg')
+        .getRawMany();
+
+    console.log('s =', s)
     return postsPagingModelOutput(query, totalPosts, postsPaging);
   }
 }
