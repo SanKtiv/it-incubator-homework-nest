@@ -5,14 +5,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import b_crypt from 'bcrypt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
 import { UsersTable } from '../../users/domain/users.table';
-import { UsersRepositoryOrm } from '../../users/infrastructure/postgresqldb/users.repository-typeorm';
+import { UsersRepositoryTypeOrm } from '../../users/infrastructure/postgresqldb/users.repository-typeorm';
 import { PasswordRecoveryTable } from '../../users/domain/password-recovery.table';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly emailAdapter: EmailAdapter,
-    private readonly usersRepository: UsersRepositoryOrm,
+    private readonly usersRepository: UsersRepositoryTypeOrm,
     private readonly usersService: UsersService,
   ) {}
 

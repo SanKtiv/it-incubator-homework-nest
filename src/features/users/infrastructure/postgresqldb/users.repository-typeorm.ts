@@ -8,7 +8,7 @@ import { AccountDataTable } from '../../domain/account-data.table';
 import { PasswordRecoveryTable } from '../../domain/password-recovery.table';
 
 @Injectable()
-export class UsersRepositoryOrm {
+export class UsersRepositoryTypeOrm {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   private get repository() {
@@ -146,7 +146,7 @@ export class UsersRepositoryOrm {
     }
   }
 
-  async removeAll() {
+  async clear(): Promise<void> {
     await this.repository.clear();
   }
 }

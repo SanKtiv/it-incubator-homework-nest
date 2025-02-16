@@ -11,7 +11,7 @@ import add from 'date-fns/add';
 import { UserDocument } from '../domain/users.schema';
 import { UsersRepositoryRawsql } from '../infrastructure/postgresqldb/users.repository-rawsql';
 import { UsersTable } from '../domain/users.table';
-import { UsersRepositoryOrm } from '../infrastructure/postgresqldb/users.repository-typeorm';
+import { UsersRepositoryTypeOrm } from '../infrastructure/postgresqldb/users.repository-typeorm';
 import { AccountDataTable } from '../domain/account-data.table';
 import { EmailConfirmationTable } from '../domain/email-сonfirmation.table';
 
@@ -19,7 +19,7 @@ import { EmailConfirmationTable } from '../domain/email-сonfirmation.table';
 export class UsersService {
   constructor(
     //private readonly usersRepository: UsersRepositoryMongo,
-    private readonly usersRepository: UsersRepositoryOrm,
+    private readonly usersRepository: UsersRepositoryTypeOrm,
   ) {}
 
   async createUser(dto: UsersInputDto): Promise<UsersTable> {

@@ -66,7 +66,7 @@ import { StatusesRepositorySql } from './features/statuses/infrastructure/status
 import { AccountDataTable } from './features/users/domain/account-data.table';
 import { EmailConfirmationTable } from './features/users/domain/email-сonfirmation.table';
 import { PasswordRecoveryTable } from './features/users/domain/password-recovery.table';
-import { UsersRepositoryOrm } from './features/users/infrastructure/postgresqldb/users.repository-typeorm';
+import { UsersRepositoryTypeOrm } from './features/users/infrastructure/postgresqldb/users.repository-typeorm';
 import { DevicesRepositoryTypeOrm } from './features/security/infrastructure/postgresqldb/devices-repository-type-orm.service';
 import { UsersQueryRepositoryTypeOrm } from './features/users/infrastructure/postgresqldb/users.query.repository-typeorm';
 import { BlogsRepository } from './features/blogs/infrastructure/blogs.repository';
@@ -78,6 +78,8 @@ import { BlogsQueryRepository } from './features/blogs/infrastructure/blogs.quer
 import { PostsQueryRepositoryTypeOrm } from './features/posts/infrastructure/postgresql/posts.query.repository-typeorm';
 import { PostsQueryRepository } from './features/posts/infrastructure/posts.query.repository';
 import {UsersQueryRepository} from "./features/users/infrastructure/users.query.repository";
+import {DevicesRepository} from "./features/security/infrastructure/devices.repository";
+import {UsersRepository} from "./features/users/infrastructure/users.repository";
 
 dotenv.config();
 
@@ -121,13 +123,15 @@ const sqlRepositories = [
   PostsQueryRepositorySql,
   CommentsRepositorySql,
   CommentsQueryRepositorySql,
+  UsersRepository,
   UsersRepositoryRawsql,
   UsersQueryRepository,
   UsersQueryRepositoryRawsql,
+  DevicesRepository,
   DevicesRepositoryRawsql,
   RequestApiRepositoryTypeOrm,
   StatusesRepositorySql,
-  UsersRepositoryOrm,
+  UsersRepositoryTypeOrm,
   DevicesRepositoryTypeOrm,
   UsersQueryRepositoryTypeOrm,
 ];
