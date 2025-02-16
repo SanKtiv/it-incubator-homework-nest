@@ -274,17 +274,6 @@ export class PostsQueryRepositoryTypeOrm {
         .orderBy(`pg."${query.sortBy}"`, query.sortDirection)
         .getRawMany();
 
-    const res = await this.dataSource
-        .createQueryBuilder()
-        .select(['pg.*'])
-        .from(subQueryPostsPaging, 'pg')
-        .leftJoin(
-            subQueryNewestLikes,
-            'nl',
-            'nl."postId" = pg."id" AND nl."rowNumber" <= 3',
-        )
-        .getRawMany();
-console.log('postsPaging =', postsPaging)
     return postsPagingModelOutput(query, totalPosts, postsPaging);
   }
 }
