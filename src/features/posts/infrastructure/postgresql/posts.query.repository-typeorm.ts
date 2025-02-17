@@ -20,12 +20,52 @@ export class PostsQueryRepositoryTypeOrm {
     @InjectRepository(PostsTable) protected repository: Repository<PostsTable>,
   ) {}
 
-  // private get repository() {
-  //     return this.dataSource.getRepository(PostsTable);
-  // }
-
   private get builder() {
     return this.repository.createQueryBuilder('p');
+  }
+
+  private getSubQueryCountLikesPost = (
+      subQuery: SelectQueryBuilder<StatusesPostsTable>,
+  ) =>
+      subQuery
+          .select('CAST (COUNT(*) AS INT)', 'likesCount')
+          .from(StatusesPostsTable, 'sp')
+          .where('p.id = sp."postId"')
+          .andWhere('sp."userStatus" = :like', { like: 'Like' });
+
+  private getSubQueryCountDislikesPost = (
+      subQuery: SelectQueryBuilder<StatusesPostsTable>,
+  ) =>
+      subQuery
+          .select('CAST (COUNT(*) AS INT)')
+          .from(StatusesPostsTable, 'sp')
+          .where('p.id = sp."postId"')
+          .andWhere('sp."userStatus" = :dislike', { dislike: 'Dislike' });
+
+  private getSubQueryNewestLikes() {
+    const usersWithLoginEntity = (
+        subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+        subQuery
+            .select(['u."id"'])
+            .addSelect('acd."login" AS "login"')
+            .from(UsersTable, 'u')
+            .leftJoin('u.accountData', 'acd');
+
+    const res = (
+        subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    ) =>
+        subQuery
+            .select(['st."postId"', 'st."userId"', 'st."addedAt"'])
+            .from(StatusesPostsTable, 'st')
+            .addSelect(
+                'ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"',
+            )
+            .addSelect('"user"."login"')
+            .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
+            .where('st."userStatus" = :like', { like: 'Like' });
+
+    return res;
   }
 
   async findById(
@@ -195,23 +235,23 @@ export class PostsQueryRepositoryTypeOrm {
     userId = userId ?? null;
     blogId = blogId ?? null;
 
-    const subQueryCountLikesPost = (
-      subQuery: SelectQueryBuilder<StatusesPostsTable>,
-    ) =>
-      subQuery
-        .select('CAST (COUNT(*) AS INT)', 'likesCount')
-        .from(StatusesPostsTable, 'sp')
-        .where('p.id = sp."postId"')
-        .andWhere('sp."userStatus" = :like', { like: 'Like' });
-
-    const subQueryCountDislikesPost = (
-      subQuery: SelectQueryBuilder<StatusesPostsTable>,
-    ) =>
-      subQuery
-        .select('CAST (COUNT(*) AS INT)')
-        .from(StatusesPostsTable, 'sp')
-        .where('p.id = sp."postId"')
-        .andWhere('sp."userStatus" = :dislike', { dislike: 'Dislike' });
+    // const subQueryCountLikesPost = (
+    //   subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    // ) =>
+    //   subQuery
+    //     .select('CAST (COUNT(*) AS INT)', 'likesCount')
+    //     .from(StatusesPostsTable, 'sp')
+    //     .where('p.id = sp."postId"')
+    //     .andWhere('sp."userStatus" = :like', { like: 'Like' });
+    //
+    // const subQueryCountDislikesPost = (
+    //   subQuery: SelectQueryBuilder<StatusesPostsTable>,
+    // ) =>
+    //   subQuery
+    //     .select('CAST (COUNT(*) AS INT)')
+    //     .from(StatusesPostsTable, 'sp')
+    //     .where('p.id = sp."postId"')
+    //     .andWhere('sp."userStatus" = :dislike', { dislike: 'Dislike' });
 
     const subQueryNewestLikes = (
       subQuery: SelectQueryBuilder<StatusesPostsTable>,
@@ -250,8 +290,8 @@ export class PostsQueryRepositoryTypeOrm {
       .addCommonTableExpression(postsWithWherePaging, 'pwwp')
       .from('pwwp', 'p')
       .select(['p.*'])
-      .addSelect(subQueryCountLikesPost, 'likesCount')
-      .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+      .addSelect(this.getSubQueryCountLikesPost, 'likesCount')
+      .addSelect(this.getSubQueryCountDislikesPost, 'dislikesCount')
       .leftJoin(
           StatusesPostsTable,
           's',
