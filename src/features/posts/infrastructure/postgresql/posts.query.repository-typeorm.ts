@@ -194,10 +194,7 @@ export class PostsQueryRepositoryTypeOrm {
     userId = userId ?? null;
     blogId = blogId ?? null;
 
-    const totalPosts = await this.repository
-        .createQueryBuilder('p')
-      .where('p.blogId = :blogId OR :blogId IS NULL', { blogId })
-      .getCount();
+
 
     const subQueryCountLikesPost = (
       subQuery: SelectQueryBuilder<StatusesPostsTable>,
@@ -260,6 +257,76 @@ export class PostsQueryRepositoryTypeOrm {
         .skip((query.pageNumber - 1) * query.pageSize)
         .take(query.pageSize);
 
+
+    const postsWithWhere = this.repository
+        .createQueryBuilder('p')
+        .select(['p.*'])
+        // .addSelect('b.name', 'blogName')
+        // .addSelect('s."userStatus"', 'myStatus')
+        // .addSelect(subQueryCountLikesPost, 'likesCount')
+        // .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+        .where('p."blogId" = :blogId OR :blogId IS NULL', { blogId })
+        // .leftJoin(
+        //     StatusesPostsTable,
+        //     's',
+        //     's."postId" = p."id" AND s."userId" = :userId',
+        //     { userId },
+        // )
+        // .leftJoin('p.blogId', 'b')
+
+    const postsModel = this.dataSource
+        .createQueryBuilder()
+        .addCommonTableExpression(postsWithWhere, 'pww')
+        .from('pww', 'p')
+        .select(['p.*'])
+        // .addSelect('b.name', 'blogName')
+        // .addSelect('s."userStatus"', 'myStatus')
+        // .addSelect(subQueryCountLikesPost, 'likesCount')
+        // .addSelect(subQueryCountDislikesPost, 'dislikesCount')
+        //
+        // .where('p."blogId" = :blogId OR :blogId IS NULL', {blogId})
+        // .leftJoin(
+        //     StatusesPostsTable,
+        //     's',
+        //     's."postId" = p."id" AND s."userId" = :userId',
+        //     {userId},
+        // )
+        // .leftJoin('p.blogId', 'b')
+
+
+    try {
+      const postsModelPaging = await this.dataSource
+          .createQueryBuilder()
+          .addCommonTableExpression(postsModel, 'postsModel')
+          .from('postsModel', 'pm')
+          .select(['pm.*'])
+          // .orderBy(`pmp."${query.sortBy}"`, query.sortDirection)
+          // .skip((query.pageNumber - 1) * query.pageSize)
+          // .take(query.pageSize)
+          .getRawMany()
+
+      console.log('s =', postsModelPaging.length)
+    }
+    catch (e) {
+      console.log()
+    }
+
+      // const postsPagingCTE = await this.dataSource
+      //     .createQueryBuilder()
+      //     .addCommonTableExpression(posts, 'pg')
+      //     .select(['pg.*'])
+      //     .addSelect('nl."login"', 'login')
+      //     .addSelect('nl."userId"', 'userId')
+      //     .addSelect('nl."addedAt"', 'addedAt')
+      //     .from(subQueryPostsPaging, 'pg')
+      //     .leftJoin(
+      //         subQueryNewestLikes,
+      //         'nl',
+      //         'nl."postId" = pg."id" AND nl."rowNumber" <= 3')
+      //     .orderBy(`pg."${query.sortBy}"`, query.sortDirection)
+      //     .getRawMany();
+
+
     const postsPaging = await this.dataSource
         .createQueryBuilder()
         .select(['pg.*'])
@@ -274,13 +341,18 @@ export class PostsQueryRepositoryTypeOrm {
         .orderBy(`pg."${query.sortBy}"`, query.sortDirection)
         .getRawMany();
 
-    const s = await this.dataSource
-        .createQueryBuilder()
-        .select(['pg.*'])
-        .from(subQueryPostsPaging, 'pg')
-        .getRawMany();
+    const totalPosts = await this.repository
+        .createQueryBuilder('p')
+        .where('p.blogId = :blogId OR :blogId IS NULL', {blogId})
+        .getCount();
 
-    console.log('s =', s)
+    // const s = await this.dataSource
+    //     .createQueryBuilder()
+    //     .select(['pg.*'])
+    //     .from(subQueryPostsPaging, 'pg')
+    //     .getRawMany();
+
+
     return postsPagingModelOutput(query, totalPosts, postsPaging);
   }
 }
