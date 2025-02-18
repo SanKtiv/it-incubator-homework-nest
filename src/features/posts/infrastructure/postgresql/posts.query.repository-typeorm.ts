@@ -232,28 +232,6 @@ export class PostsQueryRepositoryTypeOrm {
     userId = userId ?? null;
     blogId = blogId ?? null;
 
-    // const subQueryNewestLikes = (
-    //   subQuery: SelectQueryBuilder<StatusesPostsTable>,
-    // ) =>
-    //   subQuery
-    //     .select(['st."postId"', 'st."userId"', 'st."addedAt"'])
-    //     .from(StatusesPostsTable, 'st')
-    //     .addSelect(
-    //       'ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"',
-    //     )
-    //     .addSelect('"user"."login"')
-    //     .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
-    //     .where('st."userStatus" = :like', { like: 'Like' });
-    //
-    // const usersWithLoginEntity = (
-    //   subQuery: SelectQueryBuilder<StatusesPostsTable>,
-    // ) =>
-    //   subQuery
-    //     .select(['u."id"'])
-    //     .addSelect('acd."login" AS "login"')
-    //     .from(UsersTable, 'u')
-    //     .leftJoin('u.accountData', 'acd');
-
     const postsSelected = this.repository
         .createQueryBuilder('p')
         .select(['p.*'])
