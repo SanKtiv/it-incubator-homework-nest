@@ -1,10 +1,9 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PostQuery } from '../../api/models/input/posts.input.dto';
 import {
-  postViewModel_SQL,
   PostsOutputDto,
   PostsPaging,
-  postsPagingViewModel_SQL, postsModelOutput, postsPagingModelOutput,
+    postsModelOutput, postsPagingModelOutput,
 } from '../../api/models/output/posts.output.dto';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
@@ -43,16 +42,16 @@ export class PostsQueryRepositoryTypeOrm {
           .andWhere('sp."userStatus" = :dislike', { dislike: 'Dislike' });
 
   private getSubQueryNewestLikes() {
-    const usersWithLoginEntity = (
-        subQuery: SelectQueryBuilder<StatusesPostsTable>,
-    ) =>
-        subQuery
-            .select(['u."id"'])
-            .addSelect('acd."login" AS "login"')
-            .from(UsersTable, 'u')
-            .leftJoin('u.accountData', 'acd');
+      const usersWithLoginEntity = (
+          subQuery: SelectQueryBuilder<StatusesPostsTable>,
+      ) =>
+          subQuery
+              .select(['u."id"'])
+              .addSelect('acd."login" AS "login"')
+              .from(UsersTable, 'u')
+              .leftJoin('u.accountData', 'acd');
 
-    const res = (
+    return (
         subQuery: SelectQueryBuilder<StatusesPostsTable>,
     ) =>
         subQuery
@@ -64,8 +63,6 @@ export class PostsQueryRepositoryTypeOrm {
             .addSelect('"user"."login"')
             .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
             .where('st."userStatus" = :like', { like: 'Like' });
-
-    return res;
   }
 
   async findById(
@@ -235,45 +232,27 @@ export class PostsQueryRepositoryTypeOrm {
     userId = userId ?? null;
     blogId = blogId ?? null;
 
-    // const subQueryCountLikesPost = (
+    // const subQueryNewestLikes = (
     //   subQuery: SelectQueryBuilder<StatusesPostsTable>,
     // ) =>
     //   subQuery
-    //     .select('CAST (COUNT(*) AS INT)', 'likesCount')
-    //     .from(StatusesPostsTable, 'sp')
-    //     .where('p.id = sp."postId"')
-    //     .andWhere('sp."userStatus" = :like', { like: 'Like' });
+    //     .select(['st."postId"', 'st."userId"', 'st."addedAt"'])
+    //     .from(StatusesPostsTable, 'st')
+    //     .addSelect(
+    //       'ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"',
+    //     )
+    //     .addSelect('"user"."login"')
+    //     .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
+    //     .where('st."userStatus" = :like', { like: 'Like' });
     //
-    // const subQueryCountDislikesPost = (
+    // const usersWithLoginEntity = (
     //   subQuery: SelectQueryBuilder<StatusesPostsTable>,
     // ) =>
     //   subQuery
-    //     .select('CAST (COUNT(*) AS INT)')
-    //     .from(StatusesPostsTable, 'sp')
-    //     .where('p.id = sp."postId"')
-    //     .andWhere('sp."userStatus" = :dislike', { dislike: 'Dislike' });
-
-    const subQueryNewestLikes = (
-      subQuery: SelectQueryBuilder<StatusesPostsTable>,
-    ) =>
-      subQuery
-        .select(['st."postId"', 'st."userId"', 'st."addedAt"'])
-        .from(StatusesPostsTable, 'st')
-        .addSelect(
-          'ROW_NUMBER() OVER (PARTITION BY "postId" ORDER BY "addedAt" DESC) AS "rowNumber"',
-        )
-        .addSelect('"user"."login"')
-        .leftJoin(usersWithLoginEntity, 'user', 'st."userId" = "user"."id"')
-        .where('st."userStatus" = :like', { like: 'Like' });
-
-    const usersWithLoginEntity = (
-      subQuery: SelectQueryBuilder<StatusesPostsTable>,
-    ) =>
-      subQuery
-        .select(['u."id"'])
-        .addSelect('acd."login" AS "login"')
-        .from(UsersTable, 'u')
-        .leftJoin('u.accountData', 'acd');
+    //     .select(['u."id"'])
+    //     .addSelect('acd."login" AS "login"')
+    //     .from(UsersTable, 'u')
+    //     .leftJoin('u.accountData', 'acd');
 
     const postsSelected = this.repository
         .createQueryBuilder('p')
@@ -295,36 +274,14 @@ export class PostsQueryRepositoryTypeOrm {
         .orderBy(`"${query.sortBy}"`, query.sortDirection)
         .offset((query.pageNumber - 1) * query.pageSize)
         .limit(query.pageSize)
-        // .skip((query.pageNumber - 1) * query.pageSize)
-        // .take(query.pageSize)
-
-      // const testerPostsPaging = await this.dataSource
-      //     .createQueryBuilder()
-      //     .addCommonTableExpression(postsWithWherePaging, 'pwwp')
-      //     .from('pwwp', 'p')
-      //     .select(['p.*'])
-      //     .orderBy(`p."${query.sortBy}"`, query.sortDirection)
-      //     .skip((query.pageNumber - 1) * query.pageSize)
-      //     .take(query.pageSize)
 
   const postsPaging = await this.dataSource
       .createQueryBuilder()
       .addCommonTableExpression(postsSelectedAndPaging, 'psp')
       .from('psp', 'p')
       .select(['p.*'])
-      // .addSelect(this.getSubQueryCountLikesPost, 'likesCount')
-      // .addSelect(this.getSubQueryCountDislikesPost, 'dislikesCount')
-      // .leftJoin(
-      //     StatusesPostsTable,
-      //     's',
-      //     's."postId" = p."id" AND s."userId" = :userId',
-      //     {userId},
-      // )
-      // .addSelect('s."userStatus"', 'myStatus')
-      // .leftJoin(BlogsTable, 'b', 'p."blogId" = b."id"')
-      // .addSelect('b.name', 'blogName')
       .leftJoin(
-          subQueryNewestLikes,
+          this.getSubQueryNewestLikes(),
           'nl',
           'nl."postId" = p."id" AND nl."rowNumber" <= 3')
       .addSelect('nl."login"', 'login')
