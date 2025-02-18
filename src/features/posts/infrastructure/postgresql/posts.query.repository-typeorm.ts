@@ -292,7 +292,7 @@ export class PostsQueryRepositoryTypeOrm {
             {userId},
         )
         .addSelect('s."userStatus"', 'myStatus')
-        .orderBy(`p."${query.sortBy}"`, query.sortDirection)
+        .orderBy(`"${query.sortBy}"`, query.sortDirection)
         .offset((query.pageNumber - 1) * query.pageSize)
         .limit(query.pageSize)
         // .skip((query.pageNumber - 1) * query.pageSize)
