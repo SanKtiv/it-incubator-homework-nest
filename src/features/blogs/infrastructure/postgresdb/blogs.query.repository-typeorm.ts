@@ -31,23 +31,27 @@ export class BlogsQueryRepositoryTypeOrm {
     return this.repository.findOneBy({ id });
   }
 
-  async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
+  async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto | void> {
     const searchName = query.searchNameTerm;
-
+    console.log('query =', query)
     const blogs = this.builder;
 
     if (searchName)
-      blogs.where('blog.name ~* :nameTerm', { nameTerm: searchName });
+      blogs.where('b.name ~* :nameTerm', {nameTerm: searchName});
+    try {
+      const pagingBlogs = await blogs
+          .orderBy(`b.${query.sortBy}`, query.sortDirection)
+          .skip((query.pageNumber - 1) * query.pageSize)
+          .take(query.pageSize)
+          .getMany();
 
-    const totalBlogs = await blogs.getCount();
+      const totalBlogs = await blogs.getCount();
 
-    const pagingBlogs = await blogs
-      .orderBy(`b.${query.sortBy}`, query.sortDirection)
-      .skip((query.pageNumber - 1) * query.pageSize)
-      .take(query.pageSize)
-      .getMany();
+      return blogsPagingModelOutput(query, totalBlogs, pagingBlogs);
+    } catch (e) {
+      console.log(e)
+    }
 
-    return blogsPagingModelOutput(query, totalBlogs, pagingBlogs);
   }
 
   async findById_RAW(id: string): Promise<BlogsViewDto | undefined> {
