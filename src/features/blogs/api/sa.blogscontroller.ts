@@ -64,7 +64,7 @@ export class SaBlogsController {
   }
 
   @Get()
-  async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto | void> {
+  async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto> {
     return this.blogsQueryRepository.findBlogs(query);
   }
 

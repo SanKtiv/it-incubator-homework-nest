@@ -31,14 +31,14 @@ export class BlogsQueryRepositoryTypeOrm {
     return this.repository.findOneBy({ id });
   }
 
-  async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto | void> {
+  async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
     const searchName = query.searchNameTerm;
     console.log('query =', query)
     const blogs = this.builder;
 
     if (searchName)
       blogs.where('b.name ~* :nameTerm', {nameTerm: searchName});
-    try {
+
       const pagingBlogs = await blogs
           .orderBy(`b.${query.sortBy}`, query.sortDirection)
           .skip((query.pageNumber - 1) * query.pageSize)
@@ -48,10 +48,6 @@ export class BlogsQueryRepositoryTypeOrm {
       const totalBlogs = await blogs.getCount();
 
       return blogsPagingModelOutput(query, totalBlogs, pagingBlogs);
-    } catch (e) {
-      console.log(e)
-    }
-
   }
 
   async findById_RAW(id: string): Promise<BlogsViewDto | undefined> {
