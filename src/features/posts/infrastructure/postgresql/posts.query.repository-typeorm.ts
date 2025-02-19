@@ -55,17 +55,16 @@ export class PostsQueryRepositoryTypeOrm {
   }
 
   async getPostsPaging(
-    query: PostQuery,
-    blogId: string,
-    userId?: string,
+      query: PostQuery,
+      userId?: string,
   ): Promise<PostsPaging> {
     const uId = userId ?? null;
-    const bId = blogId ?? null;
+    //const bId = blogId ?? null;
 
     const postsSelected = this.repository
         .createQueryBuilder('p')
         .select(['p.*'])
-        .where('p."blogId" = :bId OR :blogId IS NULL', { bId })
+        //.where('p."blogId" = :bId OR :blogId IS NULL', { bId })
 
     const postsSelectedAndPaging = postsSelected
         .addSelect(this.getSubQueryCountLikesPost, 'likesCount')
@@ -83,24 +82,32 @@ export class PostsQueryRepositoryTypeOrm {
         .offset((query.pageNumber - 1) * query.pageSize)
         .limit(query.pageSize)
 
-  const postsPaging = await this.dataSource
-      .createQueryBuilder()
-      .addCommonTableExpression(postsSelectedAndPaging, 'psp')
-      .from('psp', 'p')
-      .select(['p.*'])
-      .leftJoin(
-          this.getSubQueryNewestLikes(),
-          'nl',
-          'nl."postId" = p."id" AND nl."rowNumber" <= 3')
-      .addSelect('nl."login"', 'login')
-      .addSelect('nl."userId"', 'userId')
-      .addSelect('nl."addedAt"', 'addedAt')
-      .orderBy(`p."${query.sortBy}"`, query.sortDirection)
-      .getRawMany();
+    const postsPaging = await this.dataSource
+        .createQueryBuilder()
+        .addCommonTableExpression(postsSelectedAndPaging, 'psp')
+        .from('psp', 'p')
+        .select(['p.*'])
+        .leftJoin(
+            this.getSubQueryNewestLikes(),
+            'nl',
+            'nl."postId" = p."id" AND nl."rowNumber" <= 3')
+        .addSelect('nl."login"', 'login')
+        .addSelect('nl."userId"', 'userId')
+        .addSelect('nl."addedAt"', 'addedAt')
+        .orderBy(`p."${query.sortBy}"`, query.sortDirection)
+        .getRawMany();
 
     const totalPosts = await postsSelected.getCount();
 
     return postsPagingModelOutput(query, totalPosts, postsPaging);
+  }
+
+  async getPostsPagingByBlogId(
+      query: PostQuery,
+      blogId: string,
+      userId?: string,
+  ): Promise<PostsPaging> {
+
   }
 
   private getSubQueryCountLikesPost = (

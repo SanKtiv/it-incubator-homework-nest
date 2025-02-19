@@ -108,7 +108,7 @@ export class BlogsController {
       req.headers.authorization,
     );
 
-    return this.postsQueryRepository.getPostsPaging(query, blogId, userId);
+    return this.postsQueryRepository.getPostsPaging(query, {blogId, userId});
   }
 
   @Put(':blogId')
