@@ -56,16 +56,16 @@ export class PostsQueryRepositoryTypeOrm {
 
   async getPostsPaging(
     query: PostQuery,
-    blogId: string | null,
-    userId?: string | null,
+    blogId: string,
+    userId?: string,
   ): Promise<PostsPaging> {
-    userId = userId ?? null;
-    blogId = blogId ?? null;
+    const uId = userId ?? null;
+    const bId = blogId ?? null;
 
     const postsSelected = this.repository
         .createQueryBuilder('p')
         .select(['p.*'])
-        .where('p."blogId" = :blogId OR :blogId IS NULL', { blogId })
+        .where('p."blogId" = :bId OR :blogId IS NULL', { bId })
 
     const postsSelectedAndPaging = postsSelected
         .addSelect(this.getSubQueryCountLikesPost, 'likesCount')
@@ -75,8 +75,8 @@ export class PostsQueryRepositoryTypeOrm {
         .leftJoin(
             StatusesPostsTable,
             's',
-            's."postId" = p."id" AND s."userId" = :userId',
-            {userId},
+            's."postId" = p."id" AND s."userId" = :uId',
+            {uId},
         )
         .addSelect('s."userStatus"', 'myStatus')
         .orderBy(`"${query.sortBy}"`, query.sortDirection)

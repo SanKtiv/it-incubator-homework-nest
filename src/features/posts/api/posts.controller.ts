@@ -105,10 +105,7 @@ export class PostController {
     const userId = await this.accessJwtToken.getUserIdFromHeaders(
       req.headers.authorization,
     );
-
-    const blogId = null;
-
-    return this.postsQueryRepository.getPostsPaging(query, blogId, userId);
+    return this.postsQueryRepository.getPostsPaging(query, userId);
   }
 
   @Get(':postId/comments')
