@@ -57,20 +57,18 @@ export const commentOutputDto = (
     ),
   );
 
-export const sqlCommentOutputDto = (commentDocument: any, userId?: string) => ({
-  id: commentDocument.id,
-  content: commentDocument.content,
-  createdAt: commentDocument.createdAt.toISOString(),
+export const commentModelOutput = (comment: CommentsTable, userId?: string) => ({
+  id: comment.id,
+  content: comment.content,
+  createdAt: comment.createdAt.toISOString(),
   commentatorInfo: {
-    userId: commentDocument.userId,
-    userLogin: commentDocument.userLogin,
+    userId: comment.userId,
+    userLogin: comment.userLogin,
   },
   likesInfo: {
-    likesCount: commentDocument.likesCount ? commentDocument.likesCount : 0,
-    dislikesCount: commentDocument.dislikesCount
-      ? commentDocument.dislikesCount
-      : 0,
-    myStatus: 'None',
+    likesCount: comment.likesCount ?? 0,
+    dislikesCount: comment.dislikesCount ?? 0,
+    myStatus: comment.myStatus ?? 'None',
   },
 });
 

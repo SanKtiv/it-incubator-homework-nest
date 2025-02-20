@@ -8,7 +8,7 @@ import { PostsRepositoryMongo } from '../../posts/infrastructure/mongodb/posts.r
 import { UsersRepositoryMongo } from '../../users/infrastructure/mongodb/users.repository-mongo';
 import {
   CommentOutputDto,
-  sqlCommentOutputDto,
+  commentModelOutput,
 } from '../api/models/output/comment.output.dto';
 import { CommentServiceDto } from '../api/models/input/comment-service.dto';
 import { CommentInputDto } from '../api/models/input/comment.input.dto';
@@ -18,14 +18,14 @@ import { PostsService } from '../../posts/application/posts.service';
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
 import { CommentsRepositorySql } from '../infrastructure/postgresql/comments.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
+import {CommentsTable} from "../domain/comments.entity";
+import {CommentsRepository} from "../infrastructure/comments.repository";
 
 @Injectable()
 export class CommentsService {
   constructor(
-    //private readonly commentsRepository: CommentsRepositoryMongo,
     private readonly commentsRepositorySql: CommentsRepositorySql,
-    //private readonly postsRepository: PostsRepositoryMongo,
-    //private readonly usersRepository: UsersRepositoryMongo,
+    private readonly commentsRepository: CommentsRepository,
     private readonly usersRepositorySql: UsersRepositoryRawsql,
     private readonly statusesRepositorySql: StatusesRepositorySql,
     private readonly postsService: PostsService,
@@ -34,9 +34,16 @@ export class CommentsService {
   async createComment(dto: CommentServiceDto): Promise<CommentOutputDto> {
     await this.postsService.existPostById(dto.postId);
 
-    const comment = await this.commentsRepositorySql.create_RAW(dto);
+    const commentEntity = new CommentsTable()
 
-    return sqlCommentOutputDto(comment);
+    commentEntity.content = dto.content
+    commentEntity.postId = dto.postId
+    commentEntity.userId = dto.userId
+    commentEntity.createdAt = new Date()
+
+    const comment = await this.commentsRepository.createComment(commentEntity);
+
+    return commentModelOutput(comment);
   }
 
   async updateCommentById(id: string, userId: string, dto: CommentInputDto) {

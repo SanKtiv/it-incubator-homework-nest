@@ -17,7 +17,7 @@ export class PostsRepositoryTypeOrm {
     return this.repository.createQueryBuilder('p');
   }
 
-  async create(dto: PostsTable) {
+  async create(dto: PostsTable): Promise<PostsTable> {
     try {
       return this.repository.save(dto);
     } catch (e) {
@@ -29,9 +29,9 @@ export class PostsRepositoryTypeOrm {
     await this.dataSource.query('TRUNCATE TABLE "posts" CASCADE');
   }
 
-  // async findById_ORM(id: string): Promise<PostsTable | null> {
-  //     return this.repository_ORM.findOneBy({id: id});
-  // }
+  async findById(id: string): Promise<PostsTable | null> {
+      return this.repository.findOneBy({id});
+  }
   //
   // async savePost_ORM(postDocument: PostsTable): Promise<PostsTable> {
   //     return this.repository_ORM.save(postDocument);

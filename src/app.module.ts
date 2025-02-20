@@ -80,6 +80,10 @@ import { PostsQueryRepository } from './features/posts/infrastructure/posts.quer
 import {UsersQueryRepository} from "./features/users/infrastructure/users.query.repository";
 import {DevicesRepository} from "./features/security/infrastructure/devices.repository";
 import {UsersRepository} from "./features/users/infrastructure/users.repository";
+import {CommentsRepositoryTypeOrm} from "./features/comments/infrastructure/postgresql/comments.repository-typeorm";
+import {CommentsQueryRepositoryTypeOrm} from "./features/comments/infrastructure/postgresql/comments.query.repository-typeorm";
+import {CommentsRepository} from "./features/comments/infrastructure/comments.repository";
+import {CommentsQueryRepository} from "./features/comments/infrastructure/postgresql/comments.query.repository";
 
 dotenv.config();
 
@@ -123,6 +127,10 @@ const sqlRepositories = [
   PostsQueryRepositorySql,
   CommentsRepositorySql,
   CommentsQueryRepositorySql,
+  CommentsRepositoryTypeOrm,
+  CommentsQueryRepositoryTypeOrm,
+  CommentsRepository,
+  CommentsQueryRepository,
   UsersRepository,
   UsersRepositoryRawsql,
   UsersQueryRepository,

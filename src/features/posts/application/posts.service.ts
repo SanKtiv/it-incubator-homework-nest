@@ -46,7 +46,7 @@ export class PostsService {
   }
 
   async existPostById(id: string): Promise<PostsTable> {
-    const post = await this.postsRepositorySql.findById_RAW(id);
+    const post = await this.postsRepository.findPostsById(id);
 
     if (!post) throw new NotFoundException();
 
