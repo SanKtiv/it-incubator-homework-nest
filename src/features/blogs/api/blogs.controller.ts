@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { BlogQuery, BlogsInputDto } from './models/input/blogs.input.dto';
 import { BlogsService } from '../application/blogs.service';
-import { BlogsQueryRepositoryMongo } from '../infrastructure/mongodb/blogs.query.repository-mongo';
 import {
   BlogsViewDto,
   BlogsViewPagingDto,
@@ -24,7 +23,6 @@ import {
   PostQuery,
   PostsInputDto,
 } from '../../posts/api/models/input/posts.input.dto';
-import { PostsQueryRepositoryMongo } from '../../posts/infrastructure/mongodb/posts.query.repository-mongo';
 import { PostsPaging } from '../../posts/api/models/output/posts.output.dto';
 import { PostsService } from '../../posts/application/posts.service';
 import { InputDto } from '../../../infrastructure/models/input.dto';
@@ -33,8 +31,6 @@ import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repository-sql';
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
-import { DevicesRepositoryRawsql } from '../../security/infrastructure/postgresqldb/devices.repository-rawsql';
-import { RequestApiRepositoryTypeOrm } from '../../requests/infrastructure/postgresqldb/request.repository-tepeorm';
 import { BlogsQueryRepositoryRawSql } from '../infrastructure/postgresdb/blogs-query-repository-raw-sql.service';
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
