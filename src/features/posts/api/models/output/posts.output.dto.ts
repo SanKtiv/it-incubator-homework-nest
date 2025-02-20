@@ -83,10 +83,6 @@ export const postCreatedViewModel = (
   },
 });
 
-export const postModelOutput = () => ({
-
-})
-
 export function postsModelOutput(posts: any[]): PostsOutputDto[] {
     const outputModel: any = [];
 

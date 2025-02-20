@@ -8,15 +8,10 @@ import {
 } from '../../api/models/output/posts.output.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { PostsTable } from '../../domain/posts.table';
 
 @Injectable()
 export class PostsQueryRepositorySql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
-
-  private get repository() {
-    return this.dataSource.getRepository(PostsTable);
-  }
 
   async findById_RAW(
     id: string,
@@ -127,29 +122,4 @@ export class PostsQueryRepositorySql {
       throw new InternalServerErrorException();
     }
   }
-
-  // async findPaging(
-  //   query: PostQuery,
-  //   dto: { userId?: string; blogId?: string },
-  // ): Promise<PostsPaging> {
-  //   const filter = dto.blogId ? { blogId: dto.blogId } : {};
-  //
-  //   //const totalPosts = await this.repository.countBy(filter); for mongo
-  //
-  //   const posts = this.repository.createQueryBuilder('post');
-  //
-  //   if (dto.blogId) {
-  //     posts.where('post.blogId = :blogId', { blogId: dto.blogId });
-  //   }
-  //
-  //   const totalPosts = await posts.getCount();
-  //
-  //   const postsPaging = await posts
-  //     .orderBy(`post.${query.sortBy}`, query.sortDirection)
-  //     .skip((query.pageNumber - 1) * query.pageSize)
-  //     .take(query.pageSize)
-  //     .getMany();
-  //
-  //   return postsSqlPaging(query, totalPosts, postsPaging, dto.userId);
-  // }
 }

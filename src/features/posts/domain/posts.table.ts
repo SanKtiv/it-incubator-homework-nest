@@ -3,11 +3,9 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BlogsTable } from '../../blogs/domain/blog.entity';
-import { StatusesPostsTable } from '../../statuses/domain/statuses.entity';
 
 @Entity('posts')
 export class PostsTable {

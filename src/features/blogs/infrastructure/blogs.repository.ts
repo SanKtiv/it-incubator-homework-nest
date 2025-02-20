@@ -8,11 +8,11 @@ import { BlogsInputDto } from '../api/models/input/blogs.input.dto';
 export class BlogsRepository {
   constructor(private readonly blogsRepository: BlogsRepositoryTypeOrm) {}
 
-  async create(dto: BlogsTable) {
+  async create(dto: BlogsTable): Promise<BlogsTable> {
     return this.blogsRepository.createBlog(dto);
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<BlogsTable | null> {
     return this.blogsRepository.findById(id);
   }
 

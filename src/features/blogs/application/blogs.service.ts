@@ -1,15 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BlogsInputDto } from '../api/models/input/blogs.input.dto';
-import { BlogsRepositoryMongo } from '../infrastructure/mongodb/blogs.repository-mongo';
 import {
   BlogsViewDto,
   blogsViewModel,
 } from '../api/models/output/blogs.view.dto';
-import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repository-sql';
 import { BlogsTable } from '../domain/blog.entity';
 import { BlogsRepository } from '../infrastructure/blogs.repository';
-import { BlogsServicesDto } from '../api/models/input/blogs.services.dto';
-import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class BlogsService {

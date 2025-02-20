@@ -23,11 +23,11 @@ export class BlogsRepositoryTypeOrm {
     return this.repository.save(dto);
   }
 
-  async save(blog: BlogsTable) {
+  async save(blog: BlogsTable): Promise<BlogsTable> {
     return this.repository.save(blog);
   }
 
-  async findById(id: string): Promise<BlogsTable | null | undefined> {
+  async findById(id: string): Promise<BlogsTable | null> {
     try {
       return this.repository.findOneBy({ id });
     } catch (e) {

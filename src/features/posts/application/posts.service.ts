@@ -69,14 +69,9 @@ export class PostsService {
   }
 
   async updatePostForBlog(postId: string, blogId: string, UpdateDto: InputDto) {
-    // const postDocument = await this.postsRepository.findById(id);
-    //
-    // if (!postDocument) throw new NotFoundException();
     const post = await this.existPostById(postId);
 
     if (post!.blogId !== blogId) throw new NotFoundException();
-
-    //Object.assign(post, UpdateDto);
 
     await this.postsRepositorySql.updatePost_RAW(postId, UpdateDto, blogId);
   }

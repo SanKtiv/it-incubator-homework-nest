@@ -19,13 +19,10 @@ import {
   PostsInputDto,
 } from './models/input/posts.input.dto';
 import { PostsOutputDto, PostsPaging } from './models/output/posts.output.dto';
-import { BlogsQueryRepositoryMongo } from '../../blogs/infrastructure/mongodb/blogs.query.repository-mongo';
-import { PostsQueryRepositoryMongo } from '../infrastructure/mongodb/posts.query.repository-mongo';
 import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { CommentInputDto } from '../../comments/api/models/input/comment.input.dto';
 import { CommentsService } from '../../comments/application/comments.service';
 import { CommentOutputDto } from '../../comments/api/models/output/comment.output.dto';
-import { CommentsQueryRepositoryMongo } from '../../comments/infrastructure/mongodb/comments.query.repository-mongo';
 import { QueryDto } from '../../../infrastructure/models/query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
@@ -48,11 +45,11 @@ export class PostController {
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
-  @Get('test')
-  async get() {
-    const query = new PostQuery();
-    return this.postsQueryRepository.getPostById('46971ee9-d696-4561-86b6-57f48e7ecfb4');
-  }
+  // @Get('test')
+  // async get() {
+  //   const query = new PostQuery();
+  //   return this.postsQueryRepository.getPostById('46971ee9-d696-4561-86b6-57f48e7ecfb4');
+  // }
 
   @Get(':postId')
   async getPostById(
