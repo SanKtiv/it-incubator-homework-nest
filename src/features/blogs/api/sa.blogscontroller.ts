@@ -28,7 +28,7 @@ import { PostsService } from '../../posts/application/posts.service';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { Request } from 'express';
-import { BlogsQueryRepositorySql } from '../infrastructure/postgresdb/blogs.query.repository-sql';
+import { BlogsQueryRepositoryRawSql } from '../infrastructure/postgresdb/blogs-query-repository-raw-sql.service';
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
 import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
@@ -38,7 +38,7 @@ import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.rep
 export class SaBlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
-    private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
+    private readonly blogsQueryRepositorySql: BlogsQueryRepositoryRawSql,
     private readonly blogsService: BlogsService,
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsQueryRepository: PostsQueryRepository,

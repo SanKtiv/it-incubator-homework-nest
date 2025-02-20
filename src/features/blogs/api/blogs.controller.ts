@@ -35,7 +35,7 @@ import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repositor
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
 import { DevicesRepositoryRawsql } from '../../security/infrastructure/postgresqldb/devices.repository-rawsql';
 import { RequestApiRepositoryTypeOrm } from '../../requests/infrastructure/postgresqldb/request.repository-tepeorm';
-import { BlogsQueryRepositorySql } from '../infrastructure/postgresdb/blogs.query.repository-sql';
+import { BlogsQueryRepositoryRawSql } from '../infrastructure/postgresdb/blogs-query-repository-raw-sql.service';
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
@@ -46,7 +46,7 @@ import {PostsQueryRepository} from "../../posts/infrastructure/posts.query.repos
 export class BlogsController {
   constructor(
       private readonly blogsQueryRepository: BlogsQueryRepository,
-    private readonly blogsQueryRepositorySql: BlogsQueryRepositorySql,
+    private readonly blogsQueryRepositorySql: BlogsQueryRepositoryRawSql,
     private readonly blogsRepositorySql: BlogsRepositorySql,
     private readonly blogsService: BlogsService,
       private readonly postsQueryRepository: PostsQueryRepository,

@@ -8,7 +8,7 @@ import {
   postCreatedViewModel,
 } from '../api/models/output/posts.output.dto';
 import { BlogsService } from '../../blogs/application/blogs.service';
-import { PostsRepositorySql } from '../infrastructure/postgresql/posts.repository-sql';
+import { PostsRepositoryRawSql } from '../infrastructure/postgresql/posts-repository-raw-sql.service';
 import { PostsTable } from '../domain/posts.table';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
@@ -19,7 +19,7 @@ import { PostsRepository } from '../infrastructure/posts.repository';
 @Injectable()
 export class PostsService {
   constructor(
-    private readonly postsRepositorySql: PostsRepositorySql,
+    private readonly postsRepositorySql: PostsRepositoryRawSql,
     private readonly postsRepository: PostsRepository,
     private readonly usersRepositorySql: UsersRepositoryRawsql,
     private readonly blogsService: BlogsService,

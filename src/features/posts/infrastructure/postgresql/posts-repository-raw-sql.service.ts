@@ -6,40 +6,8 @@ import { PostsTable } from '../../domain/posts.table';
 import { InputDto } from '../../../../infrastructure/models/input.dto';
 
 @Injectable()
-export class PostsRepositorySql {
+export class PostsRepositoryRawSql {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
-
-  private get repository_ORM() {
-    return this.dataSource.getRepository(PostsTable);
-  }
-
-  async create_ORM(
-    inputDto: PostsInputDto,
-    blogName: string,
-  ): Promise<PostsTable> {
-    const postDocument = {
-      ...inputDto,
-      blogName: blogName,
-      createdAt: new Date(),
-    };
-    return this.repository_ORM.save(postDocument);
-  }
-
-  async findById_ORM(id: string): Promise<PostsTable | null> {
-    return this.repository_ORM.findOneBy({ id: id });
-  }
-
-  async savePost_ORM(postDocument: PostsTable): Promise<PostsTable> {
-    return this.repository_ORM.save(postDocument);
-  }
-
-  async deletePost_ORM(post: PostsTable): Promise<void> {
-    await this.repository_ORM.remove(post);
-  }
-
-  async deleteAll_ORM(): Promise<void> {
-    await this.repository_ORM.clear();
-  }
 
   async create_RAW(dto: PostsInputDto) {
     const insertPostQuery = `

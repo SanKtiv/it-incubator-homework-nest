@@ -49,10 +49,10 @@ import { DevicesRepositoryRawsql } from './features/security/infrastructure/post
 import { RequestApiRepositoryTypeOrm } from './features/requests/infrastructure/postgresqldb/request.repository-tepeorm';
 import { RequestTable } from './features/requests/domain/request.table';
 import { UsersQueryRepositoryRawsql } from './features/users/infrastructure/postgresqldb/users.query.repository-rawsql';
-import { BlogsQueryRepositorySql } from './features/blogs/infrastructure/postgresdb/blogs.query.repository-sql';
+import { BlogsQueryRepositoryRawSql } from './features/blogs/infrastructure/postgresdb/blogs-query-repository-raw-sql.service';
 import { PostsTable } from './features/posts/domain/posts.table';
 import { SaBlogsController } from './features/blogs/api/sa.blogscontroller';
-import { PostsRepositorySql } from './features/posts/infrastructure/postgresql/posts.repository-sql';
+import { PostsRepositoryRawSql } from './features/posts/infrastructure/postgresql/posts-repository-raw-sql.service';
 import { PostsQueryRepositorySql } from './features/posts/infrastructure/postgresql/posts.query.repository-sql';
 import { CommentsTable } from './features/comments/domain/comments.entity';
 import { CommentsRepositorySql } from './features/comments/infrastructure/postgresql/comments.repository-sql';
@@ -114,9 +114,9 @@ const sqlRepositories = [
   BlogsRepositoryTypeOrm,
   BlogsQueryRepositoryTypeOrm,
   BlogsRepositorySql,
-  BlogsQueryRepositorySql,
+  BlogsQueryRepositoryRawSql,
   PostsRepository,
-  PostsRepositorySql,
+  PostsRepositoryRawSql,
   PostsQueryRepository,
   PostsRepositoryTypeOrm,
   PostsQueryRepositoryTypeOrm,
