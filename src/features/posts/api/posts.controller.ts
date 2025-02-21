@@ -33,6 +33,7 @@ import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-toke
 import { PostsQueryRepositorySql } from '../infrastructure/postgresql/posts.query.repository-sql';
 import { CommentsQueryRepositorySql } from '../../comments/infrastructure/postgresql/comments.query.repository-sql';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
+import {CommentsQueryRepository} from "../../comments/infrastructure/postgresql/comments.query.repository";
 
 @Controller('posts')
 export class PostController {
@@ -42,14 +43,19 @@ export class PostController {
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsService: CommentsService,
     private readonly commentsSqlQueryRepository: CommentsQueryRepositorySql,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
-  // @Get('test')
-  // async get() {
-  //   const query = new PostQuery();
-  //   return this.postsQueryRepository.getPostById('46971ee9-d696-4561-86b6-57f48e7ecfb4');
-  // }
+    @Post('test')
+  async get() {
+const dto = {
+    content: 'content',
+    postId: '09b397f1-8f15-4d3c-9cc7-866522f3f639',
+    userId: '91204982-eddf-470c-9925-42b660169684'
+}
+    return this.commentsService.createComment(dto);
+  }
 
   @Get(':postId')
   async getPostById(
@@ -112,7 +118,7 @@ export class PostController {
     @Query() query: QueryDto,
     @Req() req: Request,
   ) {
-    const post = await this.postsQueryRepositorySql.findById_RAW(postId);
+    const post = await this.postsQueryRepository.getPostById(postId);
 
     if (!post) throw new NotFoundException();
 

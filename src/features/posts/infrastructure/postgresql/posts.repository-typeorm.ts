@@ -18,11 +18,7 @@ export class PostsRepositoryTypeOrm {
   }
 
   async create(dto: PostsTable): Promise<PostsTable> {
-    try {
       return this.repository.save(dto);
-    } catch (e) {
-      console.log(e);
-    }
   }
 
   async clear(): Promise<void> {

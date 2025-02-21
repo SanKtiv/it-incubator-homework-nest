@@ -28,11 +28,7 @@ export class BlogsRepositoryTypeOrm {
   }
 
   async findById(id: string): Promise<BlogsTable | null> {
-    try {
       return this.repository.findOneBy({ id });
-    } catch (e) {
-      console.log(e);
-    }
   }
 
   async updateBlogById(
