@@ -10,13 +10,11 @@ import add from 'date-fns/add';
 import { UsersTable } from '../domain/users.table';
 import { AccountDataTable } from '../domain/account-data.table';
 import { EmailConfirmationTable } from '../domain/email-сonfirmation.table';
-import {UsersRepository} from "../infrastructure/users.repository";
+import { UsersRepository } from '../infrastructure/users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly usersRepository: UsersRepository,
-  ) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async createUser(dto: UsersInputDto): Promise<UsersTable> {
     await this.existUserLogin(dto.login);

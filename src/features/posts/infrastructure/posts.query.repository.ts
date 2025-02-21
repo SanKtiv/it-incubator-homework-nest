@@ -12,7 +12,7 @@ export class PostsQueryRepository {
 
   async getPostsPaging(
     query: PostQuery,
-    dto: { blogId?: string, userId?: string | null }
+    dto: { blogId?: string; userId?: string | null },
   ) {
     return this.postsQueryRepository.getPostsPaging(query, dto);
   }

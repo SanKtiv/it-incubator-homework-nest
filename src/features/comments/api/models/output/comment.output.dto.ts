@@ -57,7 +57,10 @@ export const commentOutputDto = (
     ),
   );
 
-export const commentModelOutput = (comment: CommentsTable | any, userId?: string) => ({
+export const commentModelOutput = (
+  comment: CommentsTable | any,
+  userId?: string,
+) => ({
   id: comment.id,
   content: comment.content,
   createdAt: comment.createdAt.toISOString(),

@@ -1,6 +1,4 @@
-import {
-  Injectable,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { BlogQuery } from '../../api/models/input/blogs.input.dto';
 import {
   BlogsViewPagingDto,
@@ -26,20 +24,20 @@ export class BlogsQueryRepositoryTypeOrm {
 
   async getBlogsPaging(query: BlogQuery): Promise<BlogsViewPagingDto> {
     const searchName = query.searchNameTerm;
-    console.log('query =', query)
+    console.log('query =', query);
     const blogs = this.builder;
 
     if (searchName)
-      blogs.where('b.name ~* :nameTerm', {nameTerm: searchName});
+      blogs.where('b.name ~* :nameTerm', { nameTerm: searchName });
 
-      const pagingBlogs = await blogs
-          .orderBy(`b.${query.sortBy}`, query.sortDirection)
-          .skip((query.pageNumber - 1) * query.pageSize)
-          .take(query.pageSize)
-          .getMany();
+    const pagingBlogs = await blogs
+      .orderBy(`b.${query.sortBy}`, query.sortDirection)
+      .skip((query.pageNumber - 1) * query.pageSize)
+      .take(query.pageSize)
+      .getMany();
 
-      const totalBlogs = await blogs.getCount();
+    const totalBlogs = await blogs.getCount();
 
-      return blogsPagingModelOutput(query, totalBlogs, pagingBlogs);
+    return blogsPagingModelOutput(query, totalBlogs, pagingBlogs);
   }
 }

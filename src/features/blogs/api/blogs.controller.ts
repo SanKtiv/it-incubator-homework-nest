@@ -35,17 +35,17 @@ import { BlogsQueryRepositoryRawSql } from '../infrastructure/postgresdb/blogs-q
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
-import {BlogsQueryRepository} from "../infrastructure/blogs.query.repository";
-import {PostsQueryRepository} from "../../posts/infrastructure/posts.query.repository";
+import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
+import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
-      private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly blogsQueryRepositorySql: BlogsQueryRepositoryRawSql,
     private readonly blogsRepositorySql: BlogsRepositorySql,
     private readonly blogsService: BlogsService,
-      private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly postsQueryRepository: PostsQueryRepository,
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsService: PostsService,
     private readonly accessJwtToken: AccessJwtToken,
@@ -104,7 +104,7 @@ export class BlogsController {
       req.headers.authorization,
     );
 
-    return this.postsQueryRepository.getPostsPaging(query, {blogId, userId});
+    return this.postsQueryRepository.getPostsPaging(query, { blogId, userId });
   }
 
   @Put(':blogId')

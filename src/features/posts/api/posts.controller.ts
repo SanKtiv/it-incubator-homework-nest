@@ -33,7 +33,7 @@ import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-toke
 import { PostsQueryRepositorySql } from '../infrastructure/postgresql/posts.query.repository-sql';
 import { CommentsQueryRepositorySql } from '../../comments/infrastructure/postgresql/comments.query.repository-sql';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
-import {CommentsQueryRepository} from "../../comments/infrastructure/postgresql/comments.query.repository";
+import { CommentsQueryRepository } from '../../comments/infrastructure/postgresql/comments.query.repository';
 
 @Controller('posts')
 export class PostController {
@@ -47,13 +47,13 @@ export class PostController {
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
-    @Post('test')
+  @Post('test')
   async get() {
-const dto = {
-    content: 'content',
-    postId: '09b397f1-8f15-4d3c-9cc7-866522f3f639',
-    userId: '91204982-eddf-470c-9925-42b660169684'
-}
+    const dto = {
+      content: 'content',
+      postId: '09b397f1-8f15-4d3c-9cc7-866522f3f639',
+      userId: '91204982-eddf-470c-9925-42b660169684',
+    };
     return this.commentsService.createComment(dto);
   }
 
@@ -109,7 +109,7 @@ const dto = {
       req.headers.authorization,
     );
 
-    return this.postsQueryRepository.getPostsPaging(query, {userId});
+    return this.postsQueryRepository.getPostsPaging(query, { userId });
   }
 
   @Get(':postId/comments')

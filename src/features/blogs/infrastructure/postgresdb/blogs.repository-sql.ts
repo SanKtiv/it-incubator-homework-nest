@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { DataSource} from 'typeorm';
-import { InjectDataSource} from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
 import { BlogsTable } from '../../domain/blog.entity';
 import { BlogsInputDto } from '../../api/models/input/blogs.input.dto';
 

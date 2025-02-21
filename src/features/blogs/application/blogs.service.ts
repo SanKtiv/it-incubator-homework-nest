@@ -42,6 +42,6 @@ export class BlogsService {
   async deleteBlogById(id: string): Promise<void> {
     const result = await this.blogsRepository.deleteById(id);
 
-    if ( !result || result.affected != 1) throw new NotFoundException();
+    if (!result || result.affected != 1) throw new NotFoundException();
   }
 }

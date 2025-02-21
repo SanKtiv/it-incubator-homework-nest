@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { BlogQuery } from '../../api/models/input/blogs.input.dto';
 import {
   BlogsViewDto,

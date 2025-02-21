@@ -1,4 +1,9 @@
-import {Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 @Entity('blogs')
 export class BlogsTable {

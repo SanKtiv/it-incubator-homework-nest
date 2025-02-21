@@ -25,6 +25,6 @@ export class BlogsRepository {
   }
 
   async deleteAll(): Promise<void> {
-    await this.blogsRepository.deleteAll()
+    await this.blogsRepository.deleteAll();
   }
 }

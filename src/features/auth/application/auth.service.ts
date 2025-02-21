@@ -6,7 +6,7 @@ import b_crypt from 'bcrypt';
 import { NewPasswordInputDto } from '../api/models/input/new-password.input.dto';
 import { UsersTable } from '../../users/domain/users.table';
 import { PasswordRecoveryTable } from '../../users/domain/password-recovery.table';
-import {UsersRepository} from "../../users/infrastructure/users.repository";
+import { UsersRepository } from '../../users/infrastructure/users.repository';
 
 @Injectable()
 export class AuthService {

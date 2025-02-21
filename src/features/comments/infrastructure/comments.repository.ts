@@ -1,25 +1,18 @@
-import {Injectable} from "@nestjs/common";
-import {CommentsRepositoryTypeOrm} from "./postgresql/comments.repository-typeorm";
-import {CommentsTable} from "../domain/comments.entity";
+import { Injectable } from '@nestjs/common';
+import { CommentsRepositoryTypeOrm } from './postgresql/comments.repository-typeorm';
+import { CommentsTable } from '../domain/comments.entity';
 
 @Injectable()
 export class CommentsRepository {
-    constructor( protected repository: CommentsRepositoryTypeOrm) {
-    }
+  constructor(protected repository: CommentsRepositoryTypeOrm) {}
 
-    async createComment(comment: CommentsTable): Promise<CommentsTable> {
-        return this.repository.create(comment)
-    }
+  async createComment(comment: CommentsTable): Promise<CommentsTable> {
+    return this.repository.create(comment);
+  }
 
-    async updateComment() {
+  async updateComment() {}
 
-    }
+  async deleteOneById() {}
 
-    async deleteOneById() {
-
-    }
-
-    async clear() {
-
-    }
+  async clear() {}
 }

@@ -13,7 +13,7 @@ import {
 import { DeviceTable } from '../domain/device.table';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { RefreshJwtToken } from '../../auth/application/use-cases/refresh-jwt-token';
-import {DevicesRepository} from "../infrastructure/devices.repository";
+import { DevicesRepository } from '../infrastructure/devices.repository';
 
 @Injectable()
 export class DevicesService {
@@ -90,6 +90,9 @@ export class DevicesService {
   }
 
   async deleteAllDevicesWithoutCurrent(payload: any) {
-    await this.devicesRepository.deleteManyByUserId(payload.sub, payload.deviceId);
+    await this.devicesRepository.deleteManyByUserId(
+      payload.sub,
+      payload.deviceId,
+    );
   }
 }

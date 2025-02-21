@@ -77,13 +77,13 @@ import { BlogsQueryRepositoryTypeOrm } from './features/blogs/infrastructure/pos
 import { BlogsQueryRepository } from './features/blogs/infrastructure/blogs.query.repository';
 import { PostsQueryRepositoryTypeOrm } from './features/posts/infrastructure/postgresql/posts.query.repository-typeorm';
 import { PostsQueryRepository } from './features/posts/infrastructure/posts.query.repository';
-import {UsersQueryRepository} from "./features/users/infrastructure/users.query.repository";
-import {DevicesRepository} from "./features/security/infrastructure/devices.repository";
-import {UsersRepository} from "./features/users/infrastructure/users.repository";
-import {CommentsRepositoryTypeOrm} from "./features/comments/infrastructure/postgresql/comments.repository-typeorm";
-import {CommentsQueryRepositoryTypeOrm} from "./features/comments/infrastructure/postgresql/comments.query.repository-typeorm";
-import {CommentsRepository} from "./features/comments/infrastructure/comments.repository";
-import {CommentsQueryRepository} from "./features/comments/infrastructure/postgresql/comments.query.repository";
+import { UsersQueryRepository } from './features/users/infrastructure/users.query.repository';
+import { DevicesRepository } from './features/security/infrastructure/devices.repository';
+import { UsersRepository } from './features/users/infrastructure/users.repository';
+import { CommentsRepositoryTypeOrm } from './features/comments/infrastructure/postgresql/comments.repository-typeorm';
+import { CommentsQueryRepositoryTypeOrm } from './features/comments/infrastructure/postgresql/comments.query.repository-typeorm';
+import { CommentsRepository } from './features/comments/infrastructure/comments.repository';
+import { CommentsQueryRepository } from './features/comments/infrastructure/postgresql/comments.query.repository';
 
 dotenv.config();
 

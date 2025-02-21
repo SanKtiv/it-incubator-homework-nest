@@ -18,8 +18,8 @@ import { PostsService } from '../../posts/application/posts.service';
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
 import { CommentsRepositorySql } from '../infrastructure/postgresql/comments.repository-sql';
 import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
-import {CommentsTable} from "../domain/comments.entity";
-import {CommentsRepository} from "../infrastructure/comments.repository";
+import { CommentsTable } from '../domain/comments.entity';
+import { CommentsRepository } from '../infrastructure/comments.repository';
 
 @Injectable()
 export class CommentsService {
@@ -34,12 +34,12 @@ export class CommentsService {
   async createComment(dto: CommentServiceDto): Promise<CommentOutputDto> {
     await this.postsService.existPostById(dto.postId);
 
-    const commentEntity = new CommentsTable()
+    const commentEntity = new CommentsTable();
 
-    commentEntity.content = dto.content
-    commentEntity.postId = dto.postId
-    commentEntity.userId = dto.userId
-    commentEntity.createdAt = new Date()
+    commentEntity.content = dto.content;
+    commentEntity.postId = dto.postId;
+    commentEntity.userId = dto.userId;
+    commentEntity.createdAt = new Date();
 
     const comment = await this.commentsRepository.createComment(commentEntity);
 

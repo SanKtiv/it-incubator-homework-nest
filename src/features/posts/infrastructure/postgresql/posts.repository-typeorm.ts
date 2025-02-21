@@ -18,7 +18,7 @@ export class PostsRepositoryTypeOrm {
   }
 
   async create(dto: PostsTable): Promise<PostsTable> {
-      return this.repository.save(dto);
+    return this.repository.save(dto);
   }
 
   async clear(): Promise<void> {
@@ -26,7 +26,7 @@ export class PostsRepositoryTypeOrm {
   }
 
   async findById(id: string): Promise<PostsTable | null> {
-      return this.repository.findOneBy({id});
+    return this.repository.findOneBy({ id });
   }
   //
   // async savePost_ORM(postDocument: PostsTable): Promise<PostsTable> {

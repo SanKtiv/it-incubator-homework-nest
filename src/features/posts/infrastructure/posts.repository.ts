@@ -12,10 +12,10 @@ export class PostsRepository {
   }
 
   async findPostsById(id: string): Promise<PostsTable | null> {
-    return this.postsRepository.findById(id)
+    return this.postsRepository.findById(id);
   }
 
   async deleteAll(): Promise<void> {
-    await this.postsRepository.clear()
+    await this.postsRepository.clear();
   }
 }

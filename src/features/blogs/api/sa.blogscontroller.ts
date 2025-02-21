@@ -89,7 +89,7 @@ export class SaBlogsController {
 
     if (!blog) throw new NotFoundException();
 
-    await this.postsQueryRepository.getPostsPaging(query, {blogId});
+    await this.postsQueryRepository.getPostsPaging(query, { blogId });
   }
 
   @Put(':blogId')

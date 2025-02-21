@@ -28,7 +28,7 @@ export class BlogsRepositoryTypeOrm {
   }
 
   async findById(id: string): Promise<BlogsTable | null> {
-      return this.repository.findOneBy({ id });
+    return this.repository.findOneBy({ id });
   }
 
   async updateBlogById(
@@ -41,10 +41,9 @@ export class BlogsRepositoryTypeOrm {
   async deleteOne(id: string): Promise<UpdateResult | void> {
     try {
       const s = await this.repository.softDelete({ id });
-      return s
-    }
-    catch (e) {
-      console.log(e)
+      return s;
+    } catch (e) {
+      console.log(e);
     }
   }
 

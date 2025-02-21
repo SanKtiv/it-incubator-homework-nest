@@ -23,7 +23,9 @@ export class AccessJwtToken {
     }
   }
 
-  async getUserIdFromHeaders(header: string | undefined): Promise<string | null> {
+  async getUserIdFromHeaders(
+    header: string | undefined,
+  ): Promise<string | null> {
     if (!header) return null;
 
     const token = header.split(' ')[1];

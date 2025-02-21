@@ -84,57 +84,60 @@ export const postCreatedViewModel = (
 });
 
 export function postsModelOutput(posts: any[]): PostsOutputDto[] {
-    const outputModel: any = [];
+  const outputModel: any = [];
 
-    posts.map(post =>
-        outputModel.find(e => e.id && e.id === post.id) ?
-            outputModel :
-            outputModel.push({
-                id: post.id,
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                blogId: post.blogId,
-                blogName: post.blogName,
-                createdAt: post.createdAt.toISOString(),
-                extendedLikesInfo: {
-                    likesCount: post.likesCount ?? 0,
-                    dislikesCount: post.dislikesCount ?? 0,
-                    myStatus: post.myStatus ?? 'None',
-                    newestLikes: []
-                }
-            }));
+  posts.map((post) =>
+    outputModel.find((e) => e.id && e.id === post.id)
+      ? outputModel
+      : outputModel.push({
+          id: post.id,
+          title: post.title,
+          shortDescription: post.shortDescription,
+          content: post.content,
+          blogId: post.blogId,
+          blogName: post.blogName,
+          createdAt: post.createdAt.toISOString(),
+          extendedLikesInfo: {
+            likesCount: post.likesCount ?? 0,
+            dislikesCount: post.dislikesCount ?? 0,
+            myStatus: post.myStatus ?? 'None',
+            newestLikes: [],
+          },
+        }),
+  );
 
-    posts.map(post =>
-        outputModel.map(model =>
-            model.id === post.id && post.userId ? model.extendedLikesInfo.newestLikes.push({
-                userId: post.userId,
-                login: post.login,
-                addedAt: post.addedAt
-            }) : model
-        )
-    )
+  posts.map((post) =>
+    outputModel.map((model) =>
+      model.id === post.id && post.userId
+        ? model.extendedLikesInfo.newestLikes.push({
+            userId: post.userId,
+            login: post.login,
+            addedAt: post.addedAt,
+          })
+        : model,
+    ),
+  );
 
-    outputModel.map(model =>
-        model.extendedLikesInfo.newestLikes
-            .sort((a: any, b: any) => b.addedAt - a.addedAt)
-            .map(e => e.addedAt.toISOString() ?? e)
-    )
+  outputModel.map((model) =>
+    model.extendedLikesInfo.newestLikes
+      .sort((a: any, b: any) => b.addedAt - a.addedAt)
+      .map((e) => e.addedAt.toISOString() ?? e),
+  );
 
-    return outputModel;
+  return outputModel;
 }
 
 export const postsPagingModelOutput = (
-    query: PostQuery,
-    totalPosts: number,
-    postsPaging: any[],
+  query: PostQuery,
+  totalPosts: number,
+  postsPaging: any[],
 ): PostsPaging => ({
-    pagesCount: Math.ceil(totalPosts / +query.pageSize),
-    page: +query.pageNumber,
-    pageSize: +query.pageSize,
-    totalCount: +totalPosts,
-    items: postsModelOutput(postsPaging)
-})
+  pagesCount: Math.ceil(totalPosts / +query.pageSize),
+  page: +query.pageNumber,
+  pageSize: +query.pageSize,
+  totalCount: +totalPosts,
+  items: postsModelOutput(postsPaging),
+});
 
 export function postViewModel_SQL(postFromSQL): PostsOutputDto[] {
   const resultArray: PostsOutputDto[] = [];
