@@ -8,7 +8,11 @@ export class CommentsQueryRepository {
 
   async getCommentByd() {}
 
-  async getCommentsPaging(query: QueryDto, postId: string, userId: string) {
+  async getCommentsPaging(
+    query: QueryDto,
+    postId: string,
+    userId: string | null,
+  ) {
     return this.repository.paging(query, postId, userId);
   }
 }

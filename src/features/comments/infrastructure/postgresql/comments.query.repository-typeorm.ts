@@ -21,7 +21,7 @@ export class CommentsQueryRepositoryTypeOrm {
 
   async findById() {}
 
-  async paging(query: QueryDto, postId: string, userId: string) {
+  async paging(query: QueryDto, postId: string, userId: string | null) {
     const commentsSelected = this.repository
       .createQueryBuilder('c')
       .select(['c.*'])

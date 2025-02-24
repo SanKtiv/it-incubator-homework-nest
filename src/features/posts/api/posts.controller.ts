@@ -126,7 +126,7 @@ export class PostController {
       req.headers.authorization,
     );
 
-    return this.commentsSqlQueryRepository.findPaging_RAW(
+    return this.commentsQueryRepository.getCommentsPaging(
       query,
       postId,
       userId,
