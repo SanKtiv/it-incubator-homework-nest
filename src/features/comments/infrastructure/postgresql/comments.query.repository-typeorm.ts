@@ -9,6 +9,7 @@ import {
   StatusesCommentsTable,
   StatusesPostsTable,
 } from '../../../statuses/domain/statuses.entity';
+import { commentsPagingModelOutput } from '../../api/models/output/comment.output.dto';
 
 @Injectable()
 export class CommentsQueryRepositoryTypeOrm {
@@ -60,6 +61,8 @@ export class CommentsQueryRepositoryTypeOrm {
       .getRawMany();
 
     const totalComments = await commentsSelected.getCount();
+
+    return commentsPagingModelOutput(query, totalComments, commentsPaging);
   }
 
   private getSubQueryCountLikesComment = (

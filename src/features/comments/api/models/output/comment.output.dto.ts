@@ -85,6 +85,18 @@ export class CommentsPagingDto {
   ) {}
 }
 
+export const commentsPagingModelOutput = (
+  query: QueryDto,
+  totalComments: number,
+  commentsArray: any[],
+): CommentsPagingDto => ({
+  pagesCount: Math.ceil(totalComments / +query.pageSize),
+  page: +query.pageNumber,
+  pageSize: +query.pageSize,
+  totalCount: +totalComments,
+  items: commentsArray.map((c) => commentModelOutput(c)),
+});
+
 export const commentsPagingDto = (
   query: QueryDto,
   totalComments: number,
