@@ -12,7 +12,7 @@ import { PostsRepositoryRawSql } from '../infrastructure/postgresql/posts-reposi
 import { PostsTable } from '../domain/posts.table';
 import { InputDto } from '../../../infrastructure/models/input.dto';
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
-import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
+import { StatusesRepositorySql } from '../../statuses/infrastructure/postgresql/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 import { PostsRepository } from '../infrastructure/posts.repository';
 

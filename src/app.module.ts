@@ -62,7 +62,7 @@ import {
   StatusesPostsTable,
   StatusesTable,
 } from './features/statuses/domain/statuses.entity';
-import { StatusesRepositorySql } from './features/statuses/infrastructure/statuses.repository-sql';
+import { StatusesRepositorySql } from './features/statuses/infrastructure/postgresql/statuses.repository-sql';
 import { AccountDataTable } from './features/users/domain/account-data.table';
 import { EmailConfirmationTable } from './features/users/domain/email-сonfirmation.table';
 import { PasswordRecoveryTable } from './features/users/domain/password-recovery.table';

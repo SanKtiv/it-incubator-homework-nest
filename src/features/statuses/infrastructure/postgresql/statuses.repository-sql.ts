@@ -5,8 +5,8 @@ import {
   StatusesCommentsTable,
   StatusesPostsTable,
   StatusesTable,
-} from '../domain/statuses.entity';
-import { NewestLikes } from '../../posts/api/models/output/posts.output.dto';
+} from '../../domain/statuses.entity';
+import { NewestLikes } from '../../../posts/api/models/output/posts.output.dto';
 
 @Injectable()
 export class StatusesRepositorySql {

@@ -33,7 +33,7 @@ import { BlogsRepositorySql } from '../infrastructure/postgresdb/blogs.repositor
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
 import { BlogsQueryRepositoryRawSql } from '../infrastructure/postgresdb/blogs-query-repository-raw-sql.service';
 import { PostsQueryRepositorySql } from '../../posts/infrastructure/postgresql/posts.query.repository-sql';
-import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
+import { StatusesRepositorySql } from '../../statuses/infrastructure/postgresql/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';

@@ -50,7 +50,7 @@ export class CommentsController {
     @CurrentUserId() userId: string,
     @Body() dto: PostLikeStatusDto,
   ) {
-    await this.commentsService.createStatusOfComment(id, userId, dto);
+    await this.commentsService.createCommentStatus(id, userId, dto);
   }
 
   @Put(':commentId')

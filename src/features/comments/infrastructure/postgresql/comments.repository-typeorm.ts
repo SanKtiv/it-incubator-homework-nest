@@ -32,6 +32,10 @@ export class CommentsRepositoryTypeOrm {
       .getRawOne();
   }
 
+  async findOneById(id: string): Promise<CommentsTable | null> {
+    return this.repository.findOneBy({id})
+  }
+
   async update(comment: CommentsTable): Promise<CommentsTable> {
     return this.repository.save(comment);
   }

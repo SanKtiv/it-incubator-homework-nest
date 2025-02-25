@@ -10,6 +10,10 @@ export class CommentsRepository {
     return this.repository.create(comment);
   }
 
+  async getCommentById(id: string): Promise<CommentsTable | null> {
+    return this.repository.findOneById(id)
+  }
+
   async updateComment() {}
 
   async deleteOneById() {}

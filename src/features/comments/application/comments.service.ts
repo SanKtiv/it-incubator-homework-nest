@@ -17,9 +17,11 @@ import { CommentDocument } from '../domain/comment.schema';
 import { PostsService } from '../../posts/application/posts.service';
 import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/users.repository-rawsql';
 import { CommentsRepositorySql } from '../infrastructure/postgresql/comments.repository-sql';
-import { StatusesRepositorySql } from '../../statuses/infrastructure/statuses.repository-sql';
+import { StatusesRepositorySql } from '../../statuses/infrastructure/postgresql/statuses.repository-sql';
 import { CommentsTable } from '../domain/comments.entity';
 import { CommentsRepository } from '../infrastructure/comments.repository';
+import {StatusesRepository} from "../../statuses/infrastructure/statuses.repository";
+import {StatusesCommentsTable} from "../../statuses/domain/statuses.entity";
 
 @Injectable()
 export class CommentsService {
@@ -28,6 +30,7 @@ export class CommentsService {
     private readonly commentsRepository: CommentsRepository,
     private readonly usersRepositorySql: UsersRepositoryRawsql,
     private readonly statusesRepositorySql: StatusesRepositorySql,
+    private readonly statusesRepository: StatusesRepository,
     private readonly postsService: PostsService,
   ) {}
 
@@ -62,39 +65,46 @@ export class CommentsService {
     await this.commentsRepositorySql.deleteById_RAW(id);
   }
 
-  async createStatusOfComment(
+  async createCommentStatus(
     id: string,
     userId: string,
     dto: PostLikeStatusDto,
   ) {
     await this.existComment(id);
 
-    const newStatus = dto.likeStatus;
+    const commentStatus = new StatusesCommentsTable()
 
-    const statusOfComment =
-      await this.statusesRepositorySql.statusOfComment_RAW(userId, id);
+    commentStatus.userStatus = dto.likeStatus;
+    commentStatus.userId = userId;
+    commentStatus.addedAt = new Date();
 
-    if (!statusOfComment) {
-      await this.statusesRepositorySql.insertStatusOfComment_RAW(
-        userId,
-        id,
-        newStatus,
-      );
-
-      return;
-    }
-
-    if (statusOfComment.userStatus === newStatus) return;
-
-    await this.statusesRepositorySql.updateStatusForComment(
-      userId,
-      id,
-      newStatus,
-    );
+    await this.statusesRepository.createStatus(commentStatus)
+    // const newStatus = dto.likeStatus;
+    //
+    // const statusOfComment =
+    //   await this.statusesRepositorySql.statusOfComment_RAW(userId, id);
+    //
+    // if (!statusOfComment) {
+    //   await this.statusesRepositorySql.insertStatusOfComment_RAW(
+    //     userId,
+    //     id,
+    //     newStatus,
+    //   );
+    //
+    //   return;
+    // }
+    //
+    // if (statusOfComment.userStatus === newStatus) return;
+    //
+    // await this.statusesRepositorySql.updateStatusForComment(
+    //   userId,
+    //   id,
+    //   newStatus,
+    // );
   }
 
-  async existComment(id: string): Promise<CommentDocument> {
-    const comment = await this.commentsRepositorySql.findById_RAW(id);
+  async existComment(id: string): Promise<CommentsTable> {
+    const comment = await this.commentsRepository.getCommentById(id);
 
     if (!comment) throw new NotFoundException();
 
