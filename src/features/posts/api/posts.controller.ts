@@ -34,11 +34,13 @@ import { PostsQueryRepositorySql } from '../infrastructure/postgresql/posts.quer
 import { CommentsQueryRepositorySql } from '../../comments/infrastructure/postgresql/comments.query.repository-sql';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 import { CommentsQueryRepository } from '../../comments/infrastructure/postgresql/comments.query.repository';
+import {PostsRepository} from "../infrastructure/posts.repository";
 
 @Controller('posts')
 export class PostController {
   constructor(
     private readonly postsService: PostsService,
+    private readonly postsRepository: PostsRepository,
     private readonly postsQueryRepositorySql: PostsQueryRepositorySql,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsService: CommentsService,
@@ -49,12 +51,8 @@ export class PostController {
 
   @Post('test')
   async get() {
-    const dto = {
-      content: 'content',
-      postId: '09b397f1-8f15-4d3c-9cc7-866522f3f639',
-      userId: '91204982-eddf-470c-9925-42b660169684',
-    };
-    return this.commentsService.createComment(dto);
+
+    return this.postsRepository.clear();
   }
 
   @Get(':postId')

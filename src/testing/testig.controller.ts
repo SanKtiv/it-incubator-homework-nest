@@ -25,7 +25,7 @@ export class TestingController {
   async deleteAllData(): Promise<void> {
     await this.blogsRepository.clear();
     await this.usersRepository.deleteAll();
-    await this.postsRepository.deleteAll();
+    await this.postsRepository.clear();
     await this.commentsRepository.clear();
     await this.requestApiRepository.deleteAll_RAW();
     await this.devicesRepository.deleteAll();

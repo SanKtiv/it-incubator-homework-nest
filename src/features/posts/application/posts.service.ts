@@ -15,6 +15,8 @@ import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/u
 import { StatusesRepositorySql } from '../../statuses/infrastructure/postgresql/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 import { PostsRepository } from '../infrastructure/posts.repository';
+import {StatusesPostsRepository} from "../../statuses/infrastructure/statuses.posts.repository";
+import {StatusesPostsTable} from "../../statuses/domain/statuses.entity";
 
 @Injectable()
 export class PostsService {
@@ -24,6 +26,7 @@ export class PostsService {
     private readonly usersRepositorySql: UsersRepositoryRawsql,
     private readonly blogsService: BlogsService,
     private readonly statusesRepositorySql: StatusesRepositorySql,
+    private readonly statusesPostsRepository: StatusesPostsRepository,
     private readonly commentsRepositorySql: CommentsRepositorySql,
   ) {}
 
@@ -83,30 +86,37 @@ export class PostsService {
   ): Promise<void> {
     await this.existPostById(id);
 
-    const newStatus = dto.likeStatus;
+    const statusPost = new StatusesPostsTable()
 
-    const statusesPost = await this.statusesRepositorySql.statusOfPost_RAW(
-      userId,
-      id,
-    );
+    statusPost.userId = userId;
+    statusPost.userStatus = dto.likeStatus;
+    statusPost.addedAt = new Date();
 
-    if (!statusesPost) {
-      await this.statusesRepositorySql.insertStatusForPost_RAW(
-        userId,
-        id,
-        newStatus,
-      );
-
-      return;
-    }
-
-    if (statusesPost.userStatus === newStatus) return;
-
-    await this.statusesRepositorySql.updateStatusForPost_RAW(
-      userId,
-      id,
-      newStatus,
-    );
+    await this.statusesPostsRepository.createStatusPost(statusPost)
+    // const newStatus = dto.likeStatus;
+    //
+    // const statusesPost = await this.statusesRepositorySql.statusOfPost_RAW(
+    //   userId,
+    //   id,
+    // );
+    //
+    // if (!statusesPost) {
+    //   await this.statusesRepositorySql.insertStatusForPost_RAW(
+    //     userId,
+    //     id,
+    //     newStatus,
+    //   );
+    //
+    //   return;
+    // }
+    //
+    // if (statusesPost.userStatus === newStatus) return;
+    //
+    // await this.statusesRepositorySql.updateStatusForPost_RAW(
+    //   userId,
+    //   id,
+    //   newStatus,
+    // );
   }
 
   async deletePostById(id: string): Promise<void> {

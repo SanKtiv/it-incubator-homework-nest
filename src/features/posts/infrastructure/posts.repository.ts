@@ -15,7 +15,7 @@ export class PostsRepository {
     return this.postsRepository.findById(id);
   }
 
-  async deleteAll(): Promise<void> {
+  async clear(): Promise<void> {
     await this.postsRepository.clear();
   }
 }

@@ -20,7 +20,7 @@ import { CommentsRepositorySql } from '../infrastructure/postgresql/comments.rep
 import { StatusesRepositorySql } from '../../statuses/infrastructure/postgresql/statuses.repository-sql';
 import { CommentsTable } from '../domain/comments.entity';
 import { CommentsRepository } from '../infrastructure/comments.repository';
-import {StatusesRepository} from "../../statuses/infrastructure/statuses.repository";
+import {StatusesCommentsRepository} from "../../statuses/infrastructure/statuses.comments.repository";
 import {StatusesCommentsTable} from "../../statuses/domain/statuses.entity";
 
 @Injectable()
@@ -30,7 +30,7 @@ export class CommentsService {
     private readonly commentsRepository: CommentsRepository,
     //private readonly usersRepositorySql: UsersRepositoryRawsql,
     //private readonly statusesRepositorySql: StatusesRepositorySql,
-    private readonly statusesRepository: StatusesRepository,
+    private readonly statusesRepository: StatusesCommentsRepository,
     private readonly postsService: PostsService,
   ) {}
 
@@ -80,7 +80,7 @@ export class CommentsService {
     commentStatus.userId = userId;
     commentStatus.addedAt = new Date();
 
-    await this.statusesRepository.createStatus(commentStatus)
+    await this.statusesRepository.createStatusComment(commentStatus)
     // const newStatus = dto.likeStatus;
     //
     // const statusOfComment =

@@ -84,8 +84,10 @@ import { CommentsRepositoryTypeOrm } from './features/comments/infrastructure/po
 import { CommentsQueryRepositoryTypeOrm } from './features/comments/infrastructure/postgresql/comments.query.repository-typeorm';
 import { CommentsRepository } from './features/comments/infrastructure/comments.repository';
 import { CommentsQueryRepository } from './features/comments/infrastructure/postgresql/comments.query.repository';
-import {StatusesRepository} from "./features/statuses/infrastructure/statuses.repository";
-import {StatusesRepositoryTypeOrm} from "./features/statuses/infrastructure/postgresql/statuses.repository-typeorm";
+import {StatusesCommentsRepository} from "./features/statuses/infrastructure/statuses.comments.repository";
+import {StatusesCommentsRepositoryTypeOrm} from "./features/statuses/infrastructure/postgresql/statuses.comments.repository-typeorm";
+import {StatusesPostsRepositoryTypeOrm} from "./features/statuses/infrastructure/postgresql/statuses.posts.repository-typeorm";
+import {StatusesPostsRepository} from "./features/statuses/infrastructure/statuses.posts.repository";
 
 dotenv.config();
 
@@ -141,8 +143,10 @@ const sqlRepositories = [
   DevicesRepositoryRawsql,
   RequestApiRepositoryTypeOrm,
   StatusesRepositorySql,
-  StatusesRepository,
-  StatusesRepositoryTypeOrm,
+  StatusesCommentsRepository,
+  StatusesCommentsRepositoryTypeOrm,
+  StatusesPostsRepository,
+  StatusesPostsRepositoryTypeOrm,
   UsersRepositoryTypeOrm,
   DevicesRepositoryTypeOrm,
   UsersQueryRepositoryTypeOrm,
@@ -249,7 +253,7 @@ const strategies = [
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(TooManyRequestsMiddleware)
+      .apply(/*TooManyRequestsMiddleware*/)
       .forRoutes(
         '/auth/registration',
         '/auth/login',

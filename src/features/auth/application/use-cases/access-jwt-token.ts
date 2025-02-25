@@ -9,7 +9,7 @@ export class AccessJwtToken {
     const payload = { sub: userId };
 
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '10s',
+      expiresIn: '5m',
     });
 
     return { accessToken: accessToken };
