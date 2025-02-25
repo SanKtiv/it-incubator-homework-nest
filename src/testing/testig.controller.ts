@@ -6,6 +6,7 @@ import { DevicesRepository } from '../features/security/infrastructure/devices.r
 import { BlogsRepository } from '../features/blogs/infrastructure/blogs.repository';
 import { PostsRepository } from '../features/posts/infrastructure/posts.repository';
 import { UsersRepository } from '../features/users/infrastructure/users.repository';
+import {CommentsRepository} from "../features/comments/infrastructure/comments.repository";
 
 @Controller('testing/all-data')
 export class TestingController {
@@ -13,7 +14,7 @@ export class TestingController {
     private readonly blogsRepository: BlogsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly postsRepository: PostsRepository,
-    private readonly commentsRepository: CommentsRepositorySql,
+    private readonly commentsRepository: CommentsRepository,
     private readonly requestApiRepository: RequestApiRepositoryTypeOrm,
     private readonly devicesRepository: DevicesRepository,
     private readonly statusesRepository: StatusesRepositorySql,
@@ -22,10 +23,10 @@ export class TestingController {
   @Delete()
   @HttpCode(204)
   async deleteAllData(): Promise<void> {
-    await this.blogsRepository.deleteAll();
+    await this.blogsRepository.clear();
     await this.usersRepository.deleteAll();
     await this.postsRepository.deleteAll();
-    await this.commentsRepository.deleteAll_RAW();
+    await this.commentsRepository.clear();
     await this.requestApiRepository.deleteAll_RAW();
     await this.devicesRepository.deleteAll();
     await this.statusesRepository.deleteAll_RAW();

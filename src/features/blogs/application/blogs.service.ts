@@ -20,19 +20,19 @@ export class BlogsService {
     blogEntity.isMembership = false;
     blogEntity.createdAt = new Date();
 
-    const blog = await this.blogsRepository.create(blogEntity);
+    const blog = await this.blogsRepository.createBlog(blogEntity);
 
     return blogsViewModel(blog);
   }
 
   async updateBlog(id: string, inputUpdate: BlogsInputDto): Promise<void> {
-    const updateInfo = await this.blogsRepository.updateById(id, inputUpdate);
+    const updateInfo = await this.blogsRepository.updateBlogById(id, inputUpdate);
 
     if (updateInfo.affected != 1) throw new NotFoundException();
   }
 
   async existBlog(id: string): Promise<BlogsTable> {
-    const blog = await this.blogsRepository.findById(id);
+    const blog = await this.blogsRepository.findBlogById(id);
 
     if (!blog) throw new NotFoundException();
 
@@ -40,7 +40,7 @@ export class BlogsService {
   }
 
   async deleteBlogById(id: string): Promise<void> {
-    const result = await this.blogsRepository.deleteById(id);
+    const result = await this.blogsRepository.deleteBlogById(id);
 
     if (!result || result.affected != 1) throw new NotFoundException();
   }

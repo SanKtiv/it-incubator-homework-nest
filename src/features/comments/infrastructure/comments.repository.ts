@@ -18,7 +18,11 @@ export class CommentsRepository {
     await this.repository.update(comment)
   }
 
-  async deleteOneById() {}
+  async deleteOneById(comment: CommentsTable) {
+    await this.repository.deleteOne(comment)
+  }
 
-  async clear() {}
+  async clear(): Promise<void> {
+    await this.repository.clear()
+  }
 }

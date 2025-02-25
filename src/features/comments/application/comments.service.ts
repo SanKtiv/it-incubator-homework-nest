@@ -26,10 +26,10 @@ import {StatusesCommentsTable} from "../../statuses/domain/statuses.entity";
 @Injectable()
 export class CommentsService {
   constructor(
-    private readonly commentsRepositorySql: CommentsRepositorySql,
+    // readonly commentsRepositorySql: CommentsRepositorySql,
     private readonly commentsRepository: CommentsRepository,
-    private readonly usersRepositorySql: UsersRepositoryRawsql,
-    private readonly statusesRepositorySql: StatusesRepositorySql,
+    //private readonly usersRepositorySql: UsersRepositoryRawsql,
+    //private readonly statusesRepositorySql: StatusesRepositorySql,
     private readonly statusesRepository: StatusesRepository,
     private readonly postsService: PostsService,
   ) {}
@@ -64,7 +64,7 @@ export class CommentsService {
 
     if (comment.userId !== userId) throw new ForbiddenException();
 
-    await this.commentsRepositorySql.deleteById_RAW(id);
+    await this.commentsRepository.deleteOneById(comment);
   }
 
   async createCommentStatus(

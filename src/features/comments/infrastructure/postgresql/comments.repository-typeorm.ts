@@ -40,7 +40,11 @@ export class CommentsRepositoryTypeOrm {
     return this.repository.save(comment);
   }
 
-  async deleteOne() {}
+  async deleteOne(comment: CommentsTable) {
+    await this.repository.delete(comment)
+  }
 
-  async clear() {}
+  async clear(): Promise<void> {
+    await this.repository.query('TRUNCATE TABLE "comments" CASCADE')
+  }
 }

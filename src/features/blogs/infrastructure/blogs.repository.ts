@@ -8,23 +8,23 @@ import { BlogsInputDto } from '../api/models/input/blogs.input.dto';
 export class BlogsRepository {
   constructor(private readonly blogsRepository: BlogsRepositoryTypeOrm) {}
 
-  async create(dto: BlogsTable): Promise<BlogsTable> {
-    return this.blogsRepository.createBlog(dto);
+  async createBlog(dto: BlogsTable): Promise<BlogsTable> {
+    return this.blogsRepository.create(dto);
   }
 
-  async findById(id: string): Promise<BlogsTable | null> {
+  async findBlogById(id: string): Promise<BlogsTable | null> {
     return this.blogsRepository.findById(id);
   }
 
-  async updateById(id: string, inputUpdate: BlogsInputDto) {
-    return this.blogsRepository.updateBlogById(id, inputUpdate);
+  async updateBlogById(id: string, inputUpdate: BlogsInputDto) {
+    return this.blogsRepository.updateById(id, inputUpdate);
   }
 
-  async deleteById(id: string) {
+  async deleteBlogById(id: string) {
     return this.blogsRepository.deleteOne(id);
   }
 
-  async deleteAll(): Promise<void> {
-    await this.blogsRepository.deleteAll();
+  async clear(): Promise<void> {
+    await this.blogsRepository.clear();
   }
 }
