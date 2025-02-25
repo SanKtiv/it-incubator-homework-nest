@@ -14,7 +14,9 @@ export class CommentsRepository {
     return this.repository.findOneById(id)
   }
 
-  async updateComment() {}
+  async updateComment(comment: CommentsTable) {
+    await this.repository.update(comment)
+  }
 
   async deleteOneById() {}
 

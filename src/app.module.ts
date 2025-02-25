@@ -84,6 +84,8 @@ import { CommentsRepositoryTypeOrm } from './features/comments/infrastructure/po
 import { CommentsQueryRepositoryTypeOrm } from './features/comments/infrastructure/postgresql/comments.query.repository-typeorm';
 import { CommentsRepository } from './features/comments/infrastructure/comments.repository';
 import { CommentsQueryRepository } from './features/comments/infrastructure/postgresql/comments.query.repository';
+import {StatusesRepository} from "./features/statuses/infrastructure/statuses.repository";
+import {StatusesRepositoryTypeOrm} from "./features/statuses/infrastructure/postgresql/statuses.repository-typeorm";
 
 dotenv.config();
 
@@ -139,6 +141,8 @@ const sqlRepositories = [
   DevicesRepositoryRawsql,
   RequestApiRepositoryTypeOrm,
   StatusesRepositorySql,
+  StatusesRepository,
+  StatusesRepositoryTypeOrm,
   UsersRepositoryTypeOrm,
   DevicesRepositoryTypeOrm,
   UsersQueryRepositoryTypeOrm,

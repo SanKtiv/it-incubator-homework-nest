@@ -54,7 +54,9 @@ export class CommentsService {
 
     if (comment.userId !== userId) throw new ForbiddenException();
 
-    await this.commentsRepositorySql.updateById_RAW(id, dto.content);
+    comment.content = dto.content;
+
+    await this.commentsRepository.updateComment(comment);
   }
 
   async deleteCommentById(id: string, userId: string) {
