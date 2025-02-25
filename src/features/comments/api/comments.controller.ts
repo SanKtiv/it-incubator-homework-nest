@@ -19,12 +19,13 @@ import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto'
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { CommentsQueryRepositorySql } from '../infrastructure/postgresql/comments.query.repository-sql';
+import {CommentsQueryRepository} from "../infrastructure/postgresql/comments.query.repository";
 
 @Controller('comments')
 export class CommentsController {
   constructor(
-    //private readonly commentsQueryRepository: CommentsQueryRepositoryMongo,
     private readonly commentsQueryRepositorySql: CommentsQueryRepositorySql,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
     private readonly commentsService: CommentsService,
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
@@ -38,7 +39,7 @@ export class CommentsController {
       req.headers.authorization,
     );
 
-    return this.commentsQueryRepositorySql.findById_RAW(id, userId);
+    return this.commentsQueryRepository.getCommentByd(id, userId);
   }
 
   @Put(':commentId/like-status')

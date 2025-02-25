@@ -9,7 +9,11 @@ import {
   StatusesCommentsTable,
   StatusesPostsTable,
 } from '../../../statuses/domain/statuses.entity';
-import { commentsPagingModelOutput } from '../../api/models/output/comment.output.dto';
+import {
+  commentModelOutput,
+  CommentsPagingDto,
+  commentsPagingModelOutput
+} from '../../api/models/output/comment.output.dto';
 
 @Injectable()
 export class CommentsQueryRepositoryTypeOrm {
@@ -19,9 +23,29 @@ export class CommentsQueryRepositoryTypeOrm {
     @InjectDataSource() protected dataSource: DataSource,
   ) {}
 
-  async findById() {}
+  async findById(id: string, userId: string | null) {
+    const comment = await this.repository
+        .createQueryBuilder('c')
+        .select('c.*')
+        .where('c."id" = :id', {id})
+        .addSelect(this.getSubQueryCountLikesComment, 'likesCount')
+        .addSelect(this.getSubQueryCountDislikesComment, 'dislikesCount')
+        .leftJoin(UsersTable, 'u', 'u."id" = c."userId"')
+        .leftJoin(AccountDataTable, 'adt', 'adt."id" = u."accountDataId"')
+        .addSelect('adt."login"', 'userLogin')
+        .leftJoin(
+            StatusesCommentsTable,
+            's',
+            's."commentId" = c."id" AND s."userId" = :userId',
+            { userId },
+        )
+        .addSelect('s."userStatus"', 'myStatus')
+        .getRawOne()
 
-  async paging(query: QueryDto, postId: string, userId: string | null) {
+    return commentModelOutput(comment)
+  }
+
+  async paging(query: QueryDto, postId: string, userId: string | null): Promise<CommentsPagingDto> {
     const commentsSelected = this.repository
       .createQueryBuilder('c')
       .select(['c.*'])
@@ -49,14 +73,14 @@ export class CommentsQueryRepositoryTypeOrm {
       .addCommonTableExpression(commentsSelectedAndPaging, 'cs')
       .from('cs', 'c')
       .select(['c.*'])
-      .leftJoin(
-        this.getSubQueryNewestLikes(),
-        'nl',
-        'nl."postId" = c."id" AND nl."rowNumber" <= 3',
-      )
-      .addSelect('nl."login"', 'login')
-      .addSelect('nl."userId"', 'userId')
-      .addSelect('nl."addedAt"', 'addedAt')
+      // .leftJoin(
+      //   this.getSubQueryNewestLikes(),
+      //   'nl',
+      //   'nl."postId" = c."id" AND nl."rowNumber" <= 3',
+      // )
+      // .addSelect('nl."login"', 'login')
+      // .addSelect('nl."userId"', 'userId')
+      // .addSelect('nl."addedAt"', 'addedAt')
       .orderBy(`c."${query.sortBy}"`, query.sortDirection)
       .getRawMany();
 

@@ -6,7 +6,9 @@ import { QueryDto } from '../../../../infrastructure/models/query.dto';
 export class CommentsQueryRepository {
   constructor(protected repository: CommentsQueryRepositoryTypeOrm) {}
 
-  async getCommentByd() {}
+  async getCommentByd(id: string, userId: string | null) {
+    return this.repository.findById(id, userId)
+  }
 
   async getCommentsPaging(
     query: QueryDto,
