@@ -26,10 +26,7 @@ import {StatusesCommentsTable} from "../../statuses/domain/statuses.entity";
 @Injectable()
 export class CommentsService {
   constructor(
-    // readonly commentsRepositorySql: CommentsRepositorySql,
     private readonly commentsRepository: CommentsRepository,
-    //private readonly usersRepositorySql: UsersRepositoryRawsql,
-    //private readonly statusesRepositorySql: StatusesRepositorySql,
     private readonly statusesRepository: StatusesCommentsRepository,
     private readonly postsService: PostsService,
   ) {}

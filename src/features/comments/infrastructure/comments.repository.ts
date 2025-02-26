@@ -10,7 +10,7 @@ export class CommentsRepository {
     return this.repository.create(comment);
   }
 
-  async getCommentById(id: string): Promise<CommentsTable | null> {
+  async getCommentById(id: string): Promise<CommentsTable | null | undefined> {
     return this.repository.findOneById(id)
   }
 
