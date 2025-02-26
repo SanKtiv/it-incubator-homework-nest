@@ -27,7 +27,7 @@ export class UsersRepository {
   }
 
   async findByLoginOrEmail(loginOrEmail: string): Promise<UsersTable | null> {
-    return this.findByLoginOrEmail(loginOrEmail);
+    return this.usersRepository.findByLoginOrEmail(loginOrEmail);
   }
 
   async findByConfirmationCode(code: string): Promise<UsersTable | null> {

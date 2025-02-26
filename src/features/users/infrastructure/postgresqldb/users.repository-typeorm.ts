@@ -1,19 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { DataSource } from 'typeorm';
-import { InjectDataSource } from '@nestjs/typeorm';
+import { Injectable } from '@nestjs/common';
+import {DataSource, Repository} from 'typeorm';
+import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
 import { UsersTable } from '../../domain/users.table';
-import { UsersInputDto } from '../../api/models/input/users.input.dto';
 import { EmailConfirmationTable } from '../../domain/email-сonfirmation.table';
 import { AccountDataTable } from '../../domain/account-data.table';
-import { PasswordRecoveryTable } from '../../domain/password-recovery.table';
 
 @Injectable()
 export class UsersRepositoryTypeOrm {
-  constructor(@InjectDataSource() protected dataSource: DataSource) {}
+  constructor(@InjectDataSource() protected dataSource: DataSource,
+              @InjectRepository(UsersTable) protected repository: Repository<UsersTable>) {}
 
-  private get repository() {
-    return this.dataSource.getRepository(UsersTable);
-  }
+  // private get repository() {
+  //   return this.dataSource.getRepository(UsersTable);
+  // }
 
   async deleteAll_RAW() {
     await this.dataSource.query(

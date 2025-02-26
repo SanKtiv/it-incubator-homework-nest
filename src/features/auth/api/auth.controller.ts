@@ -70,6 +70,7 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
+    console.log('Hello')
     const deviceDto: DeviceDto = {
       ip: req.header('x-forwarded-for') || req.ip || '',
       title: req.headers['user-agent'] || 'chrome 105',
