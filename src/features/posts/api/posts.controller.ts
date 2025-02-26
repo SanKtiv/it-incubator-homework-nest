@@ -89,13 +89,7 @@ export class PostController {
     @Body() inputDto: CommentInputDto,
     @CurrentUserId() userId: string,
   ): Promise<CommentOutputDto> {
-    const dto = new CommentServiceDto();
-
-    dto.content = inputDto.content;
-    dto.userId = userId;
-    dto.postId = id;
-
-    return this.commentsService.createComment(dto);
+    return this.commentsService.createComment(id, inputDto.content, userId);
   }
 
   @Get()

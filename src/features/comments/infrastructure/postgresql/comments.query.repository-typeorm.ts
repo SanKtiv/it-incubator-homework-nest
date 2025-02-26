@@ -24,6 +24,8 @@ export class CommentsQueryRepositoryTypeOrm {
   ) {}
 
   async findById(id: string, userId: string | null) {
+    userId = userId ?? null
+
     const comment = await this.repository
         .createQueryBuilder('c')
         .select('c.*')
@@ -93,9 +95,9 @@ export class CommentsQueryRepositoryTypeOrm {
     subQuery: SelectQueryBuilder<StatusesCommentsTable>,
   ) =>
     subQuery
-      .select('CAST (COUNT(*) AS INT)', 'likesCount')
+      .select('CAST (COUNT(*) AS INT)')
       .from(StatusesCommentsTable, 'sc')
-      .where('p.id = sc."commentId"')
+      .where('c.id = sc."commentId"')
       .andWhere('sc."userStatus" = :like', { like: 'Like' });
 
   private getSubQueryCountDislikesComment = (
@@ -104,7 +106,7 @@ export class CommentsQueryRepositoryTypeOrm {
     subQuery
       .select('CAST (COUNT(*) AS INT)')
       .from(StatusesCommentsTable, 'sc')
-      .where('p.id = sc."commentId"')
+      .where('c.id = sc."commentId"')
       .andWhere('sc."userStatus" = :dislike', { dislike: 'Dislike' });
 
   private getSubQueryNewestLikes() {

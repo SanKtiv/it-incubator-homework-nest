@@ -34,14 +34,14 @@ export class CommentsService {
     private readonly postsService: PostsService,
   ) {}
 
-  async createComment(dto: CommentServiceDto): Promise<CommentOutputDto> {
-    await this.postsService.existPostById(dto.postId);
+  async createComment(id: string, content: string, userId: string): Promise<CommentOutputDto> {
+    await this.postsService.existPostById(id);
 
     const commentEntity = new CommentsTable();
 
-    commentEntity.content = dto.content;
-    commentEntity.postId = dto.postId;
-    commentEntity.userId = dto.userId;
+    commentEntity.content = content;
+    commentEntity.postId = id;
+    commentEntity.userId = userId;
     commentEntity.createdAt = new Date();
 
     const comment = await this.commentsRepository.createComment(commentEntity);
