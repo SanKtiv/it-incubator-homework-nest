@@ -88,6 +88,7 @@ export class PostsService {
 
     const statusPost = new StatusesPostsTable()
 
+    statusPost.postId = id;
     statusPost.userId = userId;
     statusPost.userStatus = dto.likeStatus;
     statusPost.addedAt = new Date();
