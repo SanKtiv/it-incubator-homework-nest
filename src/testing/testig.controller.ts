@@ -7,6 +7,8 @@ import { BlogsRepository } from '../features/blogs/infrastructure/blogs.reposito
 import { PostsRepository } from '../features/posts/infrastructure/posts.repository';
 import { UsersRepository } from '../features/users/infrastructure/users.repository';
 import {CommentsRepository} from "../features/comments/infrastructure/comments.repository";
+import {StatusesPostsRepository} from "../features/statuses/infrastructure/statuses.posts.repository";
+import {StatusesCommentsRepository} from "../features/statuses/infrastructure/statuses.comments.repository";
 
 @Controller('testing/all-data')
 export class TestingController {
@@ -18,6 +20,8 @@ export class TestingController {
     private readonly requestApiRepository: RequestApiRepositoryTypeOrm,
     private readonly devicesRepository: DevicesRepository,
     private readonly statusesRepository: StatusesRepositorySql,
+    private readonly statusesPostsRepository: StatusesPostsRepository,
+    private readonly statusesCommentsRepository: StatusesCommentsRepository,
   ) {}
 
   @Delete()
@@ -29,6 +33,8 @@ export class TestingController {
     await this.commentsRepository.clear();
     await this.requestApiRepository.deleteAll_RAW();
     await this.devicesRepository.deleteAll();
-    await this.statusesRepository.deleteAll_RAW();
+    //await this.statusesRepository.deleteAll_RAW();
+    await this.statusesPostsRepository.clear();
+    await this.statusesCommentsRepository.clear();
   }
 }

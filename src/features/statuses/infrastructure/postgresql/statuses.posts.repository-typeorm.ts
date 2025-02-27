@@ -11,4 +11,8 @@ export class StatusesPostsRepositoryTypeOrm {
     async insert(commentStatusEntity: StatusesPostsTable) {
         await this.repository.save(commentStatusEntity)
     }
+
+    async clear() {
+        await this.repository.query('TRUNCATE statuses_posts CASCADE')
+    }
 }

@@ -11,4 +11,8 @@ export class StatusesPostsRepository {
     async createStatusPost(commentStatusEntity: StatusesPostsTable) {
         await this.repository.insert(commentStatusEntity)
     }
+
+    async clear() {
+        await this.repository.clear()
+    }
 }
