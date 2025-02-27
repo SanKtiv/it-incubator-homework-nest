@@ -9,7 +9,7 @@ export class StatusesPostsRepository {
     }
 
     async createStatusPost(status: StatusesPostsTable) {
-        await this.repository.save(status)
+        await this.repository.create(status)
     }
 
     async getStatusPost(postId: string, userId: string) {
