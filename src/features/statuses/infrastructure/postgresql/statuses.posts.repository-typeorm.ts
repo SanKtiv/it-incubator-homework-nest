@@ -13,6 +13,6 @@ export class StatusesPostsRepositoryTypeOrm {
     }
 
     async clear() {
-        await this.repository.query('TRUNCATE statuses_posts CASCADE')
+        await this.repository.query('TRUNCATE TABLE "statuses_posts" CASCADE')
     }
 }
