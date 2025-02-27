@@ -17,7 +17,13 @@ export class StatusesPostsRepositoryTypeOrm {
     }
 
     async findOne(postId: string, userId: string): Promise<StatusesPostsTable | null> {
-        return this.repository.findOneBy({postId, userId})
+        return this.repository.findOne({
+            where:
+                {
+                    postId: postId,
+                    userId: userId
+                }
+        })
     }
 
     async clear() {
