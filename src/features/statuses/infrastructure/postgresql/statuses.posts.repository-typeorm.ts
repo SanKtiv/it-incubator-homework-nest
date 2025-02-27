@@ -8,8 +8,12 @@ export class StatusesPostsRepositoryTypeOrm {
     constructor(@InjectRepository(StatusesPostsTable) protected repository: Repository<StatusesPostsTable>) {
     }
 
-    async insert(commentStatusEntity: StatusesPostsTable) {
-        await this.repository.save(commentStatusEntity)
+    async save(status: StatusesPostsTable) {
+        await this.repository.save(status)
+    }
+
+    async findOne(postId: string, userId: string): Promise<StatusesPostsTable | null> {
+        return this.repository.findOneBy({postId, userId})
     }
 
     async clear() {

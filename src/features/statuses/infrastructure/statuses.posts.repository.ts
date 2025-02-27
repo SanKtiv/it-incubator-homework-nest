@@ -8,8 +8,16 @@ export class StatusesPostsRepository {
     constructor(private repository: StatusesPostsRepositoryTypeOrm) {
     }
 
-    async createStatusPost(commentStatusEntity: StatusesPostsTable) {
-        await this.repository.insert(commentStatusEntity)
+    async createStatusPost(status: StatusesPostsTable) {
+        await this.repository.save(status)
+    }
+
+    async getStatusPost(postId: string, userId: string) {
+        return this.repository.findOne(postId, userId)
+    }
+
+    async updateStatus(status: StatusesPostsTable) {
+        await this.repository.save(status)
     }
 
     async clear() {
