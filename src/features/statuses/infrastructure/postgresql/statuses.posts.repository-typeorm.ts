@@ -9,7 +9,8 @@ export class StatusesPostsRepositoryTypeOrm {
     }
 
     async create(status: StatusesPostsTable) {
-        await this.repository.insert(status)
+        console.log("create")
+        await this.repository.save(status)
     }
 
     async save(status: StatusesPostsTable) {
@@ -17,13 +18,9 @@ export class StatusesPostsRepositoryTypeOrm {
     }
 
     async findOne(postId: string, userId: string): Promise<StatusesPostsTable | null> {
-        return this.repository.findOne({
-            where:
-                {
-                    postId: postId,
-                    userId: userId
-                }
-        })
+        return this.repository.createQueryBuilder('s')
+            .where('s."postId" = :postId AND s."userId" = :userId', {postId, userId})
+            .getOne()
     }
 
     async clear() {

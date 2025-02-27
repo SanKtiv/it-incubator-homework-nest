@@ -49,10 +49,15 @@ export class PostController {
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
-  @Post('test')
+  @Get('test')
   async get() {
 
-    return this.postsRepository.clear();
+    const id = '64c7d723-7121-4ea8-b796-0b4870ba873f'
+
+    const dto: PostLikeStatusDto = {likeStatus: 'Like'}
+
+    const userId = 'a694b516-91a9-4aa9-b759-f4c54315ccf1'
+    await this.postsService.createStatusForPost(id, dto, userId);
   }
 
   @Get(':postId')

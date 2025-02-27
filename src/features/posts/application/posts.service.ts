@@ -89,23 +89,18 @@ export class PostsService {
     const statusPostEntity =
         await this.statusesPostsRepository.getStatusPost(id, userId)
 
-    if (!statusPostEntity) {
-      const newStatusPost = new StatusesPostsTable()
+    let newStatusPost = new StatusesPostsTable()
 
-      newStatusPost.postId = id
-      newStatusPost.userId = userId;
-      newStatusPost.userStatus = dto.likeStatus;
-      newStatusPost.addedAt = new Date();
-
-      await this.statusesPostsRepository.createStatusPost(newStatusPost)
-
-      return
+    if (statusPostEntity) {
+      newStatusPost.id = statusPostEntity.id
     }
 
-    statusPostEntity.userStatus = dto.likeStatus;
-    statusPostEntity.addedAt = new Date();
+    newStatusPost.postId = id
+    newStatusPost.userId = userId;
+    newStatusPost.userStatus = dto.likeStatus;
+    newStatusPost.addedAt = new Date();
 
-    await this.statusesPostsRepository.updateStatus(statusPostEntity)
+    await this.statusesPostsRepository.updateStatus(newStatusPost)
     // const newStatus = dto.likeStatus;
     //
     // const statusesPost = await this.statusesRepositorySql.statusOfPost_RAW(
