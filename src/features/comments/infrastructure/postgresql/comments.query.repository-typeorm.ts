@@ -10,7 +10,6 @@ import {
   StatusesPostsTable,
 } from '../../../statuses/domain/statuses.entity';
 import {
-  commentModelOutput,
   CommentsPagingDto,
   commentsPagingModelOutput
 } from '../../api/models/output/comment.output.dto';
@@ -23,10 +22,10 @@ export class CommentsQueryRepositoryTypeOrm {
     @InjectDataSource() protected dataSource: DataSource,
   ) {}
 
-  async findById(id: string, userId: string | null) {
+  async findById(id: string, userId: string | null): Promise<CommentsTable | null | undefined> {
     userId = userId ?? null
 
-    const comment = await this.repository
+    return this.repository
         .createQueryBuilder('c')
         .select('c.*')
         .where('c."id" = :id', {id})
@@ -43,8 +42,6 @@ export class CommentsQueryRepositoryTypeOrm {
         )
         .addSelect('s."userStatus"', 'myStatus')
         .getRawOne()
-
-    return commentModelOutput(comment)
   }
 
   async paging(query: QueryDto, postId: string, userId: string | null): Promise<CommentsPagingDto> {
