@@ -8,10 +8,6 @@ export class StatusesPostsRepository {
     constructor(private repository: StatusesPostsRepositoryTypeOrm) {
     }
 
-    async createStatusPost(status: StatusesPostsTable) {
-        await this.repository.create(status)
-    }
-
     async getStatusPost(postId: string, userId: string) {
         return this.repository.findOne(postId, userId)
     }
