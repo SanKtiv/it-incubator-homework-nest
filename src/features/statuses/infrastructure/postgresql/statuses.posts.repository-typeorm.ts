@@ -8,11 +8,6 @@ export class StatusesPostsRepositoryTypeOrm {
     constructor(@InjectRepository(StatusesPostsTable) protected repository: Repository<StatusesPostsTable>) {
     }
 
-    async create(status: StatusesPostsTable) {
-        console.log("create")
-        await this.repository.save(status)
-    }
-
     async save(status: StatusesPostsTable) {
         await this.repository.save(status)
     }
