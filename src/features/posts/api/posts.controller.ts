@@ -27,7 +27,6 @@ import { QueryDto } from '../../../infrastructure/models/query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { JWTAccessAuthGuard } from '../../../infrastructure/guards/jwt-access-auth.guard';
 import { CurrentUserId } from '../../auth/infrastructure/decorators/current-user-id.param.decorator';
-import { CommentServiceDto } from '../../comments/api/models/input/comment-service.dto';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
 import { PostsQueryRepositorySql } from '../infrastructure/postgresql/posts.query.repository-sql';
@@ -48,17 +47,6 @@ export class PostController {
     private readonly commentsQueryRepository: CommentsQueryRepository,
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
-
-  @Get('test')
-  async get() {
-
-    const id = '64c7d723-7121-4ea8-b796-0b4870ba873f'
-
-    const dto: PostLikeStatusDto = {likeStatus: 'Like'}
-
-    const userId = 'a694b516-91a9-4aa9-b759-f4c54315ccf1'
-    await this.postsService.createStatusForPost(id, dto, userId);
-  }
 
   @Get(':postId')
   async getPostById(
