@@ -1,6 +1,5 @@
 import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { RequestApiRepositoryTypeOrm } from '../features/requests/infrastructure/postgresqldb/request.repository-tepeorm';
-import { CommentsRepositorySql } from '../features/comments/infrastructure/postgresql/comments.repository-sql';
 import { StatusesRepositorySql } from '../features/statuses/infrastructure/postgresql/statuses.repository-sql';
 import { DevicesRepository } from '../features/security/infrastructure/devices.repository';
 import { BlogsRepository } from '../features/blogs/infrastructure/blogs.repository';
