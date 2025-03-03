@@ -32,7 +32,6 @@ export class TestingController {
     await this.commentsRepository.clear();
     await this.requestApiRepository.deleteAll_RAW();
     await this.devicesRepository.deleteAll();
-    //await this.statusesRepository.deleteAll_RAW();
     await this.statusesPostsRepository.clear();
     await this.statusesCommentsRepository.clear();
   }
