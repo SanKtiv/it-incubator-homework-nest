@@ -60,7 +60,7 @@ export const commentOutputDto = (
 export const commentModelOutput = (
   comment: CommentsTable | any,
   userId?: string,
-) => ({
+): CommentOutputDto => ({
   id: comment.id,
   content: comment.content,
   createdAt: comment.createdAt.toISOString(),

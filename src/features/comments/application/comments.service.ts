@@ -68,7 +68,7 @@ export class CommentsService {
     id: string,
     userId: string,
     dto: PostLikeStatusDto,
-  ) {
+  ): Promise<void> {
     await this.existComment(id);
 
     const commentStatus = new StatusesCommentsTable()
@@ -78,28 +78,6 @@ export class CommentsService {
     commentStatus.addedAt = new Date();
 
     await this.statusesRepository.createStatusComment(commentStatus)
-    // const newStatus = dto.likeStatus;
-    //
-    // const statusOfComment =
-    //   await this.statusesRepositorySql.statusOfComment_RAW(userId, id);
-    //
-    // if (!statusOfComment) {
-    //   await this.statusesRepositorySql.insertStatusOfComment_RAW(
-    //     userId,
-    //     id,
-    //     newStatus,
-    //   );
-    //
-    //   return;
-    // }
-    //
-    // if (statusOfComment.userStatus === newStatus) return;
-    //
-    // await this.statusesRepositorySql.updateStatusForComment(
-    //   userId,
-    //   id,
-    //   newStatus,
-    // );
   }
 
   async existComment(id: string): Promise<CommentsTable> {

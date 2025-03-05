@@ -1,13 +1,13 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import { CommentsQueryRepositoryTypeOrm } from './comments.query.repository-typeorm';
 import { QueryDto } from '../../../../infrastructure/models/query.dto';
-import {commentModelOutput} from "../../api/models/output/comment.output.dto";
+import {commentModelOutput, CommentOutputDto} from "../../api/models/output/comment.output.dto";
 
 @Injectable()
 export class CommentsQueryRepository {
   constructor(protected repository: CommentsQueryRepositoryTypeOrm) {}
 
-  async getCommentByd(id: string, userId: string | null) {
+  async getCommentByd(id: string, userId: string | null): Promise<CommentOutputDto> {
     const comment = await this.repository.findById(id, userId)
 
     if (!comment) throw new NotFoundException()
