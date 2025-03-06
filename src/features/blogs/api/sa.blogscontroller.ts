@@ -32,7 +32,7 @@ import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 
 @Controller('sa/blogs')
-@UseGuards(BasicAuthGuard)
+//@UseGuards(BasicAuthGuard)
 export class SaBlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
@@ -40,6 +40,18 @@ export class SaBlogsController {
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly postsService: PostsService,
   ) {}
+
+  @Get('test')
+  async test() {
+    const postId = '08fcd3c8-000a-4136-97c8-1146a2baffa5'
+    const blogId = 'c09bcb86-7716-41db-b2f9-1204437294e3'
+    const inputUpdate: InputDto = {
+      title:'sdfsdfsd',
+      shortDescription: 'sfsdfdsf',
+      content: 'dfsdfsdfsdffg'
+    }
+    await this.postsService.updatePostForBlog(postId, blogId, inputUpdate);
+  }
 
   @Post()
   async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {

@@ -73,7 +73,7 @@ export class PostsService {
 
   async updatePostForBlog(postId: string, blogId: string, UpdateDto: InputDto) {
     const post = await this.existPostById(postId);
-
+console.log('post', post)
     if (post!.blogId !== blogId) throw new NotFoundException();
 
     await this.postsRepositorySql.updatePost_RAW(postId, UpdateDto, blogId);

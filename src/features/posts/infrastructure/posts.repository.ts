@@ -10,7 +10,7 @@ export class PostsRepository {
     return this.postsRepository.create(dto);
   }
 
-  async findPostsById(id: string): Promise<PostsTable | null> {
+  async findPostsById(id: string): Promise<PostsTable | null | undefined> {
     return this.postsRepository.findById(id);
   }
 

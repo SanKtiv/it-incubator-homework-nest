@@ -18,7 +18,10 @@ export class PostsRepositoryTypeOrm {
     await this.repository.query('TRUNCATE TABLE "posts" CASCADE');
   }
 
-  async findById(id: string): Promise<PostsTable | null> {
-    return this.repository.findOneBy({ id });
+  async findById(id: string): Promise<PostsTable | null | undefined> {
+    return this.repository.createQueryBuilder('p')
+        .select('p.*')
+        .where('p."id" = :id', {id})
+        .getRawOne();
   }
 }
