@@ -32,7 +32,7 @@ import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 
 @Controller('sa/blogs')
-@UseGuards(BasicAuthGuard)
+//@UseGuards(BasicAuthGuard)
 export class SaBlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
@@ -43,8 +43,8 @@ export class SaBlogsController {
 
   @Get('test')
   async test() {
-    const postId = '08fcd3c8-000a-4136-97c8-1146a2baffa5'
-    const blogId = 'c09bcb86-7716-41db-b2f9-1204437294e3'
+    const postId = '05e949b5-ff2d-4a37-8c69-79b07eeb1672'
+    const blogId = '1b66ef63-8dbd-43c1-85bc-2dce139cafb6'
     const inputUpdate: InputDto = {
       title:'sdfsdfsd',
       shortDescription: 'sfsdfdsf',

@@ -12,6 +12,10 @@ export class StatusesCommentsRepositoryTypeOrm {
         await this.repository.save(postStatusEntity)
     }
 
+    async getStatusByUserId(userId: string): Promise<StatusesCommentsTable | null> {
+        return this.repository.findOneBy({userId: userId})
+    }
+
     async clear() {
         await this.repository.query('TRUNCATE TABLE "statuses_comments" CASCADE')
     }

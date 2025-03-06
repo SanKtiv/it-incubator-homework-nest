@@ -63,13 +63,18 @@ export class CommentsService {
   ): Promise<void> {
     await this.existComment(id);
 
-    const commentStatus = new StatusesCommentsTable()
+    let statusComment = await this.statusesRepository.getStatusCommentByUserId(userId)
 
-    commentStatus.userStatus = dto.likeStatus;
-    commentStatus.userId = userId;
-    commentStatus.addedAt = new Date();
+    if (!statusComment) {
+      statusComment = new StatusesCommentsTable()
 
-    await this.statusesRepository.createStatusComment(commentStatus)
+      statusComment.userId = userId;
+    }
+
+    statusComment.userStatus = dto.likeStatus;
+    statusComment.addedAt = new Date();
+
+    await this.statusesRepository.createStatusComment(statusComment)
   }
 
   async existComment(id: string): Promise<CommentsTable> {

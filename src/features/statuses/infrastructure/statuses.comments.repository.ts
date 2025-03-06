@@ -11,6 +11,10 @@ export class StatusesCommentsRepository {
         await this.repository.insert(postStatusEntity)
     }
 
+    async getStatusCommentByUserId(userId: string): Promise<StatusesCommentsTable | null> {
+        return this.repository.getStatusByUserId(userId)
+    }
+
     async clear() {
         await this.repository.clear()
     }

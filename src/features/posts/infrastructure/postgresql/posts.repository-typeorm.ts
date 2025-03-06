@@ -19,9 +19,18 @@ export class PostsRepositoryTypeOrm {
   }
 
   async findById(id: string): Promise<PostsTable | null | undefined> {
-    return this.repository.createQueryBuilder('p')
+    return this.repository
+        .createQueryBuilder('p')
         .select('p.*')
         .where('p."id" = :id', {id})
+        .getRawOne();
+  }
+
+  async findByPostIdAndBlogId(postId: string, blogId: string): Promise<PostsTable | null | undefined> {
+    return this.repository
+        .createQueryBuilder('p')
+        .select('p.*')
+        .where('p."id" = :postId AND p."blogId" = :blogId', {postId, blogId})
         .getRawOne();
   }
 }

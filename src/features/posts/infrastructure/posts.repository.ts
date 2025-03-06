@@ -14,6 +14,10 @@ export class PostsRepository {
     return this.postsRepository.findById(id);
   }
 
+  async findPostByIdWithBlogId(postId: string, blogId: string): Promise<PostsTable | null | undefined> {
+    return this.postsRepository.findByPostIdAndBlogId(postId, blogId)
+  }
+
   async clear(): Promise<void> {
     await this.postsRepository.clear();
   }

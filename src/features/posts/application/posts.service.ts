@@ -56,15 +56,15 @@ export class PostsService {
     return post;
   }
 
-  async existPostByIdForBlogId(postId: string, blogId: string) {
-    const post = await this.postsRepositorySql.findPostByIdWithBlogId(
+  async existPostByIdForBlogId(postId: string, blogId: string): Promise<PostsTable | void> {
+    const post = await this.postsRepository.findPostByIdWithBlogId(
       postId,
       blogId,
     );
 
     if (!post) throw new NotFoundException();
 
-    return;
+    return post;
   }
 
   async updatePost(id: string, postUpdateDto: PostsInputDto) {
@@ -72,9 +72,9 @@ export class PostsService {
   }
 
   async updatePostForBlog(postId: string, blogId: string, UpdateDto: InputDto) {
-    const post = await this.existPostById(postId);
+    const post = await this.existPostByIdForBlogId(postId, blogId);
 
-    if (post!.blogId !== blogId) throw new NotFoundException();
+    if (!post) throw new NotFoundException();
 
     await this.postsRepositorySql.updatePost_RAW(postId, UpdateDto, blogId);
   }
