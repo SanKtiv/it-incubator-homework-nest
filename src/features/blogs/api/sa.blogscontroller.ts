@@ -32,7 +32,7 @@ import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 
 @Controller('sa/blogs')
-//@UseGuards(BasicAuthGuard)
+@UseGuards(BasicAuthGuard)
 export class SaBlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
