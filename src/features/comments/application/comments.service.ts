@@ -69,6 +69,7 @@ export class CommentsService {
       statusComment = new StatusesCommentsTable()
 
       statusComment.userId = userId;
+      statusComment.commentId = id;
     }
 
     statusComment.userStatus = dto.likeStatus;
