@@ -30,7 +30,7 @@ export class CommentsController {
 
   @Get('test')
   async test() {
-      const id = '7c662c52-4d1e-49b6-8156-2c5f88ccac74'
+      const id = '3f00a7e6-8cb3-4417-bedc-650019af8dcf'
       const userId = 'f293f96b-ec4a-4302-a19a-ad3c36c8c50d'
       return this.commentsQueryRepository.getCommentByd(id, userId);
   }
