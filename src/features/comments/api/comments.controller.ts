@@ -28,6 +28,13 @@ export class CommentsController {
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
+  @Get('test')
+  async test() {
+      const id = '7c662c52-4d1e-49b6-8156-2c5f88ccac74'
+      const userId = 'f293f96b-ec4a-4302-a19a-ad3c36c8c50d'
+      return this.commentsQueryRepository.getCommentByd(id, userId);
+  }
+
   @Get(':commentId')
   async getCommentById(
     @Param('commentId', paramIdIsUUIdPipe) id: string,

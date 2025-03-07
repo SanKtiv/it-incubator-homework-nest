@@ -22,4 +22,8 @@ export class CommentsQueryRepository {
   ) {
     return this.repository.paging(query, postId, userId);
   }
+
+  async testPaging() {
+    return this.repository.testPaging()
+  }
 }

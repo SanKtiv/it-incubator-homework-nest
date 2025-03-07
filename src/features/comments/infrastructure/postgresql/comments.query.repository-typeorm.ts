@@ -88,6 +88,24 @@ export class CommentsQueryRepositoryTypeOrm {
     return commentsPagingModelOutput(query, totalComments, commentsPaging);
   }
 
+  async testPaging() {
+    return this.repository
+        .createQueryBuilder('c')
+        .select(['c.*'])
+        .addSelect(this.getSubQueryCountLikesComment, 'likesCount')
+        .addSelect(this.getSubQueryCountDislikesComment, 'dislikesCount')
+        .leftJoin(UsersTable, 'u', 'u."id" = c."userId"')
+        .leftJoin(AccountDataTable, 'adt', 'adt."id" = u."accountDataId"')
+        .addSelect('adt."login"', 'userLogin')
+        .leftJoin(
+            StatusesCommentsTable,
+            's',
+            's."commentId" = c."id"'
+        )
+        .addSelect('s."userStatus"', 'myStatus')
+        .getRawMany();
+  }
+
   private getSubQueryCountLikesComment = (
     subQuery: SelectQueryBuilder<StatusesCommentsTable>,
   ) =>

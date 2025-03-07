@@ -23,6 +23,7 @@ export class TestingController {
     private readonly statusesCommentsRepository: StatusesCommentsRepository,
   ) {}
 
+
   @Delete()
   @HttpCode(204)
   async deleteAllData(): Promise<void> {

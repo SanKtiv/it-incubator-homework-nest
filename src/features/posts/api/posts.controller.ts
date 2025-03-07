@@ -48,6 +48,11 @@ export class PostController {
     private readonly accessJwtToken: AccessJwtToken,
   ) {}
 
+  @Get('test')
+  async testPaging() {
+    return this.commentsQueryRepository.testPaging()
+  }
+
   @Get(':postId')
   async getPostById(
     @Param('postId', paramIdIsUUIdPipe) id: string,
