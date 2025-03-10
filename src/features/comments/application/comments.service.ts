@@ -63,7 +63,7 @@ export class CommentsService {
   ): Promise<void> {
     await this.existComment(id);
 
-    let statusComment = await this.statusesRepository.getStatusCommentByUserId(userId)
+    let statusComment = await this.statusesRepository.getStatusCommentByUserId(id, userId)
 
     if (!statusComment) {
       statusComment = new StatusesCommentsTable()

@@ -30,9 +30,12 @@ export class CommentsController {
 
   @Get('test')
   async test() {
-      const id = '3f00a7e6-8cb3-4417-bedc-650019af8dcf'
-      const userId = 'f293f96b-ec4a-4302-a19a-ad3c36c8c50d'
-      return this.commentsQueryRepository.getCommentByd(id, userId);
+      const id = '4d9b0543-f074-4028-9011-97a74d0cf4ab'
+      const userId = '877f525f-54d5-4e7e-8e71-ba370a426286'
+      const dto: PostLikeStatusDto = {
+          likeStatus: "Like"
+      }
+      await this.commentsService.createCommentStatus(id, userId, dto);
   }
 
   @Get(':commentId')

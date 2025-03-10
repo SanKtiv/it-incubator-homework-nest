@@ -11,8 +11,8 @@ export class StatusesCommentsRepository {
         await this.repository.insert(postStatusEntity)
     }
 
-    async getStatusCommentByUserId(userId: string): Promise<StatusesCommentsTable | null> {
-        return this.repository.getStatusByUserId(userId)
+    async getStatusCommentByUserId(id: string, userId: string): Promise<StatusesCommentsTable | null> {
+        return this.repository.getStatusByCommentIdAndUserId(id, userId)
     }
 
     async clear() {

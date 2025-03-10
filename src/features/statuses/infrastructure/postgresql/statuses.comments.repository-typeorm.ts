@@ -12,8 +12,8 @@ export class StatusesCommentsRepositoryTypeOrm {
         await this.repository.save(postStatusEntity)
     }
 
-    async getStatusByUserId(userId: string): Promise<StatusesCommentsTable | null> {
-        return this.repository.findOneBy({userId: userId})
+    async getStatusByCommentIdAndUserId(id: string, userId: string): Promise<StatusesCommentsTable | null> {
+        return this.repository.findOneBy({userId: userId, commentId: id})
     }
 
     async clear() {
