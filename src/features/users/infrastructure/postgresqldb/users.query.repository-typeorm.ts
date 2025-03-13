@@ -1,7 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument, UsersModelType } from '../../domain/users.schema';
-import { Types } from 'mongoose';
 import { UsersQuery } from '../../api/models/input/users.query.dto';
 import {
   filterByLoginAndEmail,
@@ -12,7 +9,7 @@ import {
   InfoCurrentUserDto,
 } from '../../../auth/api/models/output/info-current-user.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { Brackets, DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { UsersTable } from '../../domain/users.table';
 import {
   UsersPagingDto,

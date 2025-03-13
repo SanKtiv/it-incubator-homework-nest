@@ -4,6 +4,7 @@ import { UsersQueryRepositoryTypeOrm } from './postgresqldb/users.query.reposito
 @Injectable()
 export class UsersQueryRepository {
   constructor(protected usersQueryRepository: UsersQueryRepositoryTypeOrm) {}
+
   async getInfoCurrentUser(id: string) {
     return this.usersQueryRepository.infoCurrentUser(id);
   }
