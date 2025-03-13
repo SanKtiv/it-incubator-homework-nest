@@ -16,14 +16,14 @@ import { usersOutputDto } from './models/output/users.output.dto';
 import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
-import { UsersQueryRepositoryTypeOrm } from '../infrastructure/postgresqldb/users.query.repository-typeorm';
+import {UsersQueryRepository} from "../infrastructure/users.query.repository";
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly usersQueryRepository: UsersQueryRepositoryTypeOrm,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
   @Post()
@@ -34,7 +34,7 @@ export class UsersController {
 
   @Get()
   async getUsersPaging(@Query() query: UsersQuery) {
-    return await this.usersQueryRepository.findPaging(query);
+    return await this.usersQueryRepository.getUsersPaging(query);
   }
 
   @Delete(':userId')

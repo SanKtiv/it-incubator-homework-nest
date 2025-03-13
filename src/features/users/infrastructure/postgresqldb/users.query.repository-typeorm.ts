@@ -60,7 +60,7 @@ export class UsersQueryRepositoryTypeOrm {
     return this.dataSource.getRepository(UsersTable).count(filter);
   }
 
-  async findPaging(query: UsersQuery): Promise<UsersPagingDto> {
+  async usersPaging(query: UsersQuery): Promise<UsersPagingDto> {
     const loginTerm = query.searchLoginTerm;
     const emailTerm = query.searchEmailTerm;
 
