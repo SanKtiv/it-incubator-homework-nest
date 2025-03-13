@@ -8,8 +8,8 @@ import {
   infoCurrentUserDto,
   InfoCurrentUserDto,
 } from '../../../auth/api/models/output/info-current-user.dto';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
+import {DataSource, Repository} from 'typeorm';
 import { UsersTable } from '../../domain/users.table';
 import {
   UsersPagingDto,
@@ -18,11 +18,12 @@ import {
 
 @Injectable()
 export class UsersQueryRepositoryTypeOrm {
-  constructor(@InjectDataSource() protected dataSource: DataSource) {}
+  constructor(@InjectDataSource() protected dataSource: DataSource,
+  @InjectRepository(UsersTable) protected repository: Repository<UsersTable>) {}
 
-  private get repository() {
-    return this.dataSource.getRepository(UsersTable);
-  }
+  // private get repository() {
+  //   return this.dataSource.getRepository(UsersTable);
+  // }
   // async findById(id: string): Promise<UserDocument | null> {
   //     return this.UserModel.findById(id);
   // }
