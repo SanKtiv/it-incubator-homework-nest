@@ -89,6 +89,7 @@ import {StatusesCommentsRepositoryTypeOrm} from "./features/statuses/infrastruct
 import {StatusesPostsRepositoryTypeOrm} from "./features/statuses/infrastructure/postgresql/statuses.posts.repository-typeorm";
 import {StatusesPostsRepository} from "./features/statuses/infrastructure/statuses.posts.repository";
 import {QuizQuestionsController} from "./features/quiz/api/quiz-questions.controller";
+import {QuizQuestionsServices} from "./features/quiz/application/quiz-questions.services";
 
 dotenv.config();
 
@@ -102,6 +103,7 @@ const services = [
   AuthService,
   DevicesService,
   RequestApiService,
+  QuizQuestionsServices
 ];
 
 const mongoRepositories = [
