@@ -88,6 +88,7 @@ import {StatusesCommentsRepository} from "./features/statuses/infrastructure/sta
 import {StatusesCommentsRepositoryTypeOrm} from "./features/statuses/infrastructure/postgresql/statuses.comments.repository-typeorm";
 import {StatusesPostsRepositoryTypeOrm} from "./features/statuses/infrastructure/postgresql/statuses.posts.repository-typeorm";
 import {StatusesPostsRepository} from "./features/statuses/infrastructure/statuses.posts.repository";
+import {QuizQuestionsController} from "./features/quiz/api/quiz-questions.controller";
 
 dotenv.config();
 
@@ -234,6 +235,7 @@ const strategies = [
     CommentsController,
     AuthController,
     DevicesController,
+    QuizQuestionsController
   ],
   providers: [
     ...services,
