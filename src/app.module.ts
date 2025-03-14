@@ -90,6 +90,7 @@ import {StatusesPostsRepositoryTypeOrm} from "./features/statuses/infrastructure
 import {StatusesPostsRepository} from "./features/statuses/infrastructure/statuses.posts.repository";
 import {QuizQuestionsController} from "./features/quiz/api/quiz-questions.controller";
 import {QuizQuestionsServices} from "./features/quiz/application/quiz-questions.services";
+import {QuizQuestionsRepositoryTypeOrm} from "./features/quiz/infrastructure/postgresql/quiz-questions.repository-typeorm";
 
 dotenv.config();
 
@@ -153,6 +154,7 @@ const sqlRepositories = [
   UsersRepositoryTypeOrm,
   DevicesRepositoryTypeOrm,
   UsersQueryRepositoryTypeOrm,
+  QuizQuestionsRepositoryTypeOrm
 ];
 
 const repositories = [
