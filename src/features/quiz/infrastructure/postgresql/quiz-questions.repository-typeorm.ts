@@ -15,7 +15,15 @@ export class QuizQuestionsRepositoryTypeOrm {
     return this.repository.save(dto);
   }
 
+  async findOneById(id: string): Promise<QuizQuestionsEntity | null> {
+    return this.repository.findOneBy({ id });
+  }
+
   async update() {}
+
+  async softRemove(QuizQuestion: QuizQuestionsEntity): Promise<void> {
+    await this.repository.softRemove(QuizQuestion);
+  }
 
   async delete() {}
 }

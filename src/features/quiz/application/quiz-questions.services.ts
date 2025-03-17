@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { QuizQuestionsInputDto } from '../api/models/quiz-questions.input.dto';
 import { QuizQuestionsRepository } from '../infrastructure/quiz-questions.repository';
 import { QuizQuestionsEntity } from '../domain/quiz-questions.entity';
@@ -22,5 +22,12 @@ export class QuizQuestionsServices {
 
   async updateQuestions() {}
 
-  async deleteQuestions() {}
+  async deleteQuestions(id: string): Promise<void> {
+    const quizQuestion: QuizQuestionsEntity | null =
+      await this.repository.getQuizQuestionById(id);
+
+    if (!quizQuestion) throw new NotFoundException();
+
+    await this.repository.deleteQuizQuestion(quizQuestion);
+  }
 }

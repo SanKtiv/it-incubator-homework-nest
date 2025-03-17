@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   UseGuards,
@@ -12,6 +13,7 @@ import { QuizQuestionsInputDto } from './models/quiz-questions.input.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 
 @Controller('sa/quiz/questions')
+@UseGuards(BasicAuthGuard)
 export class QuizQuestionsController {
   constructor(protected quizQuestionsServices: QuizQuestionsServices) {}
 
@@ -25,7 +27,6 @@ export class QuizQuestionsController {
   }
 
   @Post()
-  @UseGuards(BasicAuthGuard)
   async createQuestions(@Body() dto: QuizQuestionsInputDto) {
     return this.quizQuestionsServices.createQuestions(dto);
   }
@@ -40,5 +41,7 @@ export class QuizQuestionsController {
   async publishQuestionsById() {}
 
   @Delete(':id')
-  async deleteQuestionsById() {}
+  async deleteQuestionsById(@Param('id') id: string): Promise<void> {
+    await this.quizQuestionsServices.deleteQuestions(id);
+  }
 }

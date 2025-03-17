@@ -15,4 +15,12 @@ export class QuizQuestionsRepository {
 
     return quizQuestionsViewModel(createdQuestions);
   }
+
+  async getQuizQuestionById(id: string): Promise<QuizQuestionsEntity | null> {
+    return this.repository.findOneById(id);
+  }
+
+  async deleteQuizQuestion(QuizQuestion: QuizQuestionsEntity): Promise<void> {
+    await this.repository.softRemove(QuizQuestion);
+  }
 }
