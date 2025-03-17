@@ -6,7 +6,7 @@ export class QuizQuestionsOutputDto {
     correctAnswers: string[];
     published: boolean;
     createdAt: string;
-    updatedAt: string;
+    updatedAt: string | null;
 }
 
 export const quizQuestionsViewModel = (dto: QuizQuestionsEntity) => ({
@@ -15,5 +15,5 @@ export const quizQuestionsViewModel = (dto: QuizQuestionsEntity) => ({
     correctAnswers: dto.correctAnswers,
     published: dto.published,
     createdAt: dto.createdAt.toISOString(),
-    updatedAt: dto.updatedAt.toISOString() ?? dto.updatedAt
+    updatedAt: dto.updatedAt ? dto.updatedAt.toISOString() : null
 })

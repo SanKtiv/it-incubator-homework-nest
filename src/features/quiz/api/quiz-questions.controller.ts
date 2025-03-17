@@ -8,6 +8,15 @@ export class QuizQuestionsController {
     constructor(protected quizQuestionsServices: QuizQuestionsServices) {
     }
 
+    @Get('test')
+    async test() {
+        const dto: QuizQuestionsInputDto = {
+            body: 'Question first',
+            correctAnswers: ['Answer first']
+        }
+        return this.quizQuestionsServices.createQuestions(dto)
+    }
+
     @Post()
     @UseGuards(BasicAuthGuard)
     async createQuestions(@Body() dto: QuizQuestionsInputDto) {
