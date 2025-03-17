@@ -1,7 +1,7 @@
 import {Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity('quiz-questions')
-export class QuizQuestions {
+export class QuizQuestionsEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -17,7 +17,7 @@ export class QuizQuestions {
     @Column('timestamp with time zone')
     createdAt: Date;
 
-    @Column('timestamp with time zone')
+    @Column({ type: 'timestamp with time zone', nullable: true })
     updatedAt: Date;
 
     @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
