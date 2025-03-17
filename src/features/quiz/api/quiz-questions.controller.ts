@@ -1,13 +1,17 @@
-import {Controller, Delete, Get, Post, Put} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Post, Put, UseGuards} from "@nestjs/common";
+import {QuizQuestionsServices} from "../application/quiz-questions.services";
+import {QuizQuestionsInputDto} from "./models/quiz-questions.input.dto";
+import {BasicAuthGuard} from "../../../infrastructure/guards/basic.guard";
 
 @Controller('sa/quiz/questions')
 export class QuizQuestionsController {
-    constructor() {
+    constructor(protected quizQuestionsServices: QuizQuestionsServices) {
     }
 
     @Post()
-    async createQuestions() {
-
+    @UseGuards(BasicAuthGuard)
+    async createQuestions(@Body() dto: QuizQuestionsInputDto) {
+        return this.quizQuestionsServices.createQuestions(dto)
     }
 
     @Get()
