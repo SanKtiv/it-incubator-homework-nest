@@ -16,7 +16,7 @@ import { usersOutputDto } from './models/output/users.output.dto';
 import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe';
 import { UsersQuery } from './models/input/users.query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
-import {UsersQueryRepository} from "../infrastructure/users.query.repository";
+import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)

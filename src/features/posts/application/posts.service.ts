@@ -15,8 +15,8 @@ import { UsersRepositoryRawsql } from '../../users/infrastructure/postgresqldb/u
 import { StatusesRepositorySql } from '../../statuses/infrastructure/postgresql/statuses.repository-sql';
 import { CommentsRepositorySql } from '../../comments/infrastructure/postgresql/comments.repository-sql';
 import { PostsRepository } from '../infrastructure/posts.repository';
-import {StatusesPostsRepository} from "../../statuses/infrastructure/statuses.posts.repository";
-import {StatusesPostsTable} from "../../statuses/domain/statuses.entity";
+import { StatusesPostsRepository } from '../../statuses/infrastructure/statuses.posts.repository';
+import { StatusesPostsTable } from '../../statuses/domain/statuses.entity';
 
 @Injectable()
 export class PostsService {
@@ -56,7 +56,10 @@ export class PostsService {
     return post;
   }
 
-  async existPostByIdForBlogId(postId: string, blogId: string): Promise<PostsTable | void> {
+  async existPostByIdForBlogId(
+    postId: string,
+    blogId: string,
+  ): Promise<PostsTable | void> {
     const post = await this.postsRepository.findPostByIdWithBlogId(
       postId,
       blogId,
@@ -86,21 +89,23 @@ export class PostsService {
   ): Promise<void> {
     await this.existPostById(id);
 
-    const statusPostEntity =
-        await this.statusesPostsRepository.getStatusPost(id, userId)
+    const statusPostEntity = await this.statusesPostsRepository.getStatusPost(
+      id,
+      userId,
+    );
 
-    let newStatusPost = new StatusesPostsTable()
+    const newStatusPost = new StatusesPostsTable();
 
     if (statusPostEntity) {
-      newStatusPost.id = statusPostEntity.id
+      newStatusPost.id = statusPostEntity.id;
     }
 
-    newStatusPost.postId = id
+    newStatusPost.postId = id;
     newStatusPost.userId = userId;
     newStatusPost.userStatus = dto.likeStatus;
     newStatusPost.addedAt = new Date();
 
-    await this.statusesPostsRepository.updateStatus(newStatusPost)
+    await this.statusesPostsRepository.updateStatus(newStatusPost);
     // const newStatus = dto.likeStatus;
     //
     // const statusesPost = await this.statusesRepositorySql.statusOfPost_RAW(

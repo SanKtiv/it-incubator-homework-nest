@@ -34,10 +34,10 @@ export class CommentsRepositoryTypeOrm {
 
   async findOneById(id: string): Promise<CommentsTable | null | undefined> {
     return this.repository
-        .createQueryBuilder('c')
-        .select('c.*')
-        .where('c.id = :id', {id})
-        .getRawOne()
+      .createQueryBuilder('c')
+      .select('c.*')
+      .where('c.id = :id', { id })
+      .getRawOne();
   }
 
   async update(comment: CommentsTable): Promise<CommentsTable> {
@@ -45,10 +45,10 @@ export class CommentsRepositoryTypeOrm {
   }
 
   async deleteOne(comment: CommentsTable) {
-    await this.repository.delete(comment)
+    await this.repository.delete(comment);
   }
 
   async clear(): Promise<void> {
-    await this.repository.query('TRUNCATE TABLE "comments" CASCADE')
+    await this.repository.query('TRUNCATE TABLE "comments" CASCADE');
   }
 }

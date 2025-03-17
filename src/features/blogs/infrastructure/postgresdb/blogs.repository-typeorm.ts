@@ -1,4 +1,4 @@
-import { Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataSource, Repository, UpdateResult } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BlogsTable } from '../../domain/blog.entity';

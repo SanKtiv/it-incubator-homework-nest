@@ -84,17 +84,17 @@ import { CommentsRepositoryTypeOrm } from './features/comments/infrastructure/po
 import { CommentsQueryRepositoryTypeOrm } from './features/comments/infrastructure/postgresql/comments.query.repository-typeorm';
 import { CommentsRepository } from './features/comments/infrastructure/comments.repository';
 import { CommentsQueryRepository } from './features/comments/infrastructure/postgresql/comments.query.repository';
-import {StatusesCommentsRepository} from "./features/statuses/infrastructure/statuses.comments.repository";
-import {StatusesCommentsRepositoryTypeOrm} from "./features/statuses/infrastructure/postgresql/statuses.comments.repository-typeorm";
-import {StatusesPostsRepositoryTypeOrm} from "./features/statuses/infrastructure/postgresql/statuses.posts.repository-typeorm";
-import {StatusesPostsRepository} from "./features/statuses/infrastructure/statuses.posts.repository";
-import {QuizQuestionsController} from "./features/quiz/api/quiz-questions.controller";
-import {QuizQuestionsServices} from "./features/quiz/application/quiz-questions.services";
-import {QuizQuestionsRepositoryTypeOrm} from "./features/quiz/infrastructure/postgresql/quiz-questions.repository-typeorm";
-import {QuizQuestionsQueryRepositoryTypeOrm} from "./features/quiz/infrastructure/postgresql/quiz-questions.query.repository-typeorm";
-import {QuizQuestionsRepository} from "./features/quiz/infrastructure/quiz-questions.repository";
-import {QuizQuestionsQueryRepository} from "./features/quiz/infrastructure/quiz-questions.query.repository";
-import {QuizQuestionsEntity} from "./features/quiz/domain/quiz-questions.entity";
+import { StatusesCommentsRepository } from './features/statuses/infrastructure/statuses.comments.repository';
+import { StatusesCommentsRepositoryTypeOrm } from './features/statuses/infrastructure/postgresql/statuses.comments.repository-typeorm';
+import { StatusesPostsRepositoryTypeOrm } from './features/statuses/infrastructure/postgresql/statuses.posts.repository-typeorm';
+import { StatusesPostsRepository } from './features/statuses/infrastructure/statuses.posts.repository';
+import { QuizQuestionsController } from './features/quiz/api/quiz-questions.controller';
+import { QuizQuestionsServices } from './features/quiz/application/quiz-questions.services';
+import { QuizQuestionsRepositoryTypeOrm } from './features/quiz/infrastructure/postgresql/quiz-questions.repository-typeorm';
+import { QuizQuestionsQueryRepositoryTypeOrm } from './features/quiz/infrastructure/postgresql/quiz-questions.query.repository-typeorm';
+import { QuizQuestionsRepository } from './features/quiz/infrastructure/quiz-questions.repository';
+import { QuizQuestionsQueryRepository } from './features/quiz/infrastructure/quiz-questions.query.repository';
+import { QuizQuestionsEntity } from './features/quiz/domain/quiz-questions.entity';
 
 dotenv.config();
 
@@ -108,7 +108,7 @@ const services = [
   AuthService,
   DevicesService,
   RequestApiService,
-  QuizQuestionsServices
+  QuizQuestionsServices,
 ];
 
 const mongoRepositories = [
@@ -161,7 +161,7 @@ const sqlRepositories = [
   QuizQuestionsRepositoryTypeOrm,
   QuizQuestionsQueryRepositoryTypeOrm,
   QuizQuestionsRepository,
-  QuizQuestionsQueryRepository
+  QuizQuestionsQueryRepository,
 ];
 
 const repositories = [
@@ -204,7 +204,7 @@ const strategies = [
         StatusesTable,
         StatusesCommentsTable,
         StatusesPostsTable,
-        QuizQuestionsEntity
+        QuizQuestionsEntity,
       ],
       synchronize: true,
       logging: ['query'],
@@ -222,7 +222,7 @@ const strategies = [
       StatusesTable,
       StatusesCommentsTable,
       StatusesPostsTable,
-      QuizQuestionsEntity
+      QuizQuestionsEntity,
     ]),
     // MongooseModule.forRoot(
     //   appSettings.env.isTesting()
@@ -248,7 +248,7 @@ const strategies = [
     CommentsController,
     AuthController,
     DevicesController,
-    QuizQuestionsController
+    QuizQuestionsController,
   ],
   providers: [
     ...services,
@@ -269,13 +269,13 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(/*TooManyRequestsMiddleware*/)
-      .forRoutes(
-        // '/auth/registration',
-        // '/auth/login',
-        // '/auth/password-recovery',
-        // '/auth/new-password',
-        // '/auth/registration-confirmation',
-        // '/auth/registration-email-resending',
-      );
+      .forRoutes
+      // '/auth/registration',
+      // '/auth/login',
+      // '/auth/password-recovery',
+      // '/auth/new-password',
+      // '/auth/registration-confirmation',
+      // '/auth/registration-email-resending',
+      ();
   }
 }

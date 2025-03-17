@@ -17,8 +17,8 @@ import { CommentInputDto } from './models/input/comment.input.dto';
 import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto';
 import { Request } from 'express';
 import { AccessJwtToken } from '../../auth/application/use-cases/access-jwt-token';
-import {CommentsQueryRepository} from "../infrastructure/postgresql/comments.query.repository";
-import {CommentOutputDto} from "./models/output/comment.output.dto";
+import { CommentsQueryRepository } from '../infrastructure/postgresql/comments.query.repository';
+import { CommentOutputDto } from './models/output/comment.output.dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -30,12 +30,12 @@ export class CommentsController {
 
   @Get('test')
   async test() {
-      const id = '4d9b0543-f074-4028-9011-97a74d0cf4ab'
-      const userId = '877f525f-54d5-4e7e-8e71-ba370a426286'
-      const dto: PostLikeStatusDto = {
-          likeStatus: "Like"
-      }
-      await this.commentsService.createCommentStatus(id, userId, dto);
+    const id = '4d9b0543-f074-4028-9011-97a74d0cf4ab';
+    const userId = '877f525f-54d5-4e7e-8e71-ba370a426286';
+    const dto: PostLikeStatusDto = {
+      likeStatus: 'Like',
+    };
+    await this.commentsService.createCommentStatus(id, userId, dto);
   }
 
   @Get(':commentId')

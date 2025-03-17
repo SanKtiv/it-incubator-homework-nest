@@ -33,7 +33,7 @@ import { PostsQueryRepositorySql } from '../infrastructure/postgresql/posts.quer
 import { CommentsQueryRepositorySql } from '../../comments/infrastructure/postgresql/comments.query.repository-sql';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 import { CommentsQueryRepository } from '../../comments/infrastructure/postgresql/comments.query.repository';
-import {PostsRepository} from "../infrastructure/posts.repository";
+import { PostsRepository } from '../infrastructure/posts.repository';
 
 @Controller('posts')
 export class PostController {
@@ -50,7 +50,7 @@ export class PostController {
 
   @Get('test')
   async testPaging() {
-    return this.commentsQueryRepository.testPaging()
+    return this.commentsQueryRepository.testPaging();
   }
 
   @Get(':postId')

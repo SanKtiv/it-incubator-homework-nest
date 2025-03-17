@@ -5,9 +5,9 @@ import { DevicesRepository } from '../features/security/infrastructure/devices.r
 import { BlogsRepository } from '../features/blogs/infrastructure/blogs.repository';
 import { PostsRepository } from '../features/posts/infrastructure/posts.repository';
 import { UsersRepository } from '../features/users/infrastructure/users.repository';
-import {CommentsRepository} from "../features/comments/infrastructure/comments.repository";
-import {StatusesPostsRepository} from "../features/statuses/infrastructure/statuses.posts.repository";
-import {StatusesCommentsRepository} from "../features/statuses/infrastructure/statuses.comments.repository";
+import { CommentsRepository } from '../features/comments/infrastructure/comments.repository';
+import { StatusesPostsRepository } from '../features/statuses/infrastructure/statuses.posts.repository';
+import { StatusesCommentsRepository } from '../features/statuses/infrastructure/statuses.comments.repository';
 
 @Controller('testing/all-data')
 export class TestingController {
@@ -22,7 +22,6 @@ export class TestingController {
     private readonly statusesPostsRepository: StatusesPostsRepository,
     private readonly statusesCommentsRepository: StatusesCommentsRepository,
   ) {}
-
 
   @Delete()
   @HttpCode(204)

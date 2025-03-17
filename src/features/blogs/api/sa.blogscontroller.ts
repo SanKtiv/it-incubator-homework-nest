@@ -43,13 +43,13 @@ export class SaBlogsController {
 
   @Get('test')
   async test() {
-    const postId = '05e949b5-ff2d-4a37-8c69-79b07eeb1672'
-    const blogId = '1b66ef63-8dbd-43c1-85bc-2dce139cafb6'
+    const postId = '05e949b5-ff2d-4a37-8c69-79b07eeb1672';
+    const blogId = '1b66ef63-8dbd-43c1-85bc-2dce139cafb6';
     const inputUpdate: InputDto = {
-      title:'sdfsdfsd',
+      title: 'sdfsdfsd',
       shortDescription: 'sfsdfdsf',
-      content: 'dfsdfsdfsdffg'
-    }
+      content: 'dfsdfsdfsdffg',
+    };
     await this.postsService.updatePostForBlog(postId, blogId, inputUpdate);
   }
 

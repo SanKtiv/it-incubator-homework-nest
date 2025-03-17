@@ -11,7 +11,7 @@ import {
 } from '../../../statuses/domain/statuses.entity';
 import {
   CommentsPagingDto,
-  commentsPagingModelOutput
+  commentsPagingModelOutput,
 } from '../../api/models/output/comment.output.dto';
 
 @Injectable()
@@ -22,29 +22,36 @@ export class CommentsQueryRepositoryTypeOrm {
     @InjectDataSource() protected dataSource: DataSource,
   ) {}
 
-  async findById(id: string, userId: string | null): Promise<CommentsTable | null | undefined> {
-    userId = userId ?? null
+  async findById(
+    id: string,
+    userId: string | null,
+  ): Promise<CommentsTable | null | undefined> {
+    userId = userId ?? null;
 
     return this.repository
-        .createQueryBuilder('c')
-        .select('c.*')
-        .where('c."id" = :id', {id})
-        .addSelect(this.getSubQueryCountLikesComment, 'likesCount')
-        .addSelect(this.getSubQueryCountDislikesComment, 'dislikesCount')
-        .leftJoin(UsersTable, 'u', 'u."id" = c."userId"')
-        .leftJoin(AccountDataTable, 'adt', 'adt."id" = u."accountDataId"')
-        .addSelect('adt."login"', 'userLogin')
-        .leftJoin(
-            StatusesCommentsTable,
-            's',
-            's."commentId" = c."id" AND s."userId" = :userId',
-            { userId },
-        )
-        .addSelect('s."userStatus"', 'myStatus')
-        .getRawOne()
+      .createQueryBuilder('c')
+      .select('c.*')
+      .where('c."id" = :id', { id })
+      .addSelect(this.getSubQueryCountLikesComment, 'likesCount')
+      .addSelect(this.getSubQueryCountDislikesComment, 'dislikesCount')
+      .leftJoin(UsersTable, 'u', 'u."id" = c."userId"')
+      .leftJoin(AccountDataTable, 'adt', 'adt."id" = u."accountDataId"')
+      .addSelect('adt."login"', 'userLogin')
+      .leftJoin(
+        StatusesCommentsTable,
+        's',
+        's."commentId" = c."id" AND s."userId" = :userId',
+        { userId },
+      )
+      .addSelect('s."userStatus"', 'myStatus')
+      .getRawOne();
   }
 
-  async paging(query: QueryDto, postId: string, userId: string | null): Promise<CommentsPagingDto> {
+  async paging(
+    query: QueryDto,
+    postId: string,
+    userId: string | null,
+  ): Promise<CommentsPagingDto> {
     const commentsSelected = this.repository
       .createQueryBuilder('c')
       .select(['c.*'])
@@ -90,20 +97,16 @@ export class CommentsQueryRepositoryTypeOrm {
 
   async testPaging() {
     return this.repository
-        .createQueryBuilder('c')
-        .select(['c.*'])
-        .addSelect(this.getSubQueryCountLikesComment, 'likesCount')
-        .addSelect(this.getSubQueryCountDislikesComment, 'dislikesCount')
-        .leftJoin(UsersTable, 'u', 'u."id" = c."userId"')
-        .leftJoin(AccountDataTable, 'adt', 'adt."id" = u."accountDataId"')
-        .addSelect('adt."login"', 'userLogin')
-        .leftJoin(
-            StatusesCommentsTable,
-            's',
-            's."commentId" = c."id"'
-        )
-        .addSelect('s."userStatus"', 'myStatus')
-        .getRawMany();
+      .createQueryBuilder('c')
+      .select(['c.*'])
+      .addSelect(this.getSubQueryCountLikesComment, 'likesCount')
+      .addSelect(this.getSubQueryCountDislikesComment, 'dislikesCount')
+      .leftJoin(UsersTable, 'u', 'u."id" = c."userId"')
+      .leftJoin(AccountDataTable, 'adt', 'adt."id" = u."accountDataId"')
+      .addSelect('adt."login"', 'userLogin')
+      .leftJoin(StatusesCommentsTable, 's', 's."commentId" = c."id"')
+      .addSelect('s."userStatus"', 'myStatus')
+      .getRawMany();
   }
 
   private getSubQueryCountLikesComment = (

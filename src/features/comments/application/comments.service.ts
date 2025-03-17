@@ -12,8 +12,8 @@ import { PostLikeStatusDto } from '../../posts/api/models/input/posts.input.dto'
 import { PostsService } from '../../posts/application/posts.service';
 import { CommentsTable } from '../domain/comments.entity';
 import { CommentsRepository } from '../infrastructure/comments.repository';
-import {StatusesCommentsRepository} from "../../statuses/infrastructure/statuses.comments.repository";
-import {StatusesCommentsTable} from "../../statuses/domain/statuses.entity";
+import { StatusesCommentsRepository } from '../../statuses/infrastructure/statuses.comments.repository';
+import { StatusesCommentsTable } from '../../statuses/domain/statuses.entity';
 
 @Injectable()
 export class CommentsService {
@@ -23,7 +23,11 @@ export class CommentsService {
     private readonly postsService: PostsService,
   ) {}
 
-  async createComment(id: string, content: string, userId: string): Promise<CommentOutputDto> {
+  async createComment(
+    id: string,
+    content: string,
+    userId: string,
+  ): Promise<CommentOutputDto> {
     await this.postsService.existPostById(id);
 
     const commentEntity = new CommentsTable();
@@ -38,7 +42,11 @@ export class CommentsService {
     return commentModelOutput(comment);
   }
 
-  async updateCommentById(id: string, userId: string, dto: CommentInputDto): Promise<void> {
+  async updateCommentById(
+    id: string,
+    userId: string,
+    dto: CommentInputDto,
+  ): Promise<void> {
     const comment = await this.existComment(id);
 
     if (comment.userId !== userId) throw new ForbiddenException();
@@ -63,10 +71,13 @@ export class CommentsService {
   ): Promise<void> {
     await this.existComment(id);
 
-    let statusComment = await this.statusesRepository.getStatusCommentByUserId(id, userId)
+    let statusComment = await this.statusesRepository.getStatusCommentByUserId(
+      id,
+      userId,
+    );
 
     if (!statusComment) {
-      statusComment = new StatusesCommentsTable()
+      statusComment = new StatusesCommentsTable();
 
       statusComment.userId = userId;
       statusComment.commentId = id;
@@ -75,7 +86,7 @@ export class CommentsService {
     statusComment.userStatus = dto.likeStatus;
     statusComment.addedAt = new Date();
 
-    await this.statusesRepository.createStatusComment(statusComment)
+    await this.statusesRepository.createStatusComment(statusComment);
   }
 
   async existComment(id: string): Promise<CommentsTable> {

@@ -1,22 +1,21 @@
-import {Injectable} from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 
-import { StatusesPostsTable} from "../domain/statuses.entity";
-import {StatusesPostsRepositoryTypeOrm} from "./postgresql/statuses.posts.repository-typeorm";
+import { StatusesPostsTable } from '../domain/statuses.entity';
+import { StatusesPostsRepositoryTypeOrm } from './postgresql/statuses.posts.repository-typeorm';
 
 @Injectable()
 export class StatusesPostsRepository {
-    constructor(private repository: StatusesPostsRepositoryTypeOrm) {
-    }
+  constructor(private repository: StatusesPostsRepositoryTypeOrm) {}
 
-    async getStatusPost(postId: string, userId: string) {
-        return this.repository.findOne(postId, userId)
-    }
+  async getStatusPost(postId: string, userId: string) {
+    return this.repository.findOne(postId, userId);
+  }
 
-    async updateStatus(status: StatusesPostsTable) {
-        await this.repository.save(status)
-    }
+  async updateStatus(status: StatusesPostsTable) {
+    await this.repository.save(status);
+  }
 
-    async clear() {
-        await this.repository.clear()
-    }
+  async clear() {
+    await this.repository.clear();
+  }
 }

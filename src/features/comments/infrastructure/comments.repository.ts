@@ -11,18 +11,18 @@ export class CommentsRepository {
   }
 
   async getCommentById(id: string): Promise<CommentsTable | null | undefined> {
-    return this.repository.findOneById(id)
+    return this.repository.findOneById(id);
   }
 
   async updateComment(comment: CommentsTable) {
-    await this.repository.update(comment)
+    await this.repository.update(comment);
   }
 
   async deleteOneById(comment: CommentsTable) {
-    await this.repository.deleteOne(comment)
+    await this.repository.deleteOne(comment);
   }
 
   async clear(): Promise<void> {
-    await this.repository.clear()
+    await this.repository.clear();
   }
 }

@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import {DataSource, Repository} from 'typeorm';
-import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { UsersTable } from '../../domain/users.table';
 import { EmailConfirmationTable } from '../../domain/email-сonfirmation.table';
 import { AccountDataTable } from '../../domain/account-data.table';
 
 @Injectable()
 export class UsersRepositoryTypeOrm {
-  constructor(@InjectDataSource() protected dataSource: DataSource,
-              @InjectRepository(UsersTable) protected repository: Repository<UsersTable>) {}
+  constructor(
+    @InjectDataSource() protected dataSource: DataSource,
+    @InjectRepository(UsersTable) protected repository: Repository<UsersTable>,
+  ) {}
 
   // private get repository() {
   //   return this.dataSource.getRepository(UsersTable);
@@ -146,7 +148,8 @@ export class UsersRepositoryTypeOrm {
   }
 
   async clear(): Promise<void> {
-    await this.dataSource
-        .query(`TRUNCATE "passwordRecovery", "emailConfirmation", "accountData", "users" RESTART IDENTITY CASCADE`);
+    await this.dataSource.query(
+      `TRUNCATE "passwordRecovery", "emailConfirmation", "accountData", "users" RESTART IDENTITY CASCADE`,
+    );
   }
 }
