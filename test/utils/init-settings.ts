@@ -8,6 +8,8 @@ import { BlogsTestManager } from './blogs-test-manager';
 import { DataSource } from 'typeorm';
 import { getDataSourceName } from '@nestjs/typeorm';
 import { AuthTestManager } from './auth-test-manager';
+import {QuizQuestionsTestManager} from "./quiz-questions/quiz-questions-test-manager";
+import {QuizQuestionsOptions} from "./quiz-questions/quiz-questions-options";
 
 export const initSettings = async (
   //передаем callback, который получает ModuleBuilder,
@@ -41,6 +43,8 @@ export const initSettings = async (
     const httpServer = app.getHttpServer();
     const blogsTestManager = new BlogsTestManager(app);
     const authTestManager = new AuthTestManager(app);
+    const quizQuestionsTestManager = new QuizQuestionsTestManager(app);
+    const quizQuestionsOptions = new QuizQuestionsOptions(app);
     //const userTestManger = new UsersTestManager(app);
 
     //чистим БД
@@ -54,6 +58,8 @@ export const initSettings = async (
       httpServer,
       blogsTestManager,
       authTestManager,
+      quizQuestionsTestManager,
+      quizQuestionsOptions,
       //userTestManger,
     };
   } catch (error) {

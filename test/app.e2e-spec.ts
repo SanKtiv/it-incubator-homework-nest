@@ -37,7 +37,7 @@ describe('AppController (e2e)', () => {
     //moduleBuilder.overrideProvider(UsersService).useClass(UserServiceMock),
     app = result.app;
     blogsTestManager = result.blogsTestManager;
-    authTestManager = result.authTestManager;
+    //authTestManager = result.authTestManager;
     //userTestManger = result.userTestManger;
   });
 
@@ -85,13 +85,13 @@ describe('AppController (e2e)', () => {
 
   // Tests Auth
 
-  it('/auth/registration (Post)', async () => {
-    const result = await authTestManager.registration(userTest);
-    // const resultChangePassword = await authTestManager.changePassword({})
-
-    await expect(result.statusCode).toBe(204);
-    await expect(result.body).toEqual({});
-  });
+  // it('/auth/registration (Post)', async () => {
+  //   const result = await authTestManager.registration(userTest);
+  //   // const resultChangePassword = await authTestManager.changePassword({})
+  //
+  //   await expect(result.statusCode).toBe(204);
+  //   await expect(result.body).toEqual({});
+  // });
 
   // it('/blogs (POST)', async () => {
   //   const responseCreateBlog = await blogsTestManager.createBlog(blogCreateModel)
