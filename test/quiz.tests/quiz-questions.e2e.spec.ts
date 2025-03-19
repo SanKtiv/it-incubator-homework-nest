@@ -46,15 +46,16 @@ describe('Quiz-Questions Tests (e2e)', () => {
     // });
 
     it('/sa/quiz/questions (POST), should returned status 201 and correct blog model', async () => {
-        const inputModel = quizQuestionsOptions.inputModel;
-console.log('inputModel =', inputModel)
+
         const responseCreateQuizQuestion = await quizQuestionsTestManager.create(
-            inputModel,
+            quizQuestionsOptions.inputModel('body', 'answer'),
             authBasic,
         );
 
-        await expect(responseCreateQuizQuestion.statusCode).toBe(201);
-
+        await expect(responseCreateQuizQuestion.statusCode)
+            .toBe(201);
+        await expect(responseCreateQuizQuestion.body)
+            .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
         //await quizQuestionsTestManager.expectViewModel(blogCreateModel, responseCreateQuizQuestion.body);
     });
 
