@@ -59,19 +59,18 @@ describe('Quiz-Questions Tests (e2e)', () => {
         //await quizQuestionsTestManager.expectViewModel(blogCreateModel, responseCreateQuizQuestion.body);
     });
 
-    // it('/sa/quiz/questions (GET), should returned status 200 and correct blog model', async () => {
-    //
-    //     const responseCreateQuizQuestion = await quizQuestionsTestManager.create(
-    //         quizQuestionsOptions.inputModel('body', 'answer'),
-    //         authBasic,
-    //     );
-    //
-    //     await expect(responseCreateQuizQuestion.statusCode)
-    //         .toBe(201);
-    //     await expect(responseCreateQuizQuestion.body)
-    //         .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
-    //     //await quizQuestionsTestManager.expectViewModel(blogCreateModel, responseCreateQuizQuestion.body);
-    // });
+    it('/sa/quiz/questions (GET), should returned status 200 and correct blog model', async () => {
+
+        const responseCreateQuizQuestion = await quizQuestionsTestManager.getPaging(
+            '',
+            authBasic,
+        );
+
+        await expect(responseCreateQuizQuestion.statusCode)
+            .toBe(200);
+        // await expect(responseCreateQuizQuestion.body)
+        //     .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
+    });
 
     // it('/blogs (POST), should returned status 400 with correct error', async () => {
     //     const responseCreateBlog = await blogsTestManager.createBlog(

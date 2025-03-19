@@ -23,7 +23,11 @@ export class QuizQuestionsTestManager {
         //.expect(201)
     }
 
-    async getPaging() {
+    async getPaging(queryDto: any, auth: any) {
+        return request(this.app.getHttpServer())
+            .get('/sa/quiz/questions')
+            .query(queryDto)
+            .set(auth.type, auth.pass);
     }
 
     async getById() {
