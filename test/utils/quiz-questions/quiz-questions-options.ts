@@ -8,6 +8,11 @@ export class QuizQuestionsOptions {
         correctAnswers: [`${correctAnswer}1, ${correctAnswer}2, ${correctAnswer}3`]
     })
 
+    inputModelWrong = (body: string | number, correctAnswer: string) => ({
+        body: `Question ${body}`,
+        correctAnswers: [`${correctAnswer}1, ${correctAnswer}2, ${correctAnswer}3`]
+    })
+
     outputModel = (body: string, correctAnswer: string) => ({
         id: expect.any(String),
         published: expect.any(Boolean),
@@ -15,4 +20,6 @@ export class QuizQuestionsOptions {
         updatedAt: null,
         ...this.inputModel(body, correctAnswer),
     })
+
+
 }
