@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { QuizQuestionsQueryRepositoryTypeOrm } from './postgresql/quiz-questions.query.repository-typeorm';
+import {QuizQuestionsQueryInputDto} from "../api/models/quiz-questions.input.dto";
+import {QuizQuestionsPaging} from "../api/models/quiz-questions.output.dto";
 
 @Injectable()
 export class QuizQuestionsQueryRepository {
   constructor(protected repository: QuizQuestionsQueryRepositoryTypeOrm) {}
+
+  async getQuizQuestionsPaging(queryDto: QuizQuestionsQueryInputDto): Promise<QuizQuestionsPaging> {
+    return this.repository.getPaging(queryDto)
+  }
 }

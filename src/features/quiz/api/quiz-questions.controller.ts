@@ -1,21 +1,24 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Put, Query,
+    UseGuards,
 } from '@nestjs/common';
 import { QuizQuestionsServices } from '../application/quiz-questions.services';
-import { QuizQuestionsInputDto } from './models/quiz-questions.input.dto';
+import {QuizQuestionsInputDto, QuizQuestionsQueryInputDto} from './models/quiz-questions.input.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
+import {QuizQuestionsRepository} from "../infrastructure/quiz-questions.repository";
+import {QuizQuestionsQueryRepository} from "../infrastructure/quiz-questions.query.repository";
 
 @Controller('sa/quiz/questions')
 @UseGuards(BasicAuthGuard)
 export class QuizQuestionsController {
-  constructor(protected quizQuestionsServices: QuizQuestionsServices) {}
+  constructor(protected quizQuestionsServices: QuizQuestionsServices,
+              protected quizQuestionsQueryRepository: QuizQuestionsQueryRepository) {}
 
   @Get('test')
   async test() {
@@ -32,7 +35,9 @@ export class QuizQuestionsController {
   }
 
   @Get()
-  async getQuestions() {}
+  async getQuestions(@Query() queryDto: QuizQuestionsQueryInputDto) {
+      return this.quizQuestionsQueryRepository.getQuizQuestionsPaging(queryDto)
+  }
 
   @Put(':id')
   async updateQuestionsById() {}

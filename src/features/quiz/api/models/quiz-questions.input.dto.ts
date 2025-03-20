@@ -1,4 +1,5 @@
-import { IsArray, IsString } from 'class-validator';
+import {IsArray, IsOptional, IsString} from 'class-validator';
+import {QueryDto} from "../../../../infrastructure/models/query.dto";
 
 export class QuizQuestionsInputDto {
   //@Length(3, 10, { message: 'Login length incorrect' })
@@ -7,4 +8,14 @@ export class QuizQuestionsInputDto {
 
   @IsArray()
   correctAnswers: string[];
+}
+
+export class QuizQuestionsQueryInputDto extends QueryDto {
+  @IsOptional()
+  @IsString()
+  bodySearchTerm: string;
+
+  @IsOptional()
+  @IsString()
+  publishedStatus: 'all' | 'published' | 'notPublished' = 'all';
 }
