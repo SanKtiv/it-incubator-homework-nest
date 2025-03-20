@@ -61,12 +61,14 @@ describe('Quiz-Questions Tests (e2e)', () => {
 
     it('/sa/quiz/questions (GET), should returned status 200 and correct blog model', async () => {
 
-        const responseCreateQuizQuestion = await quizQuestionsTestManager.getPaging(
+        const responseGetQuizQuestions = await quizQuestionsTestManager.getPaging(
             '',
             authBasic,
         );
 
-        await expect(responseCreateQuizQuestion.statusCode)
+        console.log('getPaging =', responseGetQuizQuestions.body)
+
+        await expect(responseGetQuizQuestions.statusCode)
             .toBe(200);
         // await expect(responseCreateQuizQuestion.body)
         //     .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
