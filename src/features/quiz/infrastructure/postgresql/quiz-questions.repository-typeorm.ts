@@ -27,5 +27,7 @@ export class QuizQuestionsRepositoryTypeOrm {
     await this.repository.softRemove(QuizQuestion);
   }
 
-  async delete() {}
+  async clear(): Promise<void> {
+    await this.repository.clear();
+  }
 }

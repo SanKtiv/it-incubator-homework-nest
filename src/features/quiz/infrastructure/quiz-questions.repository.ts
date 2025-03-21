@@ -27,4 +27,8 @@ export class QuizQuestionsRepository {
   async deleteQuizQuestion(QuizQuestion: QuizQuestionsEntity): Promise<void> {
     await this.repository.softRemove(QuizQuestion);
   }
+
+  async clear(): Promise<void> {
+    await this.repository.clear()
+  }
 }

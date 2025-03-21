@@ -8,6 +8,7 @@ import { UsersRepository } from '../features/users/infrastructure/users.reposito
 import { CommentsRepository } from '../features/comments/infrastructure/comments.repository';
 import { StatusesPostsRepository } from '../features/statuses/infrastructure/statuses.posts.repository';
 import { StatusesCommentsRepository } from '../features/statuses/infrastructure/statuses.comments.repository';
+import {QuizQuestionsRepository} from "../features/quiz/infrastructure/quiz-questions.repository";
 
 @Controller('testing/all-data')
 export class TestingController {
@@ -21,6 +22,7 @@ export class TestingController {
     private readonly statusesRepository: StatusesRepositorySql,
     private readonly statusesPostsRepository: StatusesPostsRepository,
     private readonly statusesCommentsRepository: StatusesCommentsRepository,
+    private readonly quizQuestionsRepository: QuizQuestionsRepository,
   ) {}
 
   @Delete()
@@ -34,5 +36,6 @@ export class TestingController {
     await this.devicesRepository.deleteAll();
     await this.statusesPostsRepository.clear();
     await this.statusesCommentsRepository.clear();
+    await this.quizQuestionsRepository.clear();
   }
 }
