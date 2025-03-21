@@ -19,7 +19,9 @@ export class QuizQuestionsRepositoryTypeOrm {
     return this.repository.findOneBy({ id });
   }
 
-  async update() {}
+  async update(dto: QuizQuestionsEntity) {
+    await this.repository.save(dto);
+  }
 
   async softRemove(QuizQuestion: QuizQuestionsEntity): Promise<void> {
     await this.repository.softRemove(QuizQuestion);

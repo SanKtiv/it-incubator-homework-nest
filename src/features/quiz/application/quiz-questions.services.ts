@@ -20,7 +20,19 @@ export class QuizQuestionsServices {
     return this.repository.insert(quizQuestion);
   }
 
-  async updateQuestions() {}
+  async updateQuestionsById(id: string, dto: QuizQuestionsInputDto): Promise<void> {
+    const quizQuestion = await this.repository.getQuizQuestionById(id);
+
+    if(!quizQuestion) throw new NotFoundException();
+
+    quizQuestion.body = dto.body;
+    quizQuestion.correctAnswers = dto.correctAnswers;
+    quizQuestion.updatedAt = new Date();
+
+    await this.repository.updateQuizQuestion(quizQuestion);
+  }
+
+  async updatePublishQuestionsById(id: string) {}
 
   async deleteQuestions(id: string): Promise<void> {
     const quizQuestion: QuizQuestionsEntity | null =

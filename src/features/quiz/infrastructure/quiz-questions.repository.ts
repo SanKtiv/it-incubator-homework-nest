@@ -20,6 +20,10 @@ export class QuizQuestionsRepository {
     return this.repository.findOneById(id);
   }
 
+  async updateQuizQuestion(QuizQuestion: QuizQuestionsEntity): Promise<void> {
+    await this.repository.update(QuizQuestion);
+  }
+
   async deleteQuizQuestion(QuizQuestion: QuizQuestionsEntity): Promise<void> {
     await this.repository.softRemove(QuizQuestion);
   }

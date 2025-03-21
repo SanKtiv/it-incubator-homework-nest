@@ -40,10 +40,16 @@ export class QuizQuestionsController {
   }
 
   @Put(':id')
-  async updateQuestionsById() {}
+  @HttpCode(204)
+  async updateQuestionsById(
+      @Param('id') id: string,
+      @Body() dto: QuizQuestionsInputDto ,
+  ) {
+      await this.quizQuestionsServices.updateQuestionsById(id, dto)
+  }
 
   @Put(':id/publish')
-  async publishQuestionsById() {}
+  async updatePublishQuestionsById() {}
 
   @Delete(':id')
   @HttpCode(204)
