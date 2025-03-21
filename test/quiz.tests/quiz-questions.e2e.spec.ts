@@ -8,6 +8,7 @@ import { authBasic, authBasicWrong } from '../utils/auth-options';
 import {QuizQuestionsTestManager} from "../utils/quiz-questions/quiz-questions-test-manager";
 import {AuthTestManager} from "../utils/auth-test-manager";
 import {QuizQuestionsOptions} from "../utils/quiz-questions/quiz-questions-options";
+import {QuizQuestionsQueryInputDto} from "../../src/features/quiz/api/models/quiz-questions.input.dto";
 
 describe('Quiz-Questions Tests (e2e)', () => {
     let app: INestApplication;
@@ -61,16 +62,23 @@ describe('Quiz-Questions Tests (e2e)', () => {
 
     it('/sa/quiz/questions (GET), should returned status 200 and correct blog model', async () => {
 
+        const query = {
+            publishedStatus: 'all',
+            sortDirection: 'ASC',
+            sortBy: 'createdAt',
+        }
+
         const responseGetQuizQuestions = await quizQuestionsTestManager.getPaging(
-            '',
+            query,
             authBasic,
         );
 
-        console.log('getPaging =', responseGetQuizQuestions.body)
+        const statusCode = responseGetQuizQuestions.statusCode;
+        const body = responseGetQuizQuestions.body;
+        console.log('getPaging =', body)
 
-        await expect(responseGetQuizQuestions.statusCode)
-            .toBe(200);
-        // await expect(responseCreateQuizQuestion.body)
+        await expect(statusCode).toBe(200);
+        //await expect(body).
         //     .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
     });
 

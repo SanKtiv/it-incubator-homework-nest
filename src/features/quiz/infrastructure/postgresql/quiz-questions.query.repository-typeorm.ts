@@ -13,14 +13,25 @@ export class QuizQuestionsQueryRepositoryTypeOrm {
 
   async getPaging(queryDto: QuizQuestionsQueryInputDto): Promise<QuizQuestionsPaging> {
     const bodySearchTerm = queryDto.bodySearchTerm ?? null;
+    const publishedStatus = queryDto.publishedStatus == 'published' ?
+        true :
+        queryDto.publishedStatus == 'notPublished' ? false : null;
 
     const QuizQuestions = this.repository
         .createQueryBuilder('qq')
         .where('qq."body" ~* :bodySearchTerm OR :bodySearchTerm IS NULL', {bodySearchTerm})
+        .andWhere('qq."published" = :publishedStatus OR :publishedStatus IS NULL', {publishedStatus})
 
     const totalQuizQuestions = await QuizQuestions.getCount();
 
-    const QuizQuestionsPaging = await QuizQuestions.getMany()
+    const QuizQuestionsPaging = await QuizQuestions
+        .select('qq.*')
+        .orderBy(`"${queryDto.sortBy}"`, queryDto.sortDirection)
+        .offset((queryDto.pageNumber - 1) * queryDto.pageSize)
+        .limit(queryDto.pageSize)
+        .getRawMany();
+
+    //const QuizQuestionsPaging = await QuizQuestions.getMany()
 
     return quizQuestionsPagingViewModel(QuizQuestionsPaging, queryDto, totalQuizQuestions)
   }

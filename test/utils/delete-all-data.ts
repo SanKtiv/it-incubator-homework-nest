@@ -19,7 +19,8 @@ export const deleteAllDataSQL = async (databaseConnection: DataSource) => {
       "requests",
       "accountData", 
       "emailConfirmation",
-      "passwordRecovery"
+      "passwordRecovery",
+      "quiz-questions"
       CASCADE;`,
   );
 };
