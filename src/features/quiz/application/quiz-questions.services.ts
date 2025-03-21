@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { QuizQuestionsInputDto } from '../api/models/quiz-questions.input.dto';
+import {PublishedInputDto, QuizQuestionsInputDto} from '../api/models/quiz-questions.input.dto';
 import { QuizQuestionsRepository } from '../infrastructure/quiz-questions.repository';
 import { QuizQuestionsEntity } from '../domain/quiz-questions.entity';
 import { QuizQuestionsOutputDto } from '../api/models/quiz-questions.output.dto';
@@ -32,7 +32,16 @@ export class QuizQuestionsServices {
     await this.repository.updateQuizQuestion(quizQuestion);
   }
 
-  async updatePublishQuestionsById(id: string) {}
+  async updatePublishQuestionsById(id: string, dto: PublishedInputDto): Promise<void> {
+    const quizQuestion = await this.repository.getQuizQuestionById(id);
+
+    if(!quizQuestion) throw new NotFoundException();
+
+    quizQuestion.published = dto.published;
+    quizQuestion.updatedAt = new Date();
+
+    await this.repository.updateQuizQuestion(quizQuestion);
+  }
 
   async deleteQuestions(id: string): Promise<void> {
     const quizQuestion: QuizQuestionsEntity | null =

@@ -10,6 +10,12 @@ export class QuizQuestionsInputDto {
   correctAnswers: string[];
 }
 
+export class PublishedInputDto {
+  //@Length(3, 10, { message: 'Login length incorrect' })
+  @IsString()
+  published: boolean;
+}
+
 export class QuizQuestionsQueryInputDto extends QueryDto {
   @IsOptional()
   @IsString()

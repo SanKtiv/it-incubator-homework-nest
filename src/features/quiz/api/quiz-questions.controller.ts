@@ -9,7 +9,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { QuizQuestionsServices } from '../application/quiz-questions.services';
-import {QuizQuestionsInputDto, QuizQuestionsQueryInputDto} from './models/quiz-questions.input.dto';
+import {PublishedInputDto, QuizQuestionsInputDto, QuizQuestionsQueryInputDto} from './models/quiz-questions.input.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import {QuizQuestionsRepository} from "../infrastructure/quiz-questions.repository";
 import {QuizQuestionsQueryRepository} from "../infrastructure/quiz-questions.query.repository";
@@ -49,7 +49,13 @@ export class QuizQuestionsController {
   }
 
   @Put(':id/publish')
-  async updatePublishQuestionsById() {}
+  @HttpCode(204)
+  async updatePublishQuestionsById(
+      @Param('id') id: string,
+      @Body() dto: PublishedInputDto
+  ) {
+      await this.quizQuestionsServices.updatePublishQuestionsById(id, dto);
+  }
 
   @Delete(':id')
   @HttpCode(204)
