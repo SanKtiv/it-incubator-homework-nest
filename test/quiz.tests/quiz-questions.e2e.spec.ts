@@ -9,12 +9,15 @@ import {QuizQuestionsTestManager} from "../utils/quiz-questions/quiz-questions-t
 import {AuthTestManager} from "../utils/auth-test-manager";
 import {QuizQuestionsOptions} from "../utils/quiz-questions/quiz-questions-options";
 import {QuizQuestionsQueryInputDto} from "../../src/features/quiz/api/models/quiz-questions.input.dto";
+import {ArrayNotContains} from "class-validator";
 
 describe('Quiz-Questions Tests (e2e)', () => {
     let app: INestApplication;
     let quizQuestionsTestManager: QuizQuestionsTestManager;
     let quizQuestionsOptions: QuizQuestionsOptions;
     let authTestManager: AuthTestManager;
+
+    let idExistQuestion: string = ''
 
     beforeAll(async () => {
         const result = await initSettings(); //(moduleBuilder) =>
@@ -53,9 +56,13 @@ describe('Quiz-Questions Tests (e2e)', () => {
             authBasic,
         );
 
-        await expect(responseCreateQuizQuestion.statusCode)
-            .toBe(201);
-        await expect(responseCreateQuizQuestion.body)
+        const statusCode = responseCreateQuizQuestion.statusCode
+        const body = responseCreateQuizQuestion.body
+
+        idExistQuestion = body.id;
+
+        await expect(statusCode).toBe(201);
+        await expect(body)
             .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
         //await quizQuestionsTestManager.expectViewModel(blogCreateModel, responseCreateQuizQuestion.body);
     });
@@ -80,6 +87,27 @@ describe('Quiz-Questions Tests (e2e)', () => {
         await expect(statusCode).toBe(200);
         //await expect(body).
         //     .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
+    });
+
+    it('/sa/quiz/questions/:id (DELETE), should returned status 200 and correct blog model', async () => {
+
+        const id = idExistQuestion;
+
+        const responseDeleteQuizQuestions =
+            await quizQuestionsTestManager.deleteById(id, authBasic);
+
+        const statusCode = responseDeleteQuizQuestions.statusCode;
+
+        await expect(statusCode).toBe(204);
+        //await expect(body).
+        //     .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
+
+        const responseGetQuizQuestions = await quizQuestionsTestManager.getPaging(
+            '',
+            authBasic,
+        );
+        const responseBody = responseGetQuizQuestions.body
+        await expect(responseBody.items).toEqual([])
     });
 
     // it('/blogs (POST), should returned status 400 with correct error', async () => {
