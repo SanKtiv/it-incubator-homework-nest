@@ -39,7 +39,7 @@ export class QuizQuestionsTestManager {
 
     async deleteById(id: string, auth: any) {
         return request(this.app.getHttpServer())
-            .delete(`/sa/quiz/questions/:${id}`)
+            .delete(`/sa/quiz/questions/${id}`)
             .set(auth.type, auth.pass);
     }
 }

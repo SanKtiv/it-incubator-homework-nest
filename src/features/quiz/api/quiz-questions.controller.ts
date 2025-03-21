@@ -2,7 +2,7 @@ import {
     Body,
     Controller,
     Delete,
-    Get,
+    Get, HttpCode,
     Param,
     Post,
     Put, Query,
@@ -46,6 +46,7 @@ export class QuizQuestionsController {
   async publishQuestionsById() {}
 
   @Delete(':id')
+  @HttpCode(204)
   async deleteQuestionsById(@Param('id') id: string): Promise<void> {
     await this.quizQuestionsServices.deleteQuestions(id);
   }

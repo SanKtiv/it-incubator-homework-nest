@@ -19,6 +19,10 @@ describe('Quiz-Questions Tests (e2e)', () => {
 
     let idExistQuestion: string = ''
 
+    let inputModel
+    let outputModel
+    let inputModelWrong
+
     beforeAll(async () => {
         const result = await initSettings(); //(moduleBuilder) =>
         //override UsersService еще раз
@@ -28,6 +32,10 @@ describe('Quiz-Questions Tests (e2e)', () => {
         quizQuestionsOptions = result.quizQuestionsOptions;
         authTestManager = result.authTestManager;
         //userTestManger = result.userTestManger;
+
+        inputModel = quizQuestionsOptions.inputModel();
+        outputModel = quizQuestionsOptions.outputModel();
+        inputModelWrong = quizQuestionsOptions.inputModelWrongBodyNumber()
     });
 
     afterAll(async () => {
@@ -50,11 +58,8 @@ describe('Quiz-Questions Tests (e2e)', () => {
     // });
 
     it('/sa/quiz/questions (POST), should returned status 201 and correct blog model', async () => {
-
-        const responseCreateQuizQuestion = await quizQuestionsTestManager.create(
-            quizQuestionsOptions.inputModel('body', 'answer'),
-            authBasic,
-        );
+        const responseCreateQuizQuestion =
+            await quizQuestionsTestManager.create(inputModel, authBasic);
 
         const statusCode = responseCreateQuizQuestion.statusCode
         const body = responseCreateQuizQuestion.body
@@ -62,9 +67,28 @@ describe('Quiz-Questions Tests (e2e)', () => {
         idExistQuestion = body.id;
 
         await expect(statusCode).toBe(201);
-        await expect(body)
-            .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
-        //await quizQuestionsTestManager.expectViewModel(blogCreateModel, responseCreateQuizQuestion.body);
+        await expect(body).toEqual(outputModel)
+    });
+
+    it('/sa/quiz/questions (POST), should returned status 401', async () => {
+        const responseCreateQuizQuestion =
+            await quizQuestionsTestManager.create(inputModel, authBasicWrong);
+
+        const statusCode = responseCreateQuizQuestion.statusCode
+        const body = responseCreateQuizQuestion.body
+
+        await expect(statusCode).toBe(401);
+        await expect(body).toEqual({});
+    });
+
+    it('/sa/quiz/questions (POST), should returned status 400 and error object', async () => {
+        const responseCreateQuizQuestion =
+            await quizQuestionsTestManager.create(inputModelWrong, authBasic);
+
+        const statusCode = responseCreateQuizQuestion.statusCode
+        const body = responseCreateQuizQuestion.body
+console.log('error body =', body)
+        await expect(statusCode).toBe(400);
     });
 
     it('/sa/quiz/questions (GET), should returned status 200 and correct blog model', async () => {
@@ -82,14 +106,13 @@ describe('Quiz-Questions Tests (e2e)', () => {
 
         const statusCode = responseGetQuizQuestions.statusCode;
         const body = responseGetQuizQuestions.body;
-        console.log('getPaging =', body)
 
         await expect(statusCode).toBe(200);
         //await expect(body).
         //     .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
     });
 
-    it('/sa/quiz/questions/:id (DELETE), should returned status 200 and correct blog model', async () => {
+    it('/sa/quiz/questions/:id (DELETE), should returned status 204 and correct blog model', async () => {
 
         const id = idExistQuestion;
 
@@ -99,8 +122,6 @@ describe('Quiz-Questions Tests (e2e)', () => {
         const statusCode = responseDeleteQuizQuestions.statusCode;
 
         await expect(statusCode).toBe(204);
-        //await expect(body).
-        //     .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
 
         const responseGetQuizQuestions = await quizQuestionsTestManager.getPaging(
             '',
@@ -110,20 +131,4 @@ describe('Quiz-Questions Tests (e2e)', () => {
         await expect(responseBody.items).toEqual([])
     });
 
-    // it('/blogs (POST), should returned status 400 with correct error', async () => {
-    //     const responseCreateBlog = await blogsTestManager.createBlog(
-    //         blogCreateModelWrongName,
-    //         authBasic,
-    //     );
-    //     console.log(responseCreateBlog.body);
-    //     await expect(responseCreateBlog.statusCode).toBe(400);
-    // });
-    //
-    // it('/blogs (POST), should returned status 401', async () => {
-    //     const responseCreateBlog = await blogsTestManager.createBlog(
-    //         blogCreateModel,
-    //         authBasicWrong,
-    //     );
-    //     await expect(responseCreateBlog.statusCode).toBe(401);
-    // });
 });
