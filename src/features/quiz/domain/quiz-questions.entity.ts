@@ -13,8 +13,11 @@ export class QuizQuestionsEntity {
   @Column('character varying')
   body: string;
 
-  @Column('simple-array')
-  correctAnswers: string[];
+  // @Column('simple-array')
+  // correctAnswers: string[];
+
+  @Column('character varying')
+  correctAnswers: string;
 
   @Column({ default: false })
   published: boolean;

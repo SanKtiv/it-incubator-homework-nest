@@ -10,10 +10,10 @@ export class QuizQuestionsOutputDto {
     updatedAt: string | null;
 }
 
-export const quizQuestionsViewModel = (dto: QuizQuestionsEntity) => ({
+export const quizQuestionsViewModel = (dto: QuizQuestionsEntity): QuizQuestionsOutputDto => ({
     id: dto.id,
     body: dto.body,
-    correctAnswers: dto.correctAnswers,
+    correctAnswers: [dto.correctAnswers],
     published: dto.published,
     createdAt: dto.createdAt.toISOString(),
     updatedAt: dto.updatedAt ? dto.updatedAt.toISOString() : null,

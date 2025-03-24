@@ -14,7 +14,7 @@ export class QuizQuestionsServices {
     const quizQuestion = new QuizQuestionsEntity();
 
     quizQuestion.body = dto.body;
-    quizQuestion.correctAnswers = dto.correctAnswers;
+    [quizQuestion.correctAnswers] = dto.correctAnswers;
     quizQuestion.createdAt = new Date();
 
     return this.repository.insert(quizQuestion);
@@ -26,7 +26,7 @@ export class QuizQuestionsServices {
     if(!quizQuestion) throw new NotFoundException();
 
     quizQuestion.body = dto.body;
-    quizQuestion.correctAnswers = dto.correctAnswers;
+    [quizQuestion.correctAnswers] = dto.correctAnswers;
     quizQuestion.updatedAt = new Date();
 
     await this.repository.updateQuizQuestion(quizQuestion);
