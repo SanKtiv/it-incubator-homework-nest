@@ -3,7 +3,7 @@ import {QueryDto} from "../../../../infrastructure/models/query.dto";
 
 export class QuizQuestionsInputDto {
   @IsString()
-  @Length(3, 1000, { message: 'Login length incorrect' })
+  @Length(6, 1000, { message: 'Login length incorrect' })
   body: string;
 
   @IsArray()
