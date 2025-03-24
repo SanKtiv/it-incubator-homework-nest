@@ -1,4 +1,4 @@
-import {IsArray, IsOptional, IsString} from 'class-validator';
+import {IsArray, IsBoolean, IsOptional, IsString} from 'class-validator';
 import {QueryDto} from "../../../../infrastructure/models/query.dto";
 
 export class QuizQuestionsInputDto {
@@ -12,7 +12,7 @@ export class QuizQuestionsInputDto {
 
 export class PublishedInputDto {
   //@Length(3, 10, { message: 'Login length incorrect' })
-  @IsString()
+  @IsBoolean()
   published: boolean;
 }
 
