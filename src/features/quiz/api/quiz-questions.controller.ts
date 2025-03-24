@@ -11,7 +11,6 @@ import {
 import { QuizQuestionsServices } from '../application/quiz-questions.services';
 import {PublishedInputDto, QuizQuestionsInputDto, QuizQuestionsQueryInputDto} from './models/quiz-questions.input.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
-import {QuizQuestionsRepository} from "../infrastructure/quiz-questions.repository";
 import {QuizQuestionsQueryRepository} from "../infrastructure/quiz-questions.query.repository";
 
 @Controller('sa/quiz/questions')
@@ -19,15 +18,6 @@ import {QuizQuestionsQueryRepository} from "../infrastructure/quiz-questions.que
 export class QuizQuestionsController {
   constructor(protected quizQuestionsServices: QuizQuestionsServices,
               protected quizQuestionsQueryRepository: QuizQuestionsQueryRepository) {}
-
-  @Get('test')
-  async test() {
-    const dto: QuizQuestionsInputDto = {
-      body: 'Question first',
-      correctAnswers: ['Answer first'],
-    };
-    return this.quizQuestionsServices.createQuestions(dto);
-  }
 
   @Post()
   async createQuestions(@Body() dto: QuizQuestionsInputDto) {
