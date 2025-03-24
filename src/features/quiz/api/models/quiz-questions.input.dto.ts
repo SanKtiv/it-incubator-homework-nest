@@ -1,9 +1,9 @@
-import {IsArray, IsBoolean, IsOptional, IsString} from 'class-validator';
+import {IsArray, IsBoolean, IsOptional, IsString, Length} from 'class-validator';
 import {QueryDto} from "../../../../infrastructure/models/query.dto";
 
 export class QuizQuestionsInputDto {
-  //@Length(3, 10, { message: 'Login length incorrect' })
   @IsString()
+  @Length(3, 1000, { message: 'Login length incorrect' })
   body: string;
 
   @IsArray()
