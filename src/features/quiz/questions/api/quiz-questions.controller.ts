@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { QuizQuestionsServices } from '../application/quiz-questions.services';
 import {PublishedInputDto, QuizQuestionsInputDto, QuizQuestionsQueryInputDto} from './models/quiz-questions.input.dto';
-import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
+import { BasicAuthGuard } from '../../../../infrastructure/guards/basic.guard';
 import {QuizQuestionsQueryRepository} from "../infrastructure/quiz-questions.query.repository";
 
 @Controller('sa/quiz/questions')

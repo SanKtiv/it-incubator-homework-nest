@@ -1,6 +1,6 @@
 import {INestApplication} from '@nestjs/common';
 import request from 'supertest';
-import {QuizQuestionsQueryInputDto} from "../../../src/features/quiz/api/models/quiz-questions.input.dto";
+import {QuizQuestionsQueryInputDto} from "../../../src/features/quiz/questions/api/models/quiz-questions.input.dto";
 
 export class QuizQuestionsTestManager {
     constructor(protected readonly app: INestApplication) {

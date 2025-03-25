@@ -8,7 +8,7 @@ import { UsersRepository } from '../features/users/infrastructure/users.reposito
 import { CommentsRepository } from '../features/comments/infrastructure/comments.repository';
 import { StatusesPostsRepository } from '../features/statuses/infrastructure/statuses.posts.repository';
 import { StatusesCommentsRepository } from '../features/statuses/infrastructure/statuses.comments.repository';
-import {QuizQuestionsRepository} from "../features/quiz/infrastructure/quiz-questions.repository";
+import {QuizQuestionsRepository} from "../features/quiz/questions/infrastructure/quiz-questions.repository";
 
 @Controller('testing/all-data')
 export class TestingController {

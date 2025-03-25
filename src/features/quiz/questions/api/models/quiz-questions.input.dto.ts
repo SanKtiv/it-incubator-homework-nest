@@ -1,5 +1,5 @@
 import {IsArray, IsBoolean, IsOptional, IsString, Length} from 'class-validator';
-import {QueryDto} from "../../../../infrastructure/models/query.dto";
+import {QueryDto} from "../../../../../infrastructure/models/query.dto";
 
 export class QuizQuestionsInputDto {
   @IsString()

@@ -88,13 +88,13 @@ import { StatusesCommentsRepository } from './features/statuses/infrastructure/s
 import { StatusesCommentsRepositoryTypeOrm } from './features/statuses/infrastructure/postgresql/statuses.comments.repository-typeorm';
 import { StatusesPostsRepositoryTypeOrm } from './features/statuses/infrastructure/postgresql/statuses.posts.repository-typeorm';
 import { StatusesPostsRepository } from './features/statuses/infrastructure/statuses.posts.repository';
-import { QuizQuestionsController } from './features/quiz/api/quiz-questions.controller';
-import { QuizQuestionsServices } from './features/quiz/application/quiz-questions.services';
-import { QuizQuestionsRepositoryTypeOrm } from './features/quiz/infrastructure/postgresql/quiz-questions.repository-typeorm';
-import { QuizQuestionsQueryRepositoryTypeOrm } from './features/quiz/infrastructure/postgresql/quiz-questions.query.repository-typeorm';
-import { QuizQuestionsRepository } from './features/quiz/infrastructure/quiz-questions.repository';
-import { QuizQuestionsQueryRepository } from './features/quiz/infrastructure/quiz-questions.query.repository';
-import { QuizQuestionsEntity } from './features/quiz/domain/quiz-questions.entity';
+import { QuizQuestionsController } from './features/quiz/questions/api/quiz-questions.controller';
+import { QuizQuestionsServices } from './features/quiz/questions/application/quiz-questions.services';
+import { QuizQuestionsRepositoryTypeOrm } from './features/quiz/questions/infrastructure/postgresql/quiz-questions.repository-typeorm';
+import { QuizQuestionsQueryRepositoryTypeOrm } from './features/quiz/questions/infrastructure/postgresql/quiz-questions.query.repository-typeorm';
+import { QuizQuestionsRepository } from './features/quiz/questions/infrastructure/quiz-questions.repository';
+import { QuizQuestionsQueryRepository } from './features/quiz/questions/infrastructure/quiz-questions.query.repository';
+import { QuizQuestionsEntity } from './features/quiz/questions/domain/quiz-questions.entity';
 
 dotenv.config();
 

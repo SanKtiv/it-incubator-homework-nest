@@ -8,7 +8,7 @@ import { authBasic, authBasicWrong } from '../utils/auth-options';
 import {QuizQuestionsTestManager} from "../utils/quiz-questions/quiz-questions-test-manager";
 import {AuthTestManager} from "../utils/auth-test-manager";
 import {QuizQuestionsOptions} from "../utils/quiz-questions/quiz-questions-options";
-import {QuizQuestionsQueryInputDto} from "../../src/features/quiz/api/models/quiz-questions.input.dto";
+import {QuizQuestionsQueryInputDto} from "../../src/features/quiz/questions/api/models/quiz-questions.input.dto";
 import {ArrayNotContains} from "class-validator";
 
 describe('Quiz-Questions Tests (e2e)', () => {
