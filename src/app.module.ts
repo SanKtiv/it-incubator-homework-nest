@@ -96,6 +96,7 @@ import { QuizQuestionsRepository } from './features/quiz/questions/infrastructur
 import { QuizQuestionsQueryRepository } from './features/quiz/questions/infrastructure/quiz-questions.query.repository';
 import { QuizQuestionsEntity } from './features/quiz/questions/domain/quiz-questions.entity';
 import {QuizPairGameEntity} from "./features/quiz/pair-game/domain/pair-game.entity";
+import {PairGameQuizPairsController} from "./features/quiz/pair-game/api/pair-game.controller";
 
 dotenv.config();
 
@@ -252,6 +253,7 @@ const strategies = [
     AuthController,
     DevicesController,
     QuizQuestionsController,
+    PairGameQuizPairsController,
   ],
   providers: [
     ...services,
