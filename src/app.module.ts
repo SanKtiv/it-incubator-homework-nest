@@ -97,6 +97,7 @@ import { QuizQuestionsQueryRepository } from './features/quiz/questions/infrastr
 import { QuizQuestionsEntity } from './features/quiz/questions/domain/quiz-questions.entity';
 import {QuizPairGameEntity} from "./features/quiz/pair-game/domain/pair-game.entity";
 import {PairGameQuizPairsController} from "./features/quiz/pair-game/api/pair-game.controller";
+import {PairGameQuizPairsServices} from "./features/quiz/pair-game/application/pair-game.services";
 
 dotenv.config();
 
@@ -111,6 +112,7 @@ const services = [
   DevicesService,
   RequestApiService,
   QuizQuestionsServices,
+  PairGameQuizPairsServices,
 ];
 
 const mongoRepositories = [
