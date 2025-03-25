@@ -95,6 +95,7 @@ import { QuizQuestionsQueryRepositoryTypeOrm } from './features/quiz/questions/i
 import { QuizQuestionsRepository } from './features/quiz/questions/infrastructure/quiz-questions.repository';
 import { QuizQuestionsQueryRepository } from './features/quiz/questions/infrastructure/quiz-questions.query.repository';
 import { QuizQuestionsEntity } from './features/quiz/questions/domain/quiz-questions.entity';
+import {QuizPairGameEntity} from "./features/quiz/pair-game/domain/pair-game.entity";
 
 dotenv.config();
 
@@ -205,6 +206,7 @@ const strategies = [
         StatusesCommentsTable,
         StatusesPostsTable,
         QuizQuestionsEntity,
+        QuizPairGameEntity,
       ],
       synchronize: true,
       logging: ['query'],
@@ -223,6 +225,7 @@ const strategies = [
       StatusesCommentsTable,
       StatusesPostsTable,
       QuizQuestionsEntity,
+      QuizPairGameEntity,
     ]),
     // MongooseModule.forRoot(
     //   appSettings.env.isTesting()
