@@ -1,11 +1,13 @@
 import {Injectable} from "@nestjs/common";
+import {PairGameRepository} from "../infrastucture/pair-game.repository";
 
 @Injectable()
 export class PairGameQuizPairsServices {
-    constructor() {
+    constructor(protected pairGameRepository: PairGameRepository) {
     }
 
-    async createOrJoinPairGame() {
+    async createOrJoinPairGame(userId: string ) {
+        const pairGame = await this.pairGameRepository.getPairGame(userId)
 
     }
 }

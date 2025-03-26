@@ -6,7 +6,9 @@ export class PairGameRepository {
     constructor(protected  repository: PairGameRepositoryTypeOrm) {
     }
 
-    async getPairGame() {}
+    async getPairGame(userId: string) {
+        return this.repository.getOne(userId)
+    }
 
     async createPairGame() {}
 }
