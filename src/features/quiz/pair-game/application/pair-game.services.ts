@@ -1,5 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PairGameRepository} from "../infrastucture/pair-game.repository";
+import {QuizPairGameEntity} from "../domain/pair-game.entity";
 
 @Injectable()
 export class PairGameQuizPairsServices {
@@ -8,6 +9,16 @@ export class PairGameQuizPairsServices {
 
     async createOrJoinPairGame(userId: string ) {
         const pairGame = await this.pairGameRepository.getPairGame(userId)
+
+        if(!pairGame) {
+            const newPairGame = new QuizPairGameEntity();
+
+            newPairGame.firstPlayerId = userId;
+            newPairGame.pairCreatedDate = new Date();
+            newPairGame.status = 'PendingSecondPlayer';
+
+            return this.pairGameRepository.createPairGame(newPairGame)
+        }
 
     }
 }
