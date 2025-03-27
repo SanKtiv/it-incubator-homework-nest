@@ -10,11 +10,13 @@ import {AuthTestManager} from "../utils/auth-test-manager";
 import {QuizQuestionsOptions} from "../utils/quiz-questions/quiz-questions-options";
 import {QuizQuestionsQueryInputDto} from "../../src/features/quiz/questions/api/models/quiz-questions.input.dto";
 import {ArrayNotContains} from "class-validator";
+import {QuizPairGameTestManager} from "../utils/quiz-pair-game/quiz-pair-game-test-manager";
+import {QuizPairGameOptions} from "../utils/quiz-pair-game/quiz-pair-game-options";
 
-describe('Quiz-Questions Tests (e2e)', () => {
+describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     let app: INestApplication;
-    let quizQuestionsTestManager: QuizQuestionsTestManager;
-    let quizQuestionsOptions: QuizQuestionsOptions;
+    let quizPairGameTestManager: QuizPairGameTestManager;
+    let quizPairGameOptions: QuizPairGameOptions;
     let authTestManager: AuthTestManager;
 
     let idExistQuestion: string = ''
@@ -28,14 +30,14 @@ describe('Quiz-Questions Tests (e2e)', () => {
         //override UsersService еще раз
         //moduleBuilder.overrideProvider(UsersService).useClass(UserServiceMock),
         app = result.app;
-        quizQuestionsTestManager = result.quizQuestionsTestManager;
-        quizQuestionsOptions = result.quizQuestionsOptions;
+        quizPairGameTestManager = result.quizPairGameTestManager;
+        quizPairGameOptions = result.quizPairGameOptions;
         authTestManager = result.authTestManager;
         //userTestManger = result.userTestManger;
 
-        inputModel = quizQuestionsOptions.inputModel();
-        outputModel = quizQuestionsOptions.outputModel();
-        inputModelWrong = quizQuestionsOptions.inputModelWrongBodyNumber()
+        //inputModel = quizQuestionsOptions.inputModel();
+        //outputModel = quizQuestionsOptions.outputModel();
+        //inputModelWrong = quizQuestionsOptions.inputModelWrongBodyNumber()
     });
 
     afterAll(async () => {
@@ -43,8 +45,8 @@ describe('Quiz-Questions Tests (e2e)', () => {
     });
 
     it('/sa/quiz/questions (POST), should returned status 201 and correct blog model', async () => {
-        const responseCreateQuizQuestion =
-            await quizQuestionsTestManager.create(inputModel, authBasic);
+        const resultCreatePairGame =
+            await quizPairGameTestManager.create(accessToken, authBasic);
 
         const statusCode = responseCreateQuizQuestion.statusCode
         const body = responseCreateQuizQuestion.body

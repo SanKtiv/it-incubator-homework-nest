@@ -1,6 +1,5 @@
 import {INestApplication} from '@nestjs/common';
 import request from 'supertest';
-import {QuizQuestionsQueryInputDto} from "../../../src/features/quiz/questions/api/models/quiz-questions.input.dto";
 
 export class QuizPairGameTestManager {
     constructor(protected readonly app: INestApplication) {
@@ -16,11 +15,13 @@ export class QuizPairGameTestManager {
         });
     }
 
-    async create(inputModel: any, auth: any) {
+    async create(accessToken: any, auth: any) {
         return request(this.app.getHttpServer())
-            .post('/sa/quiz/questions')
-            .set(auth.type, auth.pass)
-            .send(inputModel);
+            .post('/pair-game-quiz/pairs/connection')
+            .auth(accessToken, {
+                type: 'bearer',
+            })
+            //.send(inputModel);
         //.expect(201)
     }
 

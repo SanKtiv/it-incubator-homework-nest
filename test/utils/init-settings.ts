@@ -45,6 +45,8 @@ export const initSettings = async (
     const authTestManager = new AuthTestManager(app);
     const quizQuestionsTestManager = new QuizQuestionsTestManager(app);
     const quizQuestionsOptions = new QuizQuestionsOptions(app);
+    const quizPairGameTestManager = new QuizQuestionsTestManager(app);
+    const quizPairGameOptions = new QuizQuestionsOptions(app);
     //const userTestManger = new UsersTestManager(app);
 
     //чистим БД
@@ -60,6 +62,8 @@ export const initSettings = async (
       authTestManager,
       quizQuestionsTestManager,
       quizQuestionsOptions,
+      quizPairGameTestManager,
+      quizPairGameOptions,
       //userTestManger,
     };
   } catch (error) {
