@@ -47,7 +47,7 @@ export const initSettings = async (
     const quizQuestionsOptions = new QuizQuestionsOptions(app);
     const quizPairGameTestManager = new QuizQuestionsTestManager(app);
     const quizPairGameOptions = new QuizQuestionsOptions(app);
-    //const userTestManger = new UsersTestManager(app);
+    const userTestManger = new UsersTestManager(app);
 
     //чистим БД
     //await deleteAllData(databaseConnection);
@@ -64,7 +64,7 @@ export const initSettings = async (
       quizQuestionsOptions,
       quizPairGameTestManager,
       quizPairGameOptions,
-      //userTestManger,
+      userTestManger,
     };
   } catch (error) {
     console.error('Error initializing settings:', error);

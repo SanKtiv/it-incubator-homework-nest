@@ -12,12 +12,15 @@ import {QuizQuestionsQueryInputDto} from "../../src/features/quiz/questions/api/
 import {ArrayNotContains} from "class-validator";
 import {QuizPairGameTestManager} from "../utils/quiz-pair-game/quiz-pair-game-test-manager";
 import {QuizPairGameOptions} from "../utils/quiz-pair-game/quiz-pair-game-options";
+import {UsersTestManager} from "../utils/users-test-manager";
+import {userTest} from "../utils/users-options";
 
 describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     let app: INestApplication;
     let quizPairGameTestManager: QuizPairGameTestManager;
     let quizPairGameOptions: QuizPairGameOptions;
     let authTestManager: AuthTestManager;
+    let userTestManger: UsersTestManager;
 
     let idExistQuestion: string = ''
 
@@ -33,7 +36,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         quizPairGameTestManager = result.quizPairGameTestManager;
         quizPairGameOptions = result.quizPairGameOptions;
         authTestManager = result.authTestManager;
-        //userTestManger = result.userTestManger;
+        userTestManger = result.userTestManger;
 
         //inputModel = quizQuestionsOptions.inputModel();
         //outputModel = quizQuestionsOptions.outputModel();
@@ -45,11 +48,17 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     });
 
     it('/sa/quiz/questions (POST), should returned status 201 and correct blog model', async () => {
+        await userTestManger.adminCreateUser(userTest, authBasic)
+
+        const resultLoginUser =
+            await userTestManger.login(userTest.login, userTest.password);
+
+        const accessToken = resultLoginUser.accessToken;
+
         const resultCreatePairGame =
             await quizPairGameTestManager.create(accessToken, authBasic);
 
-        const statusCode = responseCreateQuizQuestion.statusCode
-        const body = responseCreateQuizQuestion.body
+        const body = resultCreatePairGame.body
 
         idExistQuestion = body.id;
 

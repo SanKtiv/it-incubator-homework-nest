@@ -21,8 +21,7 @@ export class QuizPairGameTestManager {
             .auth(accessToken, {
                 type: 'bearer',
             })
-            //.send(inputModel);
-        //.expect(201)
+            .expect(201)
     }
 
     async getPaging(queryDto: any, auth: any) {

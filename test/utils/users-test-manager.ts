@@ -11,6 +11,14 @@ export class UsersTestManager {
     expect(createModel.email).toBe(responseModel.email);
   }
 
+  async adminCreateUser(createModel: UsersInputDto, auth: any) {
+    return request(this.app.getHttpServer())
+        .post('/sa/users')
+        .set(auth.type, auth.pass)
+        .send(createModel)
+        .expect(200);
+  }
+
   async createUser(adminAccessToken: string, createModel: UsersInputDto) {
     return request(this.app.getHttpServer())
       .post('/api/users')
