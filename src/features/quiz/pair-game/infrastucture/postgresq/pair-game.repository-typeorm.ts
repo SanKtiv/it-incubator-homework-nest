@@ -19,4 +19,8 @@ export class PairGameRepositoryTypeOrm {
     async create(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity> {
         return this.repository.save(pairGame);
     }
+
+    async clear(): Promise<void> {
+        await this.repository.clear();
+    }
 }

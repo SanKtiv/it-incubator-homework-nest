@@ -15,7 +15,7 @@ export class QuizPairGameTestManager {
         });
     }
 
-    async create(accessToken: any, auth: any) {
+    async create(accessToken: any) {
         return request(this.app.getHttpServer())
             .post('/pair-game-quiz/pairs/connection')
             .auth(accessToken, {

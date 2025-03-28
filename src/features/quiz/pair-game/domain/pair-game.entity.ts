@@ -1,7 +1,7 @@
 import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {UsersTable} from "../../../users/domain/users.table";
 
-@Entity()
+@Entity('quiz-pair-game')
 export class QuizPairGameEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;

@@ -10,6 +10,10 @@ import { getDataSourceName } from '@nestjs/typeorm';
 import { AuthTestManager } from './auth-test-manager';
 import {QuizQuestionsTestManager} from "./quiz-questions/quiz-questions-test-manager";
 import {QuizQuestionsOptions} from "./quiz-questions/quiz-questions-options";
+import {UsersTestManager} from "./users-test-manager";
+import {ClearDataTestingManager} from "./clear-data-testing-manager";
+import {QuizPairGameTestManager} from "./quiz-pair-game/quiz-pair-game-test-manager";
+import {QuizPairGameOptions} from "./quiz-pair-game/quiz-pair-game-options";
 
 export const initSettings = async (
   //передаем callback, который получает ModuleBuilder,
@@ -45,13 +49,14 @@ export const initSettings = async (
     const authTestManager = new AuthTestManager(app);
     const quizQuestionsTestManager = new QuizQuestionsTestManager(app);
     const quizQuestionsOptions = new QuizQuestionsOptions(app);
-    const quizPairGameTestManager = new QuizQuestionsTestManager(app);
-    const quizPairGameOptions = new QuizQuestionsOptions(app);
+    const quizPairGameTestManager = new QuizPairGameTestManager(app);
+    const quizPairGameOptions = new QuizPairGameOptions(app);
     const userTestManger = new UsersTestManager(app);
 
     //чистим БД
+    const clearDataTestingManager = new ClearDataTestingManager(app);
     //await deleteAllData(databaseConnection);
-    await deleteAllDataSQL(databaseConnection);
+    //await deleteAllDataSQL(databaseConnection);
 
     //TODO:переписать через setState
     return {
@@ -65,6 +70,7 @@ export const initSettings = async (
       quizPairGameTestManager,
       quizPairGameOptions,
       userTestManger,
+      clearDataTestingManager,
     };
   } catch (error) {
     console.error('Error initializing settings:', error);
