@@ -16,7 +16,7 @@ export class UsersTestManager {
         .post('/sa/users')
         .set(auth.type, auth.pass)
         .send(createModel)
-        .expect(200);
+        .expect(201);
   }
 
   async createUser(adminAccessToken: string, createModel: UsersInputDto) {
@@ -44,8 +44,8 @@ export class UsersTestManager {
     password: string,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const response = await request(this.app.getHttpServer())
-      .post('/login')
-      .send({ login, password })
+      .post('/auth/login')
+      .send({ loginOrEmail: login, password: password })
       .expect(200);
 
     return {

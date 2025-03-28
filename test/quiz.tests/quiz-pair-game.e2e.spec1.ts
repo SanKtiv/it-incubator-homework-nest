@@ -68,7 +68,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
             await quizPairGameTestManager.create(accessToken);
 
         const body = resultCreatePairGame.body
-
+console.log('created pair game =', body)
         // idExistQuestion = body.id;
         //
         // await expect(statusCode).toBe(201);

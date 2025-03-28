@@ -8,12 +8,16 @@ export class PairGameRepositoryTypeOrm {
     constructor(@InjectRepository(QuizPairGameEntity) protected repository: Repository<QuizPairGameEntity>) {
     }
 
-    async getOne(userId: string): Promise<QuizPairGameEntity | null | undefined> {
-        return this.repository
-            .createQueryBuilder('pg')
-            .select('pg.*')
-            .where('pg."firstPlayerId" = :userId', {userId})
-            .getRawOne()
+    async getOne(userId: string): Promise<QuizPairGameEntity | null> {
+        return this.repository.findOne({
+            where: {
+                id: userId
+            },
+        })
+            // .createQueryBuilder('pg')
+            // .select('pg.*')
+            // .where('pg."firstPlayerId" = :userId', {userId})
+            // .getRawOne()
     }
 
     async create(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity> {
