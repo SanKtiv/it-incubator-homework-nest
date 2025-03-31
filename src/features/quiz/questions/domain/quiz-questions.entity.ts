@@ -1,9 +1,10 @@
 import {
   Column,
   DeleteDateColumn,
-  Entity,
+  Entity, ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import {QuizPairGameEntity} from "../../pair-game/domain/pair-game.entity";
 
 @Entity('quiz-questions')
 export class QuizQuestionsEntity {
