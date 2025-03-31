@@ -18,9 +18,7 @@ export class QuizPairGameTestManager {
     async create(accessToken: any) {
         return request(this.app.getHttpServer())
             .post('/pair-game-quiz/pairs/connection')
-            .auth(accessToken, {
-                type: 'bearer',
-            })
+            .auth(accessToken, {type: 'bearer'})
             .expect(201)
     }
 
@@ -31,7 +29,11 @@ export class QuizPairGameTestManager {
             .set(auth.type, auth.pass);
     }
 
-    async getById() {
+    async getById(id: string, accessToken: any) {
+        return request(this.app.getHttpServer())
+            .get(`/pair-game-quiz/pairs/${id}`)
+            .auth(accessToken, {type: 'bearer'})
+            .expect(200)
     }
 
     async updateById() {

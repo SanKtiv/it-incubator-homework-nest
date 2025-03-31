@@ -1,4 +1,4 @@
-import {Controller, Get, Post, UseGuards} from "@nestjs/common";
+import {Controller, Get, Param, Post, UseGuards} from "@nestjs/common";
 import {PairGameQuizPairsServices} from "../application/pair-game.services";
 import {JWTAccessAuthGuard} from "../../../../infrastructure/guards/jwt-access-auth.guard";
 import {CurrentUserId} from "../../../auth/infrastructure/decorators/current-user-id.param.decorator";
@@ -12,6 +12,12 @@ export class PairGameQuizPairsController {
     @UseGuards(JWTAccessAuthGuard)
     async createOrJoinPairGame(@CurrentUserId() userId: string,) {
         return this.pairGameServices.createOrJoinPairGame(userId)
+    }
+
+    @Get(':id')
+    @UseGuards(JWTAccessAuthGuard)
+    async getPairGameById(@Param('id') id: string) {
+
     }
 
     @Get('my-current')
