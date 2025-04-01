@@ -57,15 +57,20 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         await clearDB.clearDB();
     })
 
-    it('/pair-game-quiz/pairs/:id (GET), should returned status 200 and correct pair-game model', async () => {
+    it('/sa/users (POST), handler method create user, should returned status 201 and correct user model', async () => {
         await userTestManger.adminCreateUser(userTest, authBasic);
+    })
 
-        const resultLoginUser =
-            await userTestManger.login(userTest.login, userTest.password);
+    it('/auth/login (POST), handler method login user, should returned status 200 and correct access token', async () => {
+            const resultLoginUser =
+                await userTestManger.login(userTest.login, userTest.password);
 
-        testAccessToken = resultLoginUser.accessToken;
+            testAccessToken = resultLoginUser.accessToken;
+    })
 
-        const resultGetPairGame = await quizPairGameTestManager.getById('2trew', testAccessToken);
+    it('/pair-game-quiz/pairs/:id (GET), should returned status 200 and correct pair-game model', async () => {
+        const resultGetPairGame =
+            await quizPairGameTestManager.getById('', testAccessToken);
     })
 
     it('/pair-game-quiz/pairs/connection (POST), should returned status 201 and correct pair-game model', async () => {
