@@ -25,7 +25,8 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
     let clearDB: ClearDataTestingManager;
 
-    let testAccessToken: string
+    let testAccessToken: string;
+    let idExistPairGame: string;
     let idExistQuestion: string = ''
 
     let inputModel
@@ -68,27 +69,24 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
             testAccessToken = resultLoginUser.accessToken;
     })
 
-    it('/pair-game-quiz/pairs/:id (GET), should returned status 200 and correct pair-game model', async () => {
-        const resultGetPairGame =
-            await quizPairGameTestManager.getById('', testAccessToken);
-    })
-
     it('/pair-game-quiz/pairs/connection (POST), should returned status 201 and correct pair-game model', async () => {
-        // await userTestManger.adminCreateUser(userTest, authBasic)
-        //
-        // const resultLoginUser =
-        //     await userTestManger.login(userTest.login, userTest.password);
-        //
-        // const accessToken = resultLoginUser.accessToken;
-
         const resultCreatePairGame =
             await quizPairGameTestManager.create(testAccessToken);
 
         const body = resultCreatePairGame.body
+
+        idExistPairGame = body.id;
 console.log('created pair game =', body)
         // idExistQuestion = body.id;
         //
         // await expect(statusCode).toBe(201);
         // await expect(body).toEqual(outputModel)
     });
+
+    it('/pair-game-quiz/pairs/:id (GET), should returned status 200 and correct pair-game model', async () => {
+        const resultGetPairGame =
+            await quizPairGameTestManager.getById(idExistPairGame, testAccessToken);
+
+        console.log('resultGetPairGame =', resultGetPairGame.body)
+    })
 });
