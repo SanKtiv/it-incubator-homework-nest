@@ -101,6 +101,8 @@ import {PairGameQuizPairsServices} from "./features/quiz/pair-game/application/p
 import {PairGameRepository} from "./features/quiz/pair-game/infrastucture/pair-game.repository";
 import {PairGameRepositoryTypeOrm} from "./features/quiz/pair-game/infrastucture/postgresq/pair-game.repository-typeorm";
 import {AnswersGameEntity} from "./features/quiz/pair-game/domain/answers-game.entity";
+import {PairGameQueryRepository} from "./features/quiz/pair-game/infrastucture/pair-game.query.repository";
+import {PairGameQueryRepositoryTypeOrm} from "./features/quiz/pair-game/infrastucture/postgresq/pair-game.query.repository-typeorm";
 
 dotenv.config();
 
@@ -171,6 +173,8 @@ const sqlRepositories = [
   QuizQuestionsQueryRepository,
   PairGameRepository,
   PairGameRepositoryTypeOrm,
+  PairGameQueryRepository,
+  PairGameQueryRepositoryTypeOrm
 ];
 
 const repositories = [
