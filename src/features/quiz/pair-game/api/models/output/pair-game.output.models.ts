@@ -2,12 +2,12 @@ export class CreatedPairGameOutputModel {
     constructor(
         public id: string,
         public firstPlayerProgress: PlayersProgressClass,
-        public secondPlayerProgress: PlayersProgressClass,
-        public questions: PairGameQuestionsClass[],
+        public secondPlayerProgress: PlayersProgressClass | null = null,
+        public questions: PairGameQuestionsClass[] | null = null,
         public status: string,
         public pairCreatedDate: string,
-        public startGameDate: string,
-        public finishGameDate: string,
+        public startGameDate: string | null = null,
+        public finishGameDate: string | null = null,
     ) {
     }
 }
@@ -16,7 +16,7 @@ export class PlayersProgressClass {
     constructor(
         public answers: PlayersAnswersClass[],
         public player: PlayersClass,
-        public score: number,
+        public score: number = 0,
     ) {
     }
 }
@@ -53,6 +53,23 @@ export const createdPairGameOutputModel = (pairGame: any) => ({
             id: pairGame.firstPlayerId,
             login: pairGame.firstPlayerLogin,
         },
+        answers: [],
+        score: pairGame.firstPlayerScore,
     },
+    secondPlayerProgress: pairGame.secondPlayerId ?
+        {
+            player: {
+                id: pairGame.secondPlayerId,
+                login: pairGame.secondPlayerLogin,
+            },
+            answers: [],
+            score: pairGame.secondPlayerScore,
+        }
+        : null,
+    questions: [],
+    status: pairGame.status,
+    pairCreatedDate: pairGame.pairCreatedDate,
+    startGameDate: pairGame.startGameDate,
+    finishGameDate: pairGame.finishGameDate,
 })
 
