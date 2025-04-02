@@ -1,6 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {PairGameRepository} from "../infrastucture/pair-game.repository";
 import {QuizPairGameEntity} from "../domain/pair-game.entity";
+import {UsersTable} from "../../../users/domain/users.table";
 
 @Injectable()
 export class PairGameQuizPairsServices {

@@ -15,7 +15,8 @@ export class QuizPairGameEntity {
     firstPlayerId: string;
 
     @OneToMany(() => AnswersGameEntity,
-        (AnswersGameEntity) => AnswersGameEntity.id)
+        (AnswersGameEntity) => AnswersGameEntity.id,
+        { nullable: true})
     @JoinColumn({ name: 'answersFirstPlayer' })
     answersFirstPlayer: string;
 
@@ -26,7 +27,8 @@ export class QuizPairGameEntity {
     secondPlayerId: string;
 
     @OneToMany(() => AnswersGameEntity,
-        (AnswersGameEntity) => AnswersGameEntity.id)
+        (AnswersGameEntity) => AnswersGameEntity.id,
+        { nullable: true})
     @JoinColumn({ name: 'answersSecondPlayer' })
     answersSecondPlayer: string;
 
@@ -36,7 +38,7 @@ export class QuizPairGameEntity {
     @JoinColumn({ name: 'questions' })
     questions: QuizQuestionsEntity[];
 
-    @Column({ type: 'character varying', nullable: true })
+    @Column({ type: 'character varying' })
     status: 'PendingSecondPlayer' | 'Active';
 
     @Column('timestamp with time zone')
