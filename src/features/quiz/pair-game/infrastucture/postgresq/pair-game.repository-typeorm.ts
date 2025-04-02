@@ -8,6 +8,14 @@ export class PairGameRepositoryTypeOrm {
     constructor(@InjectRepository(QuizPairGameEntity) protected repository: Repository<QuizPairGameEntity>) {
     }
 
+    async getById(id: string): Promise<QuizPairGameEntity | null> {
+        return this.repository
+            .createQueryBuilder('pg')
+            .select('pg.*')
+            .where('pg."id" = :id', { id })
+            .getRawOne()
+    }
+
     async getOne(userId: string): Promise<QuizPairGameEntity | null> {
         return this.repository.findOne({
             where: {
