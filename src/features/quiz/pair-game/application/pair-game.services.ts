@@ -12,7 +12,10 @@ export class PairGameQuizPairsServices {
         const pairGame =
             await this.pairGameRepository.getPairGameByUserId(userId)
 
-        if(!pairGame) {
+        if (!pairGame) {
+            const anythingPairGame =
+                await this.pairGameRepository.createPairGame()
+
             const newPairGame = new QuizPairGameEntity();
 
             newPairGame.firstPlayerId = userId;
@@ -22,7 +25,9 @@ export class PairGameQuizPairsServices {
             return this.pairGameRepository.createPairGame(newPairGame)
         }
 
+        if (!pairGame.secondPlayerId) return
 
 
     }
+
 }

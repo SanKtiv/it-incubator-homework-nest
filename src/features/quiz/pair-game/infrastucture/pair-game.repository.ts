@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PairGameRepositoryTypeOrm} from "./postgresq/pair-game.repository-typeorm";
-import {QuizPairGameEntity} from "../domain/pair-game.entity";
+import {QuizPairGameEntity, QuizPairGameStatusType} from "../domain/pair-game.entity";
 
 @Injectable()
 export class PairGameRepository {
@@ -9,6 +9,10 @@ export class PairGameRepository {
 
     async getPairGameByUserId(userId: string): Promise<QuizPairGameEntity | null> {
         return this.repository.getOne(userId)
+    }
+
+    async getPairGameByStatus(status: QuizPairGameStatusType) {
+        return this.repository.getByStatus(status)
     }
 
     async createPairGame(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity> {

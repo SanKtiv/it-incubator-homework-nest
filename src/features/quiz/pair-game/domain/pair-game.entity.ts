@@ -39,7 +39,7 @@ export class QuizPairGameEntity {
     questions: QuizQuestionsEntity[];
 
     @Column({ type: 'character varying' })
-    status: 'PendingSecondPlayer' | 'Active';
+    status: QuizPairGameStatusType;
 
     @Column('timestamp with time zone')
     pairCreatedDate: Date;
@@ -50,3 +50,5 @@ export class QuizPairGameEntity {
     @Column({ type: 'timestamp with time zone', nullable: true })
     finishGameDate: Date;
 }
+
+export type QuizPairGameStatusType = 'PendingSecondPlayer' | 'Active';

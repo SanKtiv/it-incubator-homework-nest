@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
-import {QuizPairGameEntity} from "../../domain/pair-game.entity";
+import {QuizPairGameEntity, QuizPairGameStatusType} from "../../domain/pair-game.entity";
 import {Repository} from "typeorm";
 import {AccountDataTable} from "../../../../users/domain/account-data.table";
 import {UsersTable} from "../../../../users/domain/users.table";
@@ -19,6 +19,10 @@ export class PairGameRepositoryTypeOrm {
             .leftJoinAndSelect(AccountDataTable, 'ac')
             .addSelect('ac."login"', 'firstPlayerLogin')
             .getRawOne()
+    }
+
+    async getByStatus(status: QuizPairGameStatusType) {
+        return this.repository.findOneBy({ status })
     }
 
     async getOne(userId: string): Promise<QuizPairGameEntity | null> {
