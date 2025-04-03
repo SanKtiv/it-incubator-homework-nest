@@ -22,15 +22,12 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getOne(userId: string): Promise<QuizPairGameEntity | null> {
-        return this.repository.findOne({
-            where: {
-                id: userId
-            },
-        })
-            // .createQueryBuilder('pg')
-            // .select('pg.*')
-            // .where('pg."firstPlayerId" = :userId', {userId})
-            // .getRawOne()
+        return this.repository
+            .createQueryBuilder('pg')
+            .select('pg.*')
+            .where('pg."firstPlayerId" = :userId', { userId })
+            .orWhere('pg."secondPlayerId" = :userId', { userId })
+            .getRawOne()
     }
 
     async create(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity> {

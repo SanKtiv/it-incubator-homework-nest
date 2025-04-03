@@ -9,7 +9,8 @@ export class PairGameQuizPairsServices {
     }
 
     async createOrJoinPairGame(userId: string ) {
-        const pairGame = await this.pairGameRepository.getPairGame(userId)
+        const pairGame =
+            await this.pairGameRepository.getPairGameByUserId(userId)
 
         if(!pairGame) {
             const newPairGame = new QuizPairGameEntity();
@@ -20,6 +21,8 @@ export class PairGameQuizPairsServices {
 
             return this.pairGameRepository.createPairGame(newPairGame)
         }
+
+
 
     }
 }

@@ -7,7 +7,7 @@ export class PairGameRepository {
     constructor(protected  repository: PairGameRepositoryTypeOrm) {
     }
 
-    async getPairGame(userId: string): Promise<QuizPairGameEntity | null> {
+    async getPairGameByUserId(userId: string): Promise<QuizPairGameEntity | null> {
         return this.repository.getOne(userId)
     }
 
