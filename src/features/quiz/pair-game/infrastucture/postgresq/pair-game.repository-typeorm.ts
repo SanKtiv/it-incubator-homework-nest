@@ -2,6 +2,8 @@ import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {QuizPairGameEntity} from "../../domain/pair-game.entity";
 import {Repository} from "typeorm";
+import {AccountDataTable} from "../../../../users/domain/account-data.table";
+import {UsersTable} from "../../../../users/domain/users.table";
 
 @Injectable()
 export class PairGameRepositoryTypeOrm {
@@ -13,6 +15,9 @@ export class PairGameRepositoryTypeOrm {
             .createQueryBuilder('pg')
             .select('pg.*')
             .where('pg."id" = :id', { id })
+            .leftJoin(UsersTable, 'u')
+            .leftJoinAndSelect(AccountDataTable, 'ac')
+            .addSelect('ac."login"', 'firstPlayerLogin')
             .getRawOne()
     }
 
@@ -29,7 +34,8 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async create(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity> {
-        return this.repository.save(pairGame);
+        const createdPairGame = await this.repository.save(pairGame);
+        return this.getById(createdPairGame.id);
     }
 
     async clear(): Promise<void> {
