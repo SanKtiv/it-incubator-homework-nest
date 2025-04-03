@@ -11,7 +11,7 @@ export class PairGameRepository {
         return this.repository.getOne(userId)
     }
 
-    async getPairGameByStatus(status: QuizPairGameStatusType) {
+    async getPairGamesByStatus(status: QuizPairGameStatusType) {
         return this.repository.getByStatus(status)
     }
 

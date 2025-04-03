@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PairGameRepository} from "../infrastucture/pair-game.repository";
-import {QuizPairGameEntity} from "../domain/pair-game.entity";
+import {QuizPairGameEntity, QuizPairGameStatusType} from "../domain/pair-game.entity";
 import {UsersTable} from "../../../users/domain/users.table";
 
 @Injectable()
@@ -13,8 +13,10 @@ export class PairGameQuizPairsServices {
             await this.pairGameRepository.getPairGameByUserId(userId)
 
         if (!pairGame) {
-            const anythingPairGame =
-                await this.pairGameRepository.createPairGame()
+            const status: QuizPairGameStatusType = 'PendingSecondPlayer';
+
+            const anythingPairGames =
+                await this.pairGameRepository.getPairGamesByStatus(status);
 
             const newPairGame = new QuizPairGameEntity();
 

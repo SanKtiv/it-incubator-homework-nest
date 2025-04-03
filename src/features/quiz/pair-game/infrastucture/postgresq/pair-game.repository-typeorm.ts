@@ -11,24 +11,25 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getById(id: string): Promise<QuizPairGameEntity | null> {
-        return this.repository
-            .createQueryBuilder('pg')
-            .select('pg.*')
+        return this.builder
             .where('pg."id" = :id', { id })
             .leftJoin(UsersTable, 'u')
-            .leftJoinAndSelect(AccountDataTable, 'ac')
+            .leftJoin(AccountDataTable, 'ac')
             .addSelect('ac."login"', 'firstPlayerLogin')
             .getRawOne()
     }
 
     async getByStatus(status: QuizPairGameStatusType) {
-        return this.repository.findOneBy({ status })
+        return this.builder
+            .where('pg."status" = :status', { status })
+            .leftJoin(UsersTable, 'u')
+            .leftJoin(AccountDataTable, 'ac')
+            .addSelect('ac."login"', 'firstPlayerLogin')
+            .getRawMany()
     }
 
     async getOne(userId: string): Promise<QuizPairGameEntity | null> {
-        return this.repository
-            .createQueryBuilder('pg')
-            .select('pg.*')
+        return this.builder
             .where('pg."firstPlayerId" = :userId', { userId })
             .orWhere('pg."secondPlayerId" = :userId', { userId })
             .getRawOne()
@@ -42,4 +43,11 @@ export class PairGameRepositoryTypeOrm {
     async clear(): Promise<void> {
         await this.repository.clear();
     }
+
+    private get builder() {
+        return this.repository
+            .createQueryBuilder('pg')
+            .select('pg.*')
+    }
+
 }
