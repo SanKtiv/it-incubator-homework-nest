@@ -87,6 +87,6 @@ console.log('created pair game =', body)
         const resultGetPairGame =
             await quizPairGameTestManager.getById(idExistPairGame, testAccessToken);
 
-        console.log('resultGetPairGame =', resultGetPairGame.body)
+        //console.log('resultGetPairGame =', resultGetPairGame.body)
     })
 });

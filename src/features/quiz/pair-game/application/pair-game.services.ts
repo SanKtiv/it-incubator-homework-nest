@@ -15,8 +15,16 @@ export class PairGameQuizPairsServices {
         if (!pairGame) {
             const status: QuizPairGameStatusType = 'PendingSecondPlayer';
 
-            const anythingPairGames =
+            const anythingPairGames: QuizPairGameEntity =
                 await this.pairGameRepository.getPairGamesByStatus(status);
+
+            if(anythingPairGames) {
+                anythingPairGames.secondPlayerId = userId;
+                anythingPairGames.status = 'Active';
+                anythingPairGames.startGameDate = new Date();
+
+                return this.pairGameRepository.createPairGame(anythingPairGames)
+            }
 
             const newPairGame = new QuizPairGameEntity();
 
