@@ -1,7 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {QuizPairGameEntity, QuizPairGameStatusType} from "../../domain/pair-game.entity";
-import {Repository} from "typeorm";
+import {Repository, SelectQueryBuilder} from "typeorm";
 import {AccountDataTable} from "../../../../users/domain/account-data.table";
 import {UsersTable} from "../../../../users/domain/users.table";
 
@@ -22,10 +22,9 @@ export class PairGameRepositoryTypeOrm {
     async getByStatus(status: QuizPairGameStatusType) {
         return this.builder
             .where('pg."status" = :status', { status })
-            .leftJoin(UsersTable, 'u')
-            .leftJoin(AccountDataTable, 'ac')
-            .addSelect('ac."login"', 'firstPlayerLogin')
-            .getRawMany()
+            .addSelect(this.getFirstPlayerLogin, 'firstPlayerLogin')
+            .addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
+            .getRawOne()
     }
 
     async getOne(userId: string): Promise<QuizPairGameEntity | null> {
@@ -50,4 +49,18 @@ export class PairGameRepositoryTypeOrm {
             .select('pg.*')
     }
 
+    private getFirstPlayerLogin = (subQuery: SelectQueryBuilder<AccountDataTable>) =>
+        subQuery
+            .select('ac."login"')
+            .from(UsersTable, 'u')
+            .where('pg."firstPlayerId" = u."id"')
+            .leftJoin(AccountDataTable, 'ac')
+            //.addSelect('ac."login"', 'firstPlayerLogin')
+
+    private getSecondPlayerLogin = (subQuery: SelectQueryBuilder<AccountDataTable>) =>
+        subQuery
+            .select('ac."login"')
+            .from(UsersTable, 'u')
+            .where('pg."secondPlayerId" = u."id"')
+            .leftJoin(AccountDataTable, 'ac')
 }
