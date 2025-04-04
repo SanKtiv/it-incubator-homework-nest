@@ -13,7 +13,7 @@ import {ArrayNotContains} from "class-validator";
 import {QuizPairGameTestManager} from "../utils/quiz-pair-game/quiz-pair-game-test-manager";
 import {QuizPairGameOptions} from "../utils/quiz-pair-game/quiz-pair-game-options";
 import {UsersTestManager} from "../utils/users-test-manager";
-import {userTest} from "../utils/users-options";
+import {userTest1, userTest2} from "../utils/users-options";
 import {ClearDataTestingManager} from "../utils/clear-data-testing-manager";
 
 describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
@@ -25,7 +25,8 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
     let clearDB: ClearDataTestingManager;
 
-    let testAccessToken: string;
+    let testAccessToken1: string;
+    let testAccessToken2: string;
     let idExistPairGame: string;
     let idExistQuestion: string = ''
 
@@ -58,26 +59,36 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         await clearDB.clearDB();
     })
 
-    it('/sa/users (POST), handler method create user, should returned status 201 and correct user model', async () => {
-        await userTestManger.adminCreateUser(userTest, authBasic);
+    it('/sa/users (POST), handler method create user1, should returned status 201 and correct user model', async () => {
+        await userTestManger.adminCreateUser(userTest1, authBasic);
     })
 
-    it('/auth/login (POST), handler method login user, should returned status 200 and correct access token', async () => {
+    it('/sa/users (POST), handler method create user2, should returned status 201 and correct user model', async () => {
+        await userTestManger.adminCreateUser(userTest2, authBasic);
+    })
+
+    it('/auth/login (POST), handler method login user1, should returned status 200 and correct access token', async () => {
             const resultLoginUser =
-                await userTestManger.login(userTest.login, userTest.password);
+                await userTestManger.login(userTest1.login, userTest1.password);
 
-            testAccessToken = resultLoginUser.accessToken;
+            testAccessToken1 = resultLoginUser.accessToken;
     })
 
-    it('/pair-game-quiz/pairs/connection (POST), should returned status 201 and correct pair-game model', async () => {
+    it('/auth/login (POST), handler method login user2, should returned status 200 and correct access token', async () => {
+        const resultLoginUser =
+            await userTestManger.login(userTest2.login, userTest2.password);
+
+        testAccessToken2 = resultLoginUser.accessToken;
+    })
+
+    it('/pair-game-quiz/pairs/connection (POST), connection first player should returned status 201 and correct pair-game model', async () => {
         const resultCreatePairGame =
-            await quizPairGameTestManager.create(testAccessToken);
+            await quizPairGameTestManager.create(testAccessToken1);
 
         const body = resultCreatePairGame.body
 
-        idExistPairGame = body.id;
 console.log('created pair game =', body)
-        // idExistQuestion = body.id;
+        idExistPairGame = body.id;
         //
         // await expect(statusCode).toBe(201);
         // await expect(body).toEqual(outputModel)
@@ -85,8 +96,21 @@ console.log('created pair game =', body)
 
     it('/pair-game-quiz/pairs/:id (GET), should returned status 200 and correct pair-game model', async () => {
         const resultGetPairGame =
-            await quizPairGameTestManager.getById(idExistPairGame, testAccessToken);
+            await quizPairGameTestManager.getById(idExistPairGame, testAccessToken1);
 
         //console.log('resultGetPairGame =', resultGetPairGame.body)
     })
+
+    it('/pair-game-quiz/pairs/connection (POST), connection second player should returned status 201 and correct pair-game model', async () => {
+        const resultCreatePairGame =
+            await quizPairGameTestManager.create(testAccessToken2);
+
+        const body = resultCreatePairGame.body
+
+        console.log('join to pair game =', body)
+        // idExistQuestion = body.id;
+        //
+        // await expect(statusCode).toBe(201);
+        // await expect(body).toEqual(outputModel)
+    });
 });

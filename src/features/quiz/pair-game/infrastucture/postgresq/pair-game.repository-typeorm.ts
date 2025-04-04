@@ -13,6 +13,8 @@ export class PairGameRepositoryTypeOrm {
     async getById(id: string): Promise<QuizPairGameEntity | null | undefined> {
         return this.builder
             .where('pg."id" = :id', { id })
+            //.addSelect(this.getFirstPlayerLogin)
+            //.addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
             .leftJoin(UsersTable, 'u')
             .leftJoin(AccountDataTable, 'ac')
             .addSelect('ac."login"', 'firstPlayerLogin')
@@ -22,8 +24,8 @@ export class PairGameRepositoryTypeOrm {
     async getByStatus(status: QuizPairGameStatusType) {
         return this.builder
             .where('pg."status" = :status', { status })
-            .addSelect(this.getFirstPlayerLogin, 'firstPlayerLogin')
-            .addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
+            //.addSelect(this.getFirstPlayerLogin, 'firstPlayerLogin')
+            //.addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
             .getRawOne()
     }
 
@@ -51,10 +53,11 @@ export class PairGameRepositoryTypeOrm {
 
     private getFirstPlayerLogin = (subQuery: SelectQueryBuilder<AccountDataTable>) =>
         subQuery
-            .select('ac."login"')
+            .select('u."id"', 'newId')
             .from(UsersTable, 'u')
             .where('pg."firstPlayerId" = u."id"')
-            .leftJoin(AccountDataTable, 'ac')
+            .addSelect('u.deletedAt', 'newDeletedAt')
+            //.leftJoin(AccountDataTable, 'ac')
             //.addSelect('ac."login"', 'firstPlayerLogin')
 
     private getSecondPlayerLogin = (subQuery: SelectQueryBuilder<AccountDataTable>) =>

@@ -9,7 +9,7 @@ import { blogCreateModel } from './utils/blogs-options';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersInputDto } from '../src/features/users/api/models/input/users.input.dto';
 import { AuthTestManager } from './utils/auth-test-manager';
-import { userTest } from './utils/users-options';
+import { userTest1 } from './utils/users-options';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
