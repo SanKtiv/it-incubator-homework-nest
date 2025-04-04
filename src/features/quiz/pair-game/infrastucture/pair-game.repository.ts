@@ -7,7 +7,7 @@ export class PairGameRepository {
     constructor(protected  repository: PairGameRepositoryTypeOrm) {
     }
 
-    async getPairGameByUserId(userId: string): Promise<QuizPairGameEntity | null> {
+    async getPairGameByUserId(userId: string): Promise<QuizPairGameEntity | null | undefined> {
         return this.repository.getOne(userId)
     }
 
@@ -15,7 +15,7 @@ export class PairGameRepository {
         return this.repository.getByStatus(status)
     }
 
-    async createPairGame(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity> {
+    async createPairGame(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity | null | undefined> {
         return this.repository.create(pairGame)
     }
 

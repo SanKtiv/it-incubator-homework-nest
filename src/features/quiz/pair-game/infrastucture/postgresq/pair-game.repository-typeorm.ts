@@ -10,7 +10,7 @@ export class PairGameRepositoryTypeOrm {
     constructor(@InjectRepository(QuizPairGameEntity) protected repository: Repository<QuizPairGameEntity>) {
     }
 
-    async getById(id: string): Promise<QuizPairGameEntity | null> {
+    async getById(id: string): Promise<QuizPairGameEntity | null | undefined> {
         return this.builder
             .where('pg."id" = :id', { id })
             .leftJoin(UsersTable, 'u')
@@ -27,14 +27,14 @@ export class PairGameRepositoryTypeOrm {
             .getRawOne()
     }
 
-    async getOne(userId: string): Promise<QuizPairGameEntity | null> {
+    async getOne(userId: string): Promise<QuizPairGameEntity | null | undefined> {
         return this.builder
             .where('pg."firstPlayerId" = :userId', { userId })
             .orWhere('pg."secondPlayerId" = :userId', { userId })
             .getRawOne()
     }
 
-    async create(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity> {
+    async create(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity | null | undefined> {
         const createdPairGame = await this.repository.save(pairGame);
         return this.getById(createdPairGame.id);
     }
