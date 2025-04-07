@@ -13,11 +13,11 @@ export class PairGameRepositoryTypeOrm {
     async getById(id: string): Promise<QuizPairGameEntity | null | undefined> {
         return this.builder
             .where('pg."id" = :id', { id })
-            //.addSelect(this.getFirstPlayerLogin)
+            .addSelect(this.getFirstPlayerLogin)
             //.addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
-            .leftJoin(UsersTable, 'u')
-            .leftJoin(AccountDataTable, 'ac')
-            .addSelect('ac."login"', 'firstPlayerLogin')
+            //.leftJoin(UsersTable, 'u')
+            //.leftJoin(AccountDataTable, 'ac')
+            //.addSelect('ac."login"', 'firstPlayerLogin')
             .getRawOne()
     }
 
@@ -53,11 +53,10 @@ export class PairGameRepositoryTypeOrm {
 
     private getFirstPlayerLogin = (subQuery: SelectQueryBuilder<AccountDataTable>) =>
         subQuery
-            .select('u."id"', 'newId')
+            .select('ac."login"')
             .from(UsersTable, 'u')
-            .where('pg."firstPlayerId" = u."id"')
-            .addSelect('u.deletedAt', 'newDeletedAt')
-            //.leftJoin(AccountDataTable, 'ac')
+            .leftJoin(AccountDataTable, 'ac', 'ac."id" = u."accountDataId"')
+            .where('u."id" = pg."firstPlayerId"')
             //.addSelect('ac."login"', 'firstPlayerLogin')
 
     private getSecondPlayerLogin = (subQuery: SelectQueryBuilder<AccountDataTable>) =>
