@@ -54,7 +54,7 @@ export const createdPairGameOutputModel = (pairGame: any) => ({
             login: pairGame.firstPlayerLogin,
         },
         answers: [],
-        score: pairGame.firstPlayerScore,
+        score: pairGame.firstPlayerScore ?? 0,
     },
     secondPlayerProgress: pairGame.secondPlayerId ?
         {
@@ -63,10 +63,10 @@ export const createdPairGameOutputModel = (pairGame: any) => ({
                 login: pairGame.secondPlayerLogin,
             },
             answers: [],
-            score: pairGame.secondPlayerScore,
+            score: pairGame.secondPlayerScore ?? 0,
         }
         : null,
-    questions: [],
+    questions: pairGame.questions,
     status: pairGame.status,
     pairCreatedDate: pairGame.pairCreatedDate,
     startGameDate: pairGame.startGameDate,

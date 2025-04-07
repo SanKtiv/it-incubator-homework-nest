@@ -15,9 +15,6 @@ export class PairGameRepositoryTypeOrm {
             .where('pg."id" = :id', { id })
             .addSelect(this.getFirstPlayerLogin, 'firstPlayerLogin')
             .addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
-            //.leftJoin(UsersTable, 'u')
-            //.leftJoin(AccountDataTable, 'ac')
-            //.addSelect('ac."login"', 'firstPlayerLogin')
             .getRawOne()
     }
 

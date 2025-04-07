@@ -2,6 +2,7 @@ import {Injectable} from "@nestjs/common";
 import {PairGameRepository} from "../infrastucture/pair-game.repository";
 import {QuizPairGameEntity, QuizPairGameStatusType} from "../domain/pair-game.entity";
 import {UsersTable} from "../../../users/domain/users.table";
+import {createdPairGameOutputModel} from "../api/models/output/pair-game.output.models";
 
 @Injectable()
 export class PairGameQuizPairsServices {
@@ -32,7 +33,9 @@ export class PairGameQuizPairsServices {
             newPairGame.pairCreatedDate = new Date();
             newPairGame.status = 'PendingSecondPlayer';
 
-            return this.pairGameRepository.createPairGame(newPairGame)
+            const activePairGame = await this.pairGameRepository.createPairGame(newPairGame)
+
+            return createdPairGameOutputModel(activePairGame)
         }
 
         if (!pairGame.secondPlayerId) return
