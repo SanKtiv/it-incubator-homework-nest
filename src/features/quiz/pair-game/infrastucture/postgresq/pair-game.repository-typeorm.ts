@@ -13,8 +13,8 @@ export class PairGameRepositoryTypeOrm {
     async getById(id: string): Promise<QuizPairGameEntity | null | undefined> {
         return this.builder
             .where('pg."id" = :id', { id })
-            .addSelect(this.getFirstPlayerLogin)
-            //.addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
+            .addSelect(this.getFirstPlayerLogin, 'firstPlayerLogin')
+            .addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
             //.leftJoin(UsersTable, 'u')
             //.leftJoin(AccountDataTable, 'ac')
             //.addSelect('ac."login"', 'firstPlayerLogin')
@@ -57,12 +57,11 @@ export class PairGameRepositoryTypeOrm {
             .from(UsersTable, 'u')
             .leftJoin(AccountDataTable, 'ac', 'ac."id" = u."accountDataId"')
             .where('u."id" = pg."firstPlayerId"')
-            //.addSelect('ac."login"', 'firstPlayerLogin')
 
     private getSecondPlayerLogin = (subQuery: SelectQueryBuilder<AccountDataTable>) =>
         subQuery
             .select('ac."login"')
             .from(UsersTable, 'u')
+            .leftJoin(AccountDataTable, 'ac', 'ac."id" = u."accountDataId"')
             .where('pg."secondPlayerId" = u."id"')
-            .leftJoin(AccountDataTable, 'ac')
 }
