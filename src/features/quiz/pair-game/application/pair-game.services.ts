@@ -24,7 +24,10 @@ export class PairGameQuizPairsServices {
                 anythingPairGames.status = 'Active';
                 anythingPairGames.startGameDate = new Date();
 
-                return this.pairGameRepository.createPairGame(anythingPairGames)
+                const pendingPairGame =
+                    await this.pairGameRepository.createPairGame(anythingPairGames)
+
+                return createdPairGameOutputModel(pendingPairGame)
             }
 
             const newPairGame = new QuizPairGameEntity();
