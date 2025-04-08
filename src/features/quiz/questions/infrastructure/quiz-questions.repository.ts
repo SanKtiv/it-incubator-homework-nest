@@ -16,8 +16,8 @@ export class QuizQuestionsRepository {
     return quizQuestionsViewModel(createdQuestions);
   }
 
-  async getFiveRandomQuestions() {
-    return this.repository.
+  async getFiveRandomQuestions(): Promise<QuizQuestionsEntity[]> {
+    return this.repository.findFiveRandom()
   }
 
   async getQuizQuestionById(id: string): Promise<QuizQuestionsEntity | null> {

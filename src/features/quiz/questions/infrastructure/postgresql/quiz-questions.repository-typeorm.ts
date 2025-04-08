@@ -15,7 +15,7 @@ export class QuizQuestionsRepositoryTypeOrm {
     return this.repository.save(dto);
   }
 
-  async findFiveRandom() {
+  async findFiveRandom(): Promise<QuizQuestionsEntity[]> {
     return this.repository
         .createQueryBuilder('q')
         .orderBy('RANDOM()')

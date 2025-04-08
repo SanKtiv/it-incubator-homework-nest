@@ -3,10 +3,12 @@ import {PairGameRepository} from "../infrastucture/pair-game.repository";
 import {QuizPairGameEntity, QuizPairGameStatusType} from "../domain/pair-game.entity";
 import {UsersTable} from "../../../users/domain/users.table";
 import {createdPairGameOutputModel} from "../api/models/output/pair-game.output.models";
+import {QuizQuestionsRepository} from "../../questions/infrastructure/quiz-questions.repository";
 
 @Injectable()
 export class PairGameQuizPairsServices {
-    constructor(protected pairGameRepository: PairGameRepository) {
+    constructor(protected pairGameRepository: PairGameRepository,
+                protected quizQuestionsRepository: QuizQuestionsRepository) {
     }
 
     async createOrJoinPairGame(userId: string ) {
@@ -20,9 +22,13 @@ export class PairGameQuizPairsServices {
                 await this.pairGameRepository.getPairGamesByStatus(status);
 
             if(anythingPairGames) {
+                const questions =
+                    await this.quizQuestionsRepository.getFiveRandomQuestions()
+
                 anythingPairGames.secondPlayerId = userId;
                 anythingPairGames.status = 'Active';
                 anythingPairGames.startGameDate = new Date();
+                anythingPairGames.questions = questions;
 
                 const pendingPairGame =
                     await this.pairGameRepository.createPairGame(anythingPairGames)
