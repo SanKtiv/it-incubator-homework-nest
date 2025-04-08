@@ -28,7 +28,9 @@ export class PairGameQuizPairsServices {
                 anythingPairGames.secondPlayerId = userId;
                 anythingPairGames.status = 'Active';
                 anythingPairGames.startGameDate = new Date();
-                anythingPairGames.questions = questions;
+                anythingPairGames.questions = questions
+
+                console.log('anythingPairGame =', anythingPairGames)
 
                 const pendingPairGame =
                     await this.pairGameRepository.createPairGame(anythingPairGames)

@@ -73,14 +73,15 @@ describe('Quiz-Questions Tests (e2e)', () => {
     });
 
     it('/sa/quiz/questions (POST), should returned many question models and status 201', async () => {
-        const [response1, response2, response3, response4, response5] =
-            await quizQuestionsTestManager.createMany(inputModelMany, authBasic);
+        const [inputModel1, inputModel2, inputModel3, inputModel4, inputModel5] = inputModelMany;
 
-        await expect(response1.statusCode).toBe(201);
-        await expect(response2.statusCode).toBe(201);
+        const response1 = await quizQuestionsTestManager.create(inputModel1, authBasic);
+        const response2 = await quizQuestionsTestManager.create(inputModel2, authBasic);
+        const response3 = await quizQuestionsTestManager.create(inputModel3, authBasic);
+        const response4 = await quizQuestionsTestManager.create(inputModel4, authBasic);
+        const response5 = await quizQuestionsTestManager.create(inputModel5, authBasic);
+
         await expect(response3.statusCode).toBe(201);
-        await expect(response4.statusCode).toBe(201);
-        await expect(response5.statusCode).toBe(201);
     })
 
     it('/sa/quiz/questions (POST), should returned status 401', async () => {

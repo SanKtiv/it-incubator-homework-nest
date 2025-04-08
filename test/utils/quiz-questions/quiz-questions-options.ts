@@ -14,7 +14,7 @@ export class QuizQuestionsOptions {
     })
 
     inputModelMany(count: number) {
-        const array = []
+        const array: {}[] = []
         for( let i = 1; i <= count; i++) {
             const element = this.inputModel()
             element.body += `${i}`

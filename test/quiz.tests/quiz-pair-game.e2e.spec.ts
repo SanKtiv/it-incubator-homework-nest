@@ -22,6 +22,8 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     let quizPairGameOptions: QuizPairGameOptions;
     let authTestManager: AuthTestManager;
     let userTestManger: UsersTestManager;
+    let quizQuestionsTestManager: QuizQuestionsTestManager;
+    let quizQuestionsOptions: QuizQuestionsOptions;
 
     let clearDB: ClearDataTestingManager;
 
@@ -33,6 +35,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     let inputModel
     let outputModel
     let inputModelWrong
+    let inputModelMany
 
     beforeAll(async () => {
         const result = await initSettings(); //(moduleBuilder) =>
@@ -43,9 +46,12 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         quizPairGameOptions = result.quizPairGameOptions;
         authTestManager = result.authTestManager;
         userTestManger = result.userTestManger;
+        quizQuestionsTestManager = result.quizQuestionsTestManager;
+        quizQuestionsOptions = result.quizQuestionsOptions;
 
         clearDB = result.clearDataTestingManager;
 
+        inputModelMany = quizQuestionsOptions.inputModelMany(5)
         //inputModel = quizQuestionsOptions.inputModel();
         //outputModel = quizQuestionsOptions.outputModel();
         //inputModelWrong = quizQuestionsOptions.inputModelWrongBodyNumber()
@@ -57,6 +63,18 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
     it('/testing/all-data (DELETE), should returned status 204', async () => {
         await clearDB.clearDB();
+    })
+
+    it('/sa/quiz/questions (POST), should returned many question models and status 201', async () => {
+        const [inputModel1, inputModel2, inputModel3, inputModel4, inputModel5] = inputModelMany;
+
+        const response1 = await quizQuestionsTestManager.create(inputModel1, authBasic);
+        const response2 = await quizQuestionsTestManager.create(inputModel2, authBasic);
+        const response3 = await quizQuestionsTestManager.create(inputModel3, authBasic);
+        const response4 = await quizQuestionsTestManager.create(inputModel4, authBasic);
+        const response5 = await quizQuestionsTestManager.create(inputModel5, authBasic);
+
+        await expect(response3.statusCode).toBe(201);
     })
 
     it('/sa/users (POST), handler method create user1, should returned status 201 and correct user model', async () => {
