@@ -15,6 +15,14 @@ export class QuizQuestionsRepositoryTypeOrm {
     return this.repository.save(dto);
   }
 
+  async findFiveRandom() {
+    return this.repository
+        .createQueryBuilder('q')
+        .orderBy('RANDOM()')
+        .limit(5)
+        .getRawMany()
+  }
+
   async findOneById(id: string): Promise<QuizQuestionsEntity | null> {
     return this.repository.findOneBy({ id });
   }
