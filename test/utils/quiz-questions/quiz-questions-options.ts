@@ -13,7 +13,15 @@ export class QuizQuestionsOptions {
         correctAnswers: this.inputModel().correctAnswers,
     })
 
-
+    inputModelMany(count: number) {
+        const array = []
+        for( let i = 1; i <= count; i++) {
+            const element = this.inputModel()
+            element.body += `${i}`
+            array.push(element)
+        }
+        return array
+    }
 
     outputModel = () => ({
         id: expect.any(String),

@@ -24,6 +24,10 @@ export class QuizQuestionsTestManager {
         //.expect(201)
     }
 
+    async createMany(inputModel: any[], auth: any): Promise<any[]> {
+        return inputModel.map( e => this.create(e, auth))
+    }
+
     async getPaging(queryDto: any, auth: any) {
         return request(this.app.getHttpServer())
             .get('/sa/quiz/questions')

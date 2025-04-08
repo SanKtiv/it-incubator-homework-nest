@@ -20,6 +20,7 @@ describe('Quiz-Questions Tests (e2e)', () => {
     let idExistQuestion: string = ''
 
     let inputModel
+    let inputModelMany
     let outputModel
     let inputModelWrong
 
@@ -34,6 +35,7 @@ describe('Quiz-Questions Tests (e2e)', () => {
         //userTestManger = result.userTestManger;
 
         inputModel = quizQuestionsOptions.inputModel();
+        inputModelMany = quizQuestionsOptions.inputModelMany(5)
         outputModel = quizQuestionsOptions.outputModel();
         inputModelWrong = quizQuestionsOptions.inputModelWrongBodyNumber()
     });
@@ -57,7 +59,7 @@ describe('Quiz-Questions Tests (e2e)', () => {
     //   await app.init();
     // });
 
-    it('/sa/quiz/questions (POST), should returned status 201 and correct blog model', async () => {
+    it('/sa/quiz/questions (POST), should returned status 201 and correct question model', async () => {
         const responseCreateQuizQuestion =
             await quizQuestionsTestManager.create(inputModel, authBasic);
 
@@ -69,6 +71,17 @@ describe('Quiz-Questions Tests (e2e)', () => {
         await expect(statusCode).toBe(201);
         await expect(body).toEqual(outputModel)
     });
+
+    it('/sa/quiz/questions (POST), should returned many question models and status 201', async () => {
+        const [response1, response2, response3, response4, response5] =
+            await quizQuestionsTestManager.createMany(inputModelMany, authBasic);
+
+        await expect(response1.statusCode).toBe(201);
+        await expect(response2.statusCode).toBe(201);
+        await expect(response3.statusCode).toBe(201);
+        await expect(response4.statusCode).toBe(201);
+        await expect(response5.statusCode).toBe(201);
+    })
 
     it('/sa/quiz/questions (POST), should returned status 401', async () => {
         const responseCreateQuizQuestion =
