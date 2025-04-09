@@ -37,6 +37,6 @@ export class QuizQuestionsRepositoryTypeOrm {
   }
 
   async clear(): Promise<void> {
-    await this.repository.clear();
+    await this.repository.query('TRUNCATE TABLE "quiz-questions" CASCADE');
   }
 }

@@ -37,13 +37,11 @@ export class PairGameRepositoryTypeOrm {
 
     async create(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity | null | undefined> {
         const createdPairGame = await this.repository.save(pairGame);
-
-        console.log('PairGameRepositoryTypeOrm createdPairGame =', createdPairGame)
         return this.getById(createdPairGame.id);
     }
 
     async clear(): Promise<void> {
-        await this.repository.clear();
+        await this.repository.query('TRUNCATE TABLE "quiz-pair-game" CASCADE');
     }
 
     private get builder() {
