@@ -37,6 +37,8 @@ export class PairGameRepositoryTypeOrm {
 
     async create(pairGame: QuizPairGameEntity): Promise<QuizPairGameEntity | null | undefined> {
         const createdPairGame = await this.repository.save(pairGame);
+
+        console.log('PairGameRepositoryTypeOrm createdPairGame =', createdPairGame)
         return this.getById(createdPairGame.id);
     }
 
