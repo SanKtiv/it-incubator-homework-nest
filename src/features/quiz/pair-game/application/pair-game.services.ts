@@ -31,10 +31,10 @@ export class PairGameQuizPairsServices {
                 anythingPairGames.startGameDate = new Date();
                 anythingPairGames.questions = questions;
 
-                const pendingPairGame =
+                const activePairGame =
                     await this.pairGameRepository.createPairGame(anythingPairGames);
-
-                return createdPairGameOutputModel(pendingPairGame);
+console.log('Pair game is Active, get entity =', activePairGame)
+                return createdPairGameOutputModel(activePairGame);
             }
 
             const newPairGame = new QuizPairGameEntity();

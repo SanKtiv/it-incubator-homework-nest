@@ -5,6 +5,7 @@ import {Repository, SelectQueryBuilder} from "typeorm";
 import {AccountDataTable} from "../../../../users/domain/account-data.table";
 import {UsersTable} from "../../../../users/domain/users.table";
 import {QuizQuestionsEntity} from "../../../questions/domain/quiz-questions.entity";
+import {AnswersGameEntity} from "../../domain/answers-game.entity";
 
 @Injectable()
 export class PairGameRepositoryTypeOrm {
@@ -17,7 +18,7 @@ export class PairGameRepositoryTypeOrm {
             .addSelect(this.getFirstPlayerLogin, 'firstPlayerLogin')
             .addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
             //.addSelect(this.getQuestions, 'questions')
-            .getRawOne()
+            .getOne()
     }
 
     async getByStatus(status: QuizPairGameStatusType) {
@@ -49,13 +50,6 @@ export class PairGameRepositoryTypeOrm {
             .createQueryBuilder('pg')
             .select('pg.*')
     }
-
-    private getFirstPlayerLogin1 = (subQuery: SelectQueryBuilder<UsersTable>) =>
-        subQuery
-            .select('ac."login"')
-            .from(UsersTable, 'u')
-            .leftJoin(AccountDataTable, 'ac', 'ac."id" = u."accountDataId"')
-            .where('u."id" = pg."firstPlayerId"')
 
     private getFirstPlayerLogin = (subQuery: SelectQueryBuilder<AccountDataTable>) =>
         subQuery

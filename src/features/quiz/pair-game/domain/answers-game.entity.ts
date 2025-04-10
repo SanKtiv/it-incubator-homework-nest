@@ -11,7 +11,13 @@ export class AnswersGameEntity {
     pairGame: string;
 
     @ManyToOne(() => UsersTable,
-        user => user.id)
+        user => user.id,
+        // {
+        //     cascade: true,
+        //     eager: true,
+        //     onDelete: 'CASCADE',
+        // }
+        )
     @JoinColumn({ name: 'userId' })
     userId: string;
 
