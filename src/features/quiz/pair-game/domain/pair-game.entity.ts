@@ -14,23 +14,11 @@ export class QuizPairGameEntity {
     @JoinColumn({ name: 'firstPlayerId' })
     firstPlayerId: string;
 
-    @OneToMany(() => AnswersGameEntity,
-        (AnswersGameEntity) => AnswersGameEntity.id,
-        { nullable: true})
-    @JoinColumn({ name: 'answersFirstPlayer' })
-    answersFirstPlayer: AnswersGameEntity[];
-
     @ManyToOne(() => UsersTable,
         (UsersTable) => UsersTable.id,
         { nullable: true})
     @JoinColumn({ name: 'secondPlayerId' })
     secondPlayerId: string;
-
-    @OneToMany(() => AnswersGameEntity,
-        (AnswersGameEntity) => AnswersGameEntity.id,
-        { nullable: true})
-    @JoinColumn({ name: 'answersSecondPlayer' })
-    answersSecondPlayer: string;
 
     @OneToMany(() => QuizQuestionsEntity,
         QuizQuestionsEntity => QuizQuestionsEntity.quizGame)
