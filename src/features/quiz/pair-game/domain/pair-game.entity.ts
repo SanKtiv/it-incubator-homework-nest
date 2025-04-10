@@ -18,7 +18,7 @@ export class QuizPairGameEntity {
         (AnswersGameEntity) => AnswersGameEntity.id,
         { nullable: true})
     @JoinColumn({ name: 'answersFirstPlayer' })
-    answersFirstPlayer: string;
+    answersFirstPlayer: AnswersGameEntity[];
 
     @ManyToOne(() => UsersTable,
         (UsersTable) => UsersTable.id,

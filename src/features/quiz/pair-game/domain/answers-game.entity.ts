@@ -1,4 +1,6 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {QuizPairGameEntity} from "./pair-game.entity";
+import {UsersTable} from "../../../users/domain/users.table";
 
 @Entity('answers')
 export class AnswersGameEntity {
@@ -6,9 +8,11 @@ export class AnswersGameEntity {
     id: string;
 
     @Column({ type: 'uuid'})
-    gameId: string;
+    pairGame: string;
 
-    @Column({ type: 'uuid'})
+    @ManyToOne(() => UsersTable,
+        user => user.id)
+    @JoinColumn({ name: 'userId' })
     userId: string;
 
     @Column({ type: 'uuid'})
