@@ -12,9 +12,10 @@ export class QuizQuestionsEntity {
   id: string;
 
   @ManyToOne(() => QuizPairGameEntity,
-      QuizPairGameEntity => QuizPairGameEntity.questions,
+      quizGame => quizGame.id,
       { nullable: true})
-  quizGame: QuizPairGameEntity;
+  @JoinColumn({ name: 'quizGameId'})
+  quizGameId: string;
 
   @Column('character varying')
   body: string;

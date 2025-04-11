@@ -21,8 +21,8 @@ export class QuizPairGameEntity {
     secondPlayerId: string;
 
     @OneToMany(() => QuizQuestionsEntity,
-        QuizQuestionsEntity => QuizQuestionsEntity.quizGame)
-    // @JoinColumn({ name: 'questions'})
+        questions => questions.quizGameId)
+    @JoinColumn({ name: 'questions'})
     questions: QuizQuestionsEntity[];
 
     @Column({ type: 'character varying' })
