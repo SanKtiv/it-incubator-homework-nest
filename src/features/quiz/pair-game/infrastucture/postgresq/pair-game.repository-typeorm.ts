@@ -13,24 +13,13 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getById(id: string): Promise<QuizPairGameEntity | null | undefined> {
-        return this.repository.findOne({
-            where: { id },
-            //select: ,
-            relations: {
-                questions: true
-            }
-            // relations: [
-            //     'firstPlayerId.accountData.login',
-            //     'secondPlayerId.accountData.login',
-            //     'questions'
-            // ]
-        })
-            //.createQueryBuilder('pg')
-            //.where('pg."id" = :id', { id })
+        return this.repository
+            .createQueryBuilder('pg')
+            .where('pg."id" = :id', { id })
             //.addSelect(this.getFirstPlayerLogin, 'firstPlayerLogin')
             //.addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
             //.addSelect(this.getQuestions, 'questions')
-            //.getOne()
+            .getOne()
     }
 
     async getByStatus(status: QuizPairGameStatusType) {

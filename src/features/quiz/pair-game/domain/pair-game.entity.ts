@@ -14,11 +14,17 @@ export class QuizPairGameEntity {
     @JoinColumn({ name: 'firstPlayerId' })
     firstPlayerId: string;
 
+    @Column({type: 'smallint', default: 0})
+    firstPlayerScore: number;
+
     @ManyToOne(() => UsersTable,
         (UsersTable) => UsersTable.id,
         { nullable: true})
     @JoinColumn({ name: 'secondPlayerId' })
     secondPlayerId: string;
+
+    @Column({type: 'smallint', default: 0})
+    secondPlayerScore: number;
 
     @OneToMany(() => QuizQuestionsEntity,
         questions => questions.quizGameId)
