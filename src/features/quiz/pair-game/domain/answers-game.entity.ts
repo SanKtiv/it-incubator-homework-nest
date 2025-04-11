@@ -7,8 +7,21 @@ export class AnswersGameEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'uuid'})
-    pairGame: string;
+    @ManyToOne(() => QuizPairGameEntity,
+            game => game.answersFirstPlayer)
+    @JoinColumn({
+        name: 'pairGameFirstPlayer',
+        referencedColumnName: 'firstPlayerId'
+    })
+    pairGameFirstPlayer: QuizPairGameEntity;
+
+    @ManyToOne(() => QuizPairGameEntity,
+            game => game.answersSecondPlayer)
+    @JoinColumn({
+        name: 'pairGameSecondPlayer',
+        referencedColumnName: 'secondPlayerId'
+    })
+    pairGameSecondPlayer: QuizPairGameEntity
 
     @ManyToOne(() => UsersTable,
         user => user.id)

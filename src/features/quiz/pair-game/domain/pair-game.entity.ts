@@ -14,6 +14,11 @@ export class QuizPairGameEntity {
     @JoinColumn({ name: 'firstPlayerId' })
     firstPlayerId: string;
 
+    @OneToMany(() => AnswersGameEntity,
+    answer => answer.pairGameFirstPlayer)
+    @JoinColumn({name: 'answersFirstPlayer'})
+    answersFirstPlayer: AnswersGameEntity[];
+
     @Column({type: 'smallint', default: 0})
     firstPlayerScore: number;
 
@@ -25,6 +30,11 @@ export class QuizPairGameEntity {
 
     @Column({type: 'smallint', default: 0})
     secondPlayerScore: number;
+
+    @OneToMany(() => AnswersGameEntity,
+        answer => answer.pairGameSecondPlayer)
+    @JoinColumn({name: 'answersSecondPlayer'})
+    answersSecondPlayer: AnswersGameEntity[];
 
     @OneToMany(() => QuizQuestionsEntity,
         questions => questions.quizGameId)
