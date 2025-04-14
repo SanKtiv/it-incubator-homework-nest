@@ -6,6 +6,7 @@ import {QuizQuestionsRepository} from "../../questions/infrastructure/quiz-quest
 import {QuizQuestionsEntity} from "../../questions/domain/quiz-questions.entity";
 import {UsersTable} from "../../../users/domain/users.table";
 import {InputAnswersModels} from "../api/models/input/input-answers.models";
+import {AnswersGameEntity} from "../domain/answers-game.entity";
 
 @Injectable()
 export class PairGameQuizPairsServices {
@@ -67,7 +68,15 @@ console.log('Pair game is Active, get entity =', activePairGame)
             await this.pairGameRepository.getPairGameByUserId(userId)
 
         if(pairGame && pairGame.firstPlayer.id == userId) {
+            const numQuestion = pairGame.answersFirstPlayer.length;
+            const questionId = pairGame.questions[numQuestion].id;
 
+            const answersFirstPlayer = new AnswersGameEntity();
+
+            answersFirstPlayer.userId = userId;
+            answersFirstPlayer.questionId = questionId;
+            // answersFirstPlayer.answerStatus =
+            //     pairGame.questions[numQuestion].correctAnswers.
         }
 
         return this.pairGameRepository.addAnswerPlayer(userId, InputAnswersModels)

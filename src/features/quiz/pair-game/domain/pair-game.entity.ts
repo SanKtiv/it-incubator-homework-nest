@@ -14,7 +14,13 @@ export class QuizPairGameEntity {
     firstPlayer: UsersTable;
 
     @OneToMany(() => AnswersGameEntity,
-    answer => answer.pairGameId )
+    answer => answer.pairGameId,
+        {
+            //nullable: true,
+            cascade: true,
+            eager: true,
+            //onDelete: 'CASCADE',
+        })
     @JoinColumn({name: 'answersFirstPlayer'})
     answersFirstPlayer: AnswersGameEntity[];
 
@@ -30,7 +36,13 @@ export class QuizPairGameEntity {
     secondPlayerScore: number;
 
     @OneToMany(() => AnswersGameEntity,
-        answer => answer.pairGameId )
+        answer => answer.pairGameId,
+        {
+            //nullable: true,
+            cascade: true,
+            eager: true,
+            //onDelete: 'CASCADE',
+        })
     @JoinColumn({name: 'answersSecondPlayer'})
     answersSecondPlayer: AnswersGameEntity[];
 
