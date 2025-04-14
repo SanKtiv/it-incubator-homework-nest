@@ -131,4 +131,13 @@ console.log('first player created pair game =', body)
         // await expect(statusCode).toBe(201);
         // await expect(body).toEqual(outputModel)
     });
+
+    it('/pair-game-quiz/pairs/my-current/answers (POST), answer player should returned status 200 and correct model', async () => {
+        const resultCreatePairGame =
+            await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: 'Answer_1'});
+
+        //const body = resultCreatePairGame.body
+
+        //console.log('second player join to pair game =', body)
+    });
 });

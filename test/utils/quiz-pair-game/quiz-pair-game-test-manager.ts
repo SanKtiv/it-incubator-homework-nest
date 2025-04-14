@@ -44,4 +44,12 @@ export class QuizPairGameTestManager {
             .delete(`/sa/quiz/questions/${id}`)
             .set(auth.type, auth.pass);
     }
+
+    async createAnswer(accessToken: any, dto: any) {
+        return request(this.app.getHttpServer())
+            .post('/pair-game-quiz/pairs/my-current/answers')
+            .auth(accessToken, {type: 'bearer'})
+            .send(dto)
+            .expect(201)
+    }
 }
