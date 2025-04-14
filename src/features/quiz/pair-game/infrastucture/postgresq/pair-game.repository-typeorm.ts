@@ -16,6 +16,7 @@ export class PairGameRepositoryTypeOrm {
         return this.repository
             .createQueryBuilder('pg')
             .where('pg."id" = :id', { id })
+            .leftJoinAndSelect('pg.firstPlayerId', 'firstPlayerId')
             .leftJoinAndSelect('pg.questions', 'questions')
             //.addSelect(this.getFirstPlayerLogin, 'firstPlayerLogin')
             //.addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
