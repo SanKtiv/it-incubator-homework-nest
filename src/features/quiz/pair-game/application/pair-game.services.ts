@@ -1,7 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PairGameRepository} from "../infrastucture/pair-game.repository";
 import {QuizPairGameEntity, QuizPairGameStatusType} from "../domain/pair-game.entity";
-import {UsersTable} from "../../../users/domain/users.table";
 import {createdPairGameOutputModel} from "../api/models/output/pair-game.output.models";
 import {QuizQuestionsRepository} from "../../questions/infrastructure/quiz-questions.repository";
 import {QuizQuestionsEntity} from "../../questions/domain/quiz-questions.entity";
@@ -26,7 +25,7 @@ export class PairGameQuizPairsServices {
                 const questions: QuizQuestionsEntity[] =
                     await this.quizQuestionsRepository.getFiveRandomQuestions();
 
-                anythingPairGames.secondPlayerId = userId;
+                anythingPairGames.secondPlayer.id = userId;
                 anythingPairGames.status = 'Active';
                 anythingPairGames.startGameDate = new Date();
                 anythingPairGames.questions = questions;
@@ -39,7 +38,7 @@ console.log('Pair game is Active, get entity =', activePairGame)
 
             const newPairGame = new QuizPairGameEntity();
 
-            newPairGame.firstPlayerId = userId;
+            newPairGame.firstPlayer.id = userId;
             newPairGame.pairCreatedDate = new Date();
             newPairGame.status = 'PendingSecondPlayer';
 
@@ -48,7 +47,7 @@ console.log('Pair game is Active, get entity =', activePairGame)
             return createdPairGameOutputModel(activePairGame)
         }
 
-        if (!pairGame.secondPlayerId) return
+        if (!pairGame.secondPlayer.id) return
 
 
     }
