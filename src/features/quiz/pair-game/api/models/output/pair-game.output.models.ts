@@ -58,7 +58,7 @@ export const createdPairGameOutputModel = (pairGame: QuizPairGameEntity) => ({
         answers: pairGame.answersFirstPlayer,
         score: pairGame.firstPlayerScore,
     },
-    secondPlayerProgress: pairGame.secondPlayer.id ?
+    secondPlayerProgress: pairGame.secondPlayer ?
         {
             player: {
                 id: pairGame.secondPlayer.id,

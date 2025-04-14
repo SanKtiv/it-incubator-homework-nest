@@ -5,7 +5,6 @@ import {createdPairGameOutputModel} from "../api/models/output/pair-game.output.
 import {QuizQuestionsRepository} from "../../questions/infrastructure/quiz-questions.repository";
 import {QuizQuestionsEntity} from "../../questions/domain/quiz-questions.entity";
 import {UsersTable} from "../../../users/domain/users.table";
-import {AccountDataTable} from "../../../users/domain/account-data.table";
 
 @Injectable()
 export class PairGameQuizPairsServices {
@@ -37,29 +36,29 @@ export class PairGameQuizPairsServices {
 
                 const activePairGame =
                     await this.pairGameRepository.createPairGame(anythingPairGames);
-                console.log('Player entity =', activePairGame?.firstPlayer)
+
 console.log('Pair game is Active, get entity =', activePairGame)
-                return createdPairGameOutputModel(activePairGame);
+                return createdPairGameOutputModel(activePairGame!);
             }
 
             const newPairGame = new QuizPairGameEntity();
             const firstPlayer = new UsersTable();
 
             firstPlayer.id = userId;
-            //firstPlayer.accountData = new AccountDataTable();
 
             newPairGame.firstPlayer = firstPlayer;
             newPairGame.pairCreatedDate = new Date();
             newPairGame.status = 'PendingSecondPlayer';
 
-            const activePairGame = await this.pairGameRepository.createPairGame(newPairGame)
+            const pendingPairGame =
+                await this.pairGameRepository.createPairGame(newPairGame)
 
-            return createdPairGameOutputModel(activePairGame)
+            console.log('create first player entity', pendingPairGame)
+
+            return createdPairGameOutputModel(pendingPairGame!)
         }
 
         if (!pairGame.secondPlayer.id) return
-
-
     }
 
 }
