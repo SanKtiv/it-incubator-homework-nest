@@ -1,3 +1,5 @@
+import {QuizPairGameEntity} from "../../../domain/pair-game.entity";
+
 export class CreatedPairGameOutputModel {
     constructor(
         public id: string,
@@ -46,24 +48,24 @@ export class PairGameQuestionsClass {
     }
 }
 
-export const createdPairGameOutputModel = (pairGame: any) => ({
+export const createdPairGameOutputModel = (pairGame: QuizPairGameEntity) => ({
     id: pairGame.id,
     firstPlayerProgress: {
         player: {
-            id: pairGame.firstPlayerId,
-            login: pairGame.firstPlayerLogin,
+            id: pairGame.firstPlayer.id,
+            login: pairGame.firstPlayer.accountData.login,
         },
-        answers: [],
-        score: pairGame.firstPlayerScore ?? 0,
+        answers: pairGame.answersFirstPlayer,
+        score: pairGame.firstPlayerScore,
     },
-    secondPlayerProgress: pairGame.secondPlayerId ?
+    secondPlayerProgress: pairGame.secondPlayer.id ?
         {
             player: {
-                id: pairGame.secondPlayerId,
-                login: pairGame.secondPlayerLogin,
+                id: pairGame.secondPlayer.id,
+                login: pairGame.secondPlayer.accountData.login,
             },
-            answers: [],
-            score: pairGame.secondPlayerScore ?? 0,
+            answers: pairGame.answersSecondPlayer,
+            score: pairGame.secondPlayerScore ,
         }
         : null,
     questions: pairGame.questions,
