@@ -27,10 +27,13 @@ export class PairGameRepositoryTypeOrm {
                 'firstAccountData.login',
                 'secondAccountData.login'
             ])
+            .leftJoinAndSelect('pg.answersFirstPlayer',
+                'answersFirstPlayer',
+                'firstPlayer.id = answersFirstPlayer.userId')
+            .leftJoinAndSelect('pg.answersSecondPlayer',
+                'answersSecondPlayer',
+                'secondPlayer.id = answersSecondPlayer.userId')
             .leftJoinAndSelect('pg.questions', 'questions')
-            //.addSelect(this.getFirstPlayerLogin, 'firstPlayerLogin')
-            //.addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
-            //.addSelect(this.getQuestions, 'questions')
             .getOne()
     }
 
