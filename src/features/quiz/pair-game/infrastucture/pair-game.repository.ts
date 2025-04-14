@@ -21,7 +21,6 @@ export class PairGameRepository {
     }
 
     async addAnswerPlayer(userId: string, dto: InputAnswersModels) {
-
     }
 
     async clear(): Promise<void> {

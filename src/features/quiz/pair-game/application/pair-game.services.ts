@@ -63,7 +63,13 @@ console.log('Pair game is Active, get entity =', activePairGame)
     }
 
     async createAnswerPlayer(userId: string, dto: InputAnswersModels) {
-        return this.pairGameRepository
-    }
+        const pairGame =
+            await this.pairGameRepository.getPairGameByUserId(userId)
 
+        if(pairGame && pairGame.firstPlayer.id == userId) {
+
+        }
+
+        return this.pairGameRepository.addAnswerPlayer(userId, InputAnswersModels)
+    }
 }
