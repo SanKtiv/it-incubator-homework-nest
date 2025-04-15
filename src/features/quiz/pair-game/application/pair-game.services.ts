@@ -102,10 +102,10 @@ console.log('Pair game is Active, get entity =', activePairGame)
             pairGame.finishGameDate = new Date();
 
             pairGame.answersFirstPlayer
-                .sort((a, b) => b.addedAt - a.addedAt)
+                .sort((a: any, b: any) => b.addedAt - a.addedAt)
 
             pairGame.answersSecondPlayer
-                .sort((a, b) => b.addedAt - a.addedAt)
+                .sort((a: any, b: any) => b.addedAt - a.addedAt)
 
             if (pairGame.answersFirstPlayer[0] > pairGame.answersSecondPlayer[0])
                 pairGame.secondPlayerScore++;

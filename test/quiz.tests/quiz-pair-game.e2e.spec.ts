@@ -105,7 +105,6 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
         const body = resultCreatePairGame.body
 
-console.log('first player created pair game =', body)
         idExistPairGame = body.id;
         //
         // await expect(statusCode).toBe(201);
@@ -136,8 +135,8 @@ console.log('first player created pair game =', body)
         const resultCreatePairGame =
             await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: 'Answer_1'});
 
-        //const body = resultCreatePairGame.body
+        const body = resultCreatePairGame.body
 
-        //console.log('second player join to pair game =', body)
+        console.log('pair game with answer player =', body)
     });
 });
