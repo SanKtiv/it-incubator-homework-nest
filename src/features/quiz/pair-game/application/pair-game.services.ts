@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {ForbiddenException, Injectable} from "@nestjs/common";
 import {PairGameRepository} from "../infrastucture/pair-game.repository";
 import {QuizPairGameEntity, QuizPairGameStatusType} from "../domain/pair-game.entity";
 import {createdPairGameOutputModel} from "../api/models/output/pair-game.output.models";
@@ -66,35 +66,39 @@ console.log('Pair game is Active, get entity =', activePairGame)
 
     async addAnswerPlayerInPairGame(userId: string, dto: InputAnswersModels) {
         const pairGame =
-            await this.pairGameRepository.getPairGameByUserId(userId)
+            await this.pairGameRepository.getPairGameByUserId(userId);
 
-        if(pairGame) {
-            if(pairGame.firstPlayer.id === userId) {
-                const numQuestion = pairGame.answersFirstPlayer.length;
+        if (!pairGame) throw new ForbiddenException();
 
-                const answerFirstPlayer =
-                    this.createAnswerPlayer(pairGame, userId, dto, numQuestion);
+        if (pairGame.firstPlayer.id === userId) {
+            const numQuestion = pairGame.answersFirstPlayer.length;
 
-                pairGame.answersFirstPlayer.push(answerFirstPlayer);
+            if (numQuestion > 4) throw new ForbiddenException();
 
-                if(answerFirstPlayer.answerStatus === 'Correct') pairGame.firstPlayerScore++
-            }
+            const answerFirstPlayer =
+                this.createAnswerPlayer(pairGame, userId, dto, numQuestion);
 
-            if(pairGame.secondPlayer.id === userId) {
-                const numQuestion = pairGame.answersSecondPlayer.length;
+            pairGame.answersFirstPlayer.push(answerFirstPlayer);
 
-                const answerSecondPlayer =
-                    this.createAnswerPlayer(pairGame, userId, dto, numQuestion);
-
-                pairGame.answersSecondPlayer.push(answerSecondPlayer);
-
-                if(answerSecondPlayer.answerStatus === 'Correct') pairGame.answersSecondPlayer++
-            }
-
-            await this.pairGameRepository.updatePairGame(pairGame);
+            if (answerFirstPlayer.answerStatus === 'Correct') pairGame.firstPlayerScore++
         }
 
-        return
+        if (pairGame.secondPlayer.id === userId) {
+            const numQuestion = pairGame.answersSecondPlayer.length;
+
+            if (numQuestion > 4) throw new ForbiddenException();
+
+            const answerSecondPlayer =
+                this.createAnswerPlayer(pairGame, userId, dto, numQuestion);
+
+            pairGame.answersSecondPlayer.push(answerSecondPlayer);
+
+            if (answerSecondPlayer.answerStatus === 'Correct') pairGame.answersSecondPlayer++
+        }
+
+        await this.pairGameRepository.updatePairGame(pairGame);
+
+
     }
 
     createAnswerPlayer(
