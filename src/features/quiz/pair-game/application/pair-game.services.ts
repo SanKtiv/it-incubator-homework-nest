@@ -7,7 +7,6 @@ import {QuizQuestionsEntity} from "../../questions/domain/quiz-questions.entity"
 import {UsersTable} from "../../../users/domain/users.table";
 import {InputAnswersModels} from "../api/models/input/input-answers.models";
 import {AnswersGameEntity} from "../domain/answers-game.entity";
-import {throws} from "assert";
 
 @Injectable()
 export class PairGameQuizPairsServices {
@@ -70,13 +69,16 @@ console.log('Pair game is Active, get entity =', activePairGame)
 
         if (!pairGame) throw new ForbiddenException();
 
-        if (pairGame.firstPlayer.id === userId) {
-            const numQuestion = pairGame.answersFirstPlayer.length;
+        const countQuestionsGame: number = pairGame.questions.length;
+        const countAnswersFirstPlayer = pairGame.answersFirstPlayer.length;
+        const countAnswersSecondPlayer = pairGame.answersSecondPlayer.length;
 
-            if (numQuestion > 4) throw new ForbiddenException();
+        if (pairGame.firstPlayer.id === userId) {
+            if (countAnswersFirstPlayer === countQuestionsGame)
+                throw new ForbiddenException();
 
             const answerFirstPlayer =
-                this.createAnswerPlayer(pairGame, userId, dto, numQuestion);
+                this.createAnswerPlayer(pairGame, userId, dto, countAnswersFirstPlayer);
 
             pairGame.answersFirstPlayer.push(answerFirstPlayer);
 
@@ -84,16 +86,19 @@ console.log('Pair game is Active, get entity =', activePairGame)
         }
 
         if (pairGame.secondPlayer.id === userId) {
-            const numQuestion = pairGame.answersSecondPlayer.length;
-
-            if (numQuestion > 4) throw new ForbiddenException();
+            if (countAnswersSecondPlayer === countQuestionsGame)
+                throw new ForbiddenException();
 
             const answerSecondPlayer =
-                this.createAnswerPlayer(pairGame, userId, dto, numQuestion);
+                this.createAnswerPlayer(pairGame, userId, dto, countAnswersSecondPlayer);
 
             pairGame.answersSecondPlayer.push(answerSecondPlayer);
 
             if (answerSecondPlayer.answerStatus === 'Correct') pairGame.answersSecondPlayer++
+        }
+
+        if (countQuestionsGame === countAnswersFirstPlayer &&
+            countQuestionsGame === countAnswersSecondPlayer) {
         }
 
         await this.pairGameRepository.updatePairGame(pairGame);
