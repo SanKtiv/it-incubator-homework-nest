@@ -94,16 +94,27 @@ console.log('Pair game is Active, get entity =', activePairGame)
 
             pairGame.answersSecondPlayer.push(answerSecondPlayer);
 
-            if (answerSecondPlayer.answerStatus === 'Correct') pairGame.answersSecondPlayer++
+            if (answerSecondPlayer.answerStatus === 'Correct') pairGame.secondPlayerScore++
         }
 
         if (countQuestionsGame === countAnswersFirstPlayer &&
             countQuestionsGame === countAnswersSecondPlayer) {
+            pairGame.finishGameDate = new Date();
+
+            pairGame.answersFirstPlayer
+                .sort((a, b) => b.addedAt - a.addedAt)
+
+            pairGame.answersSecondPlayer
+                .sort((a, b) => b.addedAt - a.addedAt)
+
+            if (pairGame.answersFirstPlayer[0] > pairGame.answersSecondPlayer[0])
+                pairGame.secondPlayerScore++;
+
+            if (pairGame.answersFirstPlayer[0] < pairGame.answersSecondPlayer[0])
+                pairGame.firstPlayerScore++;
         }
 
         await this.pairGameRepository.updatePairGame(pairGame);
-
-
     }
 
     createAnswerPlayer(
