@@ -36,6 +36,6 @@ export class PairGameQuizPairsController {
         @CurrentUserId() userId: string,
         @Body() dto: InputAnswersModels
     ) {
-        return this.pairGameServices.createAnswerPlayer(userId, dto)
+        return this.pairGameServices.addAnswerPlayerInPairGame(userId, dto)
     }
 }

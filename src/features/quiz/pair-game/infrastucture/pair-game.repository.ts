@@ -20,7 +20,7 @@ export class PairGameRepository {
         return this.repository.create(pairGame)
     }
 
-    async addAnswerPlayer(userId: string, dto: InputAnswersModels) {
+    async updatePairGame(pairGame: QuizPairGameEntity) {
     }
 
     async clear(): Promise<void> {

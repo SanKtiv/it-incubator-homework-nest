@@ -7,6 +7,7 @@ import {QuizQuestionsEntity} from "../../questions/domain/quiz-questions.entity"
 import {UsersTable} from "../../../users/domain/users.table";
 import {InputAnswersModels} from "../api/models/input/input-answers.models";
 import {AnswersGameEntity} from "../domain/answers-game.entity";
+import {throws} from "assert";
 
 @Injectable()
 export class PairGameQuizPairsServices {
@@ -63,22 +64,63 @@ console.log('Pair game is Active, get entity =', activePairGame)
         if (!pairGame.secondPlayer.id) return
     }
 
-    async createAnswerPlayer(userId: string, dto: InputAnswersModels) {
+    async addAnswerPlayerInPairGame(userId: string, dto: InputAnswersModels) {
         const pairGame =
             await this.pairGameRepository.getPairGameByUserId(userId)
 
-        if(pairGame && pairGame.firstPlayer.id == userId) {
-            const numQuestion = pairGame.answersFirstPlayer.length;
-            const questionId = pairGame.questions[numQuestion].id;
+        if(pairGame) {
+            if(pairGame.firstPlayer.id === userId) {
+                const numQuestion = pairGame.answersFirstPlayer.length;
 
-            const answersFirstPlayer = new AnswersGameEntity();
+                const answerFirstPlayer =
+                    this.createAnswerPlayer(pairGame, userId, dto, numQuestion);
 
-            answersFirstPlayer.userId = userId;
-            answersFirstPlayer.questionId = questionId;
-            // answersFirstPlayer.answerStatus =
-            //     pairGame.questions[numQuestion].correctAnswers.
+                pairGame.answersFirstPlayer.push(answerFirstPlayer);
+
+                if(answerFirstPlayer.answerStatus === 'Correct') pairGame.firstPlayerScore++
+            }
+
+            if(pairGame.secondPlayer.id === userId) {
+                const numQuestion = pairGame.answersSecondPlayer.length;
+
+                const answerSecondPlayer =
+                    this.createAnswerPlayer(pairGame, userId, dto, numQuestion);
+
+                pairGame.answersSecondPlayer.push(answerSecondPlayer);
+
+                if(answerSecondPlayer.answerStatus === 'Correct') pairGame.answersSecondPlayer++
+            }
+
+            await this.pairGameRepository.updatePairGame(pairGame);
         }
 
-        return this.pairGameRepository.addAnswerPlayer(userId, InputAnswersModels)
+        return
+    }
+
+    createAnswerPlayer(
+        pairGame: QuizPairGameEntity,
+        userId: string,
+        dto: InputAnswersModels,
+        numQuestion: number
+    ): AnswersGameEntity {
+        const questionId = pairGame.questions[numQuestion].id
+
+        const arrayCorrectAnswers =
+            pairGame.questions[numQuestion].correctAnswers.split(",");
+
+        const answerPlayer = new AnswersGameEntity();
+
+        answerPlayer.userId = userId;
+        answerPlayer.questionId = questionId;
+        answerPlayer.addedAt = new Date();
+
+        const str = (str: string) => str.trim().toLowerCase();
+
+        const resultFind: string | undefined =
+            arrayCorrectAnswers.find( e => str(e) === str(dto.answer))
+
+        answerPlayer.answerStatus = resultFind ? 'Correct' : 'Incorrect';
+
+        return answerPlayer;
     }
 }
