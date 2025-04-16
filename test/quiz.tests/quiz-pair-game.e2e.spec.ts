@@ -131,7 +131,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         // await expect(body).toEqual(outputModel)
     });
 
-    it('/pair-game-quiz/pairs/my-current/answers (POST), answer player should returned status 200 and correct model', async () => {
+    it('/pair-game-quiz/pairs/my-current/answers (POST), add answer player should returned status 200 and correct model', async () => {
         const resultCreatePairGame =
             await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: 'Answer_1'});
 

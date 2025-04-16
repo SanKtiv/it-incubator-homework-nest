@@ -114,7 +114,7 @@ console.log('Pair game is Active, get entity =', activePairGame)
                 pairGame.firstPlayerScore++;
         }
 
-        await this.pairGameRepository.updatePairGame(pairGame);
+        return this.pairGameRepository.updatePairGame(pairGame);
     }
 
     createAnswerPlayer(

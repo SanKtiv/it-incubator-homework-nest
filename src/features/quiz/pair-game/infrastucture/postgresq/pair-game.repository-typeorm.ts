@@ -47,10 +47,7 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getOne(userId: string): Promise<QuizPairGameEntity | null | undefined> {
-        return this.repository
-            .createQueryBuilder('pg')
-            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+        return this.builder
             .where('pg.firstPlayer.id = :userId', { userId })
             .orWhere('pg.secondPlayer.id = :userId', { userId })
             .getOne()
@@ -76,7 +73,6 @@ export class PairGameRepositoryTypeOrm {
             .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
             .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
             .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
-            .leftJoinAndSelect('pg.questions', 'questions')
             .select([
                 'pg',
                 'firstPlayer.id',
@@ -84,6 +80,13 @@ export class PairGameRepositoryTypeOrm {
                 'firstAccountData.login',
                 'secondAccountData.login'
             ])
+            .leftJoinAndSelect('pg.answersFirstPlayer',
+                'answersFirstPlayer',
+                'firstPlayer.id = answersFirstPlayer.userId')
+            .leftJoinAndSelect('pg.answersSecondPlayer',
+                'answersSecondPlayer',
+                'secondPlayer.id = answersSecondPlayer.userId')
+            .leftJoinAndSelect('pg.questions', 'questions')
     }
 
     private getFirstPlayerLogin = (subQuery: SelectQueryBuilder<AccountDataTable>) =>
