@@ -124,19 +124,30 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
         const body = resultCreatePairGame.body
 
-        console.log('second player join to pair game =', body)
-        // idExistQuestion = body.id;
-        //
         // await expect(statusCode).toBe(201);
         // await expect(body).toEqual(outputModel)
     });
 
     it('/pair-game-quiz/pairs/my-current/answers (POST), add answer player should returned status 200 and correct model', async () => {
-        const resultCreatePairGame =
-            await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: 'Answer_1'});
+        await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: 'Answer_1'});
+    });
 
-        const body = resultCreatePairGame.body
+    it('/pair-game-quiz/pairs/my-current/answers (POST), add five answers first player, add five answers second player should returned status 200 and correct model', async () => {
+        let resultCreateAnswer;
 
-        console.log('pair game with answer player =', body)
+        for (let i = 1; i <= 5; i++) {
+                resultCreateAnswer = await quizPairGameTestManager
+                    .createAnswer(testAccessToken1, {answer: `Answer_${i}`});
+
+            resultCreateAnswer = await quizPairGameTestManager
+                .createAnswer(testAccessToken2, {answer: `Answer_${i}`});
+            }
+
+        const id = resultCreateAnswer.body.id
+
+        const resultGetPairGame =
+            await quizPairGameTestManager.getById(id, testAccessToken1);
+
+        console.log('return finished pair game with scores two players =', resultGetPairGame)
     });
 });

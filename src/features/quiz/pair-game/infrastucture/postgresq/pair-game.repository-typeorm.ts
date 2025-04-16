@@ -13,27 +13,8 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getById(id: string): Promise<QuizPairGameEntity | null | undefined> {
-        return this.repository
-            .createQueryBuilder('pg')
+        return this.builder
             .where('pg."id" = :id', { id })
-            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
-            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-            .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
-            .select([
-                'pg',
-                'firstPlayer.id',
-                'secondPlayer.id',
-                'firstAccountData.login',
-                'secondAccountData.login'
-            ])
-            .leftJoinAndSelect('pg.answersFirstPlayer',
-                'answersFirstPlayer',
-                'firstPlayer.id = answersFirstPlayer.userId')
-            .leftJoinAndSelect('pg.answersSecondPlayer',
-                'answersSecondPlayer',
-                'secondPlayer.id = answersSecondPlayer.userId')
-            .leftJoinAndSelect('pg.questions', 'questions')
             .getOne()
     }
 
@@ -41,8 +22,6 @@ export class PairGameRepositoryTypeOrm {
         return this.repository
             .createQueryBuilder('pg')
             .where('pg.status = :status', { status })
-            //.addSelect(this.getFirstPlayerLogin, 'firstPlayerLogin')
-            //.addSelect(this.getSecondPlayerLogin, 'secondPlayerLogin')
             .getOne()
     }
 
