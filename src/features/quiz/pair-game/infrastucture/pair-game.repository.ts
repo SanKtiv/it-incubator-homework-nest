@@ -21,6 +21,7 @@ export class PairGameRepository {
     }
 
     async updatePairGame(pairGame: QuizPairGameEntity) {
+        return this.repository.update(pairGame);
     }
 
     async clear(): Promise<void> {
