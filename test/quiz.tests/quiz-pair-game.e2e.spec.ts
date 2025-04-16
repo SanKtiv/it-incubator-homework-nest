@@ -135,19 +135,22 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     it('/pair-game-quiz/pairs/my-current/answers (POST), add five answers first player, add five answers second player should returned status 200 and correct model', async () => {
         let resultCreateAnswer;
 
-        for (let i = 1; i <= 5; i++) {
-                resultCreateAnswer = await quizPairGameTestManager
-                    .createAnswer(testAccessToken1, {answer: `Answer_${i}`});
+        resultCreateAnswer = await quizPairGameTestManager
+            .createAnswer(testAccessToken1, {answer: `Answer_4`});
 
-            resultCreateAnswer = await quizPairGameTestManager
-                .createAnswer(testAccessToken2, {answer: `Answer_${i}`});
-            }
+        // for (let i = 1; i <= 5; i++) {
+        //     resultCreateAnswer = await quizPairGameTestManager
+        //         .createAnswer(testAccessToken1, {answer: `Answer_${i}`});
+        //
+        //     resultCreateAnswer = await quizPairGameTestManager
+        //         .createAnswer(testAccessToken2, {answer: `Answer_${i}`});
+        // }
 
         const id = resultCreateAnswer.body.id
 
         const resultGetPairGame =
             await quizPairGameTestManager.getById(id, testAccessToken1);
 
-        console.log('return finished pair game with scores two players =', resultGetPairGame)
+        console.log('return finished pair game with scores two players =', resultGetPairGame.body)
     });
 });

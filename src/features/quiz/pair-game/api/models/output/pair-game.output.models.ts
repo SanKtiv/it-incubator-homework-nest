@@ -48,30 +48,44 @@ export class PairGameQuestionsClass {
     }
 }
 
-export const createdPairGameOutputModel = (pairGame: QuizPairGameEntity) => ({
-    id: pairGame.id,
-    firstPlayerProgress: {
-        player: {
-            id: pairGame.firstPlayer.id,
-            login: pairGame.firstPlayer.accountData.login,
-        },
-        answers: pairGame.answersFirstPlayer,
-        score: pairGame.firstPlayerScore,
-    },
-    secondPlayerProgress: pairGame.secondPlayer ?
-        {
+export const createdPairGameOutputModel =
+    (pairGame: QuizPairGameEntity): CreatedPairGameOutputModel => ({
+        id: pairGame.id,
+        firstPlayerProgress: {
             player: {
-                id: pairGame.secondPlayer.id,
-                login: pairGame.secondPlayer.accountData.login,
+                id: pairGame.firstPlayer.id,
+                login: pairGame.firstPlayer.accountData.login,
             },
-            answers: pairGame.answersSecondPlayer,
-            score: pairGame.secondPlayerScore ,
-        }
-        : null,
-    questions: pairGame.questions,
-    status: pairGame.status,
-    pairCreatedDate: pairGame.pairCreatedDate,
-    startGameDate: pairGame.startGameDate,
-    finishGameDate: pairGame.finishGameDate,
-})
+            answers: pairGame.answersFirstPlayer.map(e => ({
+                questionId: e.questionId,
+                answerStatus: e.answerStatus,
+                addedAt: e.addedAt.toISOString()
+            })),
+            score: pairGame.firstPlayerScore,
+        },
+        secondPlayerProgress: pairGame.secondPlayer ?
+            {
+                player: {
+                    id: pairGame.secondPlayer.id,
+                    login: pairGame.secondPlayer.accountData.login,
+                },
+                answers: pairGame.answersSecondPlayer.map(e => ({
+                    questionId: e.questionId,
+                    answerStatus: e.answerStatus,
+                    addedAt: e.addedAt.toISOString()
+                })),
+                score: pairGame.secondPlayerScore,
+            }
+            : null,
+        questions: pairGame.questions ?
+            pairGame.questions.map(e => ({
+                id: e.id,
+                body: e.body
+            })) :
+            null,
+        status: pairGame.status,
+        pairCreatedDate: pairGame.pairCreatedDate.toISOString(),
+        startGameDate: pairGame.startGameDate ? pairGame.startGameDate.toISOString() : null,
+        finishGameDate: pairGame.finishGameDate ? pairGame.finishGameDate.toISOString():  null,
+    })
 

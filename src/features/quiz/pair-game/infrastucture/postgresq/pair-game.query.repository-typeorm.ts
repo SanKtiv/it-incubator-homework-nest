@@ -2,8 +2,6 @@ import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {QuizPairGameEntity} from "../../domain/pair-game.entity";
 import {Repository} from "typeorm";
-import {UsersTable} from "../../../../users/domain/users.table";
-import {AccountDataTable} from "../../../../users/domain/account-data.table";
 
 @Injectable()
 export class PairGameQueryRepositoryTypeOrm {
@@ -13,11 +11,25 @@ export class PairGameQueryRepositoryTypeOrm {
     async getById(id: string) {
         return this.repository
             .createQueryBuilder('pg')
-            .select('pg.*')
             .where('pg."id" = :id', { id })
-            .leftJoin(UsersTable, 'u')
-            .leftJoin(AccountDataTable, 'au')
-            .addSelect('au."login"', 'firstPlayerLogin')
-            .getRawOne()
+            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+            .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
+            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+            .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
+            .select([
+                'pg',
+                'firstPlayer.id',
+                'secondPlayer.id',
+                'firstAccountData.login',
+                'secondAccountData.login'
+            ])
+            .leftJoinAndSelect('pg.answersFirstPlayer',
+                'answersFirstPlayer',
+                'firstPlayer.id = answersFirstPlayer.userId')
+            .leftJoinAndSelect('pg.answersSecondPlayer',
+                'answersSecondPlayer',
+                'secondPlayer.id = answersSecondPlayer.userId')
+            .leftJoinAndSelect('pg.questions', 'questions')
+            .getOne()
     }
 }
