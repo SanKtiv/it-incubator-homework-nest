@@ -8,10 +8,9 @@ export class PairGameQueryRepositoryTypeOrm {
     constructor(@InjectRepository(QuizPairGameEntity) protected repository: Repository<QuizPairGameEntity>) {
     }
 
-    async getById(id: string) {
-        return this.repository
+    private get building() {
+         return this.repository
             .createQueryBuilder('pg')
-            .where('pg."id" = :id', { id })
             .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
             .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
             .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
@@ -30,6 +29,18 @@ export class PairGameQueryRepositoryTypeOrm {
                 'answersSecondPlayer',
                 'secondPlayer.id = answersSecondPlayer.userId')
             .leftJoinAndSelect('pg.questions', 'questions')
+    }
+
+    async getById(id: string): Promise<QuizPairGameEntity | null> {
+        return this.building
+            .where('pg."id" = :id', { id })
+            .getOne()
+    }
+
+    async getByUserId(userId: string): Promise<QuizPairGameEntity | null> {
+        return this.building
+            .where('pg.firstPlayer.id = :userId', { userId })
+            .andWhere('pg.secondPlayer.id = :userId', { userId })
             .getOne()
     }
 }

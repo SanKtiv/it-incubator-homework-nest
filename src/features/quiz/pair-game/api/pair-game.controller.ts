@@ -26,8 +26,11 @@ export class PairGameQuizPairsController {
     }
 
     @Get('my-current')
-    async getMyCurrentPairGame() {
-
+    @UseGuards(JWTAccessAuthGuard)
+    async getMyCurrentPairGame(
+        @CurrentUserId() userId: string,
+    ) {
+        return this.pairGameQueryRepository.getByUserId(userId)
     }
 
     @Post('my-current/answers')
