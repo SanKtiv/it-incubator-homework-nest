@@ -137,10 +137,13 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
         resultCreateAnswer = await quizPairGameTestManager
             .createAnswer(testAccessToken1, {answer: `Answer_2`});
+
         await quizPairGameTestManager
             .createAnswer(testAccessToken1, {answer: `Answer_3`});
+
         await quizPairGameTestManager
             .createAnswer(testAccessToken1, {answer: `Answer_4`});
+
         await quizPairGameTestManager
             .createAnswer(testAccessToken1, {answer: `Answer_5`});
 
