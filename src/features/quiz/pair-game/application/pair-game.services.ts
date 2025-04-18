@@ -83,6 +83,7 @@ console.log('Pair game is Active, get entity =', activePairGame)
             const answerFirstPlayer =
                 this.createAnswerPlayer(pairGame, userId, dto, countAnswersFirstPlayer);
 
+            answerFirstPlayer.pairGameFirstPlayer = pairGame;
             pairGame.answersFirstPlayer.push(answerFirstPlayer);
 
             //console.log('first player answers =', pairGame.answersFirstPlayer)
@@ -98,6 +99,7 @@ console.log('Pair game is Active, get entity =', activePairGame)
             const answerSecondPlayer =
                 this.createAnswerPlayer(pairGame, userId, dto, countAnswersSecondPlayer);
 
+            answerSecondPlayer.pairGameSecondPlayer = pairGame;
             pairGame.answersSecondPlayer.push(answerSecondPlayer);
 
             if (answerSecondPlayer.answerStatus === 'Correct') pairGame.secondPlayerScore++
@@ -136,7 +138,6 @@ console.log('Pair game is Active, get entity =', activePairGame)
 
         const answerPlayer = new AnswersGameEntity();
 
-        answerPlayer.pairGameId = pairGame;
         answerPlayer.userId = userId;
         answerPlayer.questionId = questionId;
         answerPlayer.addedAt = new Date();
