@@ -128,32 +128,29 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         // await expect(body).toEqual(outputModel)
     });
 
-    it('/pair-game-quiz/pairs/my-current/answers (POST), add answer player should returned status 200 and correct model', async () => {
+    it('/pair-game-quiz/pairs/my-current/answers (POST), first and second players answer one, should return status 200', async () => {
         await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: 'Answer_1'});
+        await quizPairGameTestManager.createAnswer(testAccessToken2, {answer: 'Answer_1'});
     });
 
-    it('/pair-game-quiz/pairs/my-current/answers (POST), add five answers first player, add five answers second player should returned status 200 and correct model', async () => {
-        let resultCreateAnswer;
+    it('/pair-game-quiz/pairs/my-current/answers (POST), first and second players answer two, should return status 200', async () => {
+        await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: `Answer_2`});
+        await quizPairGameTestManager.createAnswer(testAccessToken2, {answer: `Answer_2`});
+    });
 
-        resultCreateAnswer = await quizPairGameTestManager
-            .createAnswer(testAccessToken1, {answer: `Answer_2`});
+    it('/pair-game-quiz/pairs/my-current/answers (POST), first and second players answer three, should return status 200', async () => {
+        await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: `Answer_3`});
+        await quizPairGameTestManager.createAnswer(testAccessToken2, {answer: `Answer_3`});
+    })
 
-        await quizPairGameTestManager
-            .createAnswer(testAccessToken1, {answer: `Answer_3`});
+    it('/pair-game-quiz/pairs/my-current/answers (POST), first player answers four, should return status 200', async () => {
+        await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: `Answer_4`});
+        await quizPairGameTestManager.createAnswer(testAccessToken2, {answer: `Answer_4`});
+    })
 
-        await quizPairGameTestManager
-            .createAnswer(testAccessToken1, {answer: `Answer_4`});
-
-        // await quizPairGameTestManager
-        //     .createAnswer(testAccessToken1, {answer: `Answer_5`});
-
-        // for (let i = 1; i <= 5; i++) {
-        //     resultCreateAnswer = await quizPairGameTestManager
-        //         .createAnswer(testAccessToken1, {answer: `Answer_${i}`});
-        //
-        //     // resultCreateAnswer = await quizPairGameTestManager
-        //     //     .createAnswer(testAccessToken2, {answer: `Answer_${i}`});
-        // }
+    it('/pair-game-quiz/pairs/my-current/answers (POST), first player answers five, should return status 200, and return model', async () => {
+        await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: `Answer_5`});
+        const resultCreateAnswer = await quizPairGameTestManager.createAnswer(testAccessToken2, {answer: `Answer_5`});
 
         const id = resultCreateAnswer.body.id
 
@@ -161,5 +158,6 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
             await quizPairGameTestManager.getById(id, testAccessToken1);
 
         console.log('return finished pair game with scores two players =', resultGetPairGame.body)
-    });
+    })
+
 });

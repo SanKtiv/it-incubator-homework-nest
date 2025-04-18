@@ -73,19 +73,14 @@ console.log('Pair game is Active, get entity =', activePairGame)
         const countAnswersFirstPlayer = pairGame.answersFirstPlayer.length;
         const countAnswersSecondPlayer = pairGame.answersSecondPlayer.length;
 
-        console.log('countAnswersFirstPlayer =', countAnswersFirstPlayer)
-        console.log('pairGame.answersFirstPlayer =', pairGame.answersFirstPlayer)
-
         if (pairGame.firstPlayer.id === userId) {
             if (countAnswersFirstPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 
-            const answerFirstPlayer =
+            const answerFirstPlayer: AnswersGameEntity =
                 this.createAnswerPlayer(pairGame, userId, dto, countAnswersFirstPlayer);
 
-            answerFirstPlayer.pairGameFirstPlayer = pairGame;
             pairGame.answersFirstPlayer.push(answerFirstPlayer);
-
             //console.log('first player answers =', pairGame.answersFirstPlayer)
 
             if (answerFirstPlayer.answerStatus === 'Correct')
@@ -99,7 +94,6 @@ console.log('Pair game is Active, get entity =', activePairGame)
             const answerSecondPlayer =
                 this.createAnswerPlayer(pairGame, userId, dto, countAnswersSecondPlayer);
 
-            answerSecondPlayer.pairGameSecondPlayer = pairGame;
             pairGame.answersSecondPlayer.push(answerSecondPlayer);
 
             if (answerSecondPlayer.answerStatus === 'Correct') pairGame.secondPlayerScore++
@@ -121,6 +115,8 @@ console.log('Pair game is Active, get entity =', activePairGame)
             if (pairGame.answersFirstPlayer[0] < pairGame.answersSecondPlayer[0])
                 pairGame.firstPlayerScore++;
         }
+
+        console.log('UPDATE PAIR GAME ENTItY =', pairGame)
 
         return this.pairGameRepository.updatePairGame(pairGame);
     }

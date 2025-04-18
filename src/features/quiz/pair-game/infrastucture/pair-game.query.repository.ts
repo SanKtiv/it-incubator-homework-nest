@@ -10,7 +10,7 @@ export class PairGameQueryRepository {
 
     async getById(id: string): Promise<CreatedPairGameOutputModel> {
         const pairGame = await this.repository.getById(id)
-
+console.log('pairGame in getById =', pairGame)
         if (!pairGame) throw new ForbiddenException();
 
         return createdPairGameOutputModel(pairGame);
