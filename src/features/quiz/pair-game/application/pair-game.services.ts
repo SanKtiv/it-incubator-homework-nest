@@ -82,7 +82,10 @@ console.log('Pair game is Active, get entity =', activePairGame)
 
             pairGame.answersFirstPlayer.push(answerFirstPlayer);
 
-            if (answerFirstPlayer.answerStatus === 'Correct') pairGame.firstPlayerScore++
+            console.log('first player answers =', pairGame.answersFirstPlayer)
+
+            if (answerFirstPlayer.answerStatus === 'Correct')
+                pairGame.firstPlayerScore++
         }
 
         if (pairGame.secondPlayer.id === userId) {
