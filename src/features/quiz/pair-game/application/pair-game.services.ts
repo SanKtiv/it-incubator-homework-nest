@@ -39,7 +39,6 @@ export class PairGameQuizPairsServices {
                 const activePairGame =
                     await this.pairGameRepository.createPairGame(anythingPairGames);
 
-console.log('Pair game is Active, get entity =', activePairGame)
                 return createdPairGameOutputModel(activePairGame!);
             }
 
@@ -54,8 +53,6 @@ console.log('Pair game is Active, get entity =', activePairGame)
 
             const pendingPairGame =
                 await this.pairGameRepository.createPairGame(newPairGame)
-
-            console.log('create first player entity', pendingPairGame)
 
             return createdPairGameOutputModel(pendingPairGame!)
         }
