@@ -143,12 +143,12 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         await quizPairGameTestManager.createAnswer(testAccessToken2, {answer: `Answer_3`});
     })
 
-    it('/pair-game-quiz/pairs/my-current/answers (POST), first player answers four, should return status 200', async () => {
+    it('/pair-game-quiz/pairs/my-current/answers (POST), first and second players answer four, should return status 200', async () => {
         await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: `Answer_4`});
         await quizPairGameTestManager.createAnswer(testAccessToken2, {answer: `Answer_4`});
     })
 
-    it('/pair-game-quiz/pairs/my-current/answers (POST), first player answers five, should return status 200, and return model', async () => {
+    it('/pair-game-quiz/pairs/my-current/answers (POST), first and second players answer five, should return status 200, and return model', async () => {
         await quizPairGameTestManager.createAnswer(testAccessToken1, {answer: `Answer_5`});
         const resultCreateAnswer = await quizPairGameTestManager.createAnswer(testAccessToken2, {answer: `Answer_5`});
 
