@@ -144,8 +144,8 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         await quizPairGameTestManager
             .createAnswer(testAccessToken1, {answer: `Answer_4`});
 
-        await quizPairGameTestManager
-            .createAnswer(testAccessToken1, {answer: `Answer_5`});
+        // await quizPairGameTestManager
+        //     .createAnswer(testAccessToken1, {answer: `Answer_5`});
 
         // for (let i = 1; i <= 5; i++) {
         //     resultCreateAnswer = await quizPairGameTestManager

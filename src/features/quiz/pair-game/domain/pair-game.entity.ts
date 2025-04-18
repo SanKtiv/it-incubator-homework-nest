@@ -14,7 +14,7 @@ export class QuizPairGameEntity {
     firstPlayer: UsersTable;
 
     @OneToMany(() => AnswersGameEntity,
-    answer => answer.pairGameId,
+    answer => answer.pairGameFirstPlayer,
         {
             //nullable: true,
             cascade: true,
@@ -36,7 +36,7 @@ export class QuizPairGameEntity {
     secondPlayerScore: number;
 
     @OneToMany(() => AnswersGameEntity,
-        answer => answer.pairGameId,
+        answer => answer.pairGameSecondPlayer,
         {
             //nullable: true,
             cascade: true,

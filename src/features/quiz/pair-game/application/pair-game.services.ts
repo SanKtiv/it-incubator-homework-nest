@@ -73,6 +73,9 @@ console.log('Pair game is Active, get entity =', activePairGame)
         const countAnswersFirstPlayer = pairGame.answersFirstPlayer.length;
         const countAnswersSecondPlayer = pairGame.answersSecondPlayer.length;
 
+        console.log('countAnswersFirstPlayer =', countAnswersFirstPlayer)
+        console.log('pairGame.answersFirstPlayer =', pairGame.answersFirstPlayer)
+
         if (pairGame.firstPlayer.id === userId) {
             if (countAnswersFirstPlayer === countQuestionsGame)
                 throw new ForbiddenException();
@@ -82,7 +85,7 @@ console.log('Pair game is Active, get entity =', activePairGame)
 
             pairGame.answersFirstPlayer.push(answerFirstPlayer);
 
-            console.log('first player answers =', pairGame.answersFirstPlayer)
+            //console.log('first player answers =', pairGame.answersFirstPlayer)
 
             if (answerFirstPlayer.answerStatus === 'Correct')
                 pairGame.firstPlayerScore++
@@ -133,6 +136,7 @@ console.log('Pair game is Active, get entity =', activePairGame)
 
         const answerPlayer = new AnswersGameEntity();
 
+        answerPlayer.pairGameId = pairGame;
         answerPlayer.userId = userId;
         answerPlayer.questionId = questionId;
         answerPlayer.addedAt = new Date();
