@@ -17,7 +17,7 @@ export class QuizQuestionsRepository {
   }
 
   async getFiveRandomQuestions(): Promise<QuizQuestionsEntity[]> {
-    return this.repository.findFiveRandom()
+    return this.repository.findFiveRandom();
   }
 
   async getQuizQuestionById(id: string): Promise<QuizQuestionsEntity | null> {
@@ -33,6 +33,6 @@ export class QuizQuestionsRepository {
   }
 
   async clear(): Promise<void> {
-    await this.repository.clear()
+    await this.repository.clear();
   }
 }

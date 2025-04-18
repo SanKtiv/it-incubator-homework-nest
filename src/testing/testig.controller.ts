@@ -8,8 +8,8 @@ import { UsersRepository } from '../features/users/infrastructure/users.reposito
 import { CommentsRepository } from '../features/comments/infrastructure/comments.repository';
 import { StatusesPostsRepository } from '../features/statuses/infrastructure/statuses.posts.repository';
 import { StatusesCommentsRepository } from '../features/statuses/infrastructure/statuses.comments.repository';
-import {QuizQuestionsRepository} from "../features/quiz/questions/infrastructure/quiz-questions.repository";
-import {PairGameRepository} from "../features/quiz/pair-game/infrastucture/pair-game.repository";
+import { QuizQuestionsRepository } from '../features/quiz/questions/infrastructure/quiz-questions.repository';
+import { PairGameRepository } from '../features/quiz/pair-game/infrastucture/pair-game.repository';
 
 @Controller('testing/all-data')
 export class TestingController {

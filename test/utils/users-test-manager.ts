@@ -13,10 +13,10 @@ export class UsersTestManager {
 
   async adminCreateUser(createModel: UsersInputDto, auth: any) {
     return request(this.app.getHttpServer())
-        .post('/sa/users')
-        .set(auth.type, auth.pass)
-        .send(createModel)
-        .expect(201);
+      .post('/sa/users')
+      .set(auth.type, auth.pass)
+      .send(createModel)
+      .expect(201);
   }
 
   async createUser(adminAccessToken: string, createModel: UsersInputDto) {

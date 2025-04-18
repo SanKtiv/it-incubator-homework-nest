@@ -8,12 +8,12 @@ import { BlogsTestManager } from './blogs-test-manager';
 import { DataSource } from 'typeorm';
 import { getDataSourceName } from '@nestjs/typeorm';
 import { AuthTestManager } from './auth-test-manager';
-import {QuizQuestionsTestManager} from "./quiz-questions/quiz-questions-test-manager";
-import {QuizQuestionsOptions} from "./quiz-questions/quiz-questions-options";
-import {UsersTestManager} from "./users-test-manager";
-import {ClearDataTestingManager} from "./clear-data-testing-manager";
-import {QuizPairGameTestManager} from "./quiz-pair-game/quiz-pair-game-test-manager";
-import {QuizPairGameOptions} from "./quiz-pair-game/quiz-pair-game-options";
+import { QuizQuestionsTestManager } from './quiz-questions/quiz-questions-test-manager';
+import { QuizQuestionsOptions } from './quiz-questions/quiz-questions-options';
+import { UsersTestManager } from './users-test-manager';
+import { ClearDataTestingManager } from './clear-data-testing-manager';
+import { QuizPairGameTestManager } from './quiz-pair-game/quiz-pair-game-test-manager';
+import { QuizPairGameOptions } from './quiz-pair-game/quiz-pair-game-options';
 
 export const initSettings = async (
   //передаем callback, который получает ModuleBuilder,

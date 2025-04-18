@@ -1,148 +1,167 @@
 import { INestApplication } from '@nestjs/common';
 import { initSettings } from '../utils/init-settings';
 import {
-    blogCreateModel,
-    blogCreateModelWrongName,
+  blogCreateModel,
+  blogCreateModelWrongName,
 } from '../utils/blogs-options';
 import { authBasic, authBasicWrong } from '../utils/auth-options';
-import {QuizQuestionsTestManager} from "../utils/quiz-questions/quiz-questions-test-manager";
-import {AuthTestManager} from "../utils/auth-test-manager";
-import {QuizQuestionsOptions} from "../utils/quiz-questions/quiz-questions-options";
-import {QuizQuestionsQueryInputDto} from "../../src/features/quiz/questions/api/models/quiz-questions.input.dto";
-import {ArrayNotContains} from "class-validator";
+import { QuizQuestionsTestManager } from '../utils/quiz-questions/quiz-questions-test-manager';
+import { AuthTestManager } from '../utils/auth-test-manager';
+import { QuizQuestionsOptions } from '../utils/quiz-questions/quiz-questions-options';
+import { QuizQuestionsQueryInputDto } from '../../src/features/quiz/questions/api/models/quiz-questions.input.dto';
+import { ArrayNotContains } from 'class-validator';
 
 describe('Quiz-Questions Tests (e2e)', () => {
-    let app: INestApplication;
-    let quizQuestionsTestManager: QuizQuestionsTestManager;
-    let quizQuestionsOptions: QuizQuestionsOptions;
-    let authTestManager: AuthTestManager;
+  let app: INestApplication;
+  let quizQuestionsTestManager: QuizQuestionsTestManager;
+  let quizQuestionsOptions: QuizQuestionsOptions;
+  let authTestManager: AuthTestManager;
 
-    let idExistQuestion: string = ''
+  let idExistQuestion: string = '';
 
-    let inputModel
-    let inputModelMany
-    let outputModel
-    let inputModelWrong
+  let inputModel;
+  let inputModelMany;
+  let outputModel;
+  let inputModelWrong;
 
-    beforeAll(async () => {
-        const result = await initSettings(); //(moduleBuilder) =>
-        //override UsersService еще раз
-        //moduleBuilder.overrideProvider(UsersService).useClass(UserServiceMock),
-        app = result.app;
-        quizQuestionsTestManager = result.quizQuestionsTestManager;
-        quizQuestionsOptions = result.quizQuestionsOptions;
-        authTestManager = result.authTestManager;
-        //userTestManger = result.userTestManger;
+  beforeAll(async () => {
+    const result = await initSettings(); //(moduleBuilder) =>
+    //override UsersService еще раз
+    //moduleBuilder.overrideProvider(UsersService).useClass(UserServiceMock),
+    app = result.app;
+    quizQuestionsTestManager = result.quizQuestionsTestManager;
+    quizQuestionsOptions = result.quizQuestionsOptions;
+    authTestManager = result.authTestManager;
+    //userTestManger = result.userTestManger;
 
-        inputModel = quizQuestionsOptions.inputModel();
-        inputModelMany = quizQuestionsOptions.inputModelMany(5)
-        outputModel = quizQuestionsOptions.outputModel();
-        inputModelWrong = quizQuestionsOptions.inputModelWrongBodyNumber()
-    });
+    inputModel = quizQuestionsOptions.inputModel();
+    inputModelMany = quizQuestionsOptions.inputModelMany(5);
+    outputModel = quizQuestionsOptions.outputModel();
+    inputModelWrong = quizQuestionsOptions.inputModelWrongBodyNumber();
+  });
 
-    afterAll(async () => {
-        await app.close();
-    });
+  afterAll(async () => {
+    await app.close();
+  });
 
-    // beforeEach(async () => {
-    //   const moduleFixture: TestingModule = await Test.createTestingModule({
-    //     imports: [AppModule],
-    //   })
-    //     //.overrideProvider(UsersService)
-    //     //.useValue(UserServiceMockObject)
-    //     //.useClass(UserServiceMock)
-    //     .compile();
-    //
-    //   app = moduleFixture.createNestApplication();
-    //
-    //   applyAppSettings(app);
-    //   await app.init();
-    // });
+  // beforeEach(async () => {
+  //   const moduleFixture: TestingModule = await Test.createTestingModule({
+  //     imports: [AppModule],
+  //   })
+  //     //.overrideProvider(UsersService)
+  //     //.useValue(UserServiceMockObject)
+  //     //.useClass(UserServiceMock)
+  //     .compile();
+  //
+  //   app = moduleFixture.createNestApplication();
+  //
+  //   applyAppSettings(app);
+  //   await app.init();
+  // });
 
-    it('/sa/quiz/questions (POST), should returned status 201 and correct question model', async () => {
-        const responseCreateQuizQuestion =
-            await quizQuestionsTestManager.create(inputModel, authBasic);
+  it('/sa/quiz/questions (POST), should returned status 201 and correct question model', async () => {
+    const responseCreateQuizQuestion = await quizQuestionsTestManager.create(
+      inputModel,
+      authBasic,
+    );
 
-        const statusCode = responseCreateQuizQuestion.statusCode
-        const body = responseCreateQuizQuestion.body
+    const statusCode = responseCreateQuizQuestion.statusCode;
+    const body = responseCreateQuizQuestion.body;
 
-        idExistQuestion = body.id;
+    idExistQuestion = body.id;
 
-        await expect(statusCode).toBe(201);
-        await expect(body).toEqual(outputModel)
-    });
+    await expect(statusCode).toBe(201);
+    await expect(body).toEqual(outputModel);
+  });
 
-    it('/sa/quiz/questions (POST), should returned many question models and status 201', async () => {
-        const [inputModel1, inputModel2, inputModel3, inputModel4, inputModel5] = inputModelMany;
+  it('/sa/quiz/questions (POST), should returned many question models and status 201', async () => {
+    const [inputModel1, inputModel2, inputModel3, inputModel4, inputModel5] =
+      inputModelMany;
 
-        const response1 = await quizQuestionsTestManager.create(inputModel1, authBasic);
-        const response2 = await quizQuestionsTestManager.create(inputModel2, authBasic);
-        const response3 = await quizQuestionsTestManager.create(inputModel3, authBasic);
-        const response4 = await quizQuestionsTestManager.create(inputModel4, authBasic);
-        const response5 = await quizQuestionsTestManager.create(inputModel5, authBasic);
+    const response1 = await quizQuestionsTestManager.create(
+      inputModel1,
+      authBasic,
+    );
+    const response2 = await quizQuestionsTestManager.create(
+      inputModel2,
+      authBasic,
+    );
+    const response3 = await quizQuestionsTestManager.create(
+      inputModel3,
+      authBasic,
+    );
+    const response4 = await quizQuestionsTestManager.create(
+      inputModel4,
+      authBasic,
+    );
+    const response5 = await quizQuestionsTestManager.create(
+      inputModel5,
+      authBasic,
+    );
 
-        await expect(response3.statusCode).toBe(201);
-    })
+    await expect(response3.statusCode).toBe(201);
+  });
 
-    it('/sa/quiz/questions (POST), should returned status 401', async () => {
-        const responseCreateQuizQuestion =
-            await quizQuestionsTestManager.create(inputModel, authBasicWrong);
+  it('/sa/quiz/questions (POST), should returned status 401', async () => {
+    const responseCreateQuizQuestion = await quizQuestionsTestManager.create(
+      inputModel,
+      authBasicWrong,
+    );
 
-        const statusCode = responseCreateQuizQuestion.statusCode
-        const body = responseCreateQuizQuestion.body
+    const statusCode = responseCreateQuizQuestion.statusCode;
+    const body = responseCreateQuizQuestion.body;
 
-        await expect(statusCode).toBe(401);
-        await expect(body).toEqual({});
-    });
+    await expect(statusCode).toBe(401);
+    await expect(body).toEqual({});
+  });
 
-    it('/sa/quiz/questions (POST), should returned status 400 and error object', async () => {
-        const responseCreateQuizQuestion =
-            await quizQuestionsTestManager.create(inputModelWrong, authBasic);
+  it('/sa/quiz/questions (POST), should returned status 400 and error object', async () => {
+    const responseCreateQuizQuestion = await quizQuestionsTestManager.create(
+      inputModelWrong,
+      authBasic,
+    );
 
-        const statusCode = responseCreateQuizQuestion.statusCode
-        const body = responseCreateQuizQuestion.body
-console.log('error body =', body)
-        await expect(statusCode).toBe(400);
-    });
+    const statusCode = responseCreateQuizQuestion.statusCode;
+    const body = responseCreateQuizQuestion.body;
+    console.log('error body =', body);
+    await expect(statusCode).toBe(400);
+  });
 
-    it('/sa/quiz/questions (GET), should returned status 200 and correct blog model', async () => {
+  it('/sa/quiz/questions (GET), should returned status 200 and correct blog model', async () => {
+    const query = {
+      publishedStatus: 'all',
+      sortDirection: 'ASC',
+      sortBy: 'createdAt',
+    };
 
-        const query = {
-            publishedStatus: 'all',
-            sortDirection: 'ASC',
-            sortBy: 'createdAt',
-        }
+    const responseGetQuizQuestions = await quizQuestionsTestManager.getPaging(
+      query,
+      authBasic,
+    );
 
-        const responseGetQuizQuestions = await quizQuestionsTestManager.getPaging(
-            query,
-            authBasic,
-        );
+    const statusCode = responseGetQuizQuestions.statusCode;
+    const body = responseGetQuizQuestions.body;
 
-        const statusCode = responseGetQuizQuestions.statusCode;
-        const body = responseGetQuizQuestions.body;
+    await expect(statusCode).toBe(200);
+    //await expect(body).
+    //     .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
+  });
 
-        await expect(statusCode).toBe(200);
-        //await expect(body).
-        //     .toEqual(quizQuestionsOptions.outputModel('body', 'answer'))
-    });
+  it('/sa/quiz/questions/:id (DELETE), should returned status 204', async () => {
+    const id = idExistQuestion;
 
-    it('/sa/quiz/questions/:id (DELETE), should returned status 204', async () => {
+    const responseDeleteQuizQuestions =
+      await quizQuestionsTestManager.deleteById(id, authBasic);
 
-        const id = idExistQuestion;
+    const statusCode = responseDeleteQuizQuestions.statusCode;
 
-        const responseDeleteQuizQuestions =
-            await quizQuestionsTestManager.deleteById(id, authBasic);
+    await expect(statusCode).toBe(204);
 
-        const statusCode = responseDeleteQuizQuestions.statusCode;
-
-        await expect(statusCode).toBe(204);
-
-        // const responseGetQuizQuestions = await quizQuestionsTestManager.getPaging(
-        //     '',
-        //     authBasic,
-        // );
-        // const responseBody = responseGetQuizQuestions.body
-        // await expect(responseBody.items).toEqual([])
-    });
-
+    // const responseGetQuizQuestions = await quizQuestionsTestManager.getPaging(
+    //     '',
+    //     authBasic,
+    // );
+    // const responseBody = responseGetQuizQuestions.body
+    // await expect(responseBody.items).toEqual([])
+  });
 });

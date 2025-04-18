@@ -1,20 +1,24 @@
 import {
   Column,
   DeleteDateColumn,
-  Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import {QuizPairGameEntity} from "../../pair-game/domain/pair-game.entity";
+import { QuizPairGameEntity } from '../../pair-game/domain/pair-game.entity';
 
 @Entity('quiz-questions')
 export class QuizQuestionsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => QuizPairGameEntity,
-      quizGame => quizGame.id,
-      { nullable: true})
-  @JoinColumn({ name: 'quizGameId'})
+  @ManyToOne(() => QuizPairGameEntity, (quizGame) => quizGame.id, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'quizGameId' })
   quizGameId: string;
 
   @Column('character varying')

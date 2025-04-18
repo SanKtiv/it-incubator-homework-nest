@@ -95,14 +95,14 @@ import { QuizQuestionsQueryRepositoryTypeOrm } from './features/quiz/questions/i
 import { QuizQuestionsRepository } from './features/quiz/questions/infrastructure/quiz-questions.repository';
 import { QuizQuestionsQueryRepository } from './features/quiz/questions/infrastructure/quiz-questions.query.repository';
 import { QuizQuestionsEntity } from './features/quiz/questions/domain/quiz-questions.entity';
-import {QuizPairGameEntity} from "./features/quiz/pair-game/domain/pair-game.entity";
-import {PairGameQuizPairsController} from "./features/quiz/pair-game/api/pair-game.controller";
-import {PairGameQuizPairsServices} from "./features/quiz/pair-game/application/pair-game.services";
-import {PairGameRepository} from "./features/quiz/pair-game/infrastucture/pair-game.repository";
-import {PairGameRepositoryTypeOrm} from "./features/quiz/pair-game/infrastucture/postgresq/pair-game.repository-typeorm";
-import {AnswersGameEntity} from "./features/quiz/pair-game/domain/answers-game.entity";
-import {PairGameQueryRepository} from "./features/quiz/pair-game/infrastucture/pair-game.query.repository";
-import {PairGameQueryRepositoryTypeOrm} from "./features/quiz/pair-game/infrastucture/postgresq/pair-game.query.repository-typeorm";
+import { QuizPairGameEntity } from './features/quiz/pair-game/domain/pair-game.entity';
+import { PairGameQuizPairsController } from './features/quiz/pair-game/api/pair-game.controller';
+import { PairGameQuizPairsServices } from './features/quiz/pair-game/application/pair-game.services';
+import { PairGameRepository } from './features/quiz/pair-game/infrastucture/pair-game.repository';
+import { PairGameRepositoryTypeOrm } from './features/quiz/pair-game/infrastucture/postgresq/pair-game.repository-typeorm';
+import { AnswersGameEntity } from './features/quiz/pair-game/domain/answers-game.entity';
+import { PairGameQueryRepository } from './features/quiz/pair-game/infrastucture/pair-game.query.repository';
+import { PairGameQueryRepositoryTypeOrm } from './features/quiz/pair-game/infrastucture/postgresq/pair-game.query.repository-typeorm';
 
 dotenv.config();
 
@@ -174,7 +174,7 @@ const sqlRepositories = [
   PairGameRepository,
   PairGameRepositoryTypeOrm,
   PairGameQueryRepository,
-  PairGameQueryRepositoryTypeOrm
+  PairGameQueryRepositoryTypeOrm,
 ];
 
 const repositories = [
@@ -239,7 +239,7 @@ const strategies = [
       StatusesPostsTable,
       QuizQuestionsEntity,
       QuizPairGameEntity,
-      AnswersGameEntity
+      AnswersGameEntity,
     ]),
     // MongooseModule.forRoot(
     //   appSettings.env.isTesting()
