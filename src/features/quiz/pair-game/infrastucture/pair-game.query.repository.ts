@@ -8,16 +8,18 @@ import {
   CreatedPairGameOutputModel,
   createdPairGameOutputModel,
 } from '../api/models/output/pair-game.output.models';
-import { QuizPairGameEntity } from '../domain/pair-game.entity';
 
 @Injectable()
 export class PairGameQueryRepository {
   constructor(protected repository: PairGameQueryRepositoryTypeOrm) {}
 
-  async getById(id: string): Promise<CreatedPairGameOutputModel> {
+  async getById(id: string, userId: string): Promise<CreatedPairGameOutputModel> {
     const pairGame = await this.repository.getById(id);
-    console.log('pairGame in getById =', pairGame);
-    if (!pairGame) throw new ForbiddenException();
+
+    if (!pairGame) throw new NotFoundException();
+
+    if (pairGame.firstPlayer.id === userId || pairGame.secondPlayer.id === userId)
+      throw new ForbiddenException()
 
     return createdPairGameOutputModel(pairGame);
   }
