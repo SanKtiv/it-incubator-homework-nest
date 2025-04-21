@@ -146,7 +146,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         testAccessToken1,
     );
 
-    await expect(resultGetGame.statusCode).toBe(400)
+    await expect(resultGetGame.statusCode).toBe(404)
   });
 
   it('/pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 401', async () => {
