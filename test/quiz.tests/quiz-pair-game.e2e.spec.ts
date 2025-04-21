@@ -138,6 +138,20 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     );
   });
 
+  it('/pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 400', async () => {
+    await quizPairGameTestManager.getById(
+        `${idExistPairGame}1`,
+        testAccessToken1,
+    );
+  });
+
+  it('/pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 403', async () => {
+    await quizPairGameTestManager.getById(
+        idExistPairGame,
+        `${testAccessToken1}1`,
+    );
+  });
+
   it('/pair-game-quiz/pairs/connection (POST), connection second player should returned status 201 and correct pair-game model', async () => {
     const resultCreatePairGame =
       await quizPairGameTestManager.create(testAccessToken2);
