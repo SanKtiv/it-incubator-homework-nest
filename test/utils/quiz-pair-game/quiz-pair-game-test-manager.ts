@@ -32,7 +32,7 @@ export class QuizPairGameTestManager {
     return request(this.app.getHttpServer())
       .get(`/pair-game-quiz/pairs/${id}`)
       .auth(accessToken, { type: 'bearer' })
-      .expect(200);
+      //.expect(200);
   }
 
   async updateById() {}
