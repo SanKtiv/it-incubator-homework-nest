@@ -21,7 +21,7 @@ export class PairGameQuizPairsServices {
   async createOrJoinPairGame(userId: string) {
     const pairGame = await this.pairGameRepository.getPairGameByUserId(userId);
 
-    if (pairGame && pairGame.status === 'Active') throw new ForbiddenException();
+    if (pairGame) throw new ForbiddenException();
 
     if (!pairGame) {
       const status: QuizPairGameStatusType = 'PendingSecondPlayer';
