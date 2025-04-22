@@ -14,6 +14,9 @@ export class PairGameQueryRepository {
   constructor(protected repository: PairGameQueryRepositoryTypeOrm) {}
 
   async getById(id: string, userId: string): Promise<CreatedPairGameOutputModel> {
+    console.log('Start GET')
+    console.log('id =', id)
+    console.log('userId =', userId)
     const pairGame = await this.repository.getById(id);
 
     if (!pairGame) throw new NotFoundException();

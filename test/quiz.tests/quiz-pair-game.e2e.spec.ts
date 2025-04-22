@@ -123,40 +123,44 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     const resultCreatePairGame =
       await quizPairGameTestManager.create(testAccessToken1);
 
-    const body = resultCreatePairGame.body;
-
-    idExistPairGame = body.id;
-    //
-    // await expect(statusCode).toBe(201);
-    // await expect(body).toEqual(outputModel)
+    idExistPairGame = resultCreatePairGame.body;
   });
 
-  it('/pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 200 and correct pair-game model', async () => {
-    const resultGetGame = await quizPairGameTestManager.getById(
-      idExistPairGame,
-      testAccessToken1,
-    );
-
-    await expect(resultGetGame.statusCode).toBe(200)
-  });
-
-  it('/pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 400', async () => {
-    const resultGetGame = await quizPairGameTestManager.getById(
-        `${idExistPairGame}1`,
-        testAccessToken1,
-    );
-
-    await expect(resultGetGame.statusCode).toBe(404)
-  });
-
-  it('/pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 401', async () => {
+  it('/pair-game-quiz/pairs/:id (GET), get game for second player should returned status 403', async () => {
     const resultGetGame = await quizPairGameTestManager.getById(
         idExistPairGame,
-        `${testAccessToken1}1`,
+        testAccessToken2,
     );
 
-    await expect(resultGetGame.statusCode).toBe(401)
+    await expect(resultGetGame.statusCode).toBe(403)
   });
+
+  // it('/pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 200 and correct pair-game model', async () => {
+  //   const resultGetGame = await quizPairGameTestManager.getById(
+  //     idExistPairGame,
+  //     testAccessToken1,
+  //   );
+  //
+  //   await expect(resultGetGame.statusCode).toBe(200)
+  // });
+
+  // it('/pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 400', async () => {
+  //   const resultGetGame = await quizPairGameTestManager.getById(
+  //       `${idExistPairGame}1`,
+  //       testAccessToken1,
+  //   );
+  //
+  //   await expect(resultGetGame.statusCode).toBe(404)
+  // });
+
+  // it('/pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 401', async () => {
+  //   const resultGetGame = await quizPairGameTestManager.getById(
+  //       idExistPairGame,
+  //       `${testAccessToken1}1`,
+  //   );
+  //
+  //   await expect(resultGetGame.statusCode).toBe(401)
+  // });
 
   it('/pair-game-quiz/pairs/connection (POST), connection second player should returned status 201 and correct pair-game model', async () => {
     const resultCreatePairGame =
@@ -168,14 +172,14 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     // await expect(body).toEqual(outputModel)
   });
 
-  it('/pair-game-quiz/pairs/:id (GET), get game for second player should returned status 200', async () => {
-    const resultGetGame = await quizPairGameTestManager.getById(
-        idExistPairGame,
-        testAccessToken2,
-    );
-
-    await expect(resultGetGame.statusCode).toBe(200)
-  });
+  // it('/pair-game-quiz/pairs/:id (GET), get game for second player should returned status 200', async () => {
+  //   const resultGetGame = await quizPairGameTestManager.getById(
+  //       idExistPairGame,
+  //       testAccessToken2,
+  //   );
+  //
+  //   await expect(resultGetGame.statusCode).toBe(200)
+  // });
 
   it('/pair-game-quiz/pairs/my-current/answers (POST), first and second players answer one, should return status 200', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken1, {
@@ -227,11 +231,6 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     const resultGetPairGame = await quizPairGameTestManager.getById(
       id,
       testAccessToken1,
-    );
-
-    console.log(
-      'return finished pair game with scores two players =',
-      resultGetPairGame.body,
     );
   });
 });

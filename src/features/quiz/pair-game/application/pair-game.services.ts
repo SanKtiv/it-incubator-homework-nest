@@ -135,8 +135,6 @@ export class PairGameQuizPairsServices {
         pairGame.firstPlayerScore++;
     }
 
-    console.log('UPDATE PAIR GAME ENTItY =', pairGame);
-
     return this.pairGameRepository.updatePairGame(pairGame);
   }
 
