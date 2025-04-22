@@ -23,7 +23,7 @@ export class QuizPairGameEntity {
     //nullable: true,
     cascade: true,
     eager: true,
-    //onDelete: 'CASCADE',
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'answersFirstPlayer' })
   answersFirstPlayer: AnswersGameEntity[];
@@ -42,7 +42,7 @@ export class QuizPairGameEntity {
     //nullable: true,
     cascade: true,
     eager: true,
-    //onDelete: 'CASCADE',
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'answersSecondPlayer' })
   answersSecondPlayer: AnswersGameEntity[];

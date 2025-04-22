@@ -22,7 +22,7 @@ export class PairGameQuizPairsController {
   @Get(':id')
   @UseGuards(JWTAccessAuthGuard)
   async getPairGameById(
-      @Param('id') id: string,
+      @Param('id', paramIdIsUUIdPipe) id: string,
       @CurrentUserId() userId: string,
       ) {
     return this.pairGameQueryRepository.getById(id, userId);

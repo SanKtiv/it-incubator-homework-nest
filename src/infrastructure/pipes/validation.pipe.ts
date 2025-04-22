@@ -25,16 +25,16 @@ export class bodyPipe implements PipeTransform {
 export class paramIdIsUUIdPipe implements PipeTransform {
   constructor() {}
 
-  async transform(value: any, metadata: ArgumentMetadata) {
-    if (Types.UUID.isValid(value)) return value;
-    throw new NotFoundException();
-  }
-
   // async transform(value: any, metadata: ArgumentMetadata) {
-  //   if (!isUUID(value)) throw new NotFoundException();
-  //
-  //   return value;
-  //}
+  //   if (Types.UUID.isValid(value)) return value;
+  //   throw new NotFoundException();
+  // }
+
+  async transform(value: any, metadata: ArgumentMetadata) {
+    if (!isUUID(value)) throw new NotFoundException();
+
+    return value;
+  }
 }
 
 @Injectable()
