@@ -2,7 +2,7 @@ import {
   PipeTransform,
   Injectable,
   ArgumentMetadata,
-  NotFoundException,
+  NotFoundException, ForbiddenException, BadRequestException,
 } from '@nestjs/common';
 import { BlogsQueryRepositoryMongo } from '../../features/blogs/infrastructure/mongodb/blogs.query.repository-mongo';
 import { Types } from 'mongoose';
@@ -32,6 +32,17 @@ export class paramIdIsUUIdPipe implements PipeTransform {
 
   async transform(value: any, metadata: ArgumentMetadata) {
     if (!isUUID(value)) throw new NotFoundException();
+
+    return value;
+  }
+}
+
+@Injectable()
+export class idPairGamePipe implements PipeTransform {
+  constructor() {}
+
+  async transform(value: any, metadata: ArgumentMetadata) {
+    if (!isUUID(value)) throw new BadRequestException();
 
     return value;
   }

@@ -4,7 +4,7 @@ import { JWTAccessAuthGuard } from '../../../../infrastructure/guards/jwt-access
 import { CurrentUserId } from '../../../auth/infrastructure/decorators/current-user-id.param.decorator';
 import { PairGameQueryRepository } from '../infrastucture/pair-game.query.repository';
 import { InputAnswersModels } from './models/input/input-answers.models';
-import {paramIdIsUUIdPipe} from "../../../../infrastructure/pipes/validation.pipe";
+import {idPairGamePipe} from "../../../../infrastructure/pipes/validation.pipe";
 
 @Controller('pair-game-quiz/pairs')
 export class PairGameQuizPairsController {
@@ -23,7 +23,7 @@ export class PairGameQuizPairsController {
   @Get(':id')
   @UseGuards(JWTAccessAuthGuard)
   async getPairGameById(
-      @Param('id', paramIdIsUUIdPipe) id: string,
+      @Param('id', idPairGamePipe) id: string,
       @CurrentUserId() userId: string,
       ) {
     return this.pairGameQueryRepository.getById(id, userId);
