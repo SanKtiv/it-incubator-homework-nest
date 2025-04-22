@@ -18,11 +18,13 @@ export class PairGameQueryRepository {
     console.log('id =', id)
     console.log('userId =', userId)
     const pairGame = await this.repository.getById(id);
-
+    console.log('pairGame =', pairGame)
     if (!pairGame) throw new NotFoundException();
 
-    if (pairGame.firstPlayer.id !== userId && pairGame.secondPlayer.id !== userId)
-      throw new ForbiddenException()
+    if (
+        (pairGame.firstPlayer.id !== userId && !pairGame.secondPlayer) ||
+        (pairGame.firstPlayer.id !== userId && pairGame.secondPlayer.id !== userId)
+    ) throw new ForbiddenException()
 
     return createdPairGameOutputModel(pairGame);
   }
