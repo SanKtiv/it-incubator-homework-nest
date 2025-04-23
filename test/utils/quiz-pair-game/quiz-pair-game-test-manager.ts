@@ -18,7 +18,7 @@ export class QuizPairGameTestManager {
     return request(this.app.getHttpServer())
       .post('/pair-game-quiz/pairs/connection')
       .auth(accessToken, { type: 'bearer' })
-      .expect(201);
+      .expect(200);
   }
 
   async getPaging(queryDto: any, auth: any) {
@@ -32,13 +32,13 @@ export class QuizPairGameTestManager {
     return request(this.app.getHttpServer())
       .get(`/pair-game-quiz/pairs/${id}`)
       .auth(accessToken, { type: 'bearer' })
-      //.expect(200);
   }
 
   async getCurrentGame(accessToken: any) {
     return request(this.app.getHttpServer())
-        .get(`/pair-game-quiz/pairs/my-current`)
-        .auth(accessToken, { type: 'bearer' })
+        .get('/pair-game-quiz/pairs/my-current')
+        //.set('Authorization', `Bearer ${accessToken}`)
+        .auth(accessToken, {type: 'bearer'})
   }
 
   async updateById() {}
@@ -54,6 +54,6 @@ export class QuizPairGameTestManager {
       .post('/pair-game-quiz/pairs/my-current/answers')
       .auth(accessToken, { type: 'bearer' })
       .send(dto)
-      .expect(201);
+      .expect(200);
   }
 }
