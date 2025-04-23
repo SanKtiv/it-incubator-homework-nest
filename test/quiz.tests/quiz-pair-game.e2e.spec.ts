@@ -233,12 +233,23 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
       testAccessToken2,
       { answer: `Answer_5` },
     );
+  });
 
-    const id = resultCreateAnswer.body.id;
-
-    const resultGetPairGame = await quizPairGameTestManager.getById(
-      id,
-      testAccessToken1,
+  it('/pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 200 and correct pair-game model', async () => {
+    const resultGetGame = await quizPairGameTestManager.getById(
+        idExistPairGame,
+        testAccessToken1,
     );
+
+    await expect(resultGetGame.statusCode).toBe(200)
+
+    console.log('resultGetGame =', resultGetGame.body)
+  });
+
+  it('/pair-game-quiz/pairs/my-current (GET), get current game for second player should returned status 404', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken1);
+
+    await expect(resultGetGame.statusCode).toBe(404)
   });
 });
