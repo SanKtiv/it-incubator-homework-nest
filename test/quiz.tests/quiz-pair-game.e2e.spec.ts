@@ -124,6 +124,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
       await quizPairGameTestManager.create(testAccessToken1);
 
     idExistPairGame = resultCreatePairGame.body.id;
+    console.log('GameView =', resultCreatePairGame.body)
   });
 
   it('/pair-game-quiz/pairs/my-current (GET), get current game for second player should returned status 404', async () => {

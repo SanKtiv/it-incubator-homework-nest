@@ -73,7 +73,7 @@ export const createdPairGameOutputModel = (
         score: pairGame.secondPlayerScore,
       }
     : null,
-  questions: pairGame.questions
+  questions: pairGame.questions.length !== 0
     ? pairGame.questions.map((e) => ({
         id: e.id,
         body: e.body,
