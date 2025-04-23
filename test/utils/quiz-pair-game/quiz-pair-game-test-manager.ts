@@ -35,6 +35,12 @@ export class QuizPairGameTestManager {
       //.expect(200);
   }
 
+  async getCurrentGame(accessToken: any) {
+    return request(this.app.getHttpServer())
+        .get(`/pair-game-quiz/pairs/my-current`)
+        .auth(accessToken, { type: 'bearer' })
+  }
+
   async updateById() {}
 
   async deleteById(id: string, auth: any) {
