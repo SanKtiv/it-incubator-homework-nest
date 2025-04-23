@@ -44,7 +44,7 @@ export class PairGameQueryRepositoryTypeOrm {
   async getByUserId(userId: string): Promise<QuizPairGameEntity | null> {
     return this.building
       .where('pg.firstPlayer.id = :userId', { userId })
-      .andWhere('pg.secondPlayer.id = :userId', { userId })
+      .orWhere('pg.secondPlayer.id = :userId', { userId })
       .getOne();
   }
 }
