@@ -246,9 +246,16 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     console.log('resultGetGame =', resultGetGame.body)
   });
 
-  it('/pair-game-quiz/pairs/my-current (GET), get current game for second player should returned status 404', async () => {
+  it('/pair-game-quiz/pairs/my-current (GET), get current game for first player should returned status 404', async () => {
     const resultGetGame =
         await quizPairGameTestManager.getCurrentGame(testAccessToken1);
+
+    await expect(resultGetGame.statusCode).toBe(404)
+  });
+
+  it('/pair-game-quiz/pairs/my-current (GET), get current game for second player should returned status 404', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken2);
 
     await expect(resultGetGame.statusCode).toBe(404)
   });
