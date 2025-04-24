@@ -45,7 +45,8 @@ export class PairGameQueryRepositoryTypeOrm {
         return this.building
             .where('pg.finishGameDate IS NULL')
             .andWhere('pg.firstPlayer.id = :userId', {userId})
-            .orWhere('pg.secondPlayer.id = :userId', {userId})
+            .orWhere('pg.finishGameDate IS NULL')
+            .andWhere('pg.secondPlayer.id = :userId', {userId})
             .getOne();
     }
 }
