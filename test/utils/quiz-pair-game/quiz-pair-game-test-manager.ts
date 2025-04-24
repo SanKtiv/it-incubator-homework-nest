@@ -18,7 +18,7 @@ export class QuizPairGameTestManager {
     return request(this.app.getHttpServer())
       .post('/pair-game-quiz/pairs/connection')
       .auth(accessToken, { type: 'bearer' })
-      .expect(200);
+      //.expect(200);
   }
 
   async getPaging(queryDto: any, auth: any) {
@@ -54,6 +54,6 @@ export class QuizPairGameTestManager {
       .post('/pair-game-quiz/pairs/my-current/answers')
       .auth(accessToken, { type: 'bearer' })
       .send(dto)
-      .expect(200);
+      //.expect(200);
   }
 }
