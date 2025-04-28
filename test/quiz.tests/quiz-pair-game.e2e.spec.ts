@@ -247,7 +247,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     const result = await quizPairGameTestManager.createAnswer(testAccessToken1, {
       answer: 'Answer_1',
     })
-
+    console.log('view model answer =', result.body)
     await expect(result.statusCode).toBe(200)
   });
 
@@ -269,12 +269,12 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     await expect(resultGetGame.statusCode).toBe(200)
   });
 
-  it('26 /pair-game-quiz/pairs/my-current/answers (POST), second players incorrect answer, should return status 200', async () => {
+  it('26 /pair-game-quiz/pairs/my-current/answers (POST), user2 add incorrect answer, should return status 200', async () => {
     const result = await quizPairGameTestManager.createAnswer(testAccessToken2, {
       answer: 'Answer_5',
     });
 
-    console.log('view model answer =', result.body)
+    await expect(result.statusCode).toBe(200)
   });
 
   it('27 /pair-game-quiz/pairs/:id (GET), get game for first player, should returned status 200 and correct pair-game model', async () => {
