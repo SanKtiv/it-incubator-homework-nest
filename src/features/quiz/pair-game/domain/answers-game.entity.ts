@@ -13,12 +13,6 @@ export class AnswersGameEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // @ManyToOne(() => QuizPairGameEntity)
-  // @JoinColumn({
-  //     name: 'pairGameId'
-  // })
-  // pairGameId: QuizPairGameEntity;
-
   @ManyToOne(() => QuizPairGameEntity, (game) => game.answersFirstPlayer)
   @JoinColumn({
     name: 'pairGameFirstPlayer',
