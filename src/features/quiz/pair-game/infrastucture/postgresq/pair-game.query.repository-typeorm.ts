@@ -34,7 +34,7 @@ export class PairGameQueryRepositoryTypeOrm {
                 'answersSecondPlayer',
                 'secondPlayer.id = answersSecondPlayer.userId',
             )
-            .leftJoinAndSelect('pg.questions', 'questions');
+            .leftJoinAndSelect('pg.questions', 'questions')
     }
 
     async getById(id: string): Promise<QuizPairGameEntity | null> {
@@ -43,6 +43,7 @@ export class PairGameQueryRepositoryTypeOrm {
 
     async getByUserId(userId: string): Promise<QuizPairGameEntity | null> {
         return this.building
+            //.where('(pg.finishGameDate IS NULL AND pg.firstPlayer.id = :userId) OR (pg.finishGameDate IS NULL AND pg.secondPlayer.id = :userId)', {userId})
             .where('pg.finishGameDate IS NULL')
             .andWhere('pg.firstPlayer.id = :userId', {userId})
             .orWhere('pg.finishGameDate IS NULL')

@@ -49,8 +49,8 @@ export class QuizPairGameEntity {
 
   @OneToMany(() => QuizQuestionsEntity,
       (questions) => questions.quizGameId
-  , { nullable: true })
-  @JoinColumn({ name: 'questions' })
+  , { eager: true, nullable: true })
+  //@JoinColumn({ name: 'questions' })
   questions: QuizQuestionsEntity[];
 
   @Column({ type: 'character varying' })

@@ -31,7 +31,7 @@ export class PairGameQuizPairsServices {
 
       if (anythingPairGames) {
         const questions: QuizQuestionsEntity[] =
-          await this.quizQuestionsRepository.getFiveRandomQuestions();
+          await this.quizQuestionsRepository.getFiveRandomQuestions()
 
         const secondPlayer = new UsersTable();
         secondPlayer.id = userId;
