@@ -180,6 +180,15 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     await expect(resultCreatePairGame.statusCode).toBe(200)
   });
 
+  it('22 /pair-game-quiz/pairs/:id (GET), get game user2 should returned status 200', async () => {
+    const resultGetGame = await quizPairGameTestManager.getById(
+        idExistPairGame1,
+        testAccessToken2,
+    );
+    console.log('resultGetGame user2 =', resultGetGame.body)
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
   it('13 /pair-game-quiz/pairs/connection (POST), create game №2 user3 should returned status 200', async () => {
     const resultCreatePairGame =
         await quizPairGameTestManager.create(testAccessToken3);
@@ -232,15 +241,6 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
       await quizPairGameTestManager.create(testAccessToken2);
 
     await expect(resultCreatePairGame.statusCode).toBe(403)
-  });
-
-  it('22 /pair-game-quiz/pairs/:id (GET), get game user2 should returned status 200', async () => {
-    const resultGetGame = await quizPairGameTestManager.getById(
-        idExistPairGame1,
-        testAccessToken2,
-    );
-console.log('resultGetGame user2 =', resultGetGame.body)
-    await expect(resultGetGame.statusCode).toBe(200)
   });
 
   it('23 /pair-game-quiz/pairs/my-current/answers (POST), user1 add correct answer first, should return status 200', async () => {
