@@ -71,22 +71,23 @@ export class PairGameQuizPairsServices {
     const countQuestionsGame: number = pairGame.questions.length;
     let countAnswersFirstPlayer: number = pairGame.answersFirstPlayer.length;
     let countAnswersSecondPlayer: number = pairGame.answersSecondPlayer.length;
+    let answerPlayer: AnswersGameEntity;
 
     if (pairGame.firstPlayer.id === userId) {
       if (countAnswersFirstPlayer === countQuestionsGame)
         throw new ForbiddenException();
 
-      const answerFirstPlayer: AnswersGameEntity = this.createAnswerPlayer(
+      answerPlayer = this.createAnswerPlayer(
         pairGame,
         userId,
         dto,
         countAnswersFirstPlayer,
       );
 
-      pairGame.answersFirstPlayer.push(answerFirstPlayer);
+      pairGame.answersFirstPlayer.push(answerPlayer);
       countAnswersFirstPlayer = pairGame.answersFirstPlayer.length;
 
-      if (answerFirstPlayer.answerStatus === 'Correct')
+      if (answerPlayer.answerStatus === 'Correct')
         pairGame.firstPlayerScore++;
     }
 
@@ -94,17 +95,17 @@ export class PairGameQuizPairsServices {
       if (countAnswersSecondPlayer === countQuestionsGame)
         throw new ForbiddenException();
 
-      const answerSecondPlayer = this.createAnswerPlayer(
+      answerPlayer = this.createAnswerPlayer(
         pairGame,
         userId,
         dto,
         countAnswersSecondPlayer,
       );
 
-      pairGame.answersSecondPlayer.push(answerSecondPlayer);
+      pairGame.answersSecondPlayer.push(answerPlayer);
       countAnswersSecondPlayer = pairGame.answersSecondPlayer.length;
 
-      if (answerSecondPlayer.answerStatus === 'Correct')
+      if (answerPlayer.answerStatus === 'Correct')
         pairGame.secondPlayerScore++;
     }
 
@@ -135,7 +136,9 @@ export class PairGameQuizPairsServices {
         pairGame.firstPlayerScore++;
     }
 
-    return this.pairGameRepository.updatePairGame(pairGame);
+    await this.pairGameRepository.updatePairGame(pairGame);
+
+    return answerPlayer;
   }
 
   createAnswerPlayer(

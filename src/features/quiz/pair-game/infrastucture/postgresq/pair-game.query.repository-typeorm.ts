@@ -39,20 +39,6 @@ export class PairGameQueryRepositoryTypeOrm {
 
     async getById(id: string): Promise<QuizPairGameEntity | null> {
         return this.building.where('pg."id" = :id', {id}).getOne();
-
-        // const query = this.repository
-        //     .createQueryBuilder('pg')
-        //     .leftJoinAndSelect('pg.questions', 'questions')
-        //     .select(['pg'])
-        //     .where('pg."id" = :id', {id})
-        //     .getQueryAndParameters()
-        // console.log('LOG query =', query)
-        // return this.repository
-        //     .createQueryBuilder('pg')
-        //     .leftJoinAndSelect('pg.questions', 'questions')
-        //     .select(['pg'])
-        //     .where('pg."id" = :id', {id})
-        //     .getOne();
     }
 
     async getByUserId(userId: string): Promise<QuizPairGameEntity | null> {
