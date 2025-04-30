@@ -4,7 +4,7 @@ import {
   QuizPairGameEntity,
   QuizPairGameStatusType,
 } from '../domain/pair-game.entity';
-import { createdPairGameOutputModel } from '../api/models/output/pair-game.output.models';
+import {addedAnswerPlayerOutputModel, createdPairGameOutputModel} from '../api/models/output/pair-game.output.models';
 import { QuizQuestionsRepository } from '../../questions/infrastructure/quiz-questions.repository';
 import { QuizQuestionsEntity } from '../../questions/domain/quiz-questions.entity';
 import { UsersTable } from '../../../users/domain/users.table';
@@ -138,7 +138,7 @@ export class PairGameQuizPairsServices {
 
     await this.pairGameRepository.updatePairGame(pairGame);
 
-    return answerPlayer;
+    return addedAnswerPlayerOutputModel(answerPlayer);
   }
 
   createAnswerPlayer(

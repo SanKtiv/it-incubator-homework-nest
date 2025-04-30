@@ -1,4 +1,5 @@
 import { QuizPairGameEntity } from '../../../domain/pair-game.entity';
+import {AnswersGameEntity} from "../../../domain/answers-game.entity";
 
 export class CreatedPairGameOutputModel {
   constructor(
@@ -41,6 +42,14 @@ export class PairGameQuestionsClass {
     public id: string,
     public body: string,
   ) {}
+}
+
+export class AnswerPlayerOutputModel {
+    constructor(
+        public questionId: string,
+        public answerStatus: 'Correct' | 'Incorrect',
+        public addedAt: string
+    ) {}
 }
 
 export const createdPairGameOutputModel = (
@@ -88,3 +97,10 @@ export const createdPairGameOutputModel = (
     ? pairGame.finishGameDate.toISOString()
     : null,
 });
+
+export const addedAnswerPlayerOutputModel =
+    (answerPlayer: AnswersGameEntity): AnswerPlayerOutputModel => ({
+        questionId: answerPlayer.questionId,
+        answerStatus: answerPlayer.answerStatus,
+        addedAt: answerPlayer.addedAt.toISOString()
+    })
