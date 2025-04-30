@@ -71,7 +71,7 @@ export class PairGameQuizPairsServices {
     const countQuestionsGame: number = pairGame.questions.length;
     let countAnswersFirstPlayer: number = pairGame.answersFirstPlayer.length;
     let countAnswersSecondPlayer: number = pairGame.answersSecondPlayer.length;
-    let answerPlayer: AnswersGameEntity;
+    let answerPlayer: AnswersGameEntity = new AnswersGameEntity();
 
     if (pairGame.firstPlayer.id === userId) {
       if (countAnswersFirstPlayer === countQuestionsGame)
@@ -138,7 +138,7 @@ export class PairGameQuizPairsServices {
 
     await this.pairGameRepository.updatePairGame(pairGame);
 
-    return answerPlayer || null;
+    return answerPlayer;
   }
 
   createAnswerPlayer(
