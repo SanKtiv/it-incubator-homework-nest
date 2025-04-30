@@ -209,7 +209,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         idExistPairGame1,
         testAccessToken1,
     );
-
+console.log('resultGetGame user1 =', resultGetGame.body)
     await expect(resultGetGame.statusCode).toBe(200)
   });
 
@@ -224,7 +224,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     const result = await quizPairGameTestManager.createAnswer(testAccessToken2, {
       answer: 'Answer_1',
     })
-console.log('return view model =', result.body)
+
     await expect(result.statusCode).toBe(200)
   });
 

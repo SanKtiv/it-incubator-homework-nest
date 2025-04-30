@@ -24,8 +24,7 @@ export class PairGameQueryRepository {
         (pairGame.firstPlayer.id !== userId && pairGame.secondPlayer.id !== userId)
     ) throw new ForbiddenException()
 
-    //return createdPairGameOutputModel(pairGame);
-    return pairGame;
+    return createdPairGameOutputModel(pairGame);
   }
 
   async getByUserId(userId: string): Promise<CreatedPairGameOutputModel> {
