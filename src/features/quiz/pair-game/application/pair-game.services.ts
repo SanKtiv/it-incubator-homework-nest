@@ -138,7 +138,7 @@ export class PairGameQuizPairsServices {
 
     await this.pairGameRepository.updatePairGame(pairGame);
 
-    return answerPlayer;
+    return answerPlayer || null;
   }
 
   createAnswerPlayer(
