@@ -10,10 +10,16 @@ import { InputAnswersModels } from '../api/models/input/input-answers.models';
 export class PairGameRepository {
   constructor(protected repository: PairGameRepositoryTypeOrm) {}
 
-  async getNotFinishedPairGameByUserId(
+  async getNotFinishedAndActivePairGameByUserId(
     userId: string,
   ): Promise<QuizPairGameEntity | null | undefined> {
-    return this.repository.getOne(userId);
+    return this.repository.getOneNotFinishedAndActive(userId);
+  }
+
+  async getNotFinishedPairGameByUserId(
+      userId: string,
+  ): Promise<QuizPairGameEntity | null | undefined> {
+    return this.repository.getOneNotFinished(userId);
   }
 
   async getPairGamesByStatus(status: QuizPairGameStatusType) {
