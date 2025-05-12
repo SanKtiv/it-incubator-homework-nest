@@ -13,13 +13,17 @@ export class AnswersGameEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => QuizPairGameEntity, (game) => game.answersFirstPlayer)
+  @ManyToOne(
+      () => QuizPairGameEntity,
+      (game) => game.answersFirstPlayer)
   @JoinColumn({
     name: 'pairGameFirstPlayer',
   })
   pairGameFirstPlayer: QuizPairGameEntity;
 
-  @ManyToOne(() => QuizPairGameEntity, (game) => game.answersSecondPlayer)
+  @ManyToOne(
+      () => QuizPairGameEntity,
+      (game) => game.answersSecondPlayer)
   @JoinColumn({
     name: 'pairGameSecondPlayer',
   })

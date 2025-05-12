@@ -125,15 +125,23 @@ export class PairGameQuizPairsServices {
         (a: any, b: any) => b.addedAt - a.addedAt,
       );
 
+      const correctAnswersFirstPlayer = pairGame.answersFirstPlayer
+          .find(e => e.answerStatus === 'Correct')
+
+      const correctAnswersSecondPlayer = pairGame.answersSecondPlayer
+          .find(e => e.answerStatus === 'Correct')
+
       if (
         pairGame.answersFirstPlayer[0].addedAt >
-        pairGame.answersSecondPlayer[0].addedAt
+        pairGame.answersSecondPlayer[0].addedAt &&
+          correctAnswersSecondPlayer
       )
         pairGame.secondPlayerScore++;
 
       if (
         pairGame.answersFirstPlayer[0].addedAt <
-        pairGame.answersSecondPlayer[0].addedAt
+        pairGame.answersSecondPlayer[0].addedAt &&
+          correctAnswersFirstPlayer
       )
         pairGame.firstPlayerScore++;
     }
