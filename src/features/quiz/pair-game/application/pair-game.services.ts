@@ -91,7 +91,7 @@ export class PairGameQuizPairsServices {
       if (answerPlayer.answerStatus === 'Correct')
         pairGame.firstPlayerScore++;
     }
-
+    console.log('First if is work')
     if (pairGame.secondPlayer.id === userId) {
       if (countAnswersSecondPlayer === countQuestionsGame)
         throw new ForbiddenException();
@@ -109,7 +109,7 @@ export class PairGameQuizPairsServices {
       if (answerPlayer.answerStatus === 'Correct')
         pairGame.secondPlayerScore++;
     }
-
+    console.log('Second if is work')
     if (
       countQuestionsGame === countAnswersFirstPlayer &&
       countQuestionsGame === countAnswersSecondPlayer
@@ -146,7 +146,7 @@ export class PairGameQuizPairsServices {
       )
         pairGame.firstPlayerScore++;
     }
-
+    console.log('Third if is work')
     await this.pairGameRepository.updatePairGame(pairGame);
     console.log('updatePairGame(pairGame) is work')
     return addedAnswerPlayerOutputModel(answerPlayer);
