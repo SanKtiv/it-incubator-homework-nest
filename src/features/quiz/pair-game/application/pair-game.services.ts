@@ -64,8 +64,9 @@ export class PairGameQuizPairsServices {
   }
 
   async addAnswerPlayerInPairGame(userId: string, dto: InputAnswersModels) {
+    console.log('Start addAnswerPlayerInPairGame')
     const pairGame = await this.pairGameRepository.getActivePairGameByUserId(userId);
-
+    console.log('getActivePairGameByUserId(userId) is work')
     if (!pairGame) throw new ForbiddenException();
 
     const countQuestionsGame: number = pairGame.questions.length;
@@ -147,7 +148,7 @@ export class PairGameQuizPairsServices {
     }
 
     await this.pairGameRepository.updatePairGame(pairGame);
-
+    console.log('updatePairGame(pairGame) is work')
     return addedAnswerPlayerOutputModel(answerPlayer);
   }
 
