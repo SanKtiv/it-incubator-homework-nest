@@ -64,40 +64,34 @@ export class PairGameQuizPairsServices {
   }
 
   async addAnswerPlayerInPairGame(userId: string, dto: InputAnswersModels) {
-    console.log('Start addAnswerPlayerInPairGame')
     const pairGame = await this.pairGameRepository.getActivePairGameByUserId(userId);
-    console.log('getActivePairGameByUserId(userId) is work')
+
     if (!pairGame) throw new ForbiddenException();
 
     const countQuestionsGame: number = pairGame.questions.length;
-    console.log('countQuestionsGame =', countQuestionsGame)
     let countAnswersFirstPlayer: number = pairGame.answersFirstPlayer.length;
-    console.log('countAnswersFirstPlayer =', countAnswersFirstPlayer)
     let countAnswersSecondPlayer: number = pairGame.answersSecondPlayer.length;
-    console.log('countAnswersSecondPlayer =,', countAnswersSecondPlayer)
     let answerPlayer: AnswersGameEntity = new AnswersGameEntity();
-    console.log('4')
 
     if (pairGame.firstPlayer.id === userId) {
       if (countAnswersFirstPlayer === countQuestionsGame)
         throw new ForbiddenException();
-      console.log('5')
+
       answerPlayer = this.createAnswerPlayer(
         pairGame,
         userId,
         dto,
         countAnswersFirstPlayer,
       );
-      console.log('6')
+
       pairGame.answersFirstPlayer.push(answerPlayer);
-      console.log('7')
+
       countAnswersFirstPlayer = pairGame.answersFirstPlayer.length;
-      console.log('8')
 
       if (answerPlayer.answerStatus === 'Correct')
         pairGame.firstPlayerScore++;
     }
-    console.log('First if is work')
+
     if (pairGame.secondPlayer.id === userId) {
       if (countAnswersSecondPlayer === countQuestionsGame)
         throw new ForbiddenException();
@@ -115,7 +109,7 @@ export class PairGameQuizPairsServices {
       if (answerPlayer.answerStatus === 'Correct')
         pairGame.secondPlayerScore++;
     }
-    console.log('Second if is work')
+
     if (
       countQuestionsGame === countAnswersFirstPlayer &&
       countQuestionsGame === countAnswersSecondPlayer
@@ -152,9 +146,9 @@ export class PairGameQuizPairsServices {
       )
         pairGame.firstPlayerScore++;
     }
-    console.log('Third if is work')
+
     await this.pairGameRepository.updatePairGame(pairGame);
-    console.log('updatePairGame(pairGame) is work')
+
     return addedAnswerPlayerOutputModel(answerPlayer);
   }
 
@@ -164,26 +158,25 @@ export class PairGameQuizPairsServices {
     dto: InputAnswersModels,
     numQuestion: number,
   ): AnswersGameEntity {
-    console.log('21')
     const questionId = pairGame.questions[numQuestion].id;
-    console.log('22')
+
     const arrayCorrectAnswers =
       pairGame.questions[numQuestion].correctAnswers.split(',');
-    console.log('23')
+
     const answerPlayer = new AnswersGameEntity();
-    console.log('24')
+
     answerPlayer.userId = userId;
     answerPlayer.questionId = questionId;
     answerPlayer.addedAt = new Date();
-    console.log('25')
+
     const str = (str: string) => str.trim().toLowerCase();
-    console.log('26')
+
     const resultFind: string | undefined = arrayCorrectAnswers.find(
       (e) => str(e) === str(dto.answer),
     );
-    console.log('27')
+
     answerPlayer.answerStatus = resultFind ? 'Correct' : 'Incorrect';
-    console.log('28')
+
     return answerPlayer;
   }
 }
