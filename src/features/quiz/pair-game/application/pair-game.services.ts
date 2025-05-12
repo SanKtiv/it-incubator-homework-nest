@@ -164,25 +164,26 @@ export class PairGameQuizPairsServices {
     dto: InputAnswersModels,
     numQuestion: number,
   ): AnswersGameEntity {
+    console.log('21')
     const questionId = pairGame.questions[numQuestion].id;
-
+    console.log('22')
     const arrayCorrectAnswers =
       pairGame.questions[numQuestion].correctAnswers.split(',');
-
+    console.log('23')
     const answerPlayer = new AnswersGameEntity();
-
+    console.log('24')
     answerPlayer.userId = userId;
     answerPlayer.questionId = questionId;
     answerPlayer.addedAt = new Date();
-
+    console.log('25')
     const str = (str: string) => str.trim().toLowerCase();
-
+    console.log('26')
     const resultFind: string | undefined = arrayCorrectAnswers.find(
       (e) => str(e) === str(dto.answer),
     );
-
+    console.log('27')
     answerPlayer.answerStatus = resultFind ? 'Correct' : 'Incorrect';
-
+    console.log('28')
     return answerPlayer;
   }
 }
