@@ -70,23 +70,29 @@ export class PairGameQuizPairsServices {
     if (!pairGame) throw new ForbiddenException();
 
     const countQuestionsGame: number = pairGame.questions.length;
+    console.log('1')
     let countAnswersFirstPlayer: number = pairGame.answersFirstPlayer.length;
+    console.log('2')
     let countAnswersSecondPlayer: number = pairGame.answersSecondPlayer.length;
+    console.log('3')
     let answerPlayer: AnswersGameEntity = new AnswersGameEntity();
+    console.log('4')
 
     if (pairGame.firstPlayer.id === userId) {
       if (countAnswersFirstPlayer === countQuestionsGame)
         throw new ForbiddenException();
-
+      console.log('5')
       answerPlayer = this.createAnswerPlayer(
         pairGame,
         userId,
         dto,
         countAnswersFirstPlayer,
       );
-
+      console.log('6')
       pairGame.answersFirstPlayer.push(answerPlayer);
+      console.log('7')
       countAnswersFirstPlayer = pairGame.answersFirstPlayer.length;
+      console.log('8')
 
       if (answerPlayer.answerStatus === 'Correct')
         pairGame.firstPlayerScore++;
