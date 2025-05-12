@@ -25,13 +25,12 @@ export class PairGameRepositoryTypeOrm {
             .getOne();
     }
 
-    async getOneNotFinishedAndActive(userId: string): Promise<QuizPairGameEntity | null | undefined> {
+    async getOneActive(userId: string): Promise<QuizPairGameEntity | null | undefined> {
         return this.builder
-            .where('pg.finishGameDate IS NULL')
-            .andWhere('pg.status = :status', {status: 'Active'})
+            //.where('pg.finishGameDate IS NULL')
+            .where('pg.status = :status', {status: 'Active'})
             .andWhere('pg.firstPlayer.id = :userId', {userId})
-            .orWhere('pg.finishGameDate IS NULL')
-            .andWhere('pg.status = :status', {status: 'Active'})
+            .orWhere('pg.status = :status', {status: 'Active'})
             .andWhere('pg.secondPlayer.id = :userId', {userId})
             .getOne();
     }

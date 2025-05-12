@@ -66,4 +66,4 @@ export class QuizPairGameEntity {
   finishGameDate: Date;
 }
 
-export type QuizPairGameStatusType = 'PendingSecondPlayer' | 'Active';
+export type QuizPairGameStatusType = 'PendingSecondPlayer' | 'Active' | 'Finished';

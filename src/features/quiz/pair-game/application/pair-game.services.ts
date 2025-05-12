@@ -64,7 +64,7 @@ export class PairGameQuizPairsServices {
   }
 
   async addAnswerPlayerInPairGame(userId: string, dto: InputAnswersModels) {
-    const pairGame = await this.pairGameRepository.getNotFinishedAndActivePairGameByUserId(userId);
+    const pairGame = await this.pairGameRepository.getActivePairGameByUserId(userId);
 
     if (!pairGame) throw new ForbiddenException();
 
@@ -113,6 +113,8 @@ export class PairGameQuizPairsServices {
       countQuestionsGame === countAnswersFirstPlayer &&
       countQuestionsGame === countAnswersSecondPlayer
     ) {
+      pairGame.status = 'Finished';
+
       pairGame.finishGameDate = new Date();
 
       pairGame.answersFirstPlayer.sort(
