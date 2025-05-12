@@ -70,11 +70,11 @@ export class PairGameQuizPairsServices {
     if (!pairGame) throw new ForbiddenException();
 
     const countQuestionsGame: number = pairGame.questions.length;
-    console.log('1')
+    console.log('countQuestionsGame =', countQuestionsGame)
     let countAnswersFirstPlayer: number = pairGame.answersFirstPlayer.length;
-    console.log('2')
+    console.log('countAnswersFirstPlayer =', countAnswersFirstPlayer)
     let countAnswersSecondPlayer: number = pairGame.answersSecondPlayer.length;
-    console.log('3')
+    console.log('countAnswersSecondPlayer =,', countAnswersSecondPlayer)
     let answerPlayer: AnswersGameEntity = new AnswersGameEntity();
     console.log('4')
 
