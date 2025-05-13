@@ -252,19 +252,25 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     })
   });
 
-  it('25 /pair-game-quiz/pairs/my-current/answers (POST), user2 add incorrect four answers', async () => {
+  it('25 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 1 incorrect answer', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken2, {
       answer: 'Wrong answer_1',
     })
+  });
 
+  it('26 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 2 incorrect answer', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken2, {
       answer: 'Wrong answer_2',
     })
+  });
 
+  it('27 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 3 incorrect answer', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken2, {
       answer: 'Wrong answer_3',
     })
+  });
 
+  it('28 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 4 incorrect answer', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken2, {
       answer: 'Wrong answer_4',
     })
