@@ -278,6 +278,8 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     const result = await quizPairGameTestManager.getById(idExistPairGame1, testAccessToken2)
 
     console.log('Returned finished game with score', result.body)
+    console.log('AnswersFirst =', result.body.firstPlayerProgress.answers)
+    console.log('AnswersSecond =', result.body.secondPlayerProgress.answers)
   });
 
   // it('13 /pair-game-quiz/pairs/connection (POST), create game №2 user3 should returned status 200', async () => {
