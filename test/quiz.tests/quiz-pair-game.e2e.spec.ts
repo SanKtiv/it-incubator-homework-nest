@@ -244,10 +244,28 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     await quizPairGameTestManager.createAnswer(testAccessToken1, {
       answer: 'Wrong answer_4',
     })
+  });
 
-    const result = await quizPairGameTestManager.getCurrentGame(testAccessToken1);
+  it('22 /pair-game-quiz/pairs/my-current/answers (POST), user2 add incorrect four answers', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_1',
+    })
 
-    console.log('Game with 1 correct and 4 incorrect answers for firstPlayer', result.body)
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_2',
+    })
+
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_3',
+    })
+
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_4',
+    })
+
+    const result = await quizPairGameTestManager.getById(idExistPairGame1, testAccessToken2)
+
+    console.log('Returned finished game with score', result.body)
   });
 
   // it('13 /pair-game-quiz/pairs/connection (POST), create game №2 user3 should returned status 200', async () => {
