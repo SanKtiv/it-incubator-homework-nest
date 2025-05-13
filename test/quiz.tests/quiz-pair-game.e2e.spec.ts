@@ -228,25 +228,31 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     await expect(result.statusCode).toBe(200)
   });
 
-  it('21 /pair-game-quiz/pairs/my-current/answers (POST), user1 add incorrect four answers', async () => {
+  it('21 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 1 incorrect answer', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken1, {
       answer: 'Wrong answer_1',
     })
+  });
 
+  it('22 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 2 incorrect answer', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken1, {
       answer: 'Wrong answer_2',
     })
+  });
 
+  it('23 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 3 incorrect answer', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken1, {
       answer: 'Wrong answer_3',
     })
+  });
 
+  it('24 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 4 incorrect answer', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken1, {
       answer: 'Wrong answer_4',
     })
   });
 
-  it('22 /pair-game-quiz/pairs/my-current/answers (POST), user2 add incorrect four answers', async () => {
+  it('25 /pair-game-quiz/pairs/my-current/answers (POST), user2 add incorrect four answers', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken2, {
       answer: 'Wrong answer_1',
     })
