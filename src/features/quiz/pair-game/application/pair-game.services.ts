@@ -18,7 +18,7 @@ export class PairGameQuizPairsServices {
     protected quizQuestionsRepository: QuizQuestionsRepository,
   ) {}
 
-  async createOrJoinPairGame(userId: string) {
+  async createPairGame(userId: string) {
     const pairGame = await this.pairGameRepository.getNotFinishedPairGameByUserId(userId);
 
     if (pairGame) throw new ForbiddenException();
@@ -61,6 +61,10 @@ export class PairGameQuizPairsServices {
 
       return createdPairGameOutputModel(createdPendingPairGame!);
     }
+  }
+
+  async joinToPairGame() {
+
   }
 
   async addAnswerPlayerInPairGame(userId: string, dto: InputAnswersModels) {

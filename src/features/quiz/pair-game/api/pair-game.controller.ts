@@ -23,7 +23,7 @@ export class PairGameQuizPairsController {
   @HttpCode(200)
   @UseGuards(JWTAccessAuthGuard)
   async createOrJoinPairGame(@CurrentUserId() userId: string) {
-    return this.pairGameServices.createOrJoinPairGame(userId);
+    return this.pairGameServices.createPairGame(userId);
   }
 
   @Post('my-current/answers')
