@@ -41,7 +41,7 @@ export class PairGameQuizPairsServices {
 
         const createdPendingPairGame =
             await this.pairGameRepository.createPairGame(pairGame);
-        console.log('createdPendingPairGame =', createdPendingPairGame)
+
         return createdPairGameOutputModel(createdPendingPairGame!);
     }
 
@@ -49,7 +49,7 @@ export class PairGameQuizPairsServices {
 
         const questions: QuizQuestionsEntity[] =
             await this.quizQuestionsRepository.getFiveRandomQuestions()
-console.log('questions from joinToPairGame =', questions)
+
         const secondPlayer = new UsersTable();
         secondPlayer.id = userId;
 
@@ -66,11 +66,11 @@ console.log('questions from joinToPairGame =', questions)
 
     async addAnswerPlayerInPairGame(userId: string, dto: InputAnswersModels) {
         const pairGame = await this.pairGameRepository.getActivePairGameByUserId(userId);
-        console.log('pairGame from addAnswerPlayerInPairGame =', pairGame)
+
         if (!pairGame) throw new ForbiddenException();
 
         const countQuestionsGame: number = pairGame.questions.length;
-        console.log('countQuestionsGame =', countQuestionsGame)
+
         let countAnswersFirstPlayer: number = pairGame.answersFirstPlayer.length;
         let countAnswersSecondPlayer: number = pairGame.answersSecondPlayer.length;
         let answerPlayer: AnswersGameEntity = new AnswersGameEntity();

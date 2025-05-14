@@ -229,10 +229,24 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     await expect(result.statusCode).toBe(200)
   });
 
+  it('20-1 /pair-game-quiz/pairs/my-current (GET), get current game user2 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken2);
+console.log('resultGetGame user2=', resultGetGame.body)
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
   it('21 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 1 incorrect answer', async () => {
     await quizPairGameTestManager.createAnswer(testAccessToken1, {
       answer: 'Wrong answer_1',
     })
+  });
+
+  it('21-1 /pair-game-quiz/pairs/my-current (GET), get current game user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken1);
+    console.log('resultGetGame user1=', resultGetGame.body)
+    await expect(resultGetGame.statusCode).toBe(200)
   });
 
   it('22 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 2 incorrect answer', async () => {
@@ -251,6 +265,13 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     await quizPairGameTestManager.createAnswer(testAccessToken1, {
       answer: 'Wrong answer_4',
     })
+  });
+
+  it('21-1 /pair-game-quiz/pairs/my-current (GET), get current game user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken1);
+    console.log('resultGetGame user1=', resultGetGame.body)
+    await expect(resultGetGame.statusCode).toBe(200)
   });
 
   it('25 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 1 incorrect answer', async () => {
