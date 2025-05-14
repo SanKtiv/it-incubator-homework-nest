@@ -56,10 +56,10 @@ export class PairGameQuizPairsServices {
       newPairGame.pairCreatedDate = new Date();
       newPairGame.status = statusPending;
 
-      const pendingPairGame =
+      const createdPendingPairGame =
         await this.pairGameRepository.createPairGame(newPairGame);
 
-      return createdPairGameOutputModel(pendingPairGame!);
+      return createdPairGameOutputModel(createdPendingPairGame!);
     }
   }
 
