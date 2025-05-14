@@ -30,6 +30,7 @@ export class PairGameQuizPairsServices {
         if (pendingPairGame) return this.joinToPairGame(userId, pendingPairGame)
 
         const pairGame = new QuizPairGameEntity();
+
         const firstPlayer = new UsersTable();
 
         firstPlayer.id = userId;
@@ -40,7 +41,7 @@ export class PairGameQuizPairsServices {
 
         const createdPendingPairGame =
             await this.pairGameRepository.createPairGame(pairGame);
-
+        console.log('createdPendingPairGame =', createdPendingPairGame)
         return createdPairGameOutputModel(createdPendingPairGame!);
     }
 
@@ -48,7 +49,7 @@ export class PairGameQuizPairsServices {
 
         const questions: QuizQuestionsEntity[] =
             await this.quizQuestionsRepository.getFiveRandomQuestions()
-
+console.log('questions from joinToPairGame =', questions)
         const secondPlayer = new UsersTable();
         secondPlayer.id = userId;
 

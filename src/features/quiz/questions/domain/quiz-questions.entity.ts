@@ -15,15 +15,9 @@ export class QuizQuestionsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // @ManyToOne(() => QuizPairGameEntity, (quizGame) => quizGame.id, {
-  //   nullable: true,
-  // })
-  // @JoinColumn({ name: 'quizGameId' })
-  // quizGameId: string;
-
-  @ManyToOne(() => QuizPairGameEntity, (game) => game.questions)
-  @JoinColumn({ name: 'quizGameId' })
-  quizGameId: QuizPairGameEntity;
+  @ManyToMany(() => QuizPairGameEntity, (game) => game.questions)
+  //@JoinColumn({ name: 'quizGameId' })
+  quizGameId: QuizPairGameEntity[];
 
   @Column('character varying')
   body: string;

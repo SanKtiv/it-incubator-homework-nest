@@ -34,6 +34,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
   let testAccessToken4: string;
   let idExistPairGame1: string;
   let idExistPairGame2: string;
+  let idExistPairGame3: string;
   const idExistQuestion: string = '';
 
   let inputModel;
@@ -281,6 +282,37 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     console.log('AnswersFirst =', result.body.firstPlayerProgress.answers)
     console.log('AnswersSecond =', result.body.secondPlayerProgress.answers)
 
+  });
+
+  it('29 /pair-game-quiz/pairs/connection (POST), create game №2 user3 should returned status 200', async () => {
+    const resultCreatePairGame =
+        await quizPairGameTestManager.create(testAccessToken3);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+
+    idExistPairGame2 = resultCreatePairGame.body.id;
+  });
+
+  it('30 /pair-game-quiz/pairs/connection (POST), join game №2 user4 should returned status 200', async () => {
+    const resultCreatePairGame =
+        await quizPairGameTestManager.create(testAccessToken4);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+  });
+
+  it('31 /pair-game-quiz/pairs/connection (POST), create game №3 user1 should returned status 200', async () => {
+    const resultCreatePairGame =
+        await quizPairGameTestManager.create(testAccessToken1);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+
+    idExistPairGame3 = resultCreatePairGame.body.id;
+  });
+
+  it('32 /pair-game-quiz/pairs/connection (POST), join to game №3 user2 should returned status 200', async () => {
+    const resultCreatePairGame = await quizPairGameTestManager.create(testAccessToken2);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
   });
 
   // it('13 /pair-game-quiz/pairs/connection (POST), create game №2 user3 should returned status 200', async () => {

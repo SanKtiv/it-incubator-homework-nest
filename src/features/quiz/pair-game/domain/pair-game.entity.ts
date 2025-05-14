@@ -1,7 +1,7 @@
 import {
   Column,
   Entity,
-  JoinColumn,
+  JoinColumn, JoinTable, ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -47,10 +47,20 @@ export class QuizPairGameEntity {
   @JoinColumn({ name: 'answersSecondPlayer' })
   answersSecondPlayer: AnswersGameEntity[];
 
-  @OneToMany(() => QuizQuestionsEntity,
+  @ManyToMany(() => QuizQuestionsEntity,
       (questions) => questions.quizGameId
   , { eager: true, nullable: true })
-  //@JoinColumn({ name: 'questions' })
+  @JoinTable({
+    name: 'quiz_pair_game_questions', // Название промежуточной таблицы
+    joinColumn: {
+      name: 'gameId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'questionId',
+      referencedColumnName: 'id',
+    },
+  })
   questions: QuizQuestionsEntity[];
 
   @Column({ type: 'character varying' })
