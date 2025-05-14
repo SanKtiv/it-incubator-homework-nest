@@ -24,25 +24,25 @@ export class PairGameQuizPairsServices {
     if (pairGame) throw new ForbiddenException();
 
     if (!pairGame) {
-      const status: QuizPairGameStatusType = 'PendingSecondPlayer';
+      const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
 
-      const anythingPairGames: QuizPairGameEntity | null =
-        await this.pairGameRepository.getPairGamesByStatus(status);
+      const pendingPairGame: QuizPairGameEntity | null =
+        await this.pairGameRepository.getPairGamesByStatus(statusPending);
 
-      if (anythingPairGames) {
+      if (pendingPairGame) {
         const questions: QuizQuestionsEntity[] =
           await this.quizQuestionsRepository.getFiveRandomQuestions()
 
         const secondPlayer = new UsersTable();
         secondPlayer.id = userId;
 
-        anythingPairGames.secondPlayer = secondPlayer;
-        anythingPairGames.status = 'Active';
-        anythingPairGames.startGameDate = new Date();
-        anythingPairGames.questions = questions;
+        pendingPairGame.secondPlayer = secondPlayer;
+        pendingPairGame.status = 'Active';
+        pendingPairGame.startGameDate = new Date();
+        pendingPairGame.questions = questions;
 
         const activePairGame =
-          await this.pairGameRepository.createPairGame(anythingPairGames);
+          await this.pairGameRepository.createPairGame(pendingPairGame);
 
         return createdPairGameOutputModel(activePairGame!);
       }
@@ -54,7 +54,7 @@ export class PairGameQuizPairsServices {
 
       newPairGame.firstPlayer = firstPlayer;
       newPairGame.pairCreatedDate = new Date();
-      newPairGame.status = 'PendingSecondPlayer';
+      newPairGame.status = statusPending;
 
       const pendingPairGame =
         await this.pairGameRepository.createPairGame(newPairGame);
