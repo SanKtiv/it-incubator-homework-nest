@@ -61,11 +61,13 @@ export const createdPairGameOutputModel = (
       id: pairGame.firstPlayer.id,
       login: pairGame.firstPlayer.accountData.login,
     },
-    answers: pairGame.answersFirstPlayer.map((e) => ({
+    answers: pairGame.answersFirstPlayer
+        .map((e) => ({
       questionId: e.questionId,
       answerStatus: e.answerStatus,
       addedAt: e.addedAt.toISOString(),
-    })),
+    }))
+        .sort((a: any, b: any) => a.addedAt - b.addedAt),
     score: pairGame.firstPlayerScore,
   },
   secondPlayerProgress: pairGame.secondPlayer
@@ -74,11 +76,13 @@ export const createdPairGameOutputModel = (
           id: pairGame.secondPlayer.id,
           login: pairGame.secondPlayer.accountData.login,
         },
-        answers: pairGame.answersSecondPlayer.map((e) => ({
+        answers: pairGame.answersSecondPlayer
+            .map((e) => ({
           questionId: e.questionId,
           answerStatus: e.answerStatus,
           addedAt: e.addedAt.toISOString(),
-        })),
+        }))
+            .sort((a: any, b: any) => a.addedAt - b.addedAt),
         score: pairGame.secondPlayerScore,
       }
     : null,
