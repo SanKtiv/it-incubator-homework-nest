@@ -52,4 +52,8 @@ export class PairGameQueryRepositoryTypeOrm {
             .andWhere('pg.secondPlayer.id = :userId', {userId})
             .getOne();
     }
+
+    async getStatisticByUserId(userId) {
+
+    }
 }
