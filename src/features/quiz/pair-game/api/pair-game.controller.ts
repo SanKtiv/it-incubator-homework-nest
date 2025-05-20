@@ -25,6 +25,10 @@ export class PairGameQuizPairsController {
 
   }
 
+  @Get('users/my-statistic')
+  @UseGuards(JWTAccessAuthGuard)
+  async getStatisticCurrentUser() {}
+
   @Post('connection')
   @HttpCode(200)
   @UseGuards(JWTAccessAuthGuard)
