@@ -19,6 +19,12 @@ export class PairGameQuizPairsController {
     return this.pairGameQueryRepository.getByUserId(userId);
   }
 
+  @Get('my')
+  @UseGuards(JWTAccessAuthGuard)
+  async getAllPairGamesCurrentUser() {
+
+  }
+
   @Post('connection')
   @HttpCode(200)
   @UseGuards(JWTAccessAuthGuard)
