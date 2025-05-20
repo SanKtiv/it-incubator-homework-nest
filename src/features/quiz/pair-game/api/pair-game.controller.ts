@@ -6,20 +6,20 @@ import { PairGameQueryRepository } from '../infrastucture/pair-game.query.reposi
 import { InputAnswersModels } from './models/input/input-answers.models';
 import {idPairGamePipe} from "../../../../infrastructure/pipes/validation.pipe";
 
-@Controller('pair-game-quiz/pairs')
+@Controller('pair-game-quiz')
 export class PairGameQuizPairsController {
   constructor(
     protected pairGameServices: PairGameQuizPairsServices,
     protected pairGameQueryRepository: PairGameQueryRepository,
   ) {}
 
-  @Get('my-current')
+  @Get('pairs/my-current')
   @UseGuards(JWTAccessAuthGuard)
   async getMyCurrentPairGame(@CurrentUserId() userId: string) {
     return this.pairGameQueryRepository.getByUserId(userId);
   }
 
-  @Get('my')
+  @Get('pairs/my')
   @UseGuards(JWTAccessAuthGuard)
   async getAllPairGamesCurrentUser() {
 
@@ -29,14 +29,14 @@ export class PairGameQuizPairsController {
   @UseGuards(JWTAccessAuthGuard)
   async getStatisticCurrentUser() {}
 
-  @Post('connection')
+  @Post('pairs/connection')
   @HttpCode(200)
   @UseGuards(JWTAccessAuthGuard)
   async createOrJoinPairGame(@CurrentUserId() userId: string) {
     return this.pairGameServices.createPairGame(userId);
   }
 
-  @Post('my-current/answers')
+  @Post('pairs/my-current/answers')
   @HttpCode(200)
   @UseGuards(JWTAccessAuthGuard)
   async createAnswerPlayer(
@@ -46,7 +46,7 @@ export class PairGameQuizPairsController {
     return this.pairGameServices.addAnswerPlayerInPairGame(userId, dto);
   }
 
-  @Get(':id')
+  @Get('pairs:id')
   @UseGuards(JWTAccessAuthGuard)
   async getPairGameById(
       @Param('id', idPairGamePipe) id: string,
