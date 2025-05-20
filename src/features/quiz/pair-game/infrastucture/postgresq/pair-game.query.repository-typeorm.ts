@@ -53,7 +53,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .getOne();
     }
 
-    async getStatisticByUserId(userId) {
+    async getStatisticByUserId(userId: string) {
 
     }
 }
