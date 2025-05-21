@@ -299,9 +299,6 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
     const result = await quizPairGameTestManager.getById(idExistPairGame1, testAccessToken2)
 
-    console.log('Returned finished game with score', result.body)
-    console.log('AnswersFirst =', result.body.firstPlayerProgress.answers)
-    console.log('AnswersSecond =', result.body.secondPlayerProgress.answers)
 
   });
 

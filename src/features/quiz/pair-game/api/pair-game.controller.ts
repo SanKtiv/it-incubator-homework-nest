@@ -48,7 +48,7 @@ export class PairGameQuizPairsController {
     return this.pairGameServices.addAnswerPlayerInPairGame(userId, dto);
   }
 
-  @Get('pairs:id')
+  @Get('pairs/:id')
   @UseGuards(JWTAccessAuthGuard)
   async getPairGameById(
       @Param('id', idPairGamePipe) id: string,
