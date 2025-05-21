@@ -6,7 +6,7 @@ import {
 import { PairGameQueryRepositoryTypeOrm } from './postgresq/pair-game.query.repository-typeorm';
 import {
   CreatedPairGameOutputModel,
-  createdPairGameOutputModel,
+  createdPairGameOutputModel, playerStatisticOutputModel,
 } from '../api/models/output/pair-game.output.models';
 import {QuizPairGameEntity} from "../domain/pair-game.entity";
 
@@ -36,6 +36,8 @@ export class PairGameQueryRepository {
   }
 
   async getStatisticByUserId(userId: string) {
-    return this.repository.getStatisticByUserId(userId)
+    const games = await this.repository.getStatisticByUserId(userId)
+
+    return  playerStatisticOutputModel(games, userId)
   }
 }
