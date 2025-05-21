@@ -245,7 +245,7 @@ console.log('Answers user2 =', resultGetGame.body.secondPlayerProgress.answers)
   it('21-1 /pair-game-quiz/pairs/my-current (GET), get current game user1 should returned status 200', async () => {
     const resultGetGame =
         await quizPairGameTestManager.getCurrentGame(testAccessToken1);
-    console.log('Answers user1 =', resultGetGame.body.firstPlayerProgress.answers)
+
     await expect(resultGetGame.statusCode).toBe(200)
   });
 
@@ -270,7 +270,7 @@ console.log('Answers user2 =', resultGetGame.body.secondPlayerProgress.answers)
   it('21-1 /pair-game-quiz/pairs/my-current (GET), get current game user1 should returned status 200', async () => {
     const resultGetGame =
         await quizPairGameTestManager.getCurrentGame(testAccessToken1);
-    console.log('Answers user1=', resultGetGame.body.firstPlayerProgress.answers)
+
     await expect(resultGetGame.statusCode).toBe(200)
   });
 

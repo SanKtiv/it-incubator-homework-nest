@@ -54,6 +54,17 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getStatisticByUserId(userId: string) {
-
+        return this.repository
+            .createQueryBuilder('pg')
+            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+            .select([
+                'pg',
+                'firstPlayer.id',
+                'secondPlayer.id',
+            ])
+            .where('firstPlayer.id = :userId', { userId })
+            .orWhere('secondPlayer.id = :userId', { userId })
+            .getMany()
     }
 }
