@@ -59,12 +59,14 @@ export class PairGameQueryRepositoryTypeOrm {
             .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
             .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
             .select([
-                'pg',
+                'pg.status',
+                'pg.firstPlayerScore',
+                'pg.secondPlayerScore',
                 'firstPlayer.id',
                 'secondPlayer.id',
             ])
             .where('pg.firstPlayer.id = :userId', { userId })
             .orWhere('pg.secondPlayer.id = :userId', { userId })
-            .getOne()
+            .getMany()
     }
 }
