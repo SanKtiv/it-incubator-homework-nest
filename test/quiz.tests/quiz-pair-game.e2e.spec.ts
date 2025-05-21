@@ -305,7 +305,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
   it('28-1 /pair-game-quiz/pairs/:id (GET), get game1 by id and user1 should returned status 200', async () => {
     const resultGetGame =
         await quizPairGameTestManager.getById(idExistPairGame1, testAccessToken1);
-console.log('Results for game1 =', resultGetGame.body)
+
     await expect(resultGetGame.statusCode).toBe(200)
   });
 

@@ -63,8 +63,8 @@ export class PairGameQueryRepositoryTypeOrm {
                 'firstPlayer.id',
                 'secondPlayer.id',
             ])
-            .where('firstPlayer.id = :userId', { userId })
-            .orWhere('secondPlayer.id = :userId', { userId })
-            .getMany()
+            .where('pg.firstPlayer.id = :userId', { userId })
+            .orWhere('pg.secondPlayer.id = :userId', { userId })
+            .getOne()
     }
 }
