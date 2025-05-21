@@ -34,6 +34,12 @@ export class QuizPairGameTestManager {
       .auth(accessToken, { type: 'bearer' })
   }
 
+  async getStatisticByUserId(accessToken: any) {
+    return request(this.app.getHttpServer())
+        .get(`/pair-game-quiz/users/my-statistic`)
+        .auth(accessToken, { type: 'bearer' })
+  }
+
   async getCurrentGame(accessToken: any) {
     return request(this.app.getHttpServer())
         .get('/pair-game-quiz/pairs/my-current')

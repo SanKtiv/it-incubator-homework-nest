@@ -302,10 +302,17 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
   });
 
-  it('28-1 /pair-game-quiz/pairs/my-current (GET), get current game user1 should returned status 200', async () => {
+  it('28-1 /pair-game-quiz/pairs/:id (GET), get game1 by id and user1 should returned status 200', async () => {
     const resultGetGame =
-        await quizPairGameTestManager.getCurrentGame(testAccessToken1);
+        await quizPairGameTestManager.getById(idExistPairGame1, testAccessToken1);
 console.log('Results for game1 =', resultGetGame.body)
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
+  it('28-2 /pair-game-quiz/users/my-statistic (GET), get statistic by user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
+    console.log('Statistic user1 =', resultGetGame.body)
     await expect(resultGetGame.statusCode).toBe(200)
   });
 
