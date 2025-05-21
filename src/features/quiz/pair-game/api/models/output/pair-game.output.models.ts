@@ -108,3 +108,14 @@ export const addedAnswerPlayerOutputModel =
         answerStatus: answerPlayer.answerStatus,
         addedAt: answerPlayer.addedAt.toISOString()
     })
+
+export const playerStatisticOutputModel = (games: QuizPairGameEntity[], userId: string) => ({
+    sumScore: games
+        .map(e => e.firstPlayer.id === userId ? e.firstPlayerScore : 0)
+        .reduce((a, b) => a + b),
+    avgScores: 0,
+    gamesCount: games.length,
+    winsCount: 0,
+    lossesCount: 0,
+    drawsCount: 0
+})
