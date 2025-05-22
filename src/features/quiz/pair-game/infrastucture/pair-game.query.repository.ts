@@ -36,7 +36,7 @@ export class PairGameQueryRepository {
   }
 
   async getPaging(userId: string) {
-
+    return this.getPaging(userId);
   }
 
   async getStatisticByUserId(userId: string) {

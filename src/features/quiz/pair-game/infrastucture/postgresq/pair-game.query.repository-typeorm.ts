@@ -53,6 +53,10 @@ export class PairGameQueryRepositoryTypeOrm {
             .getOne();
     }
 
+    async getPaging(userId: string) {
+
+    }
+
     async getStatisticByUserId(userId: string) {
         return this.repository
             .createQueryBuilder('pg')
