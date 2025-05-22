@@ -109,13 +109,46 @@ export const addedAnswerPlayerOutputModel =
         addedAt: answerPlayer.addedAt.toISOString()
     })
 
-export const playerStatisticOutputModel = (games: QuizPairGameEntity[] | null, userId: string) => ({
-    sumScore: games ? games
-        .map(e => e.firstPlayer.id === userId ? e.firstPlayerScore : 0)
-        .reduce((a, b) => a + b) : 0,
-    //avgScores: this.sumScore / this.gamesCount,
-    gamesCount: games ? games.length : 0,
-    //winsCount: 0,
-    //lossesCount: 0,
-    //drawsCount: 0
-})
+export function playerStatisticOutputModel(games: QuizPairGameEntity[] | null, userId: string) {
+    let sumScore = 0;
+    let avgScores = 0;
+    let gamesCount = 0;
+    let winsCount = 0;
+    let lossesCount = 0;
+    let drawsCount = 0;
+
+    if (games) {
+        gamesCount = games.length;
+
+        function find(obj: QuizPairGameEntity) {
+            if (!(obj.status === 'Finished')) return
+
+            if (obj.firstPlayerScore === obj.secondPlayerScore) drawsCount++;
+
+            if (obj.firstPlayer.id === userId) {
+                sumScore += obj.firstPlayerScore;
+
+                if (obj.firstPlayerScore > obj.secondPlayerScore) winsCount++;
+                if (obj.firstPlayerScore < obj.secondPlayerScore) lossesCount++;
+            } else {
+                sumScore += obj.secondPlayerScore;
+
+                if (obj.firstPlayerScore < obj.secondPlayerScore) winsCount++;
+                if (obj.firstPlayerScore > obj.secondPlayerScore) lossesCount++;
+            }
+        }
+
+        games.forEach( e => find(e))
+
+        avgScores = Math.round((sumScore / gamesCount) * 100) / 100;
+    }
+
+    return {
+        sumScore: sumScore,
+        avgScores: avgScores,
+        gamesCount: gamesCount,
+        winsCount: winsCount,
+        lossesCount: lossesCount,
+        drawsCount: drawsCount
+    }
+}
