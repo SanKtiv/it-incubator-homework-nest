@@ -9,6 +9,7 @@ import {
   createdPairGameOutputModel, playerStatisticOutputModel,
 } from '../api/models/output/pair-game.output.models';
 import {QuizPairGameEntity} from "../domain/pair-game.entity";
+import {pairGameQuery} from "../api/models/input/input-query.dto";
 
 @Injectable()
 export class PairGameQueryRepository {
@@ -35,8 +36,8 @@ export class PairGameQueryRepository {
     return createdPairGameOutputModel(pairGame);
   }
 
-  async getPaging(userId: string) {
-    return this.getPaging(userId);
+  async getPaging(userId: string, query: pairGameQuery) {
+    return this.repository.getPaging(userId, query);
   }
 
   async getStatisticByUserId(userId: string) {

@@ -25,7 +25,7 @@ export class PairGameQuizPairsController {
   async getAllPairGamesCurrentUser(
       @CurrentUserId() userId: string,
       @Query() query: pairGameQuery) {
-      return this.pairGameQueryRepository.getPaging(userId)
+      return this.pairGameQueryRepository.getPaging(userId, query)
   }
 
   @Get('users/my-statistic')

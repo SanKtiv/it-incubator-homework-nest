@@ -40,6 +40,13 @@ export class QuizPairGameTestManager {
         .auth(accessToken, { type: 'bearer' })
   }
 
+  async getAllGamesByUserId(accessToken: any, query: any) {
+    return request(this.app.getHttpServer())
+        .get(`/pair-game-quiz/pairs/my`)
+        .query(query)
+        .auth(accessToken, { type: 'bearer' })
+  }
+
   async getCurrentGame(accessToken: any) {
     return request(this.app.getHttpServer())
         .get('/pair-game-quiz/pairs/my-current')

@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {QuizPairGameEntity} from '../../domain/pair-game.entity';
 import {Repository} from 'typeorm';
+import {pairGameQuery} from "../../api/models/input/input-query.dto";
 
 @Injectable()
 export class PairGameQueryRepositoryTypeOrm {
@@ -53,7 +54,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .getOne();
     }
 
-    async getPaging(userId: string) {
+    async getPaging(userId: string, query: pairGameQuery) {
         return this.building
             .where('pg.firstPlayer.id = :userId', {userId})
             .orWhere('pg.secondPlayer.id = :userId', {userId})
