@@ -60,7 +60,8 @@ export class PairGameQueryRepositoryTypeOrm {
             .orWhere('pg.secondPlayer.id = :userId', {userId})
             .orderBy(`"${query.sortBy}"`, query.sortDirection)
             .offset((query.pageNumber - 1) * query.pageSize)
-            .limit(query.pageSize)
+            //.take(query.pageSize)
+            //.limit(query.pageSize)
             .getMany()
     }
 

@@ -313,7 +313,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
   it('28-2 /pair-game-quiz/users/my-statistic (GET), get statistic by user1 should returned status 200', async () => {
     const resultGetGame =
         await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
-    console.log('Statistic user1 =', resultGetGame.body)
+
     await expect(resultGetGame.statusCode).toBe(200)
   });
 
@@ -411,6 +411,11 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
   it('43 /pair-game-quiz/pairs/my (GET), get my all games by user1 should returned status 200', async () => {
     const resultGetGame =
         await quizPairGameTestManager.getAllGamesByUserId(testAccessToken1, {});
+
+    const result =
+        await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
+    console.log('Statistic user1 =', result.body)
+
     console.log('All games for user1 =', resultGetGame.body)
     await expect(resultGetGame.statusCode).toBe(200)
   });
