@@ -1,10 +1,11 @@
-import {Body, Controller, Get, HttpCode, Param, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, Param, Post, Query, UseGuards} from '@nestjs/common';
 import { PairGameQuizPairsServices } from '../application/pair-game.services';
 import { JWTAccessAuthGuard } from '../../../../infrastructure/guards/jwt-access-auth.guard';
 import { CurrentUserId } from '../../../auth/infrastructure/decorators/current-user-id.param.decorator';
 import { PairGameQueryRepository } from '../infrastucture/pair-game.query.repository';
 import { InputAnswersModels } from './models/input/input-answers.models';
 import {idPairGamePipe} from "../../../../infrastructure/pipes/validation.pipe";
+import {pairGameQuery} from "./models/input/input-query.dto";
 
 @Controller('pair-game-quiz')
 export class PairGameQuizPairsController {
@@ -21,7 +22,9 @@ export class PairGameQuizPairsController {
 
   @Get('pairs/my')
   @UseGuards(JWTAccessAuthGuard)
-  async getAllPairGamesCurrentUser(@CurrentUserId() userId: string) {
+  async getAllPairGamesCurrentUser(
+      @CurrentUserId() userId: string,
+      @Query() query: pairGameQuery) {
       return this.pairGameQueryRepository.getPaging(userId)
   }
 
