@@ -35,6 +35,10 @@ export class PairGameQueryRepository {
     return createdPairGameOutputModel(pairGame);
   }
 
+  async getPaging(userId: string) {
+
+  }
+
   async getStatisticByUserId(userId: string) {
     const games = await this.repository.getStatisticByUserId(userId)
 
