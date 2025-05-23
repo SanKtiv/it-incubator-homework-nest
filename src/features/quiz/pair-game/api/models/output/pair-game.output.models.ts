@@ -152,3 +152,7 @@ export function playerStatisticOutputModel(games: QuizPairGameEntity[] | null, u
         drawsCount: drawsCount
     }
 }
+
+export const gamesPagingOutputModel = function (games: QuizPairGameEntity[], userId: string) {
+
+}

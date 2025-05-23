@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {QuizPairGameEntity} from '../../domain/pair-game.entity';
-import {FindManyOptions, Repository} from 'typeorm';
+import {FindManyOptions, Repository, SelectQueryBuilder} from 'typeorm';
 import {pairGameQuery} from "../../api/models/input/input-query.dto";
 
 @Injectable()
@@ -55,34 +55,71 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getPaging(userId: string, query: pairGameQuery) {
-        // return this.building
+        const pairGamesCTE = this.repository
+            .createQueryBuilder('pg')
+            .where('pg.firstPlayer.id = :userId', {userId})
+            .orWhere('pg.secondPlayer.id = :userId', {userId})
+            //.orderBy(`"${query.sortBy}"`, query.sortDirection)
+            //.skip((query.pageNumber - 1) * query.pageSize)
+            //.limit(query.pageSize)
+            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+            .leftJoinAndSelect(
+                'pg.answersFirstPlayer',
+                'answersFirstPlayer',
+                'answersFirstPlayer.userId = firstPlayer.id',
+            )
+            .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
+            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+            .leftJoinAndSelect(
+                'pg.answersSecondPlayer',
+                'answersSecondPlayer',
+                'answersSecondPlayer.userId = secondPlayer.id',
+            )
+            .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
+            .leftJoinAndSelect('pg.questions', 'questions')
+
+        return this.repository
+            .createQueryBuilder()
+            .addCommonTableExpression(pairGamesCTE, 'pg')
+            .select(['pg'])
+            .orderBy(`"${query.sortBy}"`, query.sortDirection)
+            .skip((query.pageNumber - 1) * query.pageSize)
+            .limit(query.pageSize)
+            .getMany()
+
+        // return this.repository
+        //     .createQueryBuilder('pg')
+        //     // .select([
+        //     //     'pg',
+        //     //     'firstPlayer.id',
+        //     //     'secondPlayer.id',
+        //     //     'firstAccountData.login',
+        //     //     'secondAccountData.login',
+        //     //     'questions',
+        //     //     //'answersFirstPlayer',
+        //     //     //'answersSecondPlayer',
+        //     // ])
         //     .where('pg.firstPlayer.id = :userId', {userId})
         //     .orWhere('pg.secondPlayer.id = :userId', {userId})
         //     .orderBy(`"${query.sortBy}"`, query.sortDirection)
         //     .skip((query.pageNumber - 1) * query.pageSize)
-        //     .limit(query.pageSize)
+        //     //.limit(query.pageSize)
+        //     .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+        //     .leftJoinAndSelect(
+        //         'pg.answersFirstPlayer',
+        //         'answersFirstPlayer',
+        //         'answersFirstPlayer.userId = firstPlayer.id',
+        //     )
+        //     .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
+        //     .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+        //     .leftJoinAndSelect(
+        //         'pg.answersSecondPlayer',
+        //         'answersSecondPlayer',
+        //         'answersSecondPlayer.userId = secondPlayer.id',
+        //     )
+        //     .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
+        //     .leftJoinAndSelect('pg.questions', 'questions')
         //     .getMany()
-
-        const pairGamesTCE = this.repository
-            .createQueryBuilder('pg')
-            .where('pg.firstPlayer.id = :userId', {userId})
-            .orWhere('pg.secondPlayer.id = :userId', {userId})
-            .orderBy(`"${query.sortBy}"`, query.sortDirection)
-            .skip((query.pageNumber - 1) * query.pageSize)
-            .limit(query.pageSize)
-            //.getMany()
-
-        return pairGamesTCE
-            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
-            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-            .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
-            .select([
-                'pg',
-                'firstPlayer.id',
-                'secondPlayer.id',
-            ])
-            .getMany()
     }
 
     async getStatisticByUserId(userId: string) {
