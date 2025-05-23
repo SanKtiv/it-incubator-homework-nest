@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {QuizPairGameEntity} from '../../domain/pair-game.entity';
-import {Repository} from 'typeorm';
+import {FindManyOptions, Repository} from 'typeorm';
 import {pairGameQuery} from "../../api/models/input/input-query.dto";
 
 @Injectable()
@@ -55,13 +55,33 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getPaging(userId: string, query: pairGameQuery) {
-        return this.building
+        // return this.building
+        //     .where('pg.firstPlayer.id = :userId', {userId})
+        //     .orWhere('pg.secondPlayer.id = :userId', {userId})
+        //     .orderBy(`"${query.sortBy}"`, query.sortDirection)
+        //     .skip((query.pageNumber - 1) * query.pageSize)
+        //     .limit(query.pageSize)
+        //     .getMany()
+
+        const pairGamesTCE = this.repository
+            .createQueryBuilder('pg')
             .where('pg.firstPlayer.id = :userId', {userId})
             .orWhere('pg.secondPlayer.id = :userId', {userId})
             .orderBy(`"${query.sortBy}"`, query.sortDirection)
-            .offset((query.pageNumber - 1) * query.pageSize)
-            //.take(query.pageSize)
-            //.limit(query.pageSize)
+            .skip((query.pageNumber - 1) * query.pageSize)
+            .limit(query.pageSize)
+            //.getMany()
+
+        return pairGamesTCE
+            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+            .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
+            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+            .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
+            .select([
+                'pg',
+                'firstPlayer.id',
+                'secondPlayer.id',
+            ])
             .getMany()
     }
 
