@@ -59,6 +59,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .createQueryBuilder('pg')
             .where('pg.firstPlayer.id = :userId', {userId})
             .orWhere('pg.secondPlayer.id = :userId', {userId})
+            .select(['pg'])
             //.orderBy(`"${query.sortBy}"`, query.sortDirection)
             //.skip((query.pageNumber - 1) * query.pageSize)
             //.limit(query.pageSize)
@@ -81,7 +82,7 @@ export class PairGameQueryRepositoryTypeOrm {
         return this.repository
             .createQueryBuilder()
             .addCommonTableExpression(pairGamesCTE, 'pg')
-            .select(['pg'])
+            //.select(['pg'])
             .orderBy(`"${query.sortBy}"`, query.sortDirection)
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
