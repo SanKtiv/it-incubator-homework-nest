@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
+import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
 import {QuizPairGameEntity} from '../../domain/pair-game.entity';
-import {FindManyOptions, Repository, SelectQueryBuilder} from 'typeorm';
+import {DataSource, FindManyOptions, Repository, SelectQueryBuilder} from 'typeorm';
 import {pairGameQuery} from "../../api/models/input/input-query.dto";
 
 @Injectable()
@@ -9,6 +9,7 @@ export class PairGameQueryRepositoryTypeOrm {
     constructor(
         @InjectRepository(QuizPairGameEntity)
         protected repository: Repository<QuizPairGameEntity>,
+        @InjectDataSource() protected dataSource: DataSource,
     ) {
     }
     private get building() {
@@ -55,7 +56,7 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getPaging(userId: string, query: pairGameQuery) {
-        const pairGamesCTE = await this.repository
+        const pairGamesCTE = this.repository
             .createQueryBuilder('pg')
             .where('pg.firstPlayer.id = :userId OR pg.secondPlayer.id = :userId', {userId})
             .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
@@ -74,48 +75,100 @@ export class PairGameQueryRepositoryTypeOrm {
             .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
             .leftJoinAndSelect('pg.questions', 'questions')
 
-        return this.repository
-            .createQueryBuilder()
-            .addCommonTableExpression(pairGamesCTE, 'cte')
-            .select(['cte'])
-            .orderBy(`"${query.sortBy}"`, query.sortDirection)
-            .skip((query.pageNumber - 1) * query.pageSize)
-            .limit(query.pageSize)
-            .getRawMany()
+        const subQuery = (subQuery: SelectQueryBuilder<QuizPairGameEntity>) =>
+            subQuery
+                .where('pg.firstPlayer.id = :userId OR pg.secondPlayer.id = :userId', {userId})
+                .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+                .leftJoinAndSelect(
+                    'pg.answersFirstPlayer',
+                    'answersFirstPlayer',
+                    'answersFirstPlayer.userId = firstPlayer.id',
+                )
+                .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
+                .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+                .leftJoinAndSelect(
+                    'pg.answersSecondPlayer',
+                    'answersSecondPlayer',
+                    'answersSecondPlayer.userId = secondPlayer.id',
+                )
+                .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
+                .leftJoinAndSelect('pg.questions', 'questions')
+
+
+        // return this.dataSource
+        //     .createQueryBuilder()
+        //     .addCommonTableExpression(pairGamesCTE, 'cte')
+        //     .select([
+        //         'pg',
+        //         'pg.id',
+        //         // 'pg.firstPlayerScore',
+        //         // 'pg.secondPlayerScore',
+        //         // 'pg.status',
+        //         // 'pg.pairCreatedDate',
+        //         // 'pg.startGameDate',
+        //         // 'pg.finishGameDate',
+        //     ])
+        //     .from('cte', 'pg')
+        //     // .orderBy(`cte.${query.sortBy}`, query.sortDirection)
+        //     // .skip((query.pageNumber - 1) * query.pageSize)
+        //     // .limit(query.pageSize)
+        //     .getRawMany(); //
 
         // return this.repository
-        //     .createQueryBuilder('pg')
-        //     // .select([
-        //     //     'pg',
-        //     //     'firstPlayer.id',
-        //     //     'secondPlayer.id',
-        //     //     'firstAccountData.login',
-        //     //     'secondAccountData.login',
-        //     //     'questions',
-        //     //     //'answersFirstPlayer',
-        //     //     //'answersSecondPlayer',
-        //     // ])
-        //     .where('pg.firstPlayer.id = :userId', {userId})
-        //     .orWhere('pg.secondPlayer.id = :userId', {userId})
+        //     .createQueryBuilder()
+        //     .addCommonTableExpression(pairGamesCTE, 'cte')
+        //     .select('cte') // <- выбираем все поля из CTE
+        //     .from('cte', 'cte') // <- явно указываем, что читаем из CTE
+        //     // .orderBy(`cte.${query.sortBy}`, query.sortDirection)
+        //     // .skip((query.pageNumber - 1) * query.pageSize)
+        //     // .limit(query.pageSize)
+        //     .getMany();
+
+        // return this.repository
+        //     .createQueryBuilder()
+        //     .addCommonTableExpression(pairGamesCTE, 'cte')
+        //     .select(['cte'])
+        //     .from('cte', 'cte')
         //     .orderBy(`"${query.sortBy}"`, query.sortDirection)
         //     .skip((query.pageNumber - 1) * query.pageSize)
-        //     //.limit(query.pageSize)
-        //     .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-        //     .leftJoinAndSelect(
-        //         'pg.answersFirstPlayer',
-        //         'answersFirstPlayer',
-        //         'answersFirstPlayer.userId = firstPlayer.id',
-        //     )
-        //     .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
-        //     .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-        //     .leftJoinAndSelect(
-        //         'pg.answersSecondPlayer',
-        //         'answersSecondPlayer',
-        //         'answersSecondPlayer.userId = secondPlayer.id',
-        //     )
-        //     .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
-        //     .leftJoinAndSelect('pg.questions', 'questions')
+        //     .limit(query.pageSize)
         //     .getMany()
+
+        return this.repository
+            .createQueryBuilder('pg')
+            // .select([
+            //     'pg',
+            //     //'firstPlayer.id',
+            //     //'secondPlayer.id',
+            //     //'firstAccountData.login',
+            //     //'secondAccountData.login',
+            //     //'questions',
+            //     //'answersFirstPlayer',
+            //     //'answersSecondPlayer',
+            // ])
+            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+            .leftJoinAndSelect(
+                'pg.answersFirstPlayer',
+                'answersFirstPlayer',
+                'answersFirstPlayer.userId = firstPlayer.id',
+            )
+            .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
+            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+            .leftJoinAndSelect(
+                'pg.answersSecondPlayer',
+                'answersSecondPlayer',
+                'answersSecondPlayer.userId = secondPlayer.id',
+            )
+            .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
+            .leftJoinAndSelect('pg.questions', 'questions')
+            .where('pg.firstPlayer.id = :userId', {userId})
+            .orWhere('pg.secondPlayer.id = :userId', {userId})
+            .orderBy(`"${query.sortBy}"`, query.sortDirection)
+            // .skip((query.pageNumber - 1) * query.pageSize)
+            // .limit(query.pageSize)
+            .skip(0)
+            // .limit(10)
+            .getMany()
     }
 
     async getStatisticByUserId(userId: string) {
