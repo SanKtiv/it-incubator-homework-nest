@@ -55,14 +55,9 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getPaging(userId: string, query: pairGameQuery) {
-        const pairGamesCTE = this.repository
+        const pairGamesCTE = await this.repository
             .createQueryBuilder('pg')
-            .where('pg.firstPlayer.id = :userId', {userId})
-            .orWhere('pg.secondPlayer.id = :userId', {userId})
-            .select(['pg'])
-            //.orderBy(`"${query.sortBy}"`, query.sortDirection)
-            //.skip((query.pageNumber - 1) * query.pageSize)
-            //.limit(query.pageSize)
+            .where('pg.firstPlayer.id = :userId OR pg.secondPlayer.id = :userId', {userId})
             .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
             .leftJoinAndSelect(
                 'pg.answersFirstPlayer',
@@ -81,12 +76,12 @@ export class PairGameQueryRepositoryTypeOrm {
 
         return this.repository
             .createQueryBuilder()
-            .addCommonTableExpression(pairGamesCTE, 'pg')
-            //.select(['pg'])
+            .addCommonTableExpression(pairGamesCTE, 'cte')
+            .select(['cte'])
             .orderBy(`"${query.sortBy}"`, query.sortDirection)
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
-            .getMany()
+            .getRawMany()
 
         // return this.repository
         //     .createQueryBuilder('pg')
