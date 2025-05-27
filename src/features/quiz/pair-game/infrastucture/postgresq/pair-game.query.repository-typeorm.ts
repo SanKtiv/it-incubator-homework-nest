@@ -63,7 +63,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .where('pg.firstPlayer.id = :userId')
             .orWhere('pg.secondPlayer.id = :userId')
             .setParameters({ userId })
-            .orderBy(`pg."${query.sortBy}"`, query.sortDirection)
+            .orderBy(`"${query.sortBy}"`, query.sortDirection)
             .skip((query.pageNumber - 1) * query.pageSize)
             .take(query.pageSize);
 
