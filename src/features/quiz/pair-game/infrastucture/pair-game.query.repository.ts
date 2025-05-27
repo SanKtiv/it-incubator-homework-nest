@@ -6,7 +6,7 @@ import {
 import { PairGameQueryRepositoryTypeOrm } from './postgresq/pair-game.query.repository-typeorm';
 import {
   CreatedPairGameOutputModel,
-  createdPairGameOutputModel, playerStatisticOutputModel,
+  createdPairGameOutputModel, gamesPagingOutputModel, playerStatisticOutputModel,
 } from '../api/models/output/pair-game.output.models';
 import {QuizPairGameEntity} from "../domain/pair-game.entity";
 import {pairGameQuery} from "../api/models/input/input-query.dto";
@@ -37,7 +37,9 @@ export class PairGameQueryRepository {
   }
 
   async getPaging(userId: string, query: pairGameQuery) {
-    return this.repository.getPaging(userId, query);
+    const pairGames = await this.repository.getPaging(userId, query);
+
+    return gamesPagingOutputModel(pairGames);
   }
 
   async getStatisticByUserId(userId: string) {

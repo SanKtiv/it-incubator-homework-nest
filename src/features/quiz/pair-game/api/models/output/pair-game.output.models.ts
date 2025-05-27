@@ -153,6 +153,6 @@ export function playerStatisticOutputModel(games: QuizPairGameEntity[] | null, u
     }
 }
 
-export const gamesPagingOutputModel = function (games: QuizPairGameEntity[], userId: string) {
-
+export const gamesPagingOutputModel = function (games: QuizPairGameEntity[]) {
+    return games.map( game => createdPairGameOutputModel(game))
 }

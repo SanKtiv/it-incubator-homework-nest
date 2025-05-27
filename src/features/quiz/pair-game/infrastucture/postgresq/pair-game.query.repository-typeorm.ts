@@ -55,7 +55,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .getOne();
     }
 
-    async getPaging(userId: string, query: pairGameQuery) {
+    async getPaging(userId: string, query: pairGameQuery): Promise<QuizPairGameEntity[]> {
         const idsSubQuery = this.repository
             .createQueryBuilder('pg')
             .select('pg.id')
