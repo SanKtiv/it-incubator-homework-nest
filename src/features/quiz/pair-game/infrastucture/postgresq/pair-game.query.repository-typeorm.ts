@@ -56,96 +56,21 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getPaging(userId: string, query: pairGameQuery) {
-        const pairGamesCTE = this.repository
+        const idsSubQuery = this.repository
             .createQueryBuilder('pg')
-            .where('pg.firstPlayer.id = :userId OR pg.secondPlayer.id = :userId', {userId})
-            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect(
-                'pg.answersFirstPlayer',
-                'answersFirstPlayer',
-                'answersFirstPlayer.userId = firstPlayer.id',
-            )
-            .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
-            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-            .leftJoinAndSelect(
-                'pg.answersSecondPlayer',
-                'answersSecondPlayer',
-                'answersSecondPlayer.userId = secondPlayer.id',
-            )
-            .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
-            .leftJoinAndSelect('pg.questions', 'questions')
-
-        const subQuery = (subQuery: SelectQueryBuilder<QuizPairGameEntity>) =>
-            subQuery
-                .where('pg.firstPlayer.id = :userId OR pg.secondPlayer.id = :userId', {userId})
-                .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-                .leftJoinAndSelect(
-                    'pg.answersFirstPlayer',
-                    'answersFirstPlayer',
-                    'answersFirstPlayer.userId = firstPlayer.id',
-                )
-                .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
-                .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-                .leftJoinAndSelect(
-                    'pg.answersSecondPlayer',
-                    'answersSecondPlayer',
-                    'answersSecondPlayer.userId = secondPlayer.id',
-                )
-                .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
-                .leftJoinAndSelect('pg.questions', 'questions')
-
-
-        // return this.dataSource
-        //     .createQueryBuilder()
-        //     .addCommonTableExpression(pairGamesCTE, 'cte')
-        //     .select([
-        //         'pg',
-        //         'pg.id',
-        //         // 'pg.firstPlayerScore',
-        //         // 'pg.secondPlayerScore',
-        //         // 'pg.status',
-        //         // 'pg.pairCreatedDate',
-        //         // 'pg.startGameDate',
-        //         // 'pg.finishGameDate',
-        //     ])
-        //     .from('cte', 'pg')
-        //     // .orderBy(`cte.${query.sortBy}`, query.sortDirection)
-        //     // .skip((query.pageNumber - 1) * query.pageSize)
-        //     // .limit(query.pageSize)
-        //     .getRawMany(); //
-
-        // return this.repository
-        //     .createQueryBuilder()
-        //     .addCommonTableExpression(pairGamesCTE, 'cte')
-        //     .select('cte') // <- выбираем все поля из CTE
-        //     .from('cte', 'cte') // <- явно указываем, что читаем из CTE
-        //     // .orderBy(`cte.${query.sortBy}`, query.sortDirection)
-        //     // .skip((query.pageNumber - 1) * query.pageSize)
-        //     // .limit(query.pageSize)
-        //     .getMany();
-
-        // return this.repository
-        //     .createQueryBuilder()
-        //     .addCommonTableExpression(pairGamesCTE, 'cte')
-        //     .select(['cte'])
-        //     .from('cte', 'cte')
-        //     .orderBy(`"${query.sortBy}"`, query.sortDirection)
-        //     .skip((query.pageNumber - 1) * query.pageSize)
-        //     .limit(query.pageSize)
-        //     .getMany()
+            .select('pg.id')
+            //.where('pg.firstPlayer.id = :userId OR pg.secondPlayer.id = :userId', { userId })
+            .where('pg.firstPlayer.id = :userId')
+            .orWhere('pg.secondPlayer.id = :userId')
+            .setParameters({ userId })
+            .orderBy(`"${query.sortBy}"`, query.sortDirection)
+            .skip((query.pageNumber - 1) * query.pageSize)
+            .take(query.pageSize);
 
         return this.repository
             .createQueryBuilder('pg')
-            // .select([
-            //     'pg',
-            //     //'firstPlayer.id',
-            //     //'secondPlayer.id',
-            //     //'firstAccountData.login',
-            //     //'secondAccountData.login',
-            //     //'questions',
-            //     //'answersFirstPlayer',
-            //     //'answersSecondPlayer',
-            // ])
+            .where(`pg.id IN (${idsSubQuery.getQuery()})`)
+            .setParameters(idsSubQuery.getParameters())
             .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
             .leftJoinAndSelect(
                 'pg.answersFirstPlayer',
@@ -161,14 +86,8 @@ export class PairGameQueryRepositoryTypeOrm {
             )
             .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
             .leftJoinAndSelect('pg.questions', 'questions')
-            .where('pg.firstPlayer.id = :userId', {userId})
-            .orWhere('pg.secondPlayer.id = :userId', {userId})
             .orderBy(`"${query.sortBy}"`, query.sortDirection)
-            // .skip((query.pageNumber - 1) * query.pageSize)
-            // .limit(query.pageSize)
-            .skip(0)
-            // .limit(10)
-            .getMany()
+            .getMany();
     }
 
     async getStatisticByUserId(userId: string) {
