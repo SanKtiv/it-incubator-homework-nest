@@ -86,7 +86,7 @@ export class PairGameQueryRepositoryTypeOrm {
             )
             .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
             .leftJoinAndSelect('pg.questions', 'questions')
-            .orderBy(`"${query.sortBy}"`, query.sortDirection)
+            .orderBy(`"pg.${query.sortBy}"`, query.sortDirection)
             .getMany();
     }
 
