@@ -1,5 +1,6 @@
 import { QuizPairGameEntity } from '../../../domain/pair-game.entity';
 import {AnswersGameEntity} from "../../../domain/answers-game.entity";
+import {pairGameQuery} from "../input/input-query.dto";
 
 export class CreatedPairGameOutputModel {
   constructor(
@@ -153,6 +154,12 @@ export function playerStatisticOutputModel(games: QuizPairGameEntity[] | null, u
     }
 }
 
-export const gamesPagingOutputModel = function (games: QuizPairGameEntity[]) {
-    return games.map( game => createdPairGameOutputModel(game))
+export const gamesPagingOutputModel = function (games: QuizPairGameEntity[], query: pairGameQuery, totalGames: number) {
+    return {
+        pagesCount: Math.ceil(+totalGames / +query.pageSize),
+        page: query.pageNumber,
+        pageSize: query.pageSize,
+        totalCount: +totalGames,
+        items: games.map( game => createdPairGameOutputModel(game))
+    }
 }

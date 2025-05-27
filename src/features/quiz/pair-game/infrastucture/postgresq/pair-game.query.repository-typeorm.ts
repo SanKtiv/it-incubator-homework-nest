@@ -90,6 +90,16 @@ export class PairGameQueryRepositoryTypeOrm {
             .getMany();
     }
 
+    async getTotalGamesByUserId(userId: string) {
+        return this.repository
+            .createQueryBuilder('pg')
+            .select('pg.id')
+            .where('pg.firstPlayer.id = :userId')
+            .orWhere('pg.secondPlayer.id = :userId')
+            .setParameters({ userId })
+            .getCount()
+    }
+
     async getStatisticByUserId(userId: string) {
         return this.repository
             .createQueryBuilder('pg')
