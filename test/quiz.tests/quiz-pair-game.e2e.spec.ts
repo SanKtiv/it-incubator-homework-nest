@@ -408,9 +408,16 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     })
   });
 
+  it('42-1 /pair-game-quiz/pairs/connection (POST), create game №4 user1 should returned status 200', async () => {
+    const resultCreatePairGame =
+        await quizPairGameTestManager.create(testAccessToken1);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+  });
+
   it('43 /pair-game-quiz/pairs/my (GET), get my all games by user1 should returned status 200', async () => {
     const resultGetGame =
-        await quizPairGameTestManager.getAllGamesByUserId(testAccessToken1, {sortDirection: 'ASC'});
+        await quizPairGameTestManager.getAllGamesByUserId(testAccessToken1, {sortBy: 'status', sortDirection: 'DESC'});
 
     const result =
         await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
