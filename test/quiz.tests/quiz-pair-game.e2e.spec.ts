@@ -71,361 +71,361 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     await clearDB.clearDB();
   });
 
-  // it('2 /sa/quiz/questions (POST), should returned many question models and status 201', async () => {
-  //   const [inputModel1, inputModel2, inputModel3, inputModel4, inputModel5] =
-  //     inputModelMany;
-  //
-  //   const response1 = await quizQuestionsTestManager.create(
-  //     inputModel1,
-  //     authBasic,
-  //   );
-  //   const response2 = await quizQuestionsTestManager.create(
-  //     inputModel2,
-  //     authBasic,
-  //   );
-  //   const response3 = await quizQuestionsTestManager.create(
-  //     inputModel3,
-  //     authBasic,
-  //   );
-  //   const response4 = await quizQuestionsTestManager.create(
-  //     inputModel4,
-  //     authBasic,
-  //   );
-  //   const response5 = await quizQuestionsTestManager.create(
-  //     inputModel5,
-  //     authBasic,
-  //   );
-  //
-  //   await expect(response3.statusCode).toBe(201);
-  // });
-  //
-  // it('3 /sa/users (POST), handler method create user1, should returned status 201 and correct user model', async () => {
-  //   await userTestManger.adminCreateUser(userTest1, authBasic);
-  // });
-  //
-  // it('4 /sa/users (POST), handler method create user2, should returned status 201 and correct user model', async () => {
-  //   await userTestManger.adminCreateUser(userTest2, authBasic);
-  // });
-  //
-  // it('5 /sa/users (POST), handler method create user3, should returned status 201 and correct user model', async () => {
-  //   await userTestManger.adminCreateUser(userTest3, authBasic);
-  // });
-  //
-  // it('6 /sa/users (POST), handler method create user4, should returned status 201 and correct user model', async () => {
-  //   await userTestManger.adminCreateUser(userTest4, authBasic);
-  // });
-  //
-  // it('7 /auth/login (POST), handler method login user1, should returned status 200 and correct access token', async () => {
-  //   const resultLoginUser = await userTestManger.login(
-  //     userTest1.login,
-  //     userTest1.password,
-  //   );
-  //
-  //   testAccessToken1 = resultLoginUser.accessToken;
-  // });
-  //
-  // it('8 /auth/login (POST), handler method login user2, should returned status 200 and correct access token', async () => {
-  //   const resultLoginUser = await userTestManger.login(
-  //     userTest2.login,
-  //     userTest2.password,
-  //   );
-  //
-  //   testAccessToken2 = resultLoginUser.accessToken;
-  // });
-  //
-  // it('9 /auth/login (POST), handler method login user3, should returned status 200 and correct access token', async () => {
-  //   const resultLoginUser = await userTestManger.login(
-  //       userTest3.login,
-  //       userTest3.password,
-  //   );
-  //
-  //   testAccessToken3 = resultLoginUser.accessToken;
-  // });
-  //
-  // it('10 /auth/login (POST), handler method login user4, should returned status 200 and correct access token', async () => {
-  //   const resultLoginUser = await userTestManger.login(
-  //       userTest4.login,
-  //       userTest4.password,
-  //   );
-  //
-  //   testAccessToken4 = resultLoginUser.accessToken;
-  // });
-  //
-  // it('11 /pair-game-quiz/pairs/connection (POST), create game №1 user1 should returned status 200', async () => {
-  //   const resultCreatePairGame =
-  //     await quizPairGameTestManager.create(testAccessToken1);
-  //
-  //   await expect(resultCreatePairGame.statusCode).toBe(200)
-  //
-  //   idExistPairGame1 = resultCreatePairGame.body.id;
-  // });
-  //
-  // it('12 /pair-game-quiz/pairs/connection (POST), connection game №1 user1 should returned status 403', async () => {
-  //   const resultCreatePairGame =
-  //       await quizPairGameTestManager.create(testAccessToken1);
-  //
-  //   await expect(resultCreatePairGame.statusCode).toBe(403)
-  // });
-  //
-  // it('13 /pair-game-quiz/pairs/my-current (GET), get current game user2 should returned status 404', async () => {
-  //   const resultGetGame =
-  //       await quizPairGameTestManager.getCurrentGame(testAccessToken2);
-  //
-  //   await expect(resultGetGame.statusCode).toBe(404)
-  // });
-  //
-  // it('14 /pair-game-quiz/pairs/:id (GET), get game by user2 should returned status 403', async () => {
-  //   const resultGetGame = await quizPairGameTestManager.getById(
-  //       idExistPairGame1,
-  //       testAccessToken2,
-  //   );
-  //
-  //   await expect(resultGetGame.statusCode).toBe(403)
-  // });
-  //
-  // it('15 /pair-game-quiz/pairs/connection (POST), join to game №1 user2 should returned status 200', async () => {
-  //   const resultCreatePairGame = await quizPairGameTestManager.create(testAccessToken2);
-  //
-  //   await expect(resultCreatePairGame.statusCode).toBe(200)
-  // });
-  //
-  // it('16 /pair-game-quiz/pairs/:id (GET), get game user2 should returned status 200', async () => {
-  //   const resultGetGame = await quizPairGameTestManager.getById(
-  //       idExistPairGame1,
-  //       testAccessToken2,
-  //   );
-  //
-  //   await expect(resultGetGame.statusCode).toBe(200)
-  // });
-  //
-  // it('17 /pair-game-quiz/pairs/my-current/answers (POST), user1 add correct answer first, should return status 200', async () => {
-  //   const result = await quizPairGameTestManager.createAnswer(testAccessToken1, {
-  //     answer: 'Answer_1',
-  //   })
-  //
-  //   await expect(result.statusCode).toBe(200)
-  // });
-  //
-  // it('18 /pair-game-quiz/pairs/:id (GET), get game user1 should returned status 200, and one correct answer', async () => {
-  //   const resultGetGame = await quizPairGameTestManager.getById(
-  //       idExistPairGame1,
-  //       testAccessToken1,
-  //   );
-  //
-  //   await expect(resultGetGame.statusCode).toBe(200)
-  // });
-  //
-  // it('19 /pair-game-quiz/pairs/my-current (GET), get current game user2 should returned status 200', async () => {
-  //   const resultGetGame =
-  //       await quizPairGameTestManager.getCurrentGame(testAccessToken2);
-  //
-  //   await expect(resultGetGame.statusCode).toBe(200)
-  // });
-  //
-  // it('20 /pair-game-quiz/pairs/my-current/answers (POST), user2 add correct answer first, should return status 200', async () => {
-  //   const result = await quizPairGameTestManager.createAnswer(testAccessToken2, {
-  //     answer: 'Answer_1',
-  //   })
-  //
-  //   await expect(result.statusCode).toBe(200)
-  // });
-  //
-  // it('20-1 /pair-game-quiz/pairs/my-current (GET), get current game user2 should returned status 200', async () => {
-  //   const resultGetGame =
-  //       await quizPairGameTestManager.getCurrentGame(testAccessToken2);
-  //
-  //   await expect(resultGetGame.statusCode).toBe(200)
-  // });
-  //
-  // it('21 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 1 incorrect answer', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken1, {
-  //     answer: 'Wrong answer_1',
-  //   })
-  // });
-  //
-  // it('21-1 /pair-game-quiz/pairs/my-current (GET), get current game user1 should returned status 200', async () => {
-  //   const resultGetGame =
-  //       await quizPairGameTestManager.getCurrentGame(testAccessToken1);
-  //
-  //   await expect(resultGetGame.statusCode).toBe(200)
-  // });
-  //
-  // it('22 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 2 incorrect answer', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken1, {
-  //     answer: 'Wrong answer_2',
-  //   })
-  // });
-  //
-  // it('23 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 3 incorrect answer', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken1, {
-  //     answer: 'Wrong answer_3',
-  //   })
-  // });
-  //
-  // it('24 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 4 incorrect answer', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken1, {
-  //     answer: 'Wrong answer_4',
-  //   })
-  // });
-  //
-  // it('21-1 /pair-game-quiz/pairs/my-current (GET), get current game user1 should returned status 200', async () => {
-  //   const resultGetGame =
-  //       await quizPairGameTestManager.getCurrentGame(testAccessToken1);
-  //
-  //   await expect(resultGetGame.statusCode).toBe(200)
-  // });
-  //
-  // it('25 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 1 incorrect answer', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken2, {
-  //     answer: 'Wrong answer_1',
-  //   })
-  // });
-  //
-  // it('26 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 2 incorrect answer', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken2, {
-  //     answer: 'Wrong answer_2',
-  //   })
-  // });
-  //
-  // it('27 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 3 incorrect answer', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken2, {
-  //     answer: 'Wrong answer_3',
-  //   })
-  // });
-  //
-  // it('28 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 4 incorrect answer', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken2, {
-  //     answer: 'Wrong answer_4',
-  //   })
-  //
-  //   const result = await quizPairGameTestManager.getById(idExistPairGame1, testAccessToken2)
-  //
-  //
-  // });
-  //
-  // it('28-1 /pair-game-quiz/pairs/:id (GET), get game1 by id and user1 should returned status 200', async () => {
-  //   const resultGetGame =
-  //       await quizPairGameTestManager.getById(idExistPairGame1, testAccessToken1);
-  //
-  //   await expect(resultGetGame.statusCode).toBe(200)
-  // });
-  //
-  // it('28-2 /pair-game-quiz/users/my-statistic (GET), get statistic by user1 should returned status 200', async () => {
-  //   const resultGetGame =
-  //       await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
-  //
-  //   await expect(resultGetGame.statusCode).toBe(200)
-  // });
-  //
-  // it('29 /pair-game-quiz/pairs/connection (POST), create game №2 user3 should returned status 200', async () => {
-  //   const resultCreatePairGame =
-  //       await quizPairGameTestManager.create(testAccessToken3);
-  //
-  //   await expect(resultCreatePairGame.statusCode).toBe(200)
-  //
-  //   idExistPairGame2 = resultCreatePairGame.body.id;
-  // });
-  //
-  // it('30 /pair-game-quiz/pairs/connection (POST), join game №2 user4 should returned status 200', async () => {
-  //   const resultCreatePairGame =
-  //       await quizPairGameTestManager.create(testAccessToken4);
-  //
-  //   await expect(resultCreatePairGame.statusCode).toBe(200)
-  // });
-  //
-  // it('31 /pair-game-quiz/pairs/connection (POST), create game №3 user1 should returned status 200', async () => {
-  //   const resultCreatePairGame =
-  //       await quizPairGameTestManager.create(testAccessToken1);
-  //
-  //   await expect(resultCreatePairGame.statusCode).toBe(200)
-  //
-  //   idExistPairGame3 = resultCreatePairGame.body.id;
-  // });
-  //
-  // it('32 /pair-game-quiz/pairs/connection (POST), join to game №3 user2 should returned status 200', async () => {
-  //   const resultCreatePairGame = await quizPairGameTestManager.create(testAccessToken2);
-  //
-  //   await expect(resultCreatePairGame.statusCode).toBe(200)
-  // });
-  //
-  // it('33 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 1 incorrect answer in game№3', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken1, {
-  //     answer: 'Wrong answer_3',
-  //   })
-  // });
-  //
-  // it('34 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 2 incorrect answer in game№3', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken1, {
-  //     answer: 'Wrong answer_3',
-  //   })
-  // });
-  //
-  // it('35 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 3 incorrect answer in game№3', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken1, {
-  //     answer: 'Wrong answer_3',
-  //   })
-  // });
-  //
-  // it('36 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 4 correct answer in game№3', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken1, {
-  //     answer: 'Answer_2',
-  //   })
-  // });
-  //
-  // it('37 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 5 correct answer in game№3', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken1, {
-  //     answer: 'Answer_2',
-  //   })
-  // });
-  //
-  // it('38 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 1 incorrect answer in game№3', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken2, {
-  //     answer: 'Wrong answer_3',
-  //   })
-  // });
-  //
-  // it('39 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 2 incorrect answer in game№3', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken2, {
-  //     answer: 'Wrong answer_3',
-  //   })
-  // });
-  //
-  // it('40 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 3 incorrect answer in game№3', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken2, {
-  //     answer: 'Wrong answer_3',
-  //   })
-  // });
-  //
-  // it('41 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 4 correct answer in game№3', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken2, {
-  //     answer: 'Answer_2',
-  //   })
-  // });
-  //
-  // it('42 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 5 correct answer in game№3', async () => {
-  //   await quizPairGameTestManager.createAnswer(testAccessToken2, {
-  //     answer: 'Answer_2',
-  //   })
-  // });
-  //
-  // it('42-1 /pair-game-quiz/pairs/connection (POST), create game №4 user1 should returned status 200', async () => {
-  //   const resultCreatePairGame =
-  //       await quizPairGameTestManager.create(testAccessToken1);
-  //
-  //   await expect(resultCreatePairGame.statusCode).toBe(200)
-  // });
-  //
-  // it('43 /pair-game-quiz/pairs/my (GET), get my all games by user1 should returned status 200', async () => {
-  //   const resultGetGame =
-  //       await quizPairGameTestManager.getAllGamesByUserId(testAccessToken1, {sortBy: 'status', sortDirection: 'DESC'});
-  //
-  //   const result =
-  //       await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
-  //   console.log('Statistic user1 =', result.body)
-  //
-  //   console.log('All games for user1 =', resultGetGame.body)
-  //   await expect(resultGetGame.statusCode).toBe(200)
-  // });
+  it('2 /sa/quiz/questions (POST), should returned many question models and status 201', async () => {
+    const [inputModel1, inputModel2, inputModel3, inputModel4, inputModel5] =
+      inputModelMany;
+
+    const response1 = await quizQuestionsTestManager.create(
+      inputModel1,
+      authBasic,
+    );
+    const response2 = await quizQuestionsTestManager.create(
+      inputModel2,
+      authBasic,
+    );
+    const response3 = await quizQuestionsTestManager.create(
+      inputModel3,
+      authBasic,
+    );
+    const response4 = await quizQuestionsTestManager.create(
+      inputModel4,
+      authBasic,
+    );
+    const response5 = await quizQuestionsTestManager.create(
+      inputModel5,
+      authBasic,
+    );
+
+    await expect(response3.statusCode).toBe(201);
+  });
+
+  it('3 /sa/users (POST), handler method create user1, should returned status 201 and correct user model', async () => {
+    await userTestManger.adminCreateUser(userTest1, authBasic);
+  });
+
+  it('4 /sa/users (POST), handler method create user2, should returned status 201 and correct user model', async () => {
+    await userTestManger.adminCreateUser(userTest2, authBasic);
+  });
+
+  it('5 /sa/users (POST), handler method create user3, should returned status 201 and correct user model', async () => {
+    await userTestManger.adminCreateUser(userTest3, authBasic);
+  });
+
+  it('6 /sa/users (POST), handler method create user4, should returned status 201 and correct user model', async () => {
+    await userTestManger.adminCreateUser(userTest4, authBasic);
+  });
+
+  it('7 /auth/login (POST), handler method login user1, should returned status 200 and correct access token', async () => {
+    const resultLoginUser = await userTestManger.login(
+      userTest1.login,
+      userTest1.password,
+    );
+
+    testAccessToken1 = resultLoginUser.accessToken;
+  });
+
+  it('8 /auth/login (POST), handler method login user2, should returned status 200 and correct access token', async () => {
+    const resultLoginUser = await userTestManger.login(
+      userTest2.login,
+      userTest2.password,
+    );
+
+    testAccessToken2 = resultLoginUser.accessToken;
+  });
+
+  it('9 /auth/login (POST), handler method login user3, should returned status 200 and correct access token', async () => {
+    const resultLoginUser = await userTestManger.login(
+        userTest3.login,
+        userTest3.password,
+    );
+
+    testAccessToken3 = resultLoginUser.accessToken;
+  });
+
+  it('10 /auth/login (POST), handler method login user4, should returned status 200 and correct access token', async () => {
+    const resultLoginUser = await userTestManger.login(
+        userTest4.login,
+        userTest4.password,
+    );
+
+    testAccessToken4 = resultLoginUser.accessToken;
+  });
+
+  it('11 /pair-game-quiz/pairs/connection (POST), create game №1 user1 should returned status 200', async () => {
+    const resultCreatePairGame =
+      await quizPairGameTestManager.create(testAccessToken1);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+
+    idExistPairGame1 = resultCreatePairGame.body.id;
+  });
+
+  it('12 /pair-game-quiz/pairs/connection (POST), connection game №1 user1 should returned status 403', async () => {
+    const resultCreatePairGame =
+        await quizPairGameTestManager.create(testAccessToken1);
+
+    await expect(resultCreatePairGame.statusCode).toBe(403)
+  });
+
+  it('13 /pair-game-quiz/pairs/my-current (GET), get current game user2 should returned status 404', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken2);
+
+    await expect(resultGetGame.statusCode).toBe(404)
+  });
+
+  it('14 /pair-game-quiz/pairs/:id (GET), get game by user2 should returned status 403', async () => {
+    const resultGetGame = await quizPairGameTestManager.getById(
+        idExistPairGame1,
+        testAccessToken2,
+    );
+
+    await expect(resultGetGame.statusCode).toBe(403)
+  });
+
+  it('15 /pair-game-quiz/pairs/connection (POST), join to game №1 user2 should returned status 200', async () => {
+    const resultCreatePairGame = await quizPairGameTestManager.create(testAccessToken2);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+  });
+
+  it('16 /pair-game-quiz/pairs/:id (GET), get game user2 should returned status 200', async () => {
+    const resultGetGame = await quizPairGameTestManager.getById(
+        idExistPairGame1,
+        testAccessToken2,
+    );
+
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
+  it('17 /pair-game-quiz/pairs/my-current/answers (POST), user1 add correct answer first, should return status 200', async () => {
+    const result = await quizPairGameTestManager.createAnswer(testAccessToken1, {
+      answer: 'Answer_1',
+    })
+
+    await expect(result.statusCode).toBe(200)
+  });
+
+  it('18 /pair-game-quiz/pairs/:id (GET), get game user1 should returned status 200, and one correct answer', async () => {
+    const resultGetGame = await quizPairGameTestManager.getById(
+        idExistPairGame1,
+        testAccessToken1,
+    );
+
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
+  it('19 /pair-game-quiz/pairs/my-current (GET), get current game user2 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken2);
+
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
+  it('20 /pair-game-quiz/pairs/my-current/answers (POST), user2 add correct answer first, should return status 200', async () => {
+    const result = await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Answer_1',
+    })
+
+    await expect(result.statusCode).toBe(200)
+  });
+
+  it('20-1 /pair-game-quiz/pairs/my-current (GET), get current game user2 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken2);
+
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
+  it('21 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 1 incorrect answer', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken1, {
+      answer: 'Wrong answer_1',
+    })
+  });
+
+  it('21-1 /pair-game-quiz/pairs/my-current (GET), get current game user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken1);
+
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
+  it('22 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 2 incorrect answer', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken1, {
+      answer: 'Wrong answer_2',
+    })
+  });
+
+  it('23 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 3 incorrect answer', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken1, {
+      answer: 'Wrong answer_3',
+    })
+  });
+
+  it('24 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 4 incorrect answer', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken1, {
+      answer: 'Wrong answer_4',
+    })
+  });
+
+  it('21-1 /pair-game-quiz/pairs/my-current (GET), get current game user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken1);
+
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
+  it('25 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 1 incorrect answer', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_1',
+    })
+  });
+
+  it('26 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 2 incorrect answer', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_2',
+    })
+  });
+
+  it('27 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 3 incorrect answer', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_3',
+    })
+  });
+
+  it('28 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 4 incorrect answer', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_4',
+    })
+
+    const result = await quizPairGameTestManager.getById(idExistPairGame1, testAccessToken2)
+
+
+  });
+
+  it('28-1 /pair-game-quiz/pairs/:id (GET), get game1 by id and user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getById(idExistPairGame1, testAccessToken1);
+
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
+  it('28-2 /pair-game-quiz/users/my-statistic (GET), get statistic by user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
+
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
+  it('29 /pair-game-quiz/pairs/connection (POST), create game №2 user3 should returned status 200', async () => {
+    const resultCreatePairGame =
+        await quizPairGameTestManager.create(testAccessToken3);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+
+    idExistPairGame2 = resultCreatePairGame.body.id;
+  });
+
+  it('30 /pair-game-quiz/pairs/connection (POST), join game №2 user4 should returned status 200', async () => {
+    const resultCreatePairGame =
+        await quizPairGameTestManager.create(testAccessToken4);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+  });
+
+  it('31 /pair-game-quiz/pairs/connection (POST), create game №3 user1 should returned status 200', async () => {
+    const resultCreatePairGame =
+        await quizPairGameTestManager.create(testAccessToken1);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+
+    idExistPairGame3 = resultCreatePairGame.body.id;
+  });
+
+  it('32 /pair-game-quiz/pairs/connection (POST), join to game №3 user2 should returned status 200', async () => {
+    const resultCreatePairGame = await quizPairGameTestManager.create(testAccessToken2);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+  });
+
+  it('33 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 1 incorrect answer in game№3', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken1, {
+      answer: 'Wrong answer_3',
+    })
+  });
+
+  it('34 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 2 incorrect answer in game№3', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken1, {
+      answer: 'Wrong answer_3',
+    })
+  });
+
+  it('35 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 3 incorrect answer in game№3', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken1, {
+      answer: 'Wrong answer_3',
+    })
+  });
+
+  it('36 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 4 correct answer in game№3', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken1, {
+      answer: 'Answer_2',
+    })
+  });
+
+  it('37 /pair-game-quiz/pairs/my-current/answers (POST), user1 add 5 correct answer in game№3', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken1, {
+      answer: 'Answer_2',
+    })
+  });
+
+  it('38 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 1 incorrect answer in game№3', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_3',
+    })
+  });
+
+  it('39 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 2 incorrect answer in game№3', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_3',
+    })
+  });
+
+  it('40 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 3 incorrect answer in game№3', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Wrong answer_3',
+    })
+  });
+
+  it('41 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 4 correct answer in game№3', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Answer_2',
+    })
+  });
+
+  it('42 /pair-game-quiz/pairs/my-current/answers (POST), user2 add 5 correct answer in game№3', async () => {
+    await quizPairGameTestManager.createAnswer(testAccessToken2, {
+      answer: 'Answer_2',
+    })
+  });
+
+  it('42-1 /pair-game-quiz/pairs/connection (POST), create game №4 user1 should returned status 200', async () => {
+    const resultCreatePairGame =
+        await quizPairGameTestManager.create(testAccessToken1);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+  });
+
+  it('43 /pair-game-quiz/pairs/my (GET), get my all games by user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getAllGamesByUserId(testAccessToken1, {sortBy: 'status', sortDirection: 'DESC'});
+
+    const result =
+        await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
+    console.log('Statistic user1 =', result.body)
+
+    console.log('All games for user1 =', resultGetGame.body)
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
 
   // it('13 /pair-game-quiz/pairs/connection (POST), create game №2 user3 should returned status 200', async () => {
   //   const resultCreatePairGame =
