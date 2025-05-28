@@ -64,6 +64,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .orWhere('pg.secondPlayer.id = :userId')
             .setParameters({ userId })
             .orderBy(`"${query.sortBy}"`, query.sortDirection)
+            .addOrderBy("pairCreatedDate", 'DESC')
             .skip((query.pageNumber - 1) * query.pageSize)
             .take(query.pageSize);
 
@@ -87,6 +88,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
             .leftJoinAndSelect('pg.questions', 'questions')
             .orderBy(`"${query.sortBy}"`, query.sortDirection)
+            .addOrderBy("pairCreatedDate", 'DESC')
             .getMany();
     }
 
