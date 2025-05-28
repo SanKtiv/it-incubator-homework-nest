@@ -59,16 +59,18 @@ export class PairGameQueryRepositoryTypeOrm {
         const idsSubQuery = this.repository
             .createQueryBuilder('pg')
             .select('pg.id')
-            //.where('pg.firstPlayer.id = :userId OR pg.secondPlayer.id = :userId', { userId })
             .where('pg.firstPlayer.id = :userId')
             .orWhere('pg.secondPlayer.id = :userId')
             .setParameters({ userId })
             .orderBy(`"${query.sortBy}"`, query.sortDirection)
-            .addOrderBy('pg."pairCreatedDate"', 'DESC')
             .skip((query.pageNumber - 1) * query.pageSize)
             .take(query.pageSize);
 
-        return this.repository
+        if (query.sortBy !== "pairCreatedDate") {
+            idsSubQuery.addOrderBy('pg."pairCreatedDate"', 'DESC');
+        }
+
+        const gamesPaging = await this.repository
             .createQueryBuilder('pg')
             .where(`pg.id IN (${idsSubQuery.getQuery()})`)
             .setParameters(idsSubQuery.getParameters())
@@ -88,8 +90,14 @@ export class PairGameQueryRepositoryTypeOrm {
             .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
             .leftJoinAndSelect('pg.questions', 'questions')
             .orderBy(`"${query.sortBy}"`, query.sortDirection)
-            .addOrderBy('pg."pairCreatedDate"', 'DESC')
-            .getMany();
+
+        if (query.sortBy !== "pairCreatedDate") {
+           return gamesPaging
+               .addOrderBy('pg."pairCreatedDate"', 'DESC')
+               .getMany();
+        }
+
+        return gamesPaging.getMany();
     }
 
     async getTotalGamesByUserId(userId: string) {
