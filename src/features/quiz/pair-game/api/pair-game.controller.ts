@@ -25,13 +25,17 @@ export class PairGameQuizPairsController {
   async getAllPairGamesCurrentUser(
       @CurrentUserId() userId: string,
       @Query() query: pairGameQuery) {
-      return this.pairGameQueryRepository.getPaging(userId, query)
+      const res = await this.pairGameQueryRepository.getPaging(userId, query)
+      console.log('pairs/my =',res)
+      return res
   }
 
   @Get('users/my-statistic')
   @UseGuards(JWTAccessAuthGuard)
   async getStatisticCurrentUser(@CurrentUserId() userId: string) {
-      return this.pairGameQueryRepository.getStatisticByUserId(userId)
+      const res = await this.pairGameQueryRepository.getStatisticByUserId(userId)
+      console.log('users/my-statistic =', res)
+      return res
   }
 
   @Post('pairs/connection')
