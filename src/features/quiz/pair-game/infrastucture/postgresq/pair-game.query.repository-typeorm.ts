@@ -96,12 +96,12 @@ export class PairGameQueryRepositoryTypeOrm {
         if (query.sortBy !== "pairCreatedDate") {
            return gamesPaging
                .addOrderBy('pg."pairCreatedDate"', 'DESC')
-               .orderBy('questions.id', 'ASC')
+               .addOrderBy('questions.id', 'ASC')
                .getMany();
         }
 
         return gamesPaging
-            .orderBy('questions.id', 'ASC')
+            .addOrderBy('questions.id', 'ASC')
             .getMany();
     }
 
