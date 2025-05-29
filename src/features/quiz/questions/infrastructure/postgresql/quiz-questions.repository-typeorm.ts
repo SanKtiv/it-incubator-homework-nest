@@ -17,11 +17,12 @@ export class QuizQuestionsRepositoryTypeOrm {
 
   async findFiveRandom(): Promise<QuizQuestionsEntity[]> {
     return this.repository
-      .createQueryBuilder('q')
-      .select('q.*')
-      .orderBy('RANDOM()')
-      .limit(5)
-      .getRawMany();
+        .createQueryBuilder('q')
+        .select('q.*')
+        .orderBy('RANDOM()')
+        .addOrderBy('id', 'ASC')
+        .limit(5)
+        .getRawMany();
   }
 
   async findOneById(id: string): Promise<QuizQuestionsEntity | null> {

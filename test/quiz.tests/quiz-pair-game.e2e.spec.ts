@@ -57,7 +57,8 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
     clearDB = result.clearDataTestingManager;
 
-    inputModelMany = quizQuestionsOptions.inputModelMany(5);
+    inputModelMany = quizQuestionsOptions.inputModelMany(10);
+
     //inputModel = quizQuestionsOptions.inputModel();
     //outputModel = quizQuestionsOptions.outputModel();
     //inputModelWrong = quizQuestionsOptions.inputModelWrongBodyNumber()
@@ -72,28 +73,52 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
   });
 
   it('2 /sa/quiz/questions (POST), should returned many question models and status 201', async () => {
-    const [inputModel1, inputModel2, inputModel3, inputModel4, inputModel5] =
-      inputModelMany;
-
     const response1 = await quizQuestionsTestManager.create(
-      inputModel1,
+        inputModelMany[0],
       authBasic,
     );
     const response2 = await quizQuestionsTestManager.create(
-      inputModel2,
+        inputModelMany[1],
       authBasic,
     );
     const response3 = await quizQuestionsTestManager.create(
-      inputModel3,
+        inputModelMany[2],
       authBasic,
     );
     const response4 = await quizQuestionsTestManager.create(
-      inputModel4,
+        inputModelMany[3],
       authBasic,
     );
     const response5 = await quizQuestionsTestManager.create(
-      inputModel5,
+        inputModelMany[4],
       authBasic,
+    );
+
+    await expect(response3.statusCode).toBe(201);
+  });
+
+  it('2-1 /sa/quiz/questions (POST), should returned many question models and status 201', async () => {
+
+
+    const response1 = await quizQuestionsTestManager.create(
+        inputModelMany[5],
+        authBasic,
+    );
+    const response2 = await quizQuestionsTestManager.create(
+        inputModelMany[6],
+        authBasic,
+    );
+    const response3 = await quizQuestionsTestManager.create(
+        inputModelMany[7],
+        authBasic,
+    );
+    const response4 = await quizQuestionsTestManager.create(
+        inputModelMany[8],
+        authBasic,
+    );
+    const response5 = await quizQuestionsTestManager.create(
+        inputModelMany[9],
+        authBasic,
     );
 
     await expect(response3.statusCode).toBe(201);
@@ -419,13 +444,39 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     const resultGetGame =
         await quizPairGameTestManager.getAllGamesByUserId(testAccessToken1, {sortBy: 'status', sortDirection: 'ASC'});
 
-    const result =
-        await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
-    console.log('Statistic user1 =', result.body)
+    // const result =
+    //     await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
+    // console.log('Statistic user1 =', result.body)
 
-    console.log('All games for user1 =', resultGetGame.body)
+    const questions0: any = resultGetGame.body.items;
+    const id = questions0[0].id
+
+    const game = await quizPairGameTestManager.getById(id, testAccessToken1);
+
+    console.log('All games for user1-1 =', questions0[0].questions)
+    console.log('get questions game by id =', game.body.questions)
     await expect(resultGetGame.statusCode).toBe(200)
   });
+
+  it('43-1 /pair-game-quiz/pairs/my (GET), get my all games by user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getAllGamesByUserId(testAccessToken1, {sortBy: 'status', sortDirection: 'ASC'});
+
+    const questions0: any = resultGetGame.body.items;
+
+    console.log('All games for user1-2 =', questions0[0].questions)
+  });
+
+  it('43-2 /pair-game-quiz/pairs/my (GET), get my all games by user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getAllGamesByUserId(testAccessToken1, {sortBy: 'status', sortDirection: 'ASC'});
+
+    const questions0: any = resultGetGame.body.items;
+
+    console.log('All games for user1-3 =', questions0[0].questions)
+  });
+
+
 
   // it('13 /pair-game-quiz/pairs/connection (POST), create game №2 user3 should returned status 200', async () => {
   //   const resultCreatePairGame =

@@ -18,7 +18,8 @@ export class PairGameQuizPairsServices {
         protected quizQuestionsRepository: QuizQuestionsRepository,
     ) {}
     async createPairGame(userId: string) {
-        const pairGameCurrentUser = await this.pairGameRepository.getNotFinishedPairGameByUserId(userId);
+        const pairGameCurrentUser =
+            await this.pairGameRepository.getNotFinishedPairGameByUserId(userId);
 
         if (pairGameCurrentUser) throw new ForbiddenException();
 
