@@ -15,7 +15,9 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getById(id: string): Promise<QuizPairGameEntity | null | undefined> {
-        return this.builder.where('pg."id" = :id', {id}).getOne();
+        return this.builder
+            .orderBy('questions.id', 'ASC')
+            .where('pg."id" = :id', {id}).getOne();
     }
 
     async getByStatus(status: QuizPairGameStatusType) {
@@ -32,6 +34,7 @@ export class PairGameRepositoryTypeOrm {
             .andWhere('pg.firstPlayer.id = :userId', {userId})
             .orWhere('pg.status = :status', {status: 'Active'})
             .andWhere('pg.secondPlayer.id = :userId', {userId})
+            .orderBy('questions.id', 'ASC')
             .getOne();
     }
 
@@ -41,6 +44,7 @@ export class PairGameRepositoryTypeOrm {
             .andWhere('pg.firstPlayer.id = :userId', {userId})
             .orWhere('pg.finishGameDate IS NULL')
             .andWhere('pg.secondPlayer.id = :userId', {userId})
+            .orderBy('questions.id', 'ASC')
             .getOne();
     }
 

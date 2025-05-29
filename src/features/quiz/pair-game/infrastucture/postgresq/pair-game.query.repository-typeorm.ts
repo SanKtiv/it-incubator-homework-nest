@@ -53,6 +53,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .andWhere('pg.firstPlayer.id = :userId', {userId})
             .orWhere('pg.finishGameDate IS NULL')
             .andWhere('pg.secondPlayer.id = :userId', {userId})
+            .orderBy('questions.id', 'ASC')
             .getOne();
     }
 
@@ -95,10 +96,13 @@ export class PairGameQueryRepositoryTypeOrm {
         if (query.sortBy !== "pairCreatedDate") {
            return gamesPaging
                .addOrderBy('pg."pairCreatedDate"', 'DESC')
+               .orderBy('questions.id', 'ASC')
                .getMany();
         }
 
-        return gamesPaging.getMany();
+        return gamesPaging
+            .orderBy('questions.id', 'ASC')
+            .getMany();
     }
 
     async getTotalGamesByUserId(userId: string) {
