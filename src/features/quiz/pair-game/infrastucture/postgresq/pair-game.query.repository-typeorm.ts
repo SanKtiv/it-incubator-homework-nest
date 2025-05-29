@@ -42,6 +42,7 @@ export class PairGameQueryRepositoryTypeOrm {
     async getById(id: string): Promise<QuizPairGameEntity | null> {
         return this.building
             .where('pg."id" = :id', {id})
+            .orderBy('questions.id', 'ASC')
             .getOne();
     }
 
