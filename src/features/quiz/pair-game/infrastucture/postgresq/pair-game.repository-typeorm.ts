@@ -13,11 +13,11 @@ export class PairGameRepositoryTypeOrm {
         protected repository: Repository<QuizPairGameEntity>,
     ) {
     }
-
     async getById(id: string): Promise<QuizPairGameEntity | null | undefined> {
-        return this.builder
+        return this.getQuizPairGameBuilder
             .orderBy('questions.id', 'ASC')
-            .where('pg."id" = :id', {id}).getOne();
+            .where('pg."id" = :id', {id})
+            .getOne();
     }
 
     async getByStatus(status: QuizPairGameStatusType) {
@@ -28,7 +28,7 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getOneActive(userId: string): Promise<QuizPairGameEntity | null | undefined> {
-        return this.builder
+        return this.getQuizPairGameBuilder
             //.where('pg.finishGameDate IS NULL')
             .where('pg.status = :status', {status: 'Active'})
             .andWhere('pg.firstPlayer.id = :userId', {userId})
@@ -39,7 +39,7 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getOneNotFinished(userId: string): Promise<QuizPairGameEntity | null | undefined> {
-        return this.builder
+        return this.getQuizPairGameBuilder
             .where('pg.finishGameDate IS NULL')
             .andWhere('pg.firstPlayer.id = :userId', {userId})
             .orWhere('pg.finishGameDate IS NULL')
@@ -56,6 +56,7 @@ export class PairGameRepositoryTypeOrm {
         pairGame: QuizPairGameEntity,
     ): Promise<QuizPairGameEntity | null | undefined> {
         const createdPairGame = await this.repository.save(pairGame);
+
         return this.getById(createdPairGame.id);
     }
 
@@ -63,7 +64,7 @@ export class PairGameRepositoryTypeOrm {
         await this.repository.query('TRUNCATE TABLE "quiz-pair-game" CASCADE');
     }
 
-    private get builder() {
+    private get getQuizPairGameBuilder() {
         return this.repository
             .createQueryBuilder('pg')
             .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
