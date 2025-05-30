@@ -4,7 +4,6 @@ import {
   QuizPairGameEntity,
   QuizPairGameStatusType,
 } from '../domain/pair-game.entity';
-import { InputAnswersModels } from '../api/models/input/input-answers.models';
 
 @Injectable()
 export class PairGameRepository {
