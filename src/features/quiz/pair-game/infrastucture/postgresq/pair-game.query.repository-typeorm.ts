@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
 import {QuizPairGameEntity} from '../../domain/pair-game.entity';
-import {DataSource, FindManyOptions, Repository, SelectQueryBuilder} from 'typeorm';
+import {DataSource, Repository} from 'typeorm';
 import {pairGameQuery} from "../../api/models/input/input-query.dto";
 
 @Injectable()
@@ -48,7 +48,6 @@ export class PairGameQueryRepositoryTypeOrm {
 
     async getByUserId(userId: string): Promise<QuizPairGameEntity | null> {
         return this.building
-            //.where('(pg.finishGameDate IS NULL AND pg.firstPlayer.id = :userId) OR (pg.finishGameDate IS NULL AND pg.secondPlayer.id = :userId)', {userId})
             .where('pg.finishGameDate IS NULL')
             .andWhere('pg.firstPlayer.id = :userId', {userId})
             .orWhere('pg.finishGameDate IS NULL')
