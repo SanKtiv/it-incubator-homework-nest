@@ -15,7 +15,7 @@ import {pairGameQuery} from "../api/models/input/input-query.dto";
 export class PairGameQueryRepository {
   constructor(protected repository: PairGameQueryRepositoryTypeOrm) {}
 
-  async getById(id: string, userId: string): Promise<CreatedPairGameOutputModel | QuizPairGameEntity> {
+  async getById(id: string, userId: string): Promise<CreatedPairGameOutputModel> {
     const pairGame = await this.repository.getById(id);
 
     if (!pairGame) throw new NotFoundException();
@@ -47,6 +47,6 @@ export class PairGameQueryRepository {
   async getStatisticByUserId(userId: string) {
     const games = await this.repository.getStatisticByUserId(userId)
 
-    return  playerStatisticOutputModel(games, userId)
+    return playerStatisticOutputModel(games, userId)
   }
 }

@@ -104,7 +104,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .getMany();
     }
 
-    async getTotalGamesByUserId(userId: string) {
+    async getTotalGamesByUserId(userId: string): Promise<number> {
         return this.repository
             .createQueryBuilder('pg')
             .select('pg.id')
@@ -114,7 +114,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .getCount()
     }
 
-    async getStatisticByUserId(userId: string) {
+    async getStatisticByUserId(userId: string): Promise<QuizPairGameEntity[]> {
         return this.repository
             .createQueryBuilder('pg')
             .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')

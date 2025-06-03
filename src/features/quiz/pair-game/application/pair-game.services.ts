@@ -4,7 +4,11 @@ import {
     QuizPairGameEntity,
     QuizPairGameStatusType,
 } from '../domain/pair-game.entity';
-import {addedAnswerPlayerOutputModel, createdPairGameOutputModel} from '../api/models/output/pair-game.output.models';
+import {
+    addedAnswerPlayerOutputModel, AnswerPlayerOutputModel,
+    CreatedPairGameOutputModel,
+    createdPairGameOutputModel
+} from '../api/models/output/pair-game.output.models';
 import {QuizQuestionsRepository} from '../../questions/infrastructure/quiz-questions.repository';
 import {QuizQuestionsEntity} from '../../questions/domain/quiz-questions.entity';
 import {UsersTable} from '../../../users/domain/users.table';
@@ -17,7 +21,7 @@ export class PairGameQuizPairsServices {
         protected pairGameRepository: PairGameRepository,
         protected quizQuestionsRepository: QuizQuestionsRepository,
     ) {}
-    async createPairGame(userId: string) {
+    async createPairGame(userId: string): Promise<CreatedPairGameOutputModel> {
         const pairGameCurrentUser =
             await this.pairGameRepository.getNotFinishedPairGameByUserId(userId);
 
@@ -46,7 +50,7 @@ export class PairGameQuizPairsServices {
         return createdPairGameOutputModel(createdPendingPairGame!);
     }
 
-    async joinToPairGame(userId: string, pendingPairGame: QuizPairGameEntity) {
+    async joinToPairGame(userId: string, pendingPairGame: QuizPairGameEntity): Promise<CreatedPairGameOutputModel> {
 
         const questions: QuizQuestionsEntity[] =
             await this.quizQuestionsRepository.getFiveRandomQuestions()
@@ -65,7 +69,7 @@ export class PairGameQuizPairsServices {
         return createdPairGameOutputModel(activePairGame!);
     }
 
-    async addAnswerPlayerInPairGame(userId: string, dto: InputAnswersModels) {
+    async addAnswerPlayerInPairGame(userId: string, dto: InputAnswersModels): Promise<AnswerPlayerOutputModel> {
         const pairGame = await this.pairGameRepository.getActivePairGameByUserId(userId);
 
         if (!pairGame) throw new ForbiddenException();
