@@ -10,6 +10,7 @@ import { AccountDataTable } from './account-data.table';
 import { EmailConfirmationTable } from './email-сonfirmation.table';
 import { PasswordRecoveryTable } from './password-recovery.table';
 import { AnswersGameEntity } from '../../quiz/pair-game/domain/answers-game.entity';
+import {PairGamePlayersEntity} from "../../quiz/pair-game/domain/pair-game-players.entity";
 
 @Entity('users')
 export class UsersTable {
@@ -60,6 +61,19 @@ export class UsersTable {
   )
   @JoinColumn({ name: 'answersPairGames' })
   answersPairGames: AnswersGameEntity[];
+
+    @OneToMany(
+        () => PairGamePlayersEntity,
+        players => players.user,
+        {
+            nullable: true,
+            cascade: true,
+            eager: true,
+            onDelete: 'CASCADE',
+        },
+    )
+    @JoinColumn()
+    pairGamePlayer: PairGamePlayersEntity[];
 
   @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   deletedAt?: Date; // Поле для хранения даты удаления для softRemove, softDelete
