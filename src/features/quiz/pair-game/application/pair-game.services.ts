@@ -159,7 +159,7 @@ export class PairGameQuizPairsServices {
         return addedAnswerPlayerOutputModel(answerPlayer);
     }
 
-    createAnswerPlayer(
+    private createAnswerPlayer(
         pairGame: QuizPairGameEntity,
         userId: string,
         dto: InputAnswersModels,
