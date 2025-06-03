@@ -1,15 +1,20 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {QuizQuestionsEntity} from "../../questions/domain/quiz-questions.entity";
 import {QuizPairGameStatusType} from "./pair-game.entity";
+import {PairGamePlayersEntity} from "./pair-game-players.entity";
 
 @Entity('new-pair-game')
 export class NewPairGameEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    firstPlayer;
+    @OneToOne(() => PairGamePlayersEntity)
+    @JoinColumn()
+    firstPlayer: PairGamePlayersEntity;
 
-    secondPlayer;
+    @OneToOne(() => PairGamePlayersEntity, {nullable: true})
+    @JoinColumn()
+    secondPlayer: PairGamePlayersEntity | null;
 
     questions: QuizQuestionsEntity[];
 

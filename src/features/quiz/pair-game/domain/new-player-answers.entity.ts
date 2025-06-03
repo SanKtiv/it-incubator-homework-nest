@@ -10,28 +10,10 @@ export class PlayerAnswersEntity {
 
     @ManyToOne(
         () => PairGamePlayersEntity,
-        player => player.answers)
+        player => player.answers
+    )
     @JoinColumn()
     player: PairGamePlayersEntity;
-    // @ManyToOne(
-    //     () => QuizPairGameEntity,
-    //     (game) => game.answersFirstPlayer)
-    // @JoinColumn({
-    //     name: 'pairGameFirstPlayer',
-    // })
-    // pairGameFirstPlayer: QuizPairGameEntity;
-    //
-    // @ManyToOne(
-    //     () => QuizPairGameEntity,
-    //     (game) => game.answersSecondPlayer)
-    // @JoinColumn({
-    //     name: 'pairGameSecondPlayer',
-    // })
-    // pairGameSecondPlayer: QuizPairGameEntity;
-    //
-    // @ManyToOne(() => UsersTable, (user) => user.id)
-    // @JoinColumn({ name: 'userId' })
-    // userId: string;
 
     @Column({ type: 'uuid' })
     questionId: string;
