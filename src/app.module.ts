@@ -105,6 +105,8 @@ import { PairGameQueryRepository } from './features/quiz/pair-game/infrastucture
 import { PairGameQueryRepositoryTypeOrm } from './features/quiz/pair-game/infrastucture/postgresq/pair-game.query.repository-typeorm';
 import {NewPairGameEntity} from "./features/quiz/pair-game/domain/new-pair-game.entity";
 import {PairGamePlayersEntity} from "./features/quiz/pair-game/domain/pair-game-players.entity";
+import {PlayerAnswersEntity} from "./features/quiz/pair-game/domain/new-player-answers.entity";
+import {QuestionsGameEntity} from "./features/quiz/pair-game/domain/new-questions-game.entity";
 
 dotenv.config();
 
@@ -224,6 +226,8 @@ const strategies = [
         AnswersGameEntity,
         NewPairGameEntity,
         PairGamePlayersEntity,
+        PlayerAnswersEntity,
+        QuestionsGameEntity,
       ],
       synchronize: true,
       //logging: ['query'],
@@ -246,6 +250,8 @@ const strategies = [
       AnswersGameEntity,
       NewPairGameEntity,
       PairGamePlayersEntity,
+      PlayerAnswersEntity,
+      QuestionsGameEntity,
     ]),
     // MongooseModule.forRoot(
     //   appSettings.env.isTesting()

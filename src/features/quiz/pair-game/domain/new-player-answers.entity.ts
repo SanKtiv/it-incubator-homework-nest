@@ -1,6 +1,4 @@
 import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {QuizPairGameEntity} from "./pair-game.entity";
-import {UsersTable} from "../../../users/domain/users.table";
 import {PairGamePlayersEntity} from "./pair-game-players.entity";
 
 @Entity('new-answers')

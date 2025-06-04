@@ -1,4 +1,4 @@
-import {Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {UsersTable} from "../../../users/domain/users.table";
 import {PlayerAnswersEntity} from "./new-player-answers.entity";
 
@@ -16,7 +16,16 @@ export class PairGamePlayersEntity {
 
     @OneToMany(
         () => PlayerAnswersEntity,
-        answer => answer.player)
+        answer => answer.player,
+        {
+            //nullable: true,
+            cascade: true,
+            eager: true,
+            onDelete: 'CASCADE',
+        },)
     @JoinColumn()
     answers: PlayerAnswersEntity[];
+
+    @Column({ type: 'smallint', default: 0 })
+    playerScore: number;
 }
