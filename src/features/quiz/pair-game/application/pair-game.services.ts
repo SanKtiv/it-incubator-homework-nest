@@ -14,6 +14,9 @@ import {QuizQuestionsEntity} from '../../questions/domain/quiz-questions.entity'
 import {UsersTable} from '../../../users/domain/users.table';
 import {InputAnswersModels} from '../api/models/input/input-answers.models';
 import {AnswersGameEntity} from '../domain/answers-game.entity';
+import {NewPairGameEntity} from "../domain/new-pair-game.entity";
+import {PairGamePlayersEntity} from "../domain/pair-game-players.entity";
+import {QuestionsGameEntity} from "../domain/new-questions-game.entity";
 
 @Injectable()
 export class PairGameQuizPairsServices {
@@ -50,8 +53,18 @@ export class PairGameQuizPairsServices {
         return createdPairGameOutputModel(createdPendingPairGame!);
     }
 
-    async newCreatePairGame(userId: string): Promise<CreatedPairGameOutputModel> {
+    async newCreatePairGame(userId: string) {
+        const pairGameCurrentUser =
+            await this.pairGameRepository.newGetNotFinishedPairGameByUserId(userId);
 
+        if (pairGameCurrentUser) throw new ForbiddenException();
+
+        const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
+
+        const pendingPairGame: NewPairGameEntity | null =
+            await this.pairGameRepository.newGetPairGamesByStatus(statusPending);
+
+        if (pendingPairGame) return this.newJoinToPairGame(userId, pendingPairGame)
     }
 
     async joinToPairGame(userId: string, pendingPairGame: QuizPairGameEntity): Promise<CreatedPairGameOutputModel> {
@@ -61,6 +74,32 @@ export class PairGameQuizPairsServices {
 
         const secondPlayer = new UsersTable();
         secondPlayer.id = userId;
+
+        pendingPairGame.secondPlayer = secondPlayer;
+        pendingPairGame.status = 'Active';
+        pendingPairGame.startGameDate = new Date();
+        pendingPairGame.questions = questions;
+
+        const activePairGame =
+            await this.pairGameRepository.createPairGame(pendingPairGame);
+
+        return createdPairGameOutputModel(activePairGame!);
+    }
+
+    async newJoinToPairGame(userId: string, pendingPairGame: NewPairGameEntity): Promise<CreatedPairGameOutputModel> {
+
+        const questions: QuizQuestionsEntity[] =
+            await this.quizQuestionsRepository.getFiveRandomQuestions()
+
+        const questionsForGame: QuestionsGameEntity[] = questions.map(
+            e => ({ index: 1, questions: e, game: pendingPairGame}))
+
+        const secondPlayer = new PairGamePlayersEntity();
+        const user = new UsersTable()
+
+        user.id = userId;
+
+        secondPlayer.user = user;
 
         pendingPairGame.secondPlayer = secondPlayer;
         pendingPairGame.status = 'Active';

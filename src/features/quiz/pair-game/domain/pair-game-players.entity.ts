@@ -18,7 +18,7 @@ export class PairGamePlayersEntity {
         () => PlayerAnswersEntity,
         answer => answer.player,
         {
-            //nullable: true,
+            nullable: true,
             cascade: true,
             eager: true,
             onDelete: 'CASCADE',

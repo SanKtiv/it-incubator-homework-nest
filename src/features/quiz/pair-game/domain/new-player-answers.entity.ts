@@ -6,6 +6,9 @@ export class PlayerAnswersEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column({ type: 'uuid' })
+    gameId: string;
+
     @ManyToOne(
         () => PairGamePlayersEntity,
         player => player.answers
