@@ -50,6 +50,10 @@ export class PairGameQuizPairsServices {
         return createdPairGameOutputModel(createdPendingPairGame!);
     }
 
+    async newCreatePairGame(userId: string): Promise<CreatedPairGameOutputModel> {
+
+    }
+
     async joinToPairGame(userId: string, pendingPairGame: QuizPairGameEntity): Promise<CreatedPairGameOutputModel> {
 
         const questions: QuizQuestionsEntity[] =

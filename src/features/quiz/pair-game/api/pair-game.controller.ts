@@ -39,7 +39,8 @@ export class PairGameQuizPairsController {
   @HttpCode(200)
   @UseGuards(JWTAccessAuthGuard)
   async createOrJoinPairGame(@CurrentUserId() userId: string): Promise<CreatedPairGameOutputModel> {
-    return this.pairGameServices.createPairGame(userId);
+    //return this.pairGameServices.createPairGame(userId);
+      return this.pairGameServices.newCreatePairGame(userId);
   }
 
   @Post('pairs/my-current/answers')
