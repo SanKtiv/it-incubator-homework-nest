@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { PairGameQuizPairsServices } from '../../../src/features/quiz/pair-game/application/pair-game.services';
-import { PairGameQueryRepository } from "../../../src/features/quiz/pair-game/infrastucture/pair-game.query.repository";
+import { PairGameQueryRepository } from '../../../src/features/quiz/pair-game/infrastucture/pair-game.query.repository';
 
 export class QuizPairGameTestManager {
   constructor(protected readonly app: INestApplication) {
@@ -22,8 +22,8 @@ export class QuizPairGameTestManager {
     return this.pairGameQuizService.newCreatePairGame(userId);
   }
 
-  async getGameById(id: string) {
-    return this.pairGameQuizService.
+  async getGameById(id: string, userId: string) {
+    return this.pairGameQuizQueryRepositories.getById(id, userId);
   }
 
   async expectViewModel(inputModel: any, responseModel: any) {

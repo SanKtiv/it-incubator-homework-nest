@@ -73,7 +73,7 @@ export class PairGameQueryRepositoryTypeOrm {
       idsSubQuery.addOrderBy('pg."pairCreatedDate"', 'DESC');
     }
 
-    const gamesPaging = await this.repository
+    const gamesPaging = this.repository
       .createQueryBuilder('pg')
       .where(`pg.id IN (${idsSubQuery.getQuery()})`)
       .setParameters(idsSubQuery.getParameters())
