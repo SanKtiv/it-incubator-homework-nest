@@ -65,6 +65,17 @@ export class PairGameQuizPairsServices {
             await this.pairGameRepository.newGetPairGamesByStatus(statusPending);
 
         if (pendingPairGame) return this.newJoinToPairGame(userId, pendingPairGame)
+
+        const pairGame = new NewPairGameEntity();
+
+        pairGame.firstPlayer = this.createPlayer(userId);
+        pairGame.pairCreatedDate = new Date();
+        pairGame.status = statusPending;
+
+        const createdPendingPairGame =
+            await this.pairGameRepository.newCreatePairGame(pairGame);
+
+        return createdPendingPairGame;
     }
 
     async joinToPairGame(userId: string, pendingPairGame: QuizPairGameEntity): Promise<CreatedPairGameOutputModel> {
@@ -107,6 +118,15 @@ export class PairGameQuizPairsServices {
 
         return activePairGame;
         //return createdPairGameOutputModel(activePairGame!);
+    }
+
+    private createPlayer(userId: string): PairGamePlayersEntity {
+        const player = new PairGamePlayersEntity();
+        const user = new UsersTable();
+        user.id = userId;
+        player.user = user;
+
+        return player;
     }
 
     async createFiveQuestionsForGame(game: NewPairGameEntity) {
