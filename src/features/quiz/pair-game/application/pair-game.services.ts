@@ -86,15 +86,9 @@ export class PairGameQuizPairsServices {
         return createdPairGameOutputModel(activePairGame!);
     }
 
-    async newJoinToPairGame(userId: string, pendingPairGame: NewPairGameEntity): Promise<CreatedPairGameOutputModel> {
+    async newJoinToPairGame(userId: string, pendingPairGame: NewPairGameEntity) {
 
-        const questions: QuizQuestionsEntity[] =
-            await this.quizQuestionsRepository.getFiveRandomQuestions()
-
-        let index = 0;
-
-        const questionsForGame = questions.map(
-            e => ({ index: index++, questions: e, game: pendingPairGame}))
+        const questions = await this.createFiveQuestionsForGame(pendingPairGame)
 
         const secondPlayer = new PairGamePlayersEntity();
         const user = new UsersTable()
@@ -106,12 +100,27 @@ export class PairGameQuizPairsServices {
         pendingPairGame.secondPlayer = secondPlayer;
         pendingPairGame.status = 'Active';
         pendingPairGame.startGameDate = new Date();
-        pendingPairGame.questions = questionsForGame as QuestionsGameEntity[];
+        pendingPairGame.questions = questions;
 
         const activePairGame =
             await this.pairGameRepository.newCreatePairGame(pendingPairGame);
 
-        return createdPairGameOutputModel(activePairGame!);
+        return activePairGame;
+        //return createdPairGameOutputModel(activePairGame!);
+    }
+
+    async createFiveQuestionsForGame(game: NewPairGameEntity) {
+        const fiveRandomQuestions: QuizQuestionsEntity[] =
+            await this.quizQuestionsRepository.getFiveRandomQuestions()
+
+        let index = 0;
+
+        return fiveRandomQuestions.map(
+            e => ({
+                index: index++,
+                questions: e,
+                game: game
+            })) as QuestionsGameEntity[]
     }
 
     async addAnswerPlayerInPairGame(userId: string, dto: InputAnswersModels): Promise<AnswerPlayerOutputModel> {
