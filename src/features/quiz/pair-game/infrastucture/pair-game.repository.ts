@@ -42,6 +42,12 @@ export class PairGameRepository {
     return this.repository.create(pairGame);
   }
 
+  async newCreatePairGame(
+      pairGame: NewPairGameEntity,
+  ): Promise<NewPairGameEntity | null | undefined> {
+    return this.repository.newCreate(pairGame);
+  }
+
   async updatePairGame(pairGame: QuizPairGameEntity) {
     return this.repository.update(pairGame);
   }

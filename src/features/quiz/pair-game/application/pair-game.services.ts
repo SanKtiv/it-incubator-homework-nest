@@ -91,8 +91,10 @@ export class PairGameQuizPairsServices {
         const questions: QuizQuestionsEntity[] =
             await this.quizQuestionsRepository.getFiveRandomQuestions()
 
-        const questionsForGame: QuestionsGameEntity[] = questions.map(
-            e => ({ index: 1, questions: e, game: pendingPairGame}))
+        let index = 0;
+
+        const questionsForGame = questions.map(
+            e => ({ index: index++, questions: e, game: pendingPairGame}))
 
         const secondPlayer = new PairGamePlayersEntity();
         const user = new UsersTable()
@@ -104,10 +106,10 @@ export class PairGameQuizPairsServices {
         pendingPairGame.secondPlayer = secondPlayer;
         pendingPairGame.status = 'Active';
         pendingPairGame.startGameDate = new Date();
-        pendingPairGame.questions = questions;
+        pendingPairGame.questions = questionsForGame as QuestionsGameEntity[];
 
         const activePairGame =
-            await this.pairGameRepository.createPairGame(pendingPairGame);
+            await this.pairGameRepository.newCreatePairGame(pendingPairGame);
 
         return createdPairGameOutputModel(activePairGame!);
     }

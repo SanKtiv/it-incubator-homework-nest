@@ -22,6 +22,12 @@ export class PairGameRepositoryTypeOrm {
             .getOne();
     }
 
+    async newGetById(id: string): Promise<NewPairGameEntity | null | undefined> {
+        return this.newGetQuizPairGameBuilder
+            .where('pg."id" = :id', {id})
+            .getOne();
+    }
+
     async getByStatus(status: QuizPairGameStatusType) {
         return this.repository
             .createQueryBuilder('pg')
@@ -74,6 +80,14 @@ export class PairGameRepositoryTypeOrm {
         const createdPairGame = await this.repository.save(pairGame);
 
         return this.getById(createdPairGame.id);
+    }
+
+    async newCreate(
+        pairGame: NewPairGameEntity,
+    ): Promise<NewPairGameEntity | null | undefined> {
+        const createdPairGame = await this.newRepository.save(pairGame);
+
+        return this.newGetById(createdPairGame.id);
     }
 
     async clear(): Promise<void> {
