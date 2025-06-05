@@ -14,17 +14,17 @@ export class PairGamePlayersEntity {
     @JoinColumn()
     user: UsersTable;
 
-    // @OneToMany(
-    //     () => PlayerAnswersEntity,
-    //     answer => answer.player,
-    //     {
-    //         nullable: true,
-    //         cascade: true,
-    //         eager: true,
-    //         onDelete: 'CASCADE',
-    //     },)
-    // @JoinColumn()
-    // answers: PlayerAnswersEntity[] | null;
+    @OneToMany(
+        () => PlayerAnswersEntity,
+        answer => answer.player,
+        {
+            nullable: true,
+            cascade: true,
+            eager: true,
+            onDelete: 'CASCADE',
+        },)
+    @JoinColumn()
+    answers: PlayerAnswersEntity[] | null;
 
     @Column({ type: 'smallint', default: 0 })
     playerScore: number;
