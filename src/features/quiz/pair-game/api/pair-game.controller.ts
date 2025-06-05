@@ -1,12 +1,24 @@
-import {Body, Controller, Get, HttpCode, Param, Post, Query, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { PairGameQuizPairsServices } from '../application/pair-game.services';
 import { JWTAccessAuthGuard } from '../../../../infrastructure/guards/jwt-access-auth.guard';
 import { CurrentUserId } from '../../../auth/infrastructure/decorators/current-user-id.param.decorator';
 import { PairGameQueryRepository } from '../infrastucture/pair-game.query.repository';
 import { InputAnswersModels } from './models/input/input-answers.models';
-import {idPairGamePipe} from "../../../../infrastructure/pipes/validation.pipe";
-import {pairGameQuery} from "./models/input/input-query.dto";
-import {AnswerPlayerOutputModel, CreatedPairGameOutputModel} from "./models/output/pair-game.output.models";
+import { idPairGamePipe } from '../../../../infrastructure/pipes/validation.pipe';
+import { pairGameQuery } from './models/input/input-query.dto';
+import {
+  AnswerPlayerOutputModel,
+  CreatedPairGameOutputModel,
+} from './models/output/pair-game.output.models';
 
 @Controller('pair-game-quiz')
 export class PairGameQuizPairsController {
@@ -17,28 +29,31 @@ export class PairGameQuizPairsController {
 
   @Get('testing')
   async getTesting() {
-      const userId = '7135c4a6-3087-4584-9811-6bc0649ce3b3';
-      return this.pairGameServices.newCreatePairGame(userId)
+    const userId = '7135c4a6-3087-4584-9811-6bc0649ce3b3';
+    return this.pairGameServices.newCreatePairGame(userId);
   }
 
   @Get('pairs/my-current')
   @UseGuards(JWTAccessAuthGuard)
-  async getMyCurrentPairGame(@CurrentUserId() userId: string): Promise< CreatedPairGameOutputModel > {
+  async getMyCurrentPairGame(
+    @CurrentUserId() userId: string,
+  ): Promise<CreatedPairGameOutputModel> {
     return this.pairGameQueryRepository.getByUserId(userId);
   }
 
   @Get('pairs/my')
   @UseGuards(JWTAccessAuthGuard)
   async getAllPairGamesCurrentUser(
-      @CurrentUserId() userId: string,
-      @Query() query: pairGameQuery) {
-      return this.pairGameQueryRepository.getPaging(userId, query)
+    @CurrentUserId() userId: string,
+    @Query() query: pairGameQuery,
+  ) {
+    return this.pairGameQueryRepository.getPaging(userId, query);
   }
 
   @Get('users/my-statistic')
   @UseGuards(JWTAccessAuthGuard)
   async getStatisticCurrentUser(@CurrentUserId() userId: string) {
-      return this.pairGameQueryRepository.getStatisticByUserId(userId)
+    return this.pairGameQueryRepository.getStatisticByUserId(userId);
   }
 
   @Post('pairs/connection')
@@ -46,15 +61,15 @@ export class PairGameQuizPairsController {
   @UseGuards(JWTAccessAuthGuard)
   async createOrJoinPairGame(@CurrentUserId() userId: string) {
     //return this.pairGameServices.createPairGame(userId);
-      return this.pairGameServices.newCreatePairGame(userId);
+    return this.pairGameServices.newCreatePairGame(userId);
   }
 
   @Post('pairs/my-current/answers')
   @HttpCode(200)
   @UseGuards(JWTAccessAuthGuard)
   async createAnswerPlayer(
-      @CurrentUserId() userId: string,
-      @Body() dto: InputAnswersModels,
+    @CurrentUserId() userId: string,
+    @Body() dto: InputAnswersModels,
   ): Promise<AnswerPlayerOutputModel> {
     return this.pairGameServices.addAnswerPlayerInPairGame(userId, dto);
   }
@@ -62,9 +77,9 @@ export class PairGameQuizPairsController {
   @Get('pairs/:id')
   @UseGuards(JWTAccessAuthGuard)
   async getPairGameById(
-      @Param('id', idPairGamePipe) id: string,
-      @CurrentUserId() userId: string,
-      ): Promise<CreatedPairGameOutputModel> {
+    @Param('id', idPairGamePipe) id: string,
+    @CurrentUserId() userId: string,
+  ): Promise<CreatedPairGameOutputModel> {
     return this.pairGameQueryRepository.getById(id, userId);
   }
 }

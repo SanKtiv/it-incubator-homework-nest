@@ -1,7 +1,9 @@
 import {
   Column,
   Entity,
-  JoinColumn, JoinTable, ManyToMany,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -47,9 +49,10 @@ export class QuizPairGameEntity {
   @JoinColumn({ name: 'answersSecondPlayer' })
   answersSecondPlayer: AnswersGameEntity[];
 
-  @ManyToMany(() => QuizQuestionsEntity,
-      (questions) => questions.quizGameId
-  , { eager: true, nullable: true })
+  @ManyToMany(() => QuizQuestionsEntity, (questions) => questions.quizGameId, {
+    eager: true,
+    nullable: true,
+  })
   @JoinTable({
     name: 'quiz_pair_game_questions', // Название промежуточной таблицы
     joinColumn: {
@@ -76,4 +79,7 @@ export class QuizPairGameEntity {
   finishGameDate: Date;
 }
 
-export type QuizPairGameStatusType = 'PendingSecondPlayer' | 'Active' | 'Finished';
+export type QuizPairGameStatusType =
+  | 'PendingSecondPlayer'
+  | 'Active'
+  | 'Finished';

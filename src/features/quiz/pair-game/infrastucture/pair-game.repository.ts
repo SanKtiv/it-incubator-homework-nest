@@ -4,7 +4,7 @@ import {
   QuizPairGameEntity,
   QuizPairGameStatusType,
 } from '../domain/pair-game.entity';
-import {NewPairGameEntity} from "../domain/new-pair-game.entity";
+import { NewPairGameEntity } from '../domain/new-pair-game.entity';
 
 @Injectable()
 export class PairGameRepository {
@@ -17,14 +17,14 @@ export class PairGameRepository {
   }
 
   async getNotFinishedPairGameByUserId(
-      userId: string,
+    userId: string,
   ): Promise<QuizPairGameEntity | null | undefined> {
     return this.repository.getOneNotFinished(userId);
   }
 
   async newGetNotFinishedPairGameByUserId(
-      userId: string,
-  ): Promise<NewPairGameEntity | null > {
+    userId: string,
+  ): Promise<NewPairGameEntity | null> {
     return this.repository.newGetOneNotFinished(userId);
   }
 
@@ -43,7 +43,7 @@ export class PairGameRepository {
   }
 
   async newCreatePairGame(
-      pairGame: NewPairGameEntity,
+    pairGame: NewPairGameEntity,
   ): Promise<NewPairGameEntity | null | undefined> {
     return this.repository.newCreate(pairGame);
   }

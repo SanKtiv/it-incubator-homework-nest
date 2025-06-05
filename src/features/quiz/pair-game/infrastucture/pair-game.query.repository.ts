@@ -6,24 +6,31 @@ import {
 import { PairGameQueryRepositoryTypeOrm } from './postgresq/pair-game.query.repository-typeorm';
 import {
   CreatedPairGameOutputModel,
-  createdPairGameOutputModel, gamesPagingOutputModel, playerStatisticOutputModel,
+  createdPairGameOutputModel,
+  gamesPagingOutputModel,
+  playerStatisticOutputModel,
 } from '../api/models/output/pair-game.output.models';
-import {QuizPairGameEntity} from "../domain/pair-game.entity";
-import {pairGameQuery} from "../api/models/input/input-query.dto";
+import { QuizPairGameEntity } from '../domain/pair-game.entity';
+import { pairGameQuery } from '../api/models/input/input-query.dto';
 
 @Injectable()
 export class PairGameQueryRepository {
   constructor(protected repository: PairGameQueryRepositoryTypeOrm) {}
 
-  async getById(id: string, userId: string): Promise<CreatedPairGameOutputModel> {
+  async getById(
+    id: string,
+    userId: string,
+  ): Promise<CreatedPairGameOutputModel> {
     const pairGame = await this.repository.getById(id);
 
     if (!pairGame) throw new NotFoundException();
 
     if (
-        (pairGame.firstPlayer.id !== userId && !pairGame.secondPlayer) ||
-        (pairGame.firstPlayer.id !== userId && pairGame.secondPlayer.id !== userId)
-    ) throw new ForbiddenException()
+      (pairGame.firstPlayer.id !== userId && !pairGame.secondPlayer) ||
+      (pairGame.firstPlayer.id !== userId &&
+        pairGame.secondPlayer.id !== userId)
+    )
+      throw new ForbiddenException();
 
     return createdPairGameOutputModel(pairGame);
   }
@@ -45,8 +52,8 @@ export class PairGameQueryRepository {
   }
 
   async getStatisticByUserId(userId: string) {
-    const games = await this.repository.getStatisticByUserId(userId)
+    const games = await this.repository.getStatisticByUserId(userId);
 
-    return playerStatisticOutputModel(games, userId)
+    return playerStatisticOutputModel(games, userId);
   }
 }

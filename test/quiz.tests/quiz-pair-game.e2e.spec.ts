@@ -13,10 +13,15 @@ import { ArrayNotContains } from 'class-validator';
 import { QuizPairGameTestManager } from '../utils/quiz-pair-game/quiz-pair-game-test-manager';
 import { QuizPairGameOptions } from '../utils/quiz-pair-game/quiz-pair-game-options';
 import { UsersTestManager } from '../utils/users-test-manager';
-import {userTest1, userTest2, userTest3, userTest4} from '../utils/users-options';
+import {
+  userTest1,
+  userTest2,
+  userTest3,
+  userTest4,
+} from '../utils/users-options';
 import { ClearDataTestingManager } from '../utils/clear-data-testing-manager';
-import exp from "constants";
-import {pairGameQuery} from "../../src/features/quiz/pair-game/api/models/input/input-query.dto";
+import exp from 'constants';
+import { pairGameQuery } from '../../src/features/quiz/pair-game/api/models/input/input-query.dto';
 
 describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
   let app: INestApplication;
@@ -72,7 +77,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     const userId = '7135c4a6-3087-4584-9811-6bc0649ce3b3';
 
     const game = await quizPairGameTestManager.createGame(userId);
-    console.log(game)
+    console.log(game);
   });
 
   // it('1 /testing/all-data (DELETE), should returned status 204', async () => {
@@ -482,8 +487,6 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
   //
   //   console.log('All games for user1-3 =', questions0[0].questions)
   // });
-
-
 
   // it('13 /pair-game-quiz/pairs/connection (POST), create game №2 user3 should returned status 200', async () => {
   //   const resultCreatePairGame =

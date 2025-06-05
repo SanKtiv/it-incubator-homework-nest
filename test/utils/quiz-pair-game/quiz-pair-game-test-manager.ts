@@ -1,10 +1,12 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import {PairGameQuizPairsServices} from "../../../src/features/quiz/pair-game/application/pair-game.services";
+import { PairGameQuizPairsServices } from '../../../src/features/quiz/pair-game/application/pair-game.services';
 
 export class QuizPairGameTestManager {
   constructor(protected readonly app: INestApplication) {
-    this.pairGameQuizService = app.get(PairGameQuizPairsServices, { strict: false });
+    this.pairGameQuizService = app.get(PairGameQuizPairsServices, {
+      strict: false,
+    });
   }
 
   private pairGameQuizService: PairGameQuizPairsServices;
@@ -26,8 +28,8 @@ export class QuizPairGameTestManager {
   async create(accessToken: any) {
     return request(this.app.getHttpServer())
       .post('/pair-game-quiz/pairs/connection')
-      .auth(accessToken, { type: 'bearer' })
-      //.expect(200);
+      .auth(accessToken, { type: 'bearer' });
+    //.expect(200);
   }
 
   async getPaging(queryDto: any, auth: any) {
@@ -40,27 +42,29 @@ export class QuizPairGameTestManager {
   async getById(id: string, accessToken: any) {
     return request(this.app.getHttpServer())
       .get(`/pair-game-quiz/pairs/${id}`)
-      .auth(accessToken, { type: 'bearer' })
+      .auth(accessToken, { type: 'bearer' });
   }
 
   async getStatisticByUserId(accessToken: any) {
     return request(this.app.getHttpServer())
-        .get(`/pair-game-quiz/users/my-statistic`)
-        .auth(accessToken, { type: 'bearer' })
+      .get(`/pair-game-quiz/users/my-statistic`)
+      .auth(accessToken, { type: 'bearer' });
   }
 
   async getAllGamesByUserId(accessToken: any, query: any) {
     return request(this.app.getHttpServer())
-        .get(`/pair-game-quiz/pairs/my`)
-        .query(query)
-        .auth(accessToken, { type: 'bearer' })
+      .get(`/pair-game-quiz/pairs/my`)
+      .query(query)
+      .auth(accessToken, { type: 'bearer' });
   }
 
   async getCurrentGame(accessToken: any) {
-    return request(this.app.getHttpServer())
+    return (
+      request(this.app.getHttpServer())
         .get('/pair-game-quiz/pairs/my-current')
         //.set('Authorization', `Bearer ${accessToken}`)
-        .auth(accessToken, {type: 'bearer'})
+        .auth(accessToken, { type: 'bearer' })
+    );
   }
 
   async updateById() {}
@@ -75,7 +79,7 @@ export class QuizPairGameTestManager {
     return request(this.app.getHttpServer())
       .post('/pair-game-quiz/pairs/my-current/answers')
       .auth(accessToken, { type: 'bearer' })
-      .send(dto)
-      //.expect(200);
+      .send(dto);
+    //.expect(200);
   }
 }

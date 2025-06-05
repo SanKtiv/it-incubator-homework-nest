@@ -1,6 +1,6 @@
 import { QuizPairGameEntity } from '../../../domain/pair-game.entity';
-import {AnswersGameEntity} from "../../../domain/answers-game.entity";
-import {pairGameQuery} from "../input/input-query.dto";
+import { AnswersGameEntity } from '../../../domain/answers-game.entity';
+import { pairGameQuery } from '../input/input-query.dto';
 
 export class CreatedPairGameOutputModel {
   constructor(
@@ -46,11 +46,11 @@ export class PairGameQuestionsClass {
 }
 
 export class AnswerPlayerOutputModel {
-    constructor(
-        public questionId: string,
-        public answerStatus: 'Correct' | 'Incorrect',
-        public addedAt: string
-    ) {}
+  constructor(
+    public questionId: string,
+    public answerStatus: 'Correct' | 'Incorrect',
+    public addedAt: string,
+  ) {}
 }
 
 export const createdPairGameOutputModel = (
@@ -63,12 +63,12 @@ export const createdPairGameOutputModel = (
       login: pairGame.firstPlayer.accountData.login,
     },
     answers: pairGame.answersFirstPlayer
-        .sort((a: any, b: any) => a.addedAt - b.addedAt)
-        .map((e) => ({
-      questionId: e.questionId,
-      answerStatus: e.answerStatus,
-      addedAt: e.addedAt.toISOString(),
-    })),
+      .sort((a: any, b: any) => a.addedAt - b.addedAt)
+      .map((e) => ({
+        questionId: e.questionId,
+        answerStatus: e.answerStatus,
+        addedAt: e.addedAt.toISOString(),
+      })),
     score: pairGame.firstPlayerScore,
   },
   secondPlayerProgress: pairGame.secondPlayer
@@ -78,21 +78,22 @@ export const createdPairGameOutputModel = (
           login: pairGame.secondPlayer.accountData.login,
         },
         answers: pairGame.answersSecondPlayer
-            .sort((a: any, b: any) => a.addedAt - b.addedAt)
-            .map((e) => ({
-          questionId: e.questionId,
-          answerStatus: e.answerStatus,
-          addedAt: e.addedAt.toISOString(),
-        })),
+          .sort((a: any, b: any) => a.addedAt - b.addedAt)
+          .map((e) => ({
+            questionId: e.questionId,
+            answerStatus: e.answerStatus,
+            addedAt: e.addedAt.toISOString(),
+          })),
         score: pairGame.secondPlayerScore,
       }
     : null,
-  questions: pairGame.questions.length !== 0
-    ? pairGame.questions.map((e) => ({
-        id: e.id,
-        body: e.body,
-      }))
-    : null,
+  questions:
+    pairGame.questions.length !== 0
+      ? pairGame.questions.map((e) => ({
+          id: e.id,
+          body: e.body,
+        }))
+      : null,
   status: pairGame.status,
   pairCreatedDate: pairGame.pairCreatedDate.toISOString(),
   startGameDate: pairGame.startGameDate
@@ -103,63 +104,71 @@ export const createdPairGameOutputModel = (
     : null,
 });
 
-export const addedAnswerPlayerOutputModel =
-    (answerPlayer: AnswersGameEntity): AnswerPlayerOutputModel => ({
-        questionId: answerPlayer.questionId,
-        answerStatus: answerPlayer.answerStatus,
-        addedAt: answerPlayer.addedAt.toISOString()
-    })
+export const addedAnswerPlayerOutputModel = (
+  answerPlayer: AnswersGameEntity,
+): AnswerPlayerOutputModel => ({
+  questionId: answerPlayer.questionId,
+  answerStatus: answerPlayer.answerStatus,
+  addedAt: answerPlayer.addedAt.toISOString(),
+});
 
-export function playerStatisticOutputModel(games: QuizPairGameEntity[] | null, userId: string) {
-    let sumScore = 0;
-    let avgScores = 0;
-    let gamesCount = 0;
-    let winsCount = 0;
-    let lossesCount = 0;
-    let drawsCount = 0;
+export function playerStatisticOutputModel(
+  games: QuizPairGameEntity[] | null,
+  userId: string,
+) {
+  let sumScore = 0;
+  let avgScores = 0;
+  let gamesCount = 0;
+  let winsCount = 0;
+  let lossesCount = 0;
+  let drawsCount = 0;
 
-    if (games) {
-        gamesCount = games.length;
+  if (games) {
+    gamesCount = games.length;
 
-        function find(obj: QuizPairGameEntity) {
-            if (!(obj.status === 'Finished')) return
+    function find(obj: QuizPairGameEntity) {
+      if (!(obj.status === 'Finished')) return;
 
-            if (obj.firstPlayerScore === obj.secondPlayerScore) drawsCount++;
+      if (obj.firstPlayerScore === obj.secondPlayerScore) drawsCount++;
 
-            if (obj.firstPlayer.id === userId) {
-                sumScore += obj.firstPlayerScore;
+      if (obj.firstPlayer.id === userId) {
+        sumScore += obj.firstPlayerScore;
 
-                if (obj.firstPlayerScore > obj.secondPlayerScore) winsCount++;
-                if (obj.firstPlayerScore < obj.secondPlayerScore) lossesCount++;
-            } else {
-                sumScore += obj.secondPlayerScore;
+        if (obj.firstPlayerScore > obj.secondPlayerScore) winsCount++;
+        if (obj.firstPlayerScore < obj.secondPlayerScore) lossesCount++;
+      } else {
+        sumScore += obj.secondPlayerScore;
 
-                if (obj.firstPlayerScore < obj.secondPlayerScore) winsCount++;
-                if (obj.firstPlayerScore > obj.secondPlayerScore) lossesCount++;
-            }
-        }
-
-        games.forEach( e => find(e))
-
-        avgScores = Math.round((sumScore / gamesCount) * 100) / 100;
+        if (obj.firstPlayerScore < obj.secondPlayerScore) winsCount++;
+        if (obj.firstPlayerScore > obj.secondPlayerScore) lossesCount++;
+      }
     }
 
-    return {
-        sumScore: sumScore,
-        avgScores: avgScores,
-        gamesCount: gamesCount,
-        winsCount: winsCount,
-        lossesCount: lossesCount,
-        drawsCount: drawsCount
-    }
+    games.forEach((e) => find(e));
+
+    avgScores = Math.round((sumScore / gamesCount) * 100) / 100;
+  }
+
+  return {
+    sumScore: sumScore,
+    avgScores: avgScores,
+    gamesCount: gamesCount,
+    winsCount: winsCount,
+    lossesCount: lossesCount,
+    drawsCount: drawsCount,
+  };
 }
 
-export const gamesPagingOutputModel = function (games: QuizPairGameEntity[], query: pairGameQuery, totalGames: number) {
-    return {
-        pagesCount: Math.ceil(+totalGames / +query.pageSize),
-        page: query.pageNumber,
-        pageSize: query.pageSize,
-        totalCount: +totalGames,
-        items: games.map( game => createdPairGameOutputModel(game))
-    }
-}
+export const gamesPagingOutputModel = function (
+  games: QuizPairGameEntity[],
+  query: pairGameQuery,
+  totalGames: number,
+) {
+  return {
+    pagesCount: Math.ceil(+totalGames / +query.pageSize),
+    page: query.pageNumber,
+    pageSize: query.pageSize,
+    totalCount: +totalGames,
+    items: games.map((game) => createdPairGameOutputModel(game)),
+  };
+};

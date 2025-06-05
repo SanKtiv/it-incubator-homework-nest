@@ -1,27 +1,30 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {PairGamePlayersEntity} from "./pair-game-players.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { PairGamePlayersEntity } from './pair-game-players.entity';
 
 @Entity('new-answers')
 export class PlayerAnswersEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({ type: 'uuid' })
-    gameId: string;
+  @Column({ type: 'uuid' })
+  gameId: string;
 
-    @ManyToOne(
-        () => PairGamePlayersEntity,
-        player => player.answers
-    )
-    @JoinColumn()
-    player: PairGamePlayersEntity;
+  @ManyToOne(() => PairGamePlayersEntity, (player) => player.answers)
+  @JoinColumn()
+  player: PairGamePlayersEntity;
 
-    @Column({ type: 'uuid' })
-    questionId: string;
+  @Column({ type: 'uuid' })
+  questionId: string;
 
-    @Column({ type: 'character varying' })
-    answerStatus: 'Correct' | 'Incorrect';
+  @Column({ type: 'character varying' })
+  answerStatus: 'Correct' | 'Incorrect';
 
-    @Column('timestamp with time zone')
-    addedAt: Date;
+  @Column('timestamp with time zone')
+  addedAt: Date;
 }

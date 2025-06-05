@@ -2,11 +2,13 @@ import {
   PipeTransform,
   Injectable,
   ArgumentMetadata,
-  NotFoundException, ForbiddenException, BadRequestException,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { BlogsQueryRepositoryMongo } from '../../features/blogs/infrastructure/mongodb/blogs.query.repository-mongo';
 import { Types } from 'mongoose';
-import {isUUID} from "class-validator";
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class bodyPipe implements PipeTransform {
