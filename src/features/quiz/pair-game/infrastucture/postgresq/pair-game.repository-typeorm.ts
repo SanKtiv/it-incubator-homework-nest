@@ -138,17 +138,17 @@ export class PairGameRepositoryTypeOrm {
                 'firstAccountData.login',
                 'secondAccountData.login',
             ])
-            .leftJoinAndSelect(
-                'firstPlayer.answers',
-                'firstAnswers',
-                'pg.id = firstAnswers.gameId'
-            )
-            .leftJoinAndSelect(
-                'secondPlayer.answers',
-                'secondPlayerAnswers',
-                'pg.id = secondPlayerAnswers.gameId',
-            )
+            // .leftJoinAndSelect(
+            //     'firstPlayer.answers',
+            //     'firstAnswers',
+            //     'pg.id = firstAnswers.gameId'
+            // )
+            // .leftJoinAndSelect(
+            //     'secondPlayer.answers',
+            //     'secondPlayerAnswers',
+            //     'pg.id = secondPlayerAnswers.gameId',
+            // )
             .leftJoinAndSelect('pg.questions', 'questions')
-            .orderBy('questions.index', 'ASC')
+            // .orderBy('questions.index', 'ASC')
     }
 }

@@ -1,8 +1,17 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
+import {PairGameQuizPairsServices} from "../../../src/features/quiz/pair-game/application/pair-game.services";
 
 export class QuizPairGameTestManager {
-  constructor(protected readonly app: INestApplication) {}
+  constructor(protected readonly app: INestApplication) {
+    this.pairGameQuizService = app.get(PairGameQuizPairsServices, { strict: false });
+  }
+
+  private pairGameQuizService: PairGameQuizPairsServices;
+
+  async createGame(userId: string) {
+    return this.pairGameQuizService.newCreatePairGame(userId);
+  }
 
   async expectViewModel(inputModel: any, responseModel: any) {
     expect(responseModel).toEqual({

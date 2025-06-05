@@ -17,6 +17,7 @@ import {AnswersGameEntity} from '../domain/answers-game.entity';
 import {NewPairGameEntity} from "../domain/new-pair-game.entity";
 import {PairGamePlayersEntity} from "../domain/pair-game-players.entity";
 import {QuestionsGameEntity} from "../domain/new-questions-game.entity";
+import {PlayerAnswersEntity} from "../domain/new-player-answers.entity";
 
 @Injectable()
 export class PairGameQuizPairsServices {
@@ -54,28 +55,30 @@ export class PairGameQuizPairsServices {
     }
 
     async newCreatePairGame(userId: string) {
+        console.log('Start')
         const pairGameCurrentUser =
             await this.pairGameRepository.newGetNotFinishedPairGameByUserId(userId);
-
-        if (pairGameCurrentUser) throw new ForbiddenException();
-
-        const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
-
-        const pendingPairGame: NewPairGameEntity | null =
-            await this.pairGameRepository.newGetPairGamesByStatus(statusPending);
-
-        if (pendingPairGame) return this.newJoinToPairGame(userId, pendingPairGame)
-
-        const pairGame = new NewPairGameEntity();
-
-        pairGame.firstPlayer = this.createPlayer(userId);
-        pairGame.pairCreatedDate = new Date();
-        pairGame.status = statusPending;
-
-        const createdPendingPairGame =
-            await this.pairGameRepository.newCreatePairGame(pairGame);
-
-        return createdPendingPairGame;
+        console.log('newGetNotFinishedPairGameByUserId')
+        // if (pairGameCurrentUser) throw new ForbiddenException();
+        //
+        // const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
+        //
+        // const pendingPairGame: NewPairGameEntity | null =
+        //     await this.pairGameRepository.newGetPairGamesByStatus(statusPending);
+        // console.log('newGetPairGamesByStatus')
+        // if (pendingPairGame) return this.newJoinToPairGame(userId, pendingPairGame)
+        //
+        // const pairGame = new NewPairGameEntity();
+        // console.log('NewPairGameEntity')
+        // pairGame.firstPlayer = this.createPlayer(userId);
+        // console.log('createPlayer')
+        // pairGame.pairCreatedDate = new Date();
+        // pairGame.status = statusPending;
+        //
+        // const createdPendingPairGame =
+        //     await this.pairGameRepository.newCreatePairGame(pairGame);
+        // console.log('newCreatePairGame')
+        // return createdPendingPairGame;
     }
 
     async joinToPairGame(userId: string, pendingPairGame: QuizPairGameEntity): Promise<CreatedPairGameOutputModel> {
@@ -125,6 +128,7 @@ export class PairGameQuizPairsServices {
         const user = new UsersTable();
         user.id = userId;
         player.user = user;
+        //player.answers = null;
 
         return player;
     }
