@@ -44,21 +44,23 @@ export class PairGameQueryRepositoryTypeOrm {
   private get shareBuilder() {
         return this.newRepository
             .createQueryBuilder('pg')
-            .leftJoinAndSelect('pg.firstPlayer', 'fPlayer')
-            .leftJoinAndSelect('fPlayer.user', 'firstPlayer')
-            .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
+            .select(['pg'])
+            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+            .leftJoinAndSelect('firstPlayer.user', 'user')
+            .leftJoinAndSelect('user.accountData', 'userAccountData')
             .leftJoinAndSelect('pg.secondPlayer', 'sPlayer')
             .leftJoinAndSelect('sPlayer.user', 'secondPlayer')
             .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
-            .select([
-                'pg',
-                'firstPlayer.id',
-                'secondPlayer.id',
-                'firstAccountData.login',
-                'secondAccountData.login',
-            ])
+            .addSelect(['firstPlayer.id'])
+            // .select([
+            //     'pg',
+            //     'user.id',
+            //     'secondPlayer.userId',
+            //     'firstAccountData.login',
+            //     'secondAccountData.login',
+            // ])
             .leftJoinAndSelect(
-                'fPlayer.answers',
+                'firstPlayer.answers',
                 'firstPlayerAnswers',
                 'pg.id = firstPlayerAnswers.gameId',
             )

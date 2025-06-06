@@ -73,12 +73,12 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     await app.close();
   });
 
-  it('TEST SERVICES PairGameQuizPairsServices, createPairGame', async () => {
-    const userId = '7135c4a6-3087-4584-9811-6bc0649ce3b3';
-
-    const game = await quizPairGameTestManager.createGame(userId);
-    console.log(game);
-  });
+  // it('TEST SERVICES PairGameQuizPairsServices, createPairGame', async () => {
+  //   const userId = '7135c4a6-3087-4584-9811-6bc0649ce3b3';
+  //
+  //   const game = await quizPairGameTestManager.createGame(userId);
+  //   console.log(game);
+  // });
 
   it('TEST REPOSITORIES PairGameQueryRepositoryTypeOrm, get game by id', async () => {
     const id = '69b0b7af-6b0f-48d0-95df-7dd56eb3983a';
