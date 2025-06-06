@@ -3,12 +3,15 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { QuizPairGameEntity } from '../../domain/pair-game.entity';
 import { DataSource, Repository } from 'typeorm';
 import { pairGameQuery } from '../../api/models/input/input-query.dto';
+import {NewPairGameEntity} from "../../domain/new-pair-game.entity";
 
 @Injectable()
 export class PairGameQueryRepositoryTypeOrm {
   constructor(
     @InjectRepository(QuizPairGameEntity)
     protected repository: Repository<QuizPairGameEntity>,
+    @InjectRepository(NewPairGameEntity)
+    protected newRepository: Repository<NewPairGameEntity>,
     @InjectDataSource() protected dataSource: DataSource,
   ) {}
   private get building() {
@@ -38,12 +41,48 @@ export class PairGameQueryRepositoryTypeOrm {
       .leftJoinAndSelect('pg.questions', 'questions');
   }
 
+  private get shareBuilder() {
+        return this.newRepository
+            .createQueryBuilder('pg')
+            .leftJoinAndSelect('pg.firstPlayer', 'fPlayer')
+            .leftJoinAndSelect('fPlayer.user', 'firstPlayer')
+            .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
+            .leftJoinAndSelect('pg.secondPlayer', 'sPlayer')
+            .leftJoinAndSelect('sPlayer.user', 'secondPlayer')
+            .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
+            .select([
+                'pg',
+                'firstPlayer.id',
+                'secondPlayer.id',
+                'firstAccountData.login',
+                'secondAccountData.login',
+            ])
+            .leftJoinAndSelect(
+                'fPlayer.answers',
+                'firstPlayerAnswers',
+                'pg.id = firstPlayerAnswers.gameId',
+            )
+            .leftJoinAndSelect(
+                'sPlayer.answers',
+                'secondPlayerAnswers',
+                'pg.id = secondPlayerAnswers.gameId',
+            )
+            .leftJoinAndSelect('pg.questions', 'questions')
+            .orderBy('questions.index', 'ASC');
+    }
+
   async getById(id: string): Promise<QuizPairGameEntity | null> {
     return this.building
       .where('pg."id" = :id', { id })
       .orderBy('questions.id', 'ASC')
       .getOne();
   }
+
+  async newGetById(id: string): Promise<NewPairGameEntity | null> {
+        return this.shareBuilder
+            .where('pg."id" = :id', { id })
+            .getOne();
+    }
 
   async getByUserId(userId: string): Promise<QuizPairGameEntity | null> {
     return this.building

@@ -23,7 +23,7 @@ export class QuizPairGameTestManager {
   }
 
   async getGameById(id: string, userId: string) {
-    return this.pairGameQuizQueryRepositories.getById(id, userId);
+    return this.pairGameQuizQueryRepositories.newGetById(id, userId);
   }
 
   async expectViewModel(inputModel: any, responseModel: any) {

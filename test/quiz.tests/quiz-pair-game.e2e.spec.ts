@@ -80,6 +80,14 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     console.log(game);
   });
 
+  it('TEST REPOSITORIES PairGameQueryRepositoryTypeOrm, get game by id', async () => {
+    const id = '69b0b7af-6b0f-48d0-95df-7dd56eb3983a';
+    const userId = '7135c4a6-3087-4584-9811-6bc0649ce3b3';
+
+    const game = await quizPairGameTestManager.getGameById(id, userId);
+    console.log(game);
+  });
+
   // it('1 /testing/all-data (DELETE), should returned status 204', async () => {
   //   await clearDB.clearDB();
   // });

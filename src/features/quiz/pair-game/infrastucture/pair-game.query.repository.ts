@@ -35,6 +35,26 @@ export class PairGameQueryRepository {
     return createdPairGameOutputModel(pairGame);
   }
 
+  async newGetById(
+      id: string,
+      userId: string,
+  ) {
+    const pairGame = await this.repository.newGetById(id);
+
+    if (!pairGame) throw new NotFoundException();
+
+    return pairGame;
+
+    // if (
+    //     (pairGame.firstPlayer.id !== userId && !pairGame.secondPlayer) ||
+    //     (pairGame.firstPlayer.id !== userId &&
+    //         pairGame.secondPlayer.id !== userId)
+    // )
+    //   throw new ForbiddenException();
+    //
+    // return createdPairGameOutputModel(pairGame);
+  }
+
   async getByUserId(userId: string): Promise<CreatedPairGameOutputModel> {
     const pairGame = await this.repository.getByUserId(userId);
 
