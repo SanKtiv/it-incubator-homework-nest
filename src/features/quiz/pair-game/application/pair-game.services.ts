@@ -56,29 +56,28 @@ export class PairGameQuizPairsServices {
   }
 
   async newCreatePairGame(userId: string) {
-    console.log('Start');
     const pairGameCurrentUser =
       await this.pairGameRepository.newGetNotFinishedPairGameByUserId(userId);
-    console.log('newGetNotFinishedPairGameByUserId');
+
     if (pairGameCurrentUser) throw new ForbiddenException();
 
     const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
 
     const pendingPairGame: NewPairGameEntity | null =
       await this.pairGameRepository.newGetPairGamesByStatus(statusPending);
-    console.log('newGetPairGamesByStatus');
+
     if (pendingPairGame) return this.newJoinToPairGame(userId, pendingPairGame);
 
     const pairGame = new NewPairGameEntity();
-    console.log('NewPairGameEntity');
+
     pairGame.firstPlayer = this.createPlayer(userId);
-    console.log('createPlayer');
+
     pairGame.pairCreatedDate = new Date();
     pairGame.status = statusPending;
 
     const createdPendingPairGame =
       await this.pairGameRepository.newCreatePairGame(pairGame);
-    console.log('newCreatePairGame');
+
     return createdPendingPairGame;
   }
 

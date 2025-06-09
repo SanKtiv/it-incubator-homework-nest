@@ -66,9 +66,9 @@ export class PairGameRepositoryTypeOrm {
   ): Promise<NewPairGameEntity | null> {
     return this.newGetQuizPairGameBuilder
       .where('pg.finishGameDate IS NULL')
-      .andWhere('pg.firstPlayer.id = :userId')
+      .andWhere('pg.fp.id = :userId')
       .orWhere('pg.finishGameDate IS NULL')
-      .andWhere('pg.secondPlayer.id = :userId')
+      .andWhere('pg.sp.user.id = :userId')
       .setParameters({ userId })
       .getOne();
   }
@@ -129,18 +129,18 @@ export class PairGameRepositoryTypeOrm {
     return this.newRepository
       .createQueryBuilder('pg')
       .leftJoinAndSelect('pg.firstPlayer', 'fPlayer')
-      .leftJoinAndSelect('fPlayer.user', 'firstPlayer')
-      .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
+      .leftJoinAndSelect('fPlayer.user', 'fp')
+      .leftJoinAndSelect('fp.accountData', 'firstAccountData')
       .leftJoinAndSelect('pg.secondPlayer', 'sPlayer')
-      .leftJoinAndSelect('sPlayer.user', 'secondPlayer')
-      .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
-      .select([
-        'pg',
-        'firstPlayer.id',
-        'secondPlayer.id',
-        'firstAccountData.login',
-        'secondAccountData.login',
-      ])
+      .leftJoinAndSelect('sPlayer.user', 'sp')
+      .leftJoinAndSelect('sp.accountData', 'secondAccountData')
+      // .select([
+      //   'pg',
+      //   'firstPlayer.id',
+      //   'secondPlayer.id',
+      //   'firstAccountData.login',
+      //   'secondAccountData.login',
+      // ])
       .leftJoinAndSelect(
         'fPlayer.answers',
         'firstPlayerAnswers',
