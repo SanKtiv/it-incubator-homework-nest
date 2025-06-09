@@ -66,9 +66,9 @@ export class PairGameRepositoryTypeOrm {
   ): Promise<NewPairGameEntity | null> {
     return this.newGetQuizPairGameBuilder
       .where('pg.finishGameDate IS NULL')
-      .andWhere('pg.fp.id = :userId')
+      .andWhere('fp.id = :userId')
       .orWhere('pg.finishGameDate IS NULL')
-      .andWhere('pg.sp.user.id = :userId')
+      .andWhere('sp.id = :userId')
       .setParameters({ userId })
       .getOne();
   }
