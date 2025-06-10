@@ -67,7 +67,7 @@ export const newCreatedPairGameOutputModel =
         id: e.questions.id,
         body: e.questions.body,
       }))
-      : game.questions
+      : null
 
   return {
     id: game.id,
