@@ -7,7 +7,7 @@ import { PairGameQueryRepositoryTypeOrm } from './postgresq/pair-game.query.repo
 import {
   CreatedPairGameOutputModel,
   createdPairGameOutputModel,
-  gamesPagingOutputModel,
+  gamesPagingOutputModel, newCreatedPairGameOutputModel,
   playerStatisticOutputModel,
 } from '../api/models/output/pair-game.output.models';
 import { QuizPairGameEntity } from '../domain/pair-game.entity';
@@ -39,20 +39,18 @@ export class PairGameQueryRepository {
       id: string,
       userId: string,
   ) {
-    const pairGame = await this.repository.newGetById(id);
+    const game = await this.repository.newGetById(id);
 
-    if (!pairGame) throw new NotFoundException();
+    if (!game) throw new NotFoundException();
 
-    return pairGame;
+    if (
+        (game.firstPlayer.user.id !== userId && !game.secondPlayer) ||
+        (game.firstPlayer.user.id !== userId &&
+            game.secondPlayer.user.id !== userId)
+    )
+      throw new ForbiddenException();
 
-    // if (
-    //     (pairGame.firstPlayer.id !== userId && !pairGame.secondPlayer) ||
-    //     (pairGame.firstPlayer.id !== userId &&
-    //         pairGame.secondPlayer.id !== userId)
-    // )
-    //   throw new ForbiddenException();
-    //
-    // return createdPairGameOutputModel(pairGame);
+    return newCreatedPairGameOutputModel(game);
   }
 
   async getByUserId(userId: string): Promise<CreatedPairGameOutputModel> {

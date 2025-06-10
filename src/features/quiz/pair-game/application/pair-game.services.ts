@@ -119,6 +119,7 @@ export class PairGameQuizPairsServices {
   private createPlayer(userId: string): PairGamePlayersEntity {
     const player = new PairGamePlayersEntity();
     const user = new UsersTable();
+
     user.id = userId;
     player.user = user;
     player.answers = null;
