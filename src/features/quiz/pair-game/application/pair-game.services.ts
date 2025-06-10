@@ -8,7 +8,7 @@ import {
   addedAnswerPlayerOutputModel,
   AnswerPlayerOutputModel,
   CreatedPairGameOutputModel,
-  createdPairGameOutputModel,
+  createdPairGameOutputModel, newCreatedPairGameOutputModel,
 } from '../api/models/output/pair-game.output.models';
 import { QuizQuestionsRepository } from '../../questions/infrastructure/quiz-questions.repository';
 import { QuizQuestionsEntity } from '../../questions/domain/quiz-questions.entity';
@@ -78,7 +78,7 @@ export class PairGameQuizPairsServices {
     const createdPendingPairGame =
       await this.pairGameRepository.newCreatePairGame(pairGame);
 
-    return createdPendingPairGame;
+    return newCreatedPairGameOutputModel(createdPendingPairGame!);
   }
 
   async joinToPairGame(

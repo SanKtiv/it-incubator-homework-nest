@@ -7,8 +7,8 @@ export class CreatedPairGameOutputModel {
   constructor(
     public id: string,
     public firstPlayerProgress: PlayersProgressClass,
-    public secondPlayerProgress: PlayersProgressClass | null = null,
-    public questions: PairGameQuestionsClass[] | null = null,
+    public secondPlayerProgress: PlayersProgressClass | null,
+    public questions: PairGameQuestionsClass[] | null,
     public status: string,
     public pairCreatedDate: string,
     public startGameDate: string | null = null,
@@ -54,7 +54,21 @@ export class AnswerPlayerOutputModel {
   ) {}
 }
 
-export const newCreatedPairGameOutputModel = function (game: NewPairGameEntity) {
+export const newCreatedPairGameOutputModel =
+    function (game: NewPairGameEntity) {
+  const answers = (ans) => ans.map((e) => ({
+        questionId: e.questionId,
+        answerStatus: e.answerStatus,
+        addedAt: e.addedAt.toISOString(),
+      }))
+
+  const questions = game.questions
+      ? game.questions.map((e) => ({
+        id: e.questions.id,
+        body: e.questions.body,
+      }))
+      : game.questions
+
   return {
     id: game.id,
     firstPlayerProgress: {
@@ -62,7 +76,7 @@ export const newCreatedPairGameOutputModel = function (game: NewPairGameEntity) 
         id: game.firstPlayer.user.id,
         login: game.firstPlayer.user.accountData.login,
       },
-      answers: game.firstPlayer.answers,
+      answers: answers(game.firstPlayer.answers),
       score: game.firstPlayer.playerScore,
     },
     secondPlayerProgress: game.secondPlayer ?
@@ -71,10 +85,10 @@ export const newCreatedPairGameOutputModel = function (game: NewPairGameEntity) 
             id: game.secondPlayer.user.id,
             login: game.secondPlayer.user.accountData.login,
           },
-          answers: game.secondPlayer.answers,
+          answers: answers(game.secondPlayer.answers),
           score: game.secondPlayer.playerScore,
         } : game.secondPlayer,
-    questions: game.questions,
+    questions: questions,
     status: game.status,
     pairCreatedDate: game.pairCreatedDate.toISOString(),
     startGameDate: game.startGameDate ?
