@@ -16,7 +16,9 @@ export class PairGameRepositoryTypeOrm {
     protected newRepository: Repository<NewPairGameEntity>,
   ) {}
   async getById(id: string): Promise<QuizPairGameEntity | null | undefined> {
-    return this.getQuizPairGameBuilder.where('pg."id" = :id', { id }).getOne();
+    return this.getQuizPairGameBuilder
+        .where('pg."id" = :id', { id })
+        .getOne();
   }
 
   async newGetById(id: string): Promise<NewPairGameEntity | null | undefined> {

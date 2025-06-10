@@ -1,6 +1,7 @@
 import { QuizPairGameEntity } from '../../../domain/pair-game.entity';
 import { AnswersGameEntity } from '../../../domain/answers-game.entity';
 import { pairGameQuery } from '../input/input-query.dto';
+import {NewPairGameEntity} from "../../../domain/new-pair-game.entity";
 
 export class CreatedPairGameOutputModel {
   constructor(
@@ -51,6 +52,38 @@ export class AnswerPlayerOutputModel {
     public answerStatus: 'Correct' | 'Incorrect',
     public addedAt: string,
   ) {}
+}
+
+export const newCreatedPairGameOutputModel = function (game: NewPairGameEntity) {
+  return {
+    id: game.id,
+    firstPlayerProgress: {
+      player: {
+        id: game.firstPlayer.user.id,
+        login: game.firstPlayer.user.accountData.login,
+      },
+      answers: game.firstPlayer.answers,
+      score: game.firstPlayer.playerScore,
+    },
+    secondPlayerProgress: game.secondPlayer ?
+        {
+          player: {
+            id: game.secondPlayer.user.id,
+            login: game.secondPlayer.user.accountData.login,
+          },
+          answers: game.secondPlayer.answers,
+          score: game.secondPlayer.playerScore,
+        } : game.secondPlayer,
+    questions: game.questions,
+    status: game.status,
+    pairCreatedDate: game.pairCreatedDate.toISOString(),
+    startGameDate: game.startGameDate ?
+        game.startGameDate.toISOString() :
+        game.startGameDate,
+    finishGameDate: game.finishGameDate ?
+        game.finishGameDate.toISOString() :
+        game.finishGameDate
+  }
 }
 
 export const createdPairGameOutputModel = (
