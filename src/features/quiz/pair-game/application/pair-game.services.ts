@@ -105,14 +105,7 @@ export class PairGameQuizPairsServices {
   async newJoinToPairGame(userId: string, pendingPairGame: NewPairGameEntity) {
     const questions = await this.createFiveQuestionsForGame(pendingPairGame);
 
-    const secondPlayer = new PairGamePlayersEntity();
-    const user = new UsersTable();
-
-    user.id = userId;
-
-    secondPlayer.user = user;
-
-    pendingPairGame.secondPlayer = secondPlayer;
+    pendingPairGame.secondPlayer = this.createPlayer(userId);
     pendingPairGame.status = 'Active';
     pendingPairGame.startGameDate = new Date();
     pendingPairGame.questions = questions;
@@ -120,8 +113,7 @@ export class PairGameQuizPairsServices {
     const activePairGame =
       await this.pairGameRepository.newCreatePairGame(pendingPairGame);
 
-    return activePairGame;
-    //return createdPairGameOutputModel(activePairGame!);
+    return newCreatedPairGameOutputModel(activePairGame!);
   }
 
   private createPlayer(userId: string): PairGamePlayersEntity {
