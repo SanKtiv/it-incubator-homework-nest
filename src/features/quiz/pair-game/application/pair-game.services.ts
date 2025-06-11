@@ -234,6 +234,100 @@ export class PairGameQuizPairsServices {
     return addedAnswerPlayerOutputModel(answerPlayer);
   }
 
+  async newAddAnswerPlayer(
+      userId: string,
+      dto: InputAnswersModels,
+  ): Promise<AnswerPlayerOutputModel> {
+    const game =
+        await this.pairGameRepository.getActivePairGameByUserId(userId);
+
+    if (!game) throw new ForbiddenException();
+
+    const countQuestionsGame: number = game.questions.length;
+
+    let countAnswersFirstPlayer: number = game.answersFirstPlayer.length;
+    let countAnswersSecondPlayer: number = game.answersSecondPlayer.length;
+    let answerPlayer: AnswersGameEntity = new AnswersGameEntity();
+
+    if (game.firstPlayer.id === userId) {
+      if (countAnswersFirstPlayer === countQuestionsGame)
+        throw new ForbiddenException();
+
+      answerPlayer = this.createAnswerPlayer(
+          game,
+          userId,
+          dto,
+          countAnswersFirstPlayer,
+      );
+
+      game.answersFirstPlayer.push(answerPlayer);
+
+      countAnswersFirstPlayer = game.answersFirstPlayer.length;
+
+      if (answerPlayer.answerStatus === 'Correct') game.firstPlayerScore++;
+    }
+
+    if (game.secondPlayer.id === userId) {
+      if (countAnswersSecondPlayer === countQuestionsGame)
+        throw new ForbiddenException();
+
+      answerPlayer = this.createAnswerPlayer(
+          game,
+          userId,
+          dto,
+          countAnswersSecondPlayer,
+      );
+
+      game.answersSecondPlayer.push(answerPlayer);
+      countAnswersSecondPlayer = game.answersSecondPlayer.length;
+
+      if (answerPlayer.answerStatus === 'Correct') game.secondPlayerScore++;
+    }
+
+    if (
+        countQuestionsGame === countAnswersFirstPlayer &&
+        countQuestionsGame === countAnswersSecondPlayer
+    ) {
+      game.status = 'Finished';
+
+      game.finishGameDate = new Date();
+
+      game.answersFirstPlayer.sort(
+          (a: any, b: any) => b.addedAt - a.addedAt,
+      );
+
+      game.answersSecondPlayer.sort(
+          (a: any, b: any) => b.addedAt - a.addedAt,
+      );
+
+      const correctAnswersFirstPlayer = game.answersFirstPlayer.find(
+          (e) => e.answerStatus === 'Correct',
+      );
+
+      const correctAnswersSecondPlayer = game.answersSecondPlayer.find(
+          (e) => e.answerStatus === 'Correct',
+      );
+
+      if (
+          game.answersFirstPlayer[0].addedAt >
+          game.answersSecondPlayer[0].addedAt &&
+          correctAnswersSecondPlayer
+      )
+        game.secondPlayerScore++;
+
+      if (
+          game.answersFirstPlayer[0].addedAt <
+          game.answersSecondPlayer[0].addedAt &&
+          correctAnswersFirstPlayer
+      )
+        game.firstPlayerScore++;
+    }
+
+    await this.pairGameRepository.updatePairGame(game);
+
+    return addedAnswerPlayerOutputModel(answerPlayer);
+  }
+
   private createAnswerPlayer(
     pairGame: QuizPairGameEntity,
     userId: string,
