@@ -55,6 +55,16 @@ export class PairGameQuizPairsServices {
     return createdPairGameOutputModel(createdPendingPairGame!);
   }
 
+  async getActiveGameByUserId(userId: string) {
+    const status = 'Active';
+    const game =
+        await this.pairGameRepository.newGetActiveGameByUserId(userId, status);
+
+    if (!game) throw new ForbiddenException();
+
+    return game;
+  }
+
   async newCreatePairGame(userId: string) {
     const pairGameCurrentUser =
       await this.pairGameRepository.newGetNotFinishedPairGameByUserId(userId);
@@ -139,6 +149,7 @@ export class PairGameQuizPairsServices {
       game: game,
     })) as QuestionsGameEntity[];
   }
+
 
   async addAnswerPlayerInPairGame(
     userId: string,
@@ -238,17 +249,13 @@ export class PairGameQuizPairsServices {
       userId: string,
       dto: InputAnswersModels,
   ): Promise<AnswerPlayerOutputModel> {
-    const status = 'Active';
+    const game = await this.getActiveGameByUserId(userId);
 
-    const game =
-        await this.pairGameRepository.newGetActiveGameByUserId(userId, status);
+    const getLength = arr => arr ? arr.length : 0;
 
-    if (!game) throw new ForbiddenException();
-
-    const countQuestionsGame: number = game.questions.length;
-
-    let countAnswersFirstPlayer: number = game.answersFirstPlayer.length;
-    let countAnswersSecondPlayer: number = game.answersSecondPlayer.length;
+    const countQuestionsGame: number = getLength(game.questions);
+    let countAnswersFirstPlayer: number = getLength(game.firstPlayer.answers);
+    let countAnswersSecondPlayer: number = getLength(game.secondPlayer!.answers);
     let answerPlayer: AnswersGameEntity = new AnswersGameEntity();
 
     if (game.firstPlayer.user.id === userId) {
