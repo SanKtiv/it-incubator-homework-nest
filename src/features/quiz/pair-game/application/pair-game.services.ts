@@ -337,6 +337,34 @@ export class PairGameQuizPairsServices {
     return addedAnswerPlayerOutputModel(answerPlayer);
   }
 
+  private newCreateAnswerPlayer(
+      game: NewPairGameEntity,
+      userId: string,
+      dto: InputAnswersModels,
+      numQuestion: number,
+  ): PlayerAnswersEntity {
+    const questionId = game.questions[numQuestion].id;
+
+    const arrayCorrectAnswers =
+        game.questions[numQuestion].correctAnswers.split(',');
+
+    const answerPlayer = new AnswersGameEntity();
+
+    answerPlayer.userId = userId;
+    answerPlayer.questionId = questionId;
+    answerPlayer.addedAt = new Date();
+
+    const str = (str: string) => str.trim().toLowerCase();
+
+    const resultFind: string | undefined = arrayCorrectAnswers.find(
+        (e) => str(e) === str(dto.answer),
+    );
+
+    answerPlayer.answerStatus = resultFind ? 'Correct' : 'Incorrect';
+
+    return answerPlayer;
+  }
+
   private createAnswerPlayer(
     pairGame: QuizPairGameEntity,
     userId: string,
