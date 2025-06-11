@@ -52,6 +52,18 @@ export class PairGameRepositoryTypeOrm {
       .getOne();
   }
 
+  async newGetActiveGame(
+      userId: string,
+  ): Promise<NewPairGameEntity | null | undefined> {
+    return this.newGetQuizPairGameBuilder
+        .where('pg.status = :status')
+        .andWhere('fp.id = :userId')
+        .orWhere('pg.status = :status')
+        .andWhere('sp.id = :userId')
+        .setParameters({ status: 'Active' , userId })
+        .getOne();
+  }
+
   async getOneNotFinished(
     userId: string,
   ): Promise<QuizPairGameEntity | null | undefined> {

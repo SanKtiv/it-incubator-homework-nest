@@ -16,6 +16,12 @@ export class PairGameRepository {
     return this.repository.getOneActive(userId);
   }
 
+  async newGetActiveGameByUserId(
+      userId: string,
+  ): Promise<QuizPairGameEntity | null | undefined> {
+    return this.repository.getOneActive(userId);
+  }
+
   async getNotFinishedPairGameByUserId(
     userId: string,
   ): Promise<QuizPairGameEntity | null | undefined> {
