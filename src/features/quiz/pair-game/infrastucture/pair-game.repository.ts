@@ -18,8 +18,9 @@ export class PairGameRepository {
 
   async newGetActiveGameByUserId(
       userId: string,
-  ): Promise<QuizPairGameEntity | null | undefined> {
-    return this.repository.getOneActive(userId);
+      status: string
+  ): Promise<NewPairGameEntity | null | undefined> {
+    return this.repository.newGetActiveGame(userId, status);
   }
 
   async getNotFinishedPairGameByUserId(
@@ -49,9 +50,9 @@ export class PairGameRepository {
   }
 
   async newCreatePairGame(
-    pairGame: NewPairGameEntity,
+    game: NewPairGameEntity,
   ): Promise<NewPairGameEntity | null | undefined> {
-    return this.repository.newCreate(pairGame);
+    return this.repository.newCreate(game);
   }
 
   async updatePairGame(pairGame: QuizPairGameEntity) {

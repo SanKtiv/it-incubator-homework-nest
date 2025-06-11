@@ -54,13 +54,14 @@ export class PairGameRepositoryTypeOrm {
 
   async newGetActiveGame(
       userId: string,
+      status: string
   ): Promise<NewPairGameEntity | null | undefined> {
     return this.newGetQuizPairGameBuilder
         .where('pg.status = :status')
         .andWhere('fp.id = :userId')
         .orWhere('pg.status = :status')
         .andWhere('sp.id = :userId')
-        .setParameters({ status: 'Active' , userId })
+        .setParameters({ status, userId })
         .getOne();
   }
 

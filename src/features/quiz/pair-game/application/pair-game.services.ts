@@ -238,8 +238,10 @@ export class PairGameQuizPairsServices {
       userId: string,
       dto: InputAnswersModels,
   ): Promise<AnswerPlayerOutputModel> {
+    const status = 'Active';
+
     const game =
-        await this.pairGameRepository.getActivePairGameByUserId(userId);
+        await this.pairGameRepository.newGetActiveGameByUserId(userId, status);
 
     if (!game) throw new ForbiddenException();
 
@@ -249,7 +251,7 @@ export class PairGameQuizPairsServices {
     let countAnswersSecondPlayer: number = game.answersSecondPlayer.length;
     let answerPlayer: AnswersGameEntity = new AnswersGameEntity();
 
-    if (game.firstPlayer.id === userId) {
+    if (game.firstPlayer.user.id === userId) {
       if (countAnswersFirstPlayer === countQuestionsGame)
         throw new ForbiddenException();
 
