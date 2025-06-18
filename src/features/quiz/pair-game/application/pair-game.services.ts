@@ -130,13 +130,20 @@ export class PairGameQuizPairsServices {
 
     private createPlayer(userId: string): PairGamePlayersEntity {
         const player = new PairGamePlayersEntity();
-        const user = new UsersTable();
 
-        user.id = userId;
-        player.user = user;
+        player.user = new UsersTable();
+        player.user.id = userId;
         player.answers = null;
 
         return player;
+    }
+
+    private createAnswerPlayerEntity(): PlayerAnswersEntity {
+        const playerAnswer = new PlayerAnswersEntity();
+
+
+
+        return playerAnswer;
     }
 
     async createFiveQuestionsForGame(game: NewPairGameEntity) {
@@ -255,9 +262,9 @@ export class PairGameQuizPairsServices {
 
         const getLength = arr => arr ? arr.length : 0;
 
-        const countQuestionsGame: number = getLength(game.questions);
-        let countAnswersFirstPlayer: number = getLength(game.firstPlayer.answers);
-        let countAnswersSecondPlayer: number = getLength(game.secondPlayer!.answers);
+        const countQuestionsGame = getLength(game.questions);
+        let countAnswersFirstPlayer = getLength(game.firstPlayer.answers);
+        let countAnswersSecondPlayer = getLength(game.secondPlayer!.answers);
         let answerPlayer = new PlayerAnswersEntity();
 
         if (game.firstPlayer.user.id === userId) {
@@ -271,28 +278,30 @@ export class PairGameQuizPairsServices {
                 countAnswersFirstPlayer,
             );
 
-            game.answersFirstPlayer.push(answerPlayer);
+            game.firstPlayer.answers!.push(answerPlayer);
 
-            countAnswersFirstPlayer = game.answersFirstPlayer.length;
+            countAnswersFirstPlayer = game.firstPlayer.answers!.length;
 
-            if (answerPlayer.answerStatus === 'Correct') game.firstPlayerScore++;
+            if (answerPlayer.answerStatus === 'Correct')
+                game.firstPlayer.playerScore++;
         }
 
-        if (game.secondPlayer.id === userId) {
+        if (game.secondPlayer!.user.id === userId) {
             if (countAnswersSecondPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 
-            answerPlayer = this.createAnswerPlayer(
+            answerPlayer = this.newCreateAnswerPlayer(
                 game,
                 userId,
                 dto,
-                countAnswersSecondPlayer,
+                countAnswersFirstPlayer,
             );
 
-            game.answersSecondPlayer.push(answerPlayer);
-            countAnswersSecondPlayer = game.answersSecondPlayer.length;
+            game.secondPlayer!.answers!.push(answerPlayer);
+            countAnswersSecondPlayer = game.secondPlayer!.answers!.length;
 
-            if (answerPlayer.answerStatus === 'Correct') game.secondPlayerScore++;
+            if (answerPlayer.answerStatus === 'Correct')
+                game.secondPlayer!.playerScore++;
         }
 
         if (
