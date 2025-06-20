@@ -312,35 +312,35 @@ export class PairGameQuizPairsServices {
 
             game.finishGameDate = new Date();
 
-            game.answersFirstPlayer.sort(
+            game.firstPlayer.answers!.sort(
                 (a: any, b: any) => b.addedAt - a.addedAt,
             );
 
-            game.answersSecondPlayer.sort(
+            game.secondPlayer!.answers!.sort(
                 (a: any, b: any) => b.addedAt - a.addedAt,
             );
 
-            const correctAnswersFirstPlayer = game.answersFirstPlayer.find(
+            const correctAnswersFirstPlayer = game.firstPlayer.answers!.find(
                 (e) => e.answerStatus === 'Correct',
             );
 
-            const correctAnswersSecondPlayer = game.answersSecondPlayer.find(
+            const correctAnswersSecondPlayer = game.secondPlayer!.answers!.find(
                 (e) => e.answerStatus === 'Correct',
             );
 
             if (
-                game.answersFirstPlayer[0].addedAt >
-                game.answersSecondPlayer[0].addedAt &&
+                game.firstPlayer.answers![0].addedAt >
+                game.secondPlayer!.answers![0].addedAt &&
                 correctAnswersSecondPlayer
             )
-                game.secondPlayerScore++;
+                game.secondPlayer!.playerScore++;
 
             if (
-                game.answersFirstPlayer[0].addedAt <
-                game.answersSecondPlayer[0].addedAt &&
+                game.firstPlayer.answers![0].addedAt <
+                game.secondPlayer!.answers![0].addedAt &&
                 correctAnswersFirstPlayer
             )
-                game.firstPlayerScore++;
+                game.firstPlayer.playerScore++;
         }
 
         await this.pairGameRepository.updatePairGame(game);
