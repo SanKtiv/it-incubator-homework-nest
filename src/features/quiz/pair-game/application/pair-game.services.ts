@@ -363,9 +363,7 @@ export class PairGameQuizPairsServices {
 
         const answerPlayer = new PlayerAnswersEntity();
 
-        answerPlayer.player = new PairGamePlayersEntity();
-        answerPlayer.player.user = new UsersTable();
-        answerPlayer.player.user.id = userId;
+        answerPlayer.player = this.createPlayer(userId);
         answerPlayer.gameId = game.id;
         answerPlayer.questionId = questionId;
         answerPlayer.addedAt = new Date();
