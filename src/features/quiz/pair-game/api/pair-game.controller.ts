@@ -72,7 +72,7 @@ export class PairGameQuizPairsController {
     @Body() dto: InputAnswersModels,
   ): Promise<AnswerPlayerOutputModel> {
     //return this.pairGameServices.addAnswerPlayerInPairGame(userId, dto);
-      return this.pairGameServices.newAddAnswerPlayer(userId, dto);
+      return this.pairGameServices.newAddAnswerPlayerInGame(userId, dto);
   }
 
   @Get('pairs/:id')

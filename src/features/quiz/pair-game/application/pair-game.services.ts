@@ -254,7 +254,7 @@ export class PairGameQuizPairsServices {
         return addedAnswerPlayerOutputModel(answerPlayer);
     }
 
-    async newAddAnswerPlayer(
+    async newAddAnswerPlayerInGame(
         userId: string,
         dto: InputAnswersModels,
     ): Promise<AnswerPlayerOutputModel> {
