@@ -59,6 +59,10 @@ export class PairGameRepository {
     return this.repository.update(pairGame);
   }
 
+  async newUpdatePairGame(game: NewPairGameEntity) {
+    return this.repository.update(game);
+  }
+
   async clear(): Promise<void> {
     await this.repository.clear();
   }
