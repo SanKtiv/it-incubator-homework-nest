@@ -45,8 +45,7 @@ export class PairGameQueryRepository {
 
     if (
         (game.firstPlayer.user.id !== userId && !game.secondPlayer) ||
-        (game.firstPlayer.user.id !== userId &&
-            game.secondPlayer.user.id !== userId)
+        (game.firstPlayer.user.id !== userId && game.secondPlayer!.user.id !== userId)
     )
       throw new ForbiddenException();
 

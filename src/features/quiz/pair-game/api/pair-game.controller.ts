@@ -80,7 +80,8 @@ export class PairGameQuizPairsController {
   async getPairGameById(
     @Param('id', idPairGamePipe) id: string,
     @CurrentUserId() userId: string,
-  ): Promise<CreatedPairGameOutputModel> {
-    return this.pairGameQueryRepository.getById(id, userId);
+  ) {
+    //return this.pairGameQueryRepository.getById(id, userId);
+      return this.pairGameQueryRepository.newGetById(id, userId);
   }
 }
