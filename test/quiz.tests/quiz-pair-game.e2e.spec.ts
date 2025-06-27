@@ -227,30 +227,30 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
     await expect(resultGetGame.statusCode).toBe(200)
   });
-  //
-  // it('14 /pair-game-quiz/pairs/:id (GET), get game by user2 should returned status 403', async () => {
-  //   const resultGetGame = await quizPairGameTestManager.getById(
-  //       idExistPairGame1,
-  //       testAccessToken2,
-  //   );
-  //
-  //   await expect(resultGetGame.statusCode).toBe(403)
-  // });
-  //
-  // it('15 /pair-game-quiz/pairs/connection (POST), join to game №1 user2 should returned status 200', async () => {
-  //   const resultCreatePairGame = await quizPairGameTestManager.create(testAccessToken2);
-  //
-  //   await expect(resultCreatePairGame.statusCode).toBe(200)
-  // });
-  //
-  // it('16 /pair-game-quiz/pairs/:id (GET), get game user2 should returned status 200', async () => {
-  //   const resultGetGame = await quizPairGameTestManager.getById(
-  //       idExistPairGame1,
-  //       testAccessToken2,
-  //   );
-  //
-  //   await expect(resultGetGame.statusCode).toBe(200)
-  // });
+
+  it('14 /pair-game-quiz/pairs/:id (GET), get game by user2 should returned status 403', async () => {
+    const resultGetGame = await quizPairGameTestManager.getById(
+        idExistPairGame1,
+        testAccessToken2,
+    );
+
+    await expect(resultGetGame.statusCode).toBe(403)
+  });
+
+  it('15 /pair-game-quiz/pairs/connection (POST), join to game №1 user2 should returned status 200', async () => {
+    const resultCreatePairGame = await quizPairGameTestManager.create(testAccessToken2);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+  });
+
+  it('16 /pair-game-quiz/pairs/:id (GET), get game user2 should returned status 200', async () => {
+    const resultGetGame = await quizPairGameTestManager.getById(
+        idExistPairGame1,
+        testAccessToken2,
+    );
+
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
   //
   // it('17 /pair-game-quiz/pairs/my-current/answers (POST), user1 add correct answer first, should return status 200', async () => {
   //   const result = await quizPairGameTestManager.createAnswer(testAccessToken1, {

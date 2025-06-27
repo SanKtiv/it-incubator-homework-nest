@@ -104,10 +104,8 @@ export class PairGameRepositoryTypeOrm {
     return this.getById(createdPairGame.id);
   }
 
-  async newCreate(
-    pairGame: NewPairGameEntity,
-  ): Promise<NewPairGameEntity | null | undefined> {
-    const createdPairGame = await this.newRepository.save(pairGame);
+  async newCreate(game: NewPairGameEntity): Promise<NewPairGameEntity | null | undefined> {
+    const createdPairGame = await this.newRepository.save(game);
 
     return this.newGetById(createdPairGame.id);
   }
@@ -147,31 +145,25 @@ export class PairGameRepositoryTypeOrm {
 
   private get newGetQuizPairGameBuilder() {
     return this.newRepository
-      .createQueryBuilder('pg')
-      .leftJoinAndSelect('pg.firstPlayer', 'fPlayer')
-      .leftJoinAndSelect('fPlayer.user', 'fp')
-      .leftJoinAndSelect('fp.accountData', 'firstAccountData')
-      .leftJoinAndSelect('pg.secondPlayer', 'sPlayer')
-      .leftJoinAndSelect('sPlayer.user', 'sp')
-      .leftJoinAndSelect('sp.accountData', 'secondAccountData')
-      // .select([
-      //   'pg',
-      //   'firstPlayer.id',
-      //   'secondPlayer.id',
-      //   'firstAccountData.login',
-      //   'secondAccountData.login',
-      // ])
-      .leftJoinAndSelect(
-        'fPlayer.answers',
-        'firstPlayerAnswers',
-        'pg.id = firstPlayerAnswers.gameId',
-      )
-      .leftJoinAndSelect(
-        'sPlayer.answers',
-        'secondPlayerAnswers',
-        'pg.id = secondPlayerAnswers.gameId',
-      )
-      .leftJoinAndSelect('pg.questions', 'questions')
-      .orderBy('questions.index', 'ASC');
+        .createQueryBuilder('pg')
+        .select(['pg'])
+        .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+        .leftJoinAndSelect('firstPlayer.user', 'firstUser')
+        .leftJoinAndSelect('firstUser.accountData', 'firstAccountData')
+        .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+        .leftJoinAndSelect('secondPlayer.user', 'secondUser')
+        .leftJoinAndSelect('secondUser.accountData', 'secondAccountData')
+        .leftJoinAndSelect(
+            'firstPlayer.answers',
+            'firstPlayerAnswers',
+            'pg.id = firstPlayerAnswers.gameId',
+        )
+        .leftJoinAndSelect(
+            'secondPlayer.answers',
+            'secondPlayerAnswers',
+            'pg.id = secondPlayerAnswers.gameId',
+        )
+        .leftJoinAndSelect('pg.questions', 'questions')
+        .orderBy('questions.index', 'ASC');
   }
 }
