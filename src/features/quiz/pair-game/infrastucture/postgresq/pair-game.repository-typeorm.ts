@@ -58,9 +58,9 @@ export class PairGameRepositoryTypeOrm {
   ): Promise<NewPairGameEntity | null | undefined> {
     return this.newGetQuizPairGameBuilder
         .where('pg.status = :status')
-        .andWhere('fp.id = :userId')
+        .andWhere('firstUser.id = :userId')
         .orWhere('pg.status = :status')
-        .andWhere('sp.id = :userId')
+        .andWhere('secondUser.id = :userId')
         .setParameters({ status, userId })
         .getOne();
   }
@@ -81,9 +81,9 @@ export class PairGameRepositoryTypeOrm {
   ): Promise<NewPairGameEntity | null> {
     return this.newGetQuizPairGameBuilder
       .where('pg.finishGameDate IS NULL')
-      .andWhere('fp.id = :userId')
+      .andWhere('firstUser.id = :userId')
       .orWhere('pg.finishGameDate IS NULL')
-      .andWhere('sp.id = :userId')
+      .andWhere('secondUser.id = :userId')
       .setParameters({ userId })
       .getOne();
   }
