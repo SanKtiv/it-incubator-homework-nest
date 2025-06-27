@@ -151,16 +151,16 @@ export class PairGameQuizPairsServices {
         return createdPairGameOutputModel(activePairGame!);
     }
 
-    async createActiveGame(userId: string, pendingGame: NewPairGameEntity) {
-        const questions = await this.createFiveQuestionsForGame(pendingGame);
+    async createActiveGame(userId: string, game: NewPairGameEntity) {
+        const questions = await this.createFiveQuestionsForGame(game);
 
-        pendingGame.secondPlayer = this.createPlayer(userId);
-        pendingGame.status = 'Active';
-        pendingGame.startGameDate = new Date();
-        pendingGame.questions = questions;
+        game.secondPlayer = this.createPlayer(userId);
+        game.status = 'Active';
+        game.startGameDate = new Date();
+        game.questions = questions;
 
         const activeGame =
-            await this.pairGameRepository.newCreatePairGame(pendingGame);
+            await this.pairGameRepository.newCreatePairGame(game);
 
         return newCreatedPairGameOutputModel(activeGame!);
     }

@@ -70,6 +70,7 @@ export class PairGameQueryRepositoryTypeOrm {
                 'pg.id = secondPlayerAnswers.gameId',
             )
             .leftJoinAndSelect('pg.questions', 'questions')
+            .leftJoinAndSelect('questions.questions', 'question')
             .orderBy('questions.index', 'ASC');
     }
 
