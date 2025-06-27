@@ -46,12 +46,12 @@ export class PairGameQueryRepositoryTypeOrm {
             .createQueryBuilder('pg')
             .select(['pg'])
             .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect('firstPlayer.user', 'user')
-            .leftJoinAndSelect('user.accountData', 'userAccountData')
-            .leftJoinAndSelect('pg.secondPlayer', 'sPlayer')
-            .leftJoinAndSelect('sPlayer.user', 'secondPlayer')
-            .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
-            .addSelect(['firstPlayer.id'])
+            .leftJoinAndSelect('firstPlayer.user', 'firstUser')
+            .leftJoinAndSelect('firstUser.accountData', 'firstAccountData')
+            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+            .leftJoinAndSelect('secondPlayer.user', 'secondUser')
+            .leftJoinAndSelect('secondUser.accountData', 'secondAccountData')
+            //.addSelect(['firstPlayer.id'])
             // .select([
             //     'pg',
             //     'user.id',
@@ -65,7 +65,7 @@ export class PairGameQueryRepositoryTypeOrm {
                 'pg.id = firstPlayerAnswers.gameId',
             )
             .leftJoinAndSelect(
-                'sPlayer.answers',
+                'secondPlayer.answers',
                 'secondPlayerAnswers',
                 'pg.id = secondPlayerAnswers.gameId',
             )
@@ -95,6 +95,17 @@ export class PairGameQueryRepositoryTypeOrm {
       .orderBy('questions.id', 'ASC')
       .getOne();
   }
+
+    async newGetByUserId(userId: string): Promise<NewPairGameEntity | null> {
+        return this.shareBuilder
+            .where('pg.finishGameDate IS NULL')
+            .andWhere('firstUser.id = :userId')
+            .orWhere('pg.finishGameDate IS NULL')
+            .andWhere('secondUser.id = :userId')
+            .setParameters({ userId })
+            .orderBy('questions.index', 'ASC')
+            .getOne();
+    }
 
   async getPaging(
     userId: string,

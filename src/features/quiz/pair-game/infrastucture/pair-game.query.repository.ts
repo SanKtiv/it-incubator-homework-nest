@@ -63,12 +63,12 @@ export class PairGameQueryRepository {
     return createdPairGameOutputModel(pairGame);
   }
 
-  async newGetByUserId(userId: string): Promise<CreatedPairGameOutputModel> {
-    const pairGame = await this.repository.getByUserId(userId);
+  async newGetByUserId(userId: string) {
+    const game = await this.repository.newGetByUserId(userId);
 
-    if (!pairGame) throw new NotFoundException();
+    if (!game) throw new NotFoundException();
 
-    return createdPairGameOutputModel(pairGame);
+    return newCreatedPairGameOutputModel(game);
   }
 
   async getPaging(userId: string, query: pairGameQuery) {

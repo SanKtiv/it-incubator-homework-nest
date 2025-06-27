@@ -37,8 +37,9 @@ export class PairGameQuizPairsController {
   @UseGuards(JWTAccessAuthGuard)
   async getMyCurrentPairGame(
     @CurrentUserId() userId: string,
-  ): Promise<CreatedPairGameOutputModel> {
-    return this.pairGameQueryRepository.getByUserId(userId);
+  ) {
+    // return this.pairGameQueryRepository.getByUserId(userId);
+      return this.pairGameQueryRepository.newGetByUserId(userId);
   }
 
   @Get('pairs/my')

@@ -88,9 +88,9 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
   //   console.log(game);
   // });
 
-  // it('1 /testing/all-data (DELETE), should returned status 204', async () => {
-  //   await clearDB.clearDB();
-  // });
+  it('1 /testing/all-data (DELETE), should returned status 204', async () => {
+    await clearDB.clearDB();
+  });
 
   it('2 /sa/quiz/questions (POST), should returned many question models and status 201', async () => {
     const response1 = await quizQuestionsTestManager.create(
@@ -217,6 +217,15 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         await quizPairGameTestManager.getCurrentGame(testAccessToken2);
 
     await expect(resultGetGame.statusCode).toBe(404)
+  });
+
+  it('13-1 /pair-game-quiz/pairs/my-current (GET), get current game user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager.getCurrentGame(testAccessToken1);
+
+    console.log('current game =', resultGetGame.body)
+
+    await expect(resultGetGame.statusCode).toBe(200)
   });
   //
   // it('14 /pair-game-quiz/pairs/:id (GET), get game by user2 should returned status 403', async () => {
