@@ -223,7 +223,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     const resultGetGame =
         await quizPairGameTestManager.getCurrentGame(testAccessToken1);
 
-    console.log('current game =', resultGetGame.body)
+    //console.log('current game =', resultGetGame.body)
 
     await expect(resultGetGame.statusCode).toBe(200)
   });
@@ -239,7 +239,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
   it('15 /pair-game-quiz/pairs/connection (POST), join to game №1 user2 should returned status 200', async () => {
     const resultCreatePairGame = await quizPairGameTestManager.create(testAccessToken2);
-
+console.log('created active game =', resultCreatePairGame.body)
     await expect(resultCreatePairGame.statusCode).toBe(200)
   });
 
