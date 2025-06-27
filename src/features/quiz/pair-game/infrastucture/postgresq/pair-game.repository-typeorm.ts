@@ -92,6 +92,10 @@ export class PairGameRepositoryTypeOrm {
     return this.repository.save(pairGame);
   }
 
+  async newUpdate(game: NewPairGameEntity) {
+    return this.newRepository.save(game);
+  }
+
   async create(
     pairGame: QuizPairGameEntity,
   ): Promise<QuizPairGameEntity | null | undefined> {
