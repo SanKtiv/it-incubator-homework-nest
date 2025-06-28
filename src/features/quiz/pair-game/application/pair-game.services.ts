@@ -310,8 +310,10 @@ export class PairGameQuizPairsServices {
 
             const question = game.questions![countAnswersFirstPlayer]
 
+            answer.gameId = game.id;
             answer.player = game.firstPlayer;
-            answer.questionId = question.id
+            answer.questionId = question.id;
+            answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
 
             game.firstPlayer.answers!.push(answer);
@@ -327,8 +329,10 @@ export class PairGameQuizPairsServices {
 
             const question = game.questions![countAnswersSecondPlayer]
 
+            answer.gameId = game.id;
             answer.player = game.secondPlayer!;
             answer.questionId = question.id
+            answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
 
             game.secondPlayer!.answers!.push(answer);
