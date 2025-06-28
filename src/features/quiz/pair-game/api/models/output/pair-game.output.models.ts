@@ -208,7 +208,7 @@ export function playerStatisticOutputModel(
 }
 
 export function newPlayerStatisticOutputModel(
-    games: NewPairGameEntity[] | null,
+    games: NewPairGameEntity[] | null | undefined,
     userId: string,
 ) {
     const statistic = {

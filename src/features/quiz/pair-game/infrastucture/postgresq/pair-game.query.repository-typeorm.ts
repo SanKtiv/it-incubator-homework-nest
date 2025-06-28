@@ -184,23 +184,46 @@ export class PairGameQueryRepositoryTypeOrm {
       .getMany();
   }
 
-    async newGetStatisticByUserId(userId: string): Promise<NewPairGameEntity[]> {
-        return this.newRepository
-            .createQueryBuilder('pg')
-            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect('firstPlayer.user', 'firstUser')
-            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-            .leftJoinAndSelect('secondPlayer.user', 'secondUser')
-            .select([
-                'pg.status',
-                'pg.firstPlayerScore',
-                'pg.secondPlayerScore',
-                'firstUser.id',
-                'secondUser.id',
-            ])
-            .where('firstUser.id = :userId')
-            .orWhere('secondUser.id = :userId')
-            .setParameters({ userId })
-            .getMany();
+    async newGetStatisticByUserId(userId: string) {
+      try {
+          const res = await this.newRepository
+              .createQueryBuilder('pg')
+              .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+              .leftJoinAndSelect('firstPlayer.user', 'firstUser')
+              .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+              .leftJoinAndSelect('secondPlayer.user', 'secondUser')
+              .select([
+                  'pg.status',
+                  'pg.firstPlayerScore',
+                  'pg.secondPlayerScore',
+                  'firstUser.id',
+                  'secondUser.id',
+              ])
+              .where('firstUser.id = :userId')
+              .orWhere('secondUser.id = :userId')
+              .setParameters({ userId })
+              .getMany();
+
+          return res;
+      } catch (e) {
+          console.log('ERROR', e)
+      }
+        // return this.newRepository
+        //     .createQueryBuilder('pg')
+        //     .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+        //     .leftJoinAndSelect('firstPlayer.user', 'firstUser')
+        //     .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+        //     .leftJoinAndSelect('secondPlayer.user', 'secondUser')
+        //     .select([
+        //         'pg.status',
+        //         'pg.firstPlayerScore',
+        //         'pg.secondPlayerScore',
+        //         'firstUser.id',
+        //         'secondUser.id',
+        //     ])
+        //     .where('firstUser.id = :userId')
+        //     .orWhere('secondUser.id = :userId')
+        //     .setParameters({ userId })
+        //     .getMany();
     }
 }
