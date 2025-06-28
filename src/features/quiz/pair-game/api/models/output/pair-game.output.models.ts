@@ -207,6 +207,56 @@ export function playerStatisticOutputModel(
   };
 }
 
+export function newPlayerStatisticOutputModel(
+    games: NewPairGameEntity[] | null,
+    userId: string,
+) {
+    const statistic = {
+        sumScore: 0,
+        avgScores: 0,
+        gamesCount: 0,
+        winsCount: 0,
+        lossesCount: 0,
+        drawsCount: 0,
+    }
+
+    if (games) {
+        statistic.gamesCount = games.length;
+
+        function find(game: NewPairGameEntity) {
+            if (!(game.status === 'Finished')) return;
+
+            if (game.firstPlayer.playerScore === game.secondPlayer!.playerScore)
+                statistic.drawsCount++;
+
+            if (game.firstPlayer.user.id === userId) {
+                statistic.sumScore += game.firstPlayer.playerScore;
+
+                if (game.firstPlayer.playerScore > game.secondPlayer!.playerScore)
+                    statistic.winsCount++;
+
+                if (game.firstPlayer.playerScore < game.secondPlayer!.playerScore)
+                    statistic.lossesCount++;
+            } else {
+                statistic.sumScore += game.secondPlayer!.playerScore;
+
+                if (game.firstPlayer.playerScore < game.secondPlayer!.playerScore)
+                    statistic.winsCount++;
+
+                if (game.firstPlayer.playerScore > game.secondPlayer!.playerScore)
+                    statistic.lossesCount++;
+            }
+        }
+
+        games.forEach((game) => find(game));
+
+        statistic.avgScores =
+            Math.round((statistic.sumScore / statistic.gamesCount) * 100) / 100;
+    }
+
+    return statistic;
+}
+
 export const gamesPagingOutputModel = function (
   games: QuizPairGameEntity[],
   query: pairGameQuery,

@@ -54,7 +54,8 @@ export class PairGameQuizPairsController {
   @Get('users/my-statistic')
   @UseGuards(JWTAccessAuthGuard)
   async getStatisticCurrentUser(@CurrentUserId() userId: string) {
-    return this.pairGameQueryRepository.getStatisticByUserId(userId);
+    //return this.pairGameQueryRepository.getStatisticByUserId(userId);
+      return this.pairGameQueryRepository.newGetStatisticByUserId(userId);
   }
 
   @Post('pairs/connection')

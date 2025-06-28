@@ -196,7 +196,6 @@ export class PairGameQuizPairsServices {
         })) as QuestionsGameEntity[];
     }
 
-
     async addAnswerPlayerInPairGame(
         userId: string,
         dto: InputAnswersModels,
