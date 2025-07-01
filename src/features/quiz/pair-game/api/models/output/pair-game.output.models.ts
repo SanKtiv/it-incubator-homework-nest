@@ -270,3 +270,17 @@ export const gamesPagingOutputModel = function (
     items: games.map((game) => createdPairGameOutputModel(game)),
   };
 };
+
+export const newGamesPagingOutputModel = function (
+    games: NewPairGameEntity[],
+    query: pairGameQuery,
+    totalGames: number,
+) {
+    return {
+        pagesCount: Math.ceil(+totalGames / +query.pageSize),
+        page: query.pageNumber,
+        pageSize: query.pageSize,
+        totalCount: +totalGames,
+        items: games.map((game) => newCreatedPairGameOutputModel(game)),
+    };
+};

@@ -48,7 +48,8 @@ export class PairGameQuizPairsController {
     @CurrentUserId() userId: string,
     @Query() query: pairGameQuery,
   ) {
-    return this.pairGameQueryRepository.getPaging(userId, query);
+    // return this.pairGameQueryRepository.getPaging(userId, query);
+      return this.pairGameQueryRepository.newGetPaging(userId, query);
   }
 
   @Get('users/my-statistic')
