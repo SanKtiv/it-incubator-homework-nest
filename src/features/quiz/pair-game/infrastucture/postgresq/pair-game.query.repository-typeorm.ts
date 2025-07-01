@@ -266,8 +266,8 @@ export class PairGameQueryRepositoryTypeOrm {
               .leftJoinAndSelect('secondPlayer.user', 'secondUser')
               .select([
                   'pg.status',
-                  'pg.firstPlayerScore',
-                  'pg.secondPlayerScore',
+                  'firstPlayer.playerScore',
+                  'secondPlayer.playerScore',
                   'firstUser.id',
                   'secondUser.id',
               ])
@@ -278,7 +278,7 @@ export class PairGameQueryRepositoryTypeOrm {
 
           return res;
       } catch (e) {
-          console.log('ERROR', e)
+          console.log('ERROR in newGetStatisticByUserId', e)
       }
         // return this.newRepository
         //     .createQueryBuilder('pg')
