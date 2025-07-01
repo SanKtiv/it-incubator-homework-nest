@@ -52,7 +52,13 @@ export class PairGameRepository {
   async newCreatePairGame(
     game: NewPairGameEntity,
   ): Promise<NewPairGameEntity | null | undefined> {
-    return this.repository.newCreate(game);
+    try {
+      const result = await this.repository.newCreate(game);
+      return result;
+    }
+    catch (e) {
+      console.log('ERROR in newCreatePairGame -', e)
+    }
   }
 
   async updatePairGame(pairGame: QuizPairGameEntity) {
