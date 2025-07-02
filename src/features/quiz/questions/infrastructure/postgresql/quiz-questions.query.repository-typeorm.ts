@@ -18,6 +18,39 @@ export class QuizQuestionsQueryRepositoryTypeOrm {
 
   async get() {}
 
+  async getPaging(
+      queryDto: QuizQuestionsQueryInputDto,
+  ): Promise<QuizQuestionsPaging> {
+    const bodySearchTerm = queryDto.bodySearchTerm ?? null;
+
+    const publishedStatus =
+        queryDto.publishedStatus == 'published'
+            ? true
+            : queryDto.publishedStatus == 'notPublished'
+            ? false
+            : null;
+
+    const quizQuestions = this.repository
+        .createQueryBuilder('qq')
+        .where('qq."body" ~* :bodySearchTerm OR :bodySearchTerm IS NULL')
+        .andWhere('qq."published" = :publishedStatus OR :publishedStatus IS NULL')
+        .setParameters({ bodySearchTerm, publishedStatus });
+
+    const totalQuizQuestions = await quizQuestions.getCount();
+
+    const quizQuestionsPaging = await quizQuestions.select('qq.*')
+        .orderBy(`"${queryDto.sortBy}"`, queryDto.sortDirection)
+        .offset((queryDto.pageNumber - 1) * queryDto.pageSize)
+        .limit(queryDto.pageSize)
+        .getRawMany();
+
+    return quizQuestionsPagingViewModel(
+        quizQuestionsPaging,
+        queryDto,
+        totalQuizQuestions,
+    );
+  }
+
   async getPaging_OLD(
     queryDto: QuizQuestionsQueryInputDto,
   ): Promise<QuizQuestionsPaging> {
@@ -53,39 +86,6 @@ export class QuizQuestionsQueryRepositoryTypeOrm {
       QuizQuestionsPaging,
       queryDto,
       totalQuizQuestions,
-    );
-  }
-
-  async getPaging(
-      queryDto: QuizQuestionsQueryInputDto,
-  ): Promise<QuizQuestionsPaging> {
-    const bodySearchTerm = queryDto.bodySearchTerm ?? null;
-
-    const publishedStatus =
-        queryDto.publishedStatus == 'published'
-            ? true
-            : queryDto.publishedStatus == 'notPublished'
-            ? false
-            : null;
-
-    const quizQuestions = this.repository
-        .createQueryBuilder('qq')
-        .where('qq."body" ~* :bodySearchTerm OR :bodySearchTerm IS NULL')
-        .andWhere('qq."published" = :publishedStatus OR :publishedStatus IS NULL')
-        .setParameters({ bodySearchTerm, publishedStatus });
-
-    const totalQuizQuestions = await quizQuestions.getCount();
-
-    const quizQuestionsPaging = await quizQuestions.select('qq.*')
-        .orderBy(`"${queryDto.sortBy}"`, queryDto.sortDirection)
-        .offset((queryDto.pageNumber - 1) * queryDto.pageSize)
-        .limit(queryDto.pageSize)
-        .getRawMany();
-
-    return quizQuestionsPagingViewModel(
-        quizQuestionsPaging,
-        queryDto,
-        totalQuizQuestions,
     );
   }
 }

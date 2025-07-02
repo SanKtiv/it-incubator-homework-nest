@@ -38,6 +38,29 @@ export class QuizQuestionsServices {
     await this.repository.updateQuizQuestion(question);
   }
 
+  async updatePublishQuestionsById(
+      id: string,
+      dto: PublishedInputDto,
+  ): Promise<void> {
+    const question = await this.repository.getQuizQuestionById(id);
+
+    if (!question) throw new NotFoundException();
+
+    question.published = dto.published;
+    question.updatedAt = new Date();
+
+    await this.repository.updateQuizQuestion(question);
+  }
+
+  async deleteQuestions(id: string): Promise<void> {
+    const quizQuestion: NewQuizQuestionsEntity | null =
+        await this.repository.getQuizQuestionById(id);
+
+    if (!quizQuestion) throw new NotFoundException();
+
+    await this.repository.deleteQuizQuestion(quizQuestion);
+  }
+
   async createQuestion_OLD(
     dto: QuizQuestionsInputDto,
   ): Promise<QuizQuestionsOutputDto> {
@@ -65,26 +88,26 @@ export class QuizQuestionsServices {
     await this.repository.updateQuizQuestion_OLD(quizQuestion);
   }
 
-  async updatePublishQuestionsById(
+  async updatePublishQuestionsById_OLD(
     id: string,
     dto: PublishedInputDto,
   ): Promise<void> {
-    const quizQuestion = await this.repository.getQuizQuestionById(id);
+    const question = await this.repository.getQuizQuestionById_OLD(id);
 
-    if (!quizQuestion) throw new NotFoundException();
+    if (!question) throw new NotFoundException();
 
-    quizQuestion.published = dto.published;
-    quizQuestion.updatedAt = new Date();
+    question.published = dto.published;
+    question.updatedAt = new Date();
 
-    await this.repository.updateQuizQuestion(quizQuestion);
+    await this.repository.updateQuizQuestion_OLD(question);
   }
 
-  async deleteQuestions(id: string): Promise<void> {
+  async deleteQuestions_OLD(id: string): Promise<void> {
     const quizQuestion: QuizQuestionsEntity | null =
-      await this.repository.getQuizQuestionById(id);
+      await this.repository.getQuizQuestionById_OLD(id);
 
     if (!quizQuestion) throw new NotFoundException();
 
-    await this.repository.deleteQuizQuestion(quizQuestion);
+    await this.repository.deleteQuizQuestion_OLD(quizQuestion);
   }
 }
