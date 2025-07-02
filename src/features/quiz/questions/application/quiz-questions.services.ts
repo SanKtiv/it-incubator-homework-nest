@@ -11,18 +11,6 @@ import { QuizQuestionsOutputDto } from '../api/models/quiz-questions.output.dto'
 export class QuizQuestionsServices {
   constructor(protected repository: QuizQuestionsRepository) {}
 
-  async createQuestion_OLD(
-    dto: QuizQuestionsInputDto,
-  ): Promise<QuizQuestionsOutputDto> {
-    const quizQuestion = new QuizQuestionsEntity();
-
-    quizQuestion.body = dto.body;
-    [quizQuestion.correctAnswers] = dto.correctAnswers;
-    quizQuestion.createdAt = new Date();
-
-    return this.repository.insert_OLD(quizQuestion);
-  }
-
   async createQuestion(
       dto: QuizQuestionsInputDto,
   ): Promise<QuizQuestionsOutputDto> {
@@ -35,11 +23,38 @@ export class QuizQuestionsServices {
     return this.repository.insert(question);
   }
 
-  async updateQuestionsById(
+  async updateQuestionById(
+      id: string,
+      dto: QuizQuestionsInputDto,
+  ): Promise<void> {
+    const question = await this.repository.getQuizQuestionById(id);
+
+    if (!question) throw new NotFoundException();
+
+    question.body = dto.body;
+    [question.correctAnswers] = dto.correctAnswers;
+    question.updatedAt = new Date();
+
+    await this.repository.updateQuizQuestion(question);
+  }
+
+  async createQuestion_OLD(
+    dto: QuizQuestionsInputDto,
+  ): Promise<QuizQuestionsOutputDto> {
+    const quizQuestion = new QuizQuestionsEntity();
+
+    quizQuestion.body = dto.body;
+    [quizQuestion.correctAnswers] = dto.correctAnswers;
+    quizQuestion.createdAt = new Date();
+
+    return this.repository.insert_OLD(quizQuestion);
+  }
+
+  async updateQuestionById_OLD(
     id: string,
     dto: QuizQuestionsInputDto,
   ): Promise<void> {
-    const quizQuestion = await this.repository_OLD.getQuizQuestionById(id);
+    const quizQuestion = await this.repository.getQuizQuestionById_OLD(id);
 
     if (!quizQuestion) throw new NotFoundException();
 
@@ -47,7 +62,7 @@ export class QuizQuestionsServices {
     [quizQuestion.correctAnswers] = dto.correctAnswers;
     quizQuestion.updatedAt = new Date();
 
-    await this.repository.updateQuizQuestion(quizQuestion);
+    await this.repository.updateQuizQuestion_OLD(quizQuestion);
   }
 
   async updatePublishQuestionsById(

@@ -43,7 +43,7 @@ export class QuizQuestionsController {
     @Param('id') id: string,
     @Body() dto: QuizQuestionsInputDto,
   ) {
-    await this.quizQuestionsServices.updateQuestionsById(id, dto);
+    await this.quizQuestionsServices.updateQuestionById(id, dto);
   }
 
   @Put(':id/publish')

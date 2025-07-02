@@ -15,7 +15,7 @@ export class QuizQuestionsQueryRepository {
 
   async getQuizQuestionsPaging(
       queryDto: QuizQuestionsQueryInputDto,
-  ): Promise<NewQuizQuestionsPaging> {
+  ): Promise<QuizQuestionsPaging> {
     return this.repository.getPaging(queryDto);
   }
 }

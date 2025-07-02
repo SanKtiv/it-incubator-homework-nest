@@ -26,11 +26,19 @@ export class QuizQuestionsRepository {
     return this.repository.findFiveRandom();
   }
 
-  async getQuizQuestionById(id: string): Promise<QuizQuestionsEntity | null> {
+  async getQuizQuestionById_OLD(id: string): Promise<QuizQuestionsEntity | null> {
+    return this.repository.findOneById_OLD(id);
+  }
+
+  async getQuizQuestionById(id: string): Promise<NewQuizQuestionsEntity | null> {
     return this.repository.findOneById(id);
   }
 
-  async updateQuizQuestion(QuizQuestion: QuizQuestionsEntity): Promise<void> {
+  async updateQuizQuestion_OLD(QuizQuestion: QuizQuestionsEntity): Promise<void> {
+    await this.repository.update_OLD(QuizQuestion);
+  }
+
+  async updateQuizQuestion(QuizQuestion: NewQuizQuestionsEntity): Promise<void> {
     await this.repository.update(QuizQuestion);
   }
 

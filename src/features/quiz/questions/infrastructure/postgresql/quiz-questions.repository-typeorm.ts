@@ -30,12 +30,20 @@ export class QuizQuestionsRepositoryTypeOrm {
       .getRawMany();
   }
 
-  async findOneById(id: string): Promise<QuizQuestionsEntity | null> {
+  async findOneById_OLD(id: string): Promise<QuizQuestionsEntity | null> {
     return this.repository_OLD.findOneBy({ id });
   }
 
-  async update(dto: QuizQuestionsEntity) {
+  async findOneById(id: string): Promise<NewQuizQuestionsEntity | null> {
+    return this.repository.findOneBy({ id });
+  }
+
+  async update_OLD(dto: QuizQuestionsEntity) {
     await this.repository_OLD.save(dto);
+  }
+
+  async update(dto: NewQuizQuestionsEntity) {
+    await this.repository.save(dto);
   }
 
   async softRemove(QuizQuestion: QuizQuestionsEntity): Promise<void> {
