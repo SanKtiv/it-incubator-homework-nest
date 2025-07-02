@@ -24,10 +24,7 @@ export class QuestionsGameEntity {
   @JoinColumn()
   game: NewPairGameEntity;
 
-  @OneToOne(() => QuizQuestionsEntity, {
-    cascade: true,
-    eager: true,
-  })
+  @OneToOne(() => QuizQuestionsEntity )
   @JoinColumn()
   questions: QuizQuestionsEntity;
 

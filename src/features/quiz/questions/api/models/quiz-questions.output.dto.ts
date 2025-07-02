@@ -1,4 +1,4 @@
-import { QuizQuestionsEntity } from '../../domain/quiz-questions.entity';
+import {NewQuizQuestionsEntity, QuizQuestionsEntity} from '../../domain/quiz-questions.entity';
 import { QuizQuestionsQueryInputDto } from './quiz-questions.input.dto';
 
 export class QuizQuestionsOutputDto {
@@ -11,7 +11,7 @@ export class QuizQuestionsOutputDto {
 }
 
 export const quizQuestionsViewModel = (
-  dto: QuizQuestionsEntity,
+  dto: QuizQuestionsEntity | NewQuizQuestionsEntity,
 ): QuizQuestionsOutputDto => ({
   id: dto.id,
   body: dto.body,

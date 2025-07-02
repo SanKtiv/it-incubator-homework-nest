@@ -94,7 +94,7 @@ import { QuizQuestionsRepositoryTypeOrm } from './features/quiz/questions/infras
 import { QuizQuestionsQueryRepositoryTypeOrm } from './features/quiz/questions/infrastructure/postgresql/quiz-questions.query.repository-typeorm';
 import { QuizQuestionsRepository } from './features/quiz/questions/infrastructure/quiz-questions.repository';
 import { QuizQuestionsQueryRepository } from './features/quiz/questions/infrastructure/quiz-questions.query.repository';
-import { QuizQuestionsEntity } from './features/quiz/questions/domain/quiz-questions.entity';
+import {NewQuizQuestionsEntity, QuizQuestionsEntity} from './features/quiz/questions/domain/quiz-questions.entity';
 import { QuizPairGameEntity } from './features/quiz/pair-game/domain/pair-game.entity';
 import { PairGameQuizPairsController } from './features/quiz/pair-game/api/pair-game.controller';
 import { PairGameQuizPairsServices } from './features/quiz/pair-game/application/pair-game.services';
@@ -228,6 +228,7 @@ const strategies = [
         PairGamePlayersEntity,
         PlayerAnswersEntity,
         QuestionsGameEntity,
+        NewQuizQuestionsEntity
       ],
       synchronize: true,
       //logging: ['query'],
@@ -252,6 +253,7 @@ const strategies = [
       PairGamePlayersEntity,
       PlayerAnswersEntity,
       QuestionsGameEntity,
+      NewQuizQuestionsEntity
     ]),
     // MongooseModule.forRoot(
     //   appSettings.env.isTesting()

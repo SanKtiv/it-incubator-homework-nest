@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QuizQuestionsRepositoryTypeOrm } from './postgresql/quiz-questions.repository-typeorm';
-import { QuizQuestionsEntity } from '../domain/quiz-questions.entity';
+import {NewQuizQuestionsEntity, QuizQuestionsEntity} from '../domain/quiz-questions.entity';
 import {
   QuizQuestionsOutputDto,
   quizQuestionsViewModel,
@@ -10,10 +10,16 @@ import {
 export class QuizQuestionsRepository {
   constructor(protected repository: QuizQuestionsRepositoryTypeOrm) {}
 
-  async insert(dto: QuizQuestionsEntity): Promise<QuizQuestionsOutputDto> {
-    const createdQuestions = await this.repository.insert(dto);
+  async insert_OLD(dto: QuizQuestionsEntity): Promise<QuizQuestionsOutputDto> {
+    const createdQuestions = await this.repository.insert_OLD(dto);
 
     return quizQuestionsViewModel(createdQuestions);
+  }
+
+  async insert(dto: NewQuizQuestionsEntity): Promise<QuizQuestionsOutputDto> {
+    const createdQuestion = await this.repository.insert(dto);
+
+    return quizQuestionsViewModel(createdQuestion);
   }
 
   async getFiveRandomQuestions(): Promise<QuizQuestionsEntity[]> {

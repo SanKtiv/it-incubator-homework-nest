@@ -4,14 +4,14 @@ import {
   QuizQuestionsInputDto,
 } from '../api/models/quiz-questions.input.dto';
 import { QuizQuestionsRepository } from '../infrastructure/quiz-questions.repository';
-import { QuizQuestionsEntity } from '../domain/quiz-questions.entity';
+import {NewQuizQuestionsEntity, QuizQuestionsEntity} from '../domain/quiz-questions.entity';
 import { QuizQuestionsOutputDto } from '../api/models/quiz-questions.output.dto';
 
 @Injectable()
 export class QuizQuestionsServices {
   constructor(protected repository: QuizQuestionsRepository) {}
 
-  async createQuestions(
+  async createQuestion_OLD(
     dto: QuizQuestionsInputDto,
   ): Promise<QuizQuestionsOutputDto> {
     const quizQuestion = new QuizQuestionsEntity();
@@ -20,14 +20,26 @@ export class QuizQuestionsServices {
     [quizQuestion.correctAnswers] = dto.correctAnswers;
     quizQuestion.createdAt = new Date();
 
-    return this.repository.insert(quizQuestion);
+    return this.repository.insert_OLD(quizQuestion);
+  }
+
+  async createQuestion(
+      dto: QuizQuestionsInputDto,
+  ): Promise<QuizQuestionsOutputDto> {
+    const question = new NewQuizQuestionsEntity();
+
+    question.body = dto.body;
+    [question.correctAnswers] = dto.correctAnswers;
+    question.createdAt = new Date();
+
+    return this.repository.insert(question);
   }
 
   async updateQuestionsById(
     id: string,
     dto: QuizQuestionsInputDto,
   ): Promise<void> {
-    const quizQuestion = await this.repository.getQuizQuestionById(id);
+    const quizQuestion = await this.repository_OLD.getQuizQuestionById(id);
 
     if (!quizQuestion) throw new NotFoundException();
 

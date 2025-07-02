@@ -29,7 +29,7 @@ export class QuizQuestionsController {
 
   @Post()
   async createQuestions(@Body() dto: QuizQuestionsInputDto) {
-    return this.quizQuestionsServices.createQuestions(dto);
+    return this.quizQuestionsServices.createQuestion(dto);
   }
 
   @Get()
