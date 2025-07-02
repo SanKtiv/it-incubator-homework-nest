@@ -11,7 +11,7 @@ import {
     createdPairGameOutputModel, newCreatedPairGameOutputModel,
 } from '../api/models/output/pair-game.output.models';
 import {QuizQuestionsRepository} from '../../questions/infrastructure/quiz-questions.repository';
-import {QuizQuestionsEntity} from '../../questions/domain/quiz-questions.entity';
+import {NewQuizQuestionsEntity, QuizQuestionsEntity} from '../../questions/domain/quiz-questions.entity';
 import {UsersTable} from '../../../users/domain/users.table';
 import {InputAnswersModels} from '../api/models/input/input-answers.models';
 import {AnswersGameEntity} from '../domain/answers-game.entity';
@@ -135,7 +135,7 @@ export class PairGameQuizPairsServices {
         pendingPairGame: QuizPairGameEntity,
     ): Promise<CreatedPairGameOutputModel> {
         const questions: QuizQuestionsEntity[] =
-            await this.quizQuestionsRepository.getFiveRandomQuestions();
+            await this.quizQuestionsRepository.getFiveRandomQuestions_OLD();
 
         const secondPlayer = new UsersTable();
         secondPlayer.id = userId;
@@ -152,7 +152,7 @@ export class PairGameQuizPairsServices {
     }
 
     async createActiveGame(userId: string, game: NewPairGameEntity) {
-        const questions = await this.createFiveQuestionsForGame(game);
+        const questions = await this.newCreateFiveQuestionsForGame(game);
 
         game.secondPlayer = this.createPlayer(userId);
         game.status = 'Active';
@@ -185,6 +185,19 @@ export class PairGameQuizPairsServices {
 
     async createFiveQuestionsForGame(game: NewPairGameEntity) {
         const fiveRandomQuestions: QuizQuestionsEntity[] =
+            await this.quizQuestionsRepository.getFiveRandomQuestions_OLD();
+
+        let index = 0;
+
+        return fiveRandomQuestions.map((e) => ({
+            index: index++,
+            questions: e,
+            game: game,
+        })) as QuestionsGameEntity[];
+    }
+
+    async newCreateFiveQuestionsForGame(game: NewPairGameEntity) {
+        const fiveRandomQuestions: NewQuizQuestionsEntity[] =
             await this.quizQuestionsRepository.getFiveRandomQuestions();
 
         let index = 0;

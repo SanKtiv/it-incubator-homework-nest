@@ -27,12 +27,6 @@ export class PairGameQuizPairsController {
     protected pairGameQueryRepository: PairGameQueryRepository,
   ) {}
 
-  @Get('testing')
-  async getTesting() {
-    const userId = '7135c4a6-3087-4584-9811-6bc0649ce3b3';
-    return this.pairGameServices.newCreatePairGame(userId);
-  }
-
   @Get('pairs/my-current')
   @UseGuards(JWTAccessAuthGuard)
   async getMyCurrentPairGame(

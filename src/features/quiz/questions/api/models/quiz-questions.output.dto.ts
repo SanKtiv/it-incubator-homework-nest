@@ -32,7 +32,7 @@ export class QuizQuestionsPaging {
 }
 
 export const quizQuestionsPagingViewModel = (
-  dto: QuizQuestionsEntity[],
+  dto: QuizQuestionsEntity[] | NewQuizQuestionsEntity[],
   query: QuizQuestionsQueryInputDto,
   totalCount: number,
 ): QuizQuestionsPaging => ({
