@@ -13,6 +13,7 @@ export class QuizQuestionsQueryRepositoryTypeOrm {
   constructor(
     @InjectRepository(QuizQuestionsEntity)
     protected repository_OLD: Repository<QuizQuestionsEntity>,
+    @InjectRepository(NewQuizQuestionsEntity)
     protected repository: Repository<NewQuizQuestionsEntity>,
   ) {}
 

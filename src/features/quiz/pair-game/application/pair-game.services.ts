@@ -191,7 +191,7 @@ export class PairGameQuizPairsServices {
 
         return fiveRandomQuestions.map((e) => ({
             index: index++,
-            questions: e,
+            //questions: e,
             game: game,
         })) as QuestionsGameEntity[];
     }
@@ -202,11 +202,17 @@ export class PairGameQuizPairsServices {
 
         let index = 0;
 
-        return fiveRandomQuestions.map((e) => ({
-            index: index++,
-            questions: e,
-            game: game,
-        })) as QuestionsGameEntity[];
+        function mapFunc(q: NewQuizQuestionsEntity) {
+            const questionGame = new QuestionsGameEntity();
+
+            questionGame.game = game;
+            questionGame.index = index++;
+            questionGame.questions = q;
+
+            return questionGame
+        }
+
+        return fiveRandomQuestions.map(e => mapFunc(e))
     }
 
     async addAnswerPlayerInPairGame(

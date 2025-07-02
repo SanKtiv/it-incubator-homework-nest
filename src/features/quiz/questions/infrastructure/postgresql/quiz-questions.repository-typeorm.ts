@@ -7,9 +7,8 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class QuizQuestionsRepositoryTypeOrm {
   constructor(
-    @InjectRepository(QuizQuestionsEntity)
-    protected repository_OLD: Repository<QuizQuestionsEntity>,
-    protected repository: Repository<NewQuizQuestionsEntity>,
+    @InjectRepository(QuizQuestionsEntity) protected repository_OLD: Repository<QuizQuestionsEntity>,
+    @InjectRepository(NewQuizQuestionsEntity) protected repository: Repository<NewQuizQuestionsEntity>,
   ) {}
 
   async insert(dto: NewQuizQuestionsEntity): Promise<NewQuizQuestionsEntity> {
