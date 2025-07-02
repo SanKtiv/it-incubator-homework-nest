@@ -7,9 +7,15 @@ import { QuizQuestionsPaging } from '../api/models/quiz-questions.output.dto';
 export class QuizQuestionsQueryRepository {
   constructor(protected repository: QuizQuestionsQueryRepositoryTypeOrm) {}
 
-  async getQuizQuestionsPaging(
+  async getQuizQuestionsPaging_OLD(
     queryDto: QuizQuestionsQueryInputDto,
   ): Promise<QuizQuestionsPaging> {
+    return this.repository.getPaging_OLD(queryDto);
+  }
+
+  async getQuizQuestionsPaging(
+      queryDto: QuizQuestionsQueryInputDto,
+  ): Promise<NewQuizQuestionsPaging> {
     return this.repository.getPaging(queryDto);
   }
 }
