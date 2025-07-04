@@ -80,10 +80,11 @@ export class PairGameQueryRepository {
   }
 
   async newGetPaging(userId: string, query: pairGameQuery) {
+    console.log('start newGetPaging')
     const pairGames = await this.repository.newGetPaging(userId, query);
-
+    console.log('pairGames =', pairGames)
     const totalGames = await this.repository.newGetTotalGamesByUserId(userId);
-
+    console.log('totalGames =', totalGames)
     return newGamesPagingOutputModel(pairGames, query, totalGames);
   }
 
