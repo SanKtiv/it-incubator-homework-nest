@@ -24,7 +24,7 @@ export class QuestionsGameEntity {
   @JoinColumn()
   game: NewPairGameEntity;
 
-  @OneToOne(() => NewQuizQuestionsEntity )
+  @ManyToOne(() => NewQuizQuestionsEntity )
   @JoinColumn()
   questions: NewQuizQuestionsEntity;
 

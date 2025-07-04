@@ -153,7 +153,7 @@ export class PairGameQuizPairsServices {
 
     async createActiveGame(userId: string, game: NewPairGameEntity) {
         const questions = await this.newCreateFiveQuestionsForGame(game);
-
+console.log('questions =', questions)
         game.secondPlayer = this.createPlayer(userId);
         game.status = 'Active';
         game.startGameDate = new Date();
