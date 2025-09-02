@@ -39,7 +39,7 @@ export class NewPairGameEntity {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  questions: QuestionsGameEntity[] | null;
+  questions: QuestionsGameEntity[];// | null;
 
   @Column({ type: 'character varying' })
   status: QuizPairGameStatusType;

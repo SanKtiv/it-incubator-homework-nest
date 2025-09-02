@@ -43,7 +43,9 @@ export class PairGameQuizPairsController {
     @Query() query: pairGameQuery,
   ) {
     // return this.pairGameQueryRepository.getPaging(userId, query);
-      return this.pairGameQueryRepository.newGetPaging(userId, query);
+      const result = await this.pairGameQueryRepository.newGetPaging(userId, query);
+      console.log('result get my =', result)
+      return result;
   }
 
   @Get('users/my-statistic')

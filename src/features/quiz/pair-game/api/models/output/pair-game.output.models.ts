@@ -3,6 +3,7 @@ import { AnswersGameEntity } from '../../../domain/answers-game.entity';
 import { pairGameQuery } from '../input/input-query.dto';
 import {NewPairGameEntity} from "../../../domain/new-pair-game.entity";
 import {PlayerAnswersEntity} from "../../../domain/new-player-answers.entity";
+import {length} from "class-validator";
 
 export class CreatedPairGameOutputModel {
   constructor(
@@ -63,7 +64,7 @@ export const newCreatedPairGameOutputModel =
         addedAt: e.addedAt.toISOString(),
       }))
 
-  const questions = game.questions
+  const questions = game.questions.length > 0
       ? game.questions.map((e) => ({
         id: e.questions.id,
         body: e.questions.body,
