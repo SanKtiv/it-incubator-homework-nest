@@ -61,6 +61,7 @@ export class PairGameQuizPairsController {
   @UseGuards(JWTAccessAuthGuard)
   async createOrJoinPairGame(@CurrentUserId() userId: string) {
     //return this.pairGameServices.createPairGame(userId);
+    console.log('connecting userId =', userId)
     return this.pairGameServices.newCreatePairGame(userId);
   }
 
