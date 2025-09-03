@@ -43,10 +43,7 @@ export class PairGameQuizPairsController {
     @Query() query: pairGameQuery,
   ) {
     // return this.pairGameQueryRepository.getPaging(userId, query);
-      const result = await this.pairGameQueryRepository.newGetPaging(userId, query);
-      console.log('userId =', userId)
-    console.log('result my game =', result)
-    return result;
+      return this.pairGameQueryRepository.newGetPaging(userId, query);
   }
 
   @Get('users/my-statistic')
@@ -61,10 +58,7 @@ export class PairGameQuizPairsController {
   @UseGuards(JWTAccessAuthGuard)
   async createOrJoinPairGame(@CurrentUserId() userId: string) {
     //return this.pairGameServices.createPairGame(userId);
-    const res = await this.pairGameServices.newCreatePairGame(userId);
-    console.log('created game =', res)
-    return res;
-
+    return this.pairGameServices.newCreatePairGame(userId);
   }
 
   @Post('pairs/my-current/answers')
@@ -75,9 +69,7 @@ export class PairGameQuizPairsController {
     @Body() dto: InputAnswersModels,
   ): Promise<AnswerPlayerOutputModel> {
     //return this.pairGameServices.addAnswerPlayerInPairGame(userId, dto);
-      const res = await this.pairGameServices.newAddAnswerPlayerInGame(userId, dto);
-      console.log('answers model =', res)
-      return res;
+      return this.pairGameServices.newAddAnswerPlayerInGame(userId, dto);
   }
 
   @Get('pairs/:id')
