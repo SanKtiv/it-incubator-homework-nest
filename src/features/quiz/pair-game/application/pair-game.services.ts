@@ -314,7 +314,7 @@ export class PairGameQuizPairsServices {
         dto: InputAnswersModels,
     ): Promise<AnswerPlayerOutputModel> {
         let game = await this.getActiveGameByUserId(userId);
-
+console.log('get game for answer =', game);
         const getLength = arr => arr ? arr.length : 0;
 
         const countQuestionsGame = getLength(game.questions);
