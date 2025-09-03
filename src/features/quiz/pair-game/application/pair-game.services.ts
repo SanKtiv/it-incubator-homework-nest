@@ -314,7 +314,7 @@ export class PairGameQuizPairsServices {
         dto: InputAnswersModels,
     ): Promise<AnswerPlayerOutputModel> {
         let game = await this.getActiveGameByUserId(userId);
-console.log('get game for answer =', game);
+
         const getLength = arr => arr ? arr.length : 0;
 
         const countQuestionsGame = getLength(game.questions);
@@ -331,7 +331,7 @@ console.log('get game for answer =', game);
 
             answer.gameId = game.id;
             answer.player = game.firstPlayer;
-            answer.questionId = question.id;
+            answer.questionId = question.questions.id;
             answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
 
@@ -350,7 +350,7 @@ console.log('get game for answer =', game);
 
             answer.gameId = game.id;
             answer.player = game.secondPlayer!;
-            answer.questionId = question.id
+            answer.questionId = question.questions.id;
             answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
 
