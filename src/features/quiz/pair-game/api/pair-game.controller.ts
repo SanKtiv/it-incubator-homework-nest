@@ -73,7 +73,9 @@ export class PairGameQuizPairsController {
     @Body() dto: InputAnswersModels,
   ): Promise<AnswerPlayerOutputModel> {
     //return this.pairGameServices.addAnswerPlayerInPairGame(userId, dto);
-      return this.pairGameServices.newAddAnswerPlayerInGame(userId, dto);
+      const res = await this.pairGameServices.newAddAnswerPlayerInGame(userId, dto);
+      console.log('answers model =', res)
+      return res;
   }
 
   @Get('pairs/:id')
