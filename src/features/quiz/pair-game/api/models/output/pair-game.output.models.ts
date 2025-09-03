@@ -64,7 +64,7 @@ export const newCreatedPairGameOutputModel =
         addedAt: e.addedAt.toISOString(),
       }))
 
-  const questions = game.questions.length > 0
+  const questions = game.questions && game.questions.length > 0
       ? game.questions.map((e) => ({
         id: e.questions.id,
         body: e.questions.body,
