@@ -477,12 +477,15 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     //     await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
     // console.log('Statistic user1 =', result.body)
 
-    const questions0: any = resultGetGame.body.items;
-    const id = questions0[0].id
+    const items: any = resultGetGame.body.items;
+    const id = items[0].id
 
     const game = await quizPairGameTestManager.getById(id, testAccessToken1);
 
-    //console.log('All games for user1-1 =', questions0[0].questions)
+    console.log('answers first player game1=', items[0].firstPlayerProgress.answers)
+    console.log('answers second player game1=', items[0].secondPlayerProgress.answers)
+    console.log('answers first player game2=', items[1].firstPlayerProgress.answers)
+    console.log('answers second player game2=', items[1].secondPlayerProgress.answers)
     //console.log('get questions game by id =', game.body.questions)
     await expect(resultGetGame.statusCode).toBe(200)
   });

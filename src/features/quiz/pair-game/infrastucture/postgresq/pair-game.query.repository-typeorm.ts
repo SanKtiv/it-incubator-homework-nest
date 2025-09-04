@@ -201,7 +201,9 @@ export class PairGameQueryRepositoryTypeOrm {
             )
             .leftJoinAndSelect('pg.questions', 'questions')
             .leftJoinAndSelect('questions.questions', 'question')
-            .orderBy(`"${query.sortBy}"`, query.sortDirection);
+            .orderBy(`"${query.sortBy}"`, query.sortDirection)
+            .addOrderBy('"firstPlayerAnswers"."addedAt"', 'ASC')
+            .addOrderBy('"secondPlayerAnswers"."addedAt"', 'ASC');
 
         if (query.sortBy !== 'pairCreatedDate') {
             return gamesPaging
@@ -211,8 +213,6 @@ export class PairGameQueryRepositoryTypeOrm {
         }
 
         return gamesPaging
-            .addOrderBy('"firstPlayerAnswers"."addedAt"', 'DESC')
-            .addOrderBy('"secondPlayerAnswers"."addedAt"', 'DESC')
             .addOrderBy('questions.index', 'ASC')
             .getMany();
     }
