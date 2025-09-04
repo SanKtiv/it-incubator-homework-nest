@@ -211,6 +211,8 @@ export class PairGameQueryRepositoryTypeOrm {
         }
 
         return gamesPaging
+            .addOrderBy('firstPlayerAnswers.addedAt', 'DESC')
+            .addOrderBy('secondPlayerAnswers.addedAt', 'DESC')
             .addOrderBy('questions.index', 'ASC')
             .getMany();
     }
