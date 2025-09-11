@@ -203,18 +203,19 @@ export class PairGameQueryRepositoryTypeOrm {
             .leftJoinAndSelect('questions.questions', 'question')
             .orderBy(`"${query.sortBy}"`, query.sortDirection)
             .addOrderBy('"firstPlayerAnswers"."addedAt"', 'ASC')
-            .addOrderBy('"secondPlayerAnswers"."addedAt"', 'ASC');
+            .addOrderBy('"secondPlayerAnswers"."addedAt"', 'ASC')
+            .addOrderBy('questions.index', 'ASC')
 
         if (query.sortBy !== 'pairCreatedDate') {
-            return gamesPaging
-                .addOrderBy('questions.index', 'ASC')
+            gamesPaging
+                //.addOrderBy('questions.index', 'ASC')
                 //.addOrderBy('pg."pairCreatedDate"', 'DESC')
-                .addOrderBy(`"pairCreatedDate"`, 'DESC')
-                .getMany();
+                .addOrderBy(`"pairCreatedDate"`, 'DESC');
+                //.getMany();
         }
 
         return gamesPaging
-            .addOrderBy('questions.index', 'ASC')
+            //.addOrderBy('questions.index', 'ASC')
             .getMany();
     }
 
