@@ -482,10 +482,10 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
     const game = await quizPairGameTestManager.getById(id, testAccessToken1);
 
-    console.log('answers first player game1=', items[0].firstPlayerProgress.answers)
-    console.log('answers second player game1=', items[0].secondPlayerProgress.answers)
-    console.log('answers first player game2=', items[1].firstPlayerProgress.answers)
-    console.log('answers second player game2=', items[1].secondPlayerProgress.answers)
+    console.log('GAME1=', items[0].status)
+    console.log('GAME2=', items[1].pairCreatedDate)
+    console.log('GAME3=', items[2].pairCreatedDate)
+    console.log('GAME4=', items[3].pairCreatedDate)
     //console.log('get questions game by id =', game.body.questions)
     await expect(resultGetGame.statusCode).toBe(200)
   });
