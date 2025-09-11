@@ -210,7 +210,7 @@ export class PairGameQueryRepositoryTypeOrm {
             gamesPaging
                 //.addOrderBy('questions.index', 'ASC')
                 //.addOrderBy('pg."pairCreatedDate"', 'DESC')
-                .addOrderBy(`"pairCreatedDate"`, 'DESC');
+                .addOrderBy('pg."pairCreatedDate"', 'DESC');
                 //.getMany();
         }
 
