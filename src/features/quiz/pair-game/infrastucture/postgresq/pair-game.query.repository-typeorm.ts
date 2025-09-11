@@ -171,13 +171,13 @@ export class PairGameQueryRepositoryTypeOrm {
             .where('firstUser.id = :userId')
             .orWhere('secondUser.id = :userId')
             .setParameters({ userId })
-            .orderBy(`"${query.sortBy}"`, query.sortDirection)
+            //.orderBy(`"${query.sortBy}"`, query.sortDirection)
             .skip((query.pageNumber - 1) * query.pageSize)
             .take(query.pageSize);
 
-        if (query.sortBy !== 'pairCreatedDate') {
-            idsSubQuery.addOrderBy('pg."pairCreatedDate"', 'DESC');
-        }
+        // if (query.sortBy !== 'pairCreatedDate') {
+        //     idsSubQuery.addOrderBy('pg."pairCreatedDate"', 'DESC');
+        // }
 
         const gamesPaging = this.newRepository
             .createQueryBuilder('pg')
@@ -208,15 +208,18 @@ export class PairGameQueryRepositoryTypeOrm {
 
         if (query.sortBy !== 'pairCreatedDate') {
             gamesPaging
-                //.addOrderBy('questions.index', 'ASC')
-                //.addOrderBy('pg."pairCreatedDate"', 'DESC')
-                .addOrderBy('pg."pairCreatedDate"', 'DESC');
+                .addOrderBy('pg."pairCreatedDate"', 'DESC')
                 //.getMany();
         }
+        const res = await gamesPaging.getMany();
 
-        return gamesPaging
-            //.addOrderBy('questions.index', 'ASC')
-            .getMany();
+        console.log('GET MY =', res)
+
+        return res;
+
+        // return gamesPaging
+        //     //.addOrderBy('questions.index', 'ASC')
+        //     .getMany();
     }
 
   async getTotalGamesByUserId(userId: string): Promise<number> {

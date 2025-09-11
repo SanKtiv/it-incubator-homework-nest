@@ -485,7 +485,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     console.log('GAME1=', items[0].status)
     console.log('GAME2=', items[1].pairCreatedDate)
     console.log('GAME3=', items[2].pairCreatedDate)
-    console.log('GAME4=', items[3].pairCreatedDate)
+    //console.log('GAME4=', items[3].pairCreatedDate)
     //console.log('get questions game by id =', game.body.questions)
     await expect(resultGetGame.statusCode).toBe(200)
   });
