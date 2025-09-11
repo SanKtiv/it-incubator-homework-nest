@@ -207,8 +207,9 @@ export class PairGameQueryRepositoryTypeOrm {
 
         if (query.sortBy !== 'pairCreatedDate') {
             return gamesPaging
-                .addOrderBy('pg."pairCreatedDate"', 'DESC')
                 .addOrderBy('questions.index', 'ASC')
+                .addOrderBy('pg."pairCreatedDate"', 'DESC')
+
                 .getMany();
         }
 
