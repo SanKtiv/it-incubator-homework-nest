@@ -483,7 +483,10 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     const game = await quizPairGameTestManager.getById(id, testAccessToken1);
 
     console.log('GAME1=', items[0].status)
+    console.log('GAME1=', items[0].pairCreatedDate)
+    console.log('GAME2=', items[1].status)
     console.log('GAME2=', items[1].pairCreatedDate)
+    console.log('GAME3=', items[2].status)
     console.log('GAME3=', items[2].pairCreatedDate)
     //console.log('GAME4=', items[3].pairCreatedDate)
     //console.log('get questions game by id =', game.body.questions)
