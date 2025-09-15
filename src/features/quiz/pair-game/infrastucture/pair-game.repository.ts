@@ -10,17 +10,17 @@ import { NewPairGameEntity } from '../domain/new-pair-game.entity';
 export class PairGameRepository {
   constructor(protected repository: PairGameRepositoryTypeOrm) {}
 
-  async getActivePairGameByUserId(
+  async getActivePairGameByUserId_OLD(
     userId: string,
   ): Promise<QuizPairGameEntity | null | undefined> {
     return this.repository.getOneActive(userId);
   }
 
-  async newGetActiveGameByUserId(
+  async getActiveGameByUserId(
       userId: string,
       status: string
   ): Promise<NewPairGameEntity | null | undefined> {
-    return this.repository.newGetActiveGame(userId, status);
+    return this.repository.getActiveGame(userId, status);
   }
 
   async getNotFinishedPairGameByUserId(

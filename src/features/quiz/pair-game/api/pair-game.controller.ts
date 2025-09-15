@@ -15,10 +15,7 @@ import { PairGameQueryRepository } from '../infrastucture/pair-game.query.reposi
 import { InputAnswersModels } from './models/input/input-answers.models';
 import { idPairGamePipe } from '../../../../infrastructure/pipes/validation.pipe';
 import { pairGameQuery } from './models/input/input-query.dto';
-import {
-  AnswerPlayerOutputModel,
-  CreatedPairGameOutputModel,
-} from './models/output/pair-game.output.models';
+import {AnswerPlayerOutputModel} from './models/output/pair-game.output.models';
 
 @Controller('pair-game-quiz')
 export class PairGameQuizPairsController {
@@ -32,8 +29,7 @@ export class PairGameQuizPairsController {
   async getMyCurrentPairGame(
     @CurrentUserId() userId: string,
   ) {
-    // return this.pairGameQueryRepository.getByUserId(userId);
-      return this.pairGameQueryRepository.newGetByUserId(userId);
+      return this.pairGameQueryRepository.getByUserId(userId);
   }
 
   @Get('pairs/my')
@@ -42,23 +38,20 @@ export class PairGameQuizPairsController {
     @CurrentUserId() userId: string,
     @Query() query: pairGameQuery,
   ) {
-    // return this.pairGameQueryRepository.getPaging(userId, query);
-      return this.pairGameQueryRepository.newGetPaging(userId, query);
+      return this.pairGameQueryRepository.getPaging(userId, query);
   }
 
   @Get('users/my-statistic')
   @UseGuards(JWTAccessAuthGuard)
   async getStatisticCurrentUser(@CurrentUserId() userId: string) {
-    //return this.pairGameQueryRepository.getStatisticByUserId(userId);
-      return this.pairGameQueryRepository.newGetStatisticByUserId(userId);
+      return this.pairGameQueryRepository.getStatisticByUserId(userId);
   }
 
   @Post('pairs/connection')
   @HttpCode(200)
   @UseGuards(JWTAccessAuthGuard)
   async createOrJoinPairGame(@CurrentUserId() userId: string) {
-    //return this.pairGameServices.createPairGame(userId);
-    return this.pairGameServices.newCreatePairGame(userId);
+    return this.pairGameServices.createPairGame(userId);
   }
 
   @Post('pairs/my-current/answers')
@@ -68,7 +61,6 @@ export class PairGameQuizPairsController {
     @CurrentUserId() userId: string,
     @Body() dto: InputAnswersModels,
   ): Promise<AnswerPlayerOutputModel> {
-    //return this.pairGameServices.addAnswerPlayerInPairGame(userId, dto);
       return this.pairGameServices.newAddAnswerPlayerInGame(userId, dto);
   }
 
@@ -78,7 +70,6 @@ export class PairGameQuizPairsController {
     @Param('id', idPairGamePipe) id: string,
     @CurrentUserId() userId: string,
   ) {
-    //return this.pairGameQueryRepository.getById(id, userId);
       return this.pairGameQueryRepository.getById(id, userId);
   }
 }

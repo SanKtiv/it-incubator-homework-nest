@@ -52,7 +52,7 @@ export class PairGameRepositoryTypeOrm {
       .getOne();
   }
 
-  async newGetActiveGame(
+  async getActiveGame(
       userId: string,
       status: string
   ): Promise<NewPairGameEntity | null | undefined> {

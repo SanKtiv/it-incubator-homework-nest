@@ -28,7 +28,7 @@ export class PairGameQuizPairsServices {
     ) {
     }
 
-    async createPairGame(userId: string): Promise<CreatedPairGameOutputModel> {
+    async createPairGame_OLD(userId: string): Promise<CreatedPairGameOutputModel> {
         const pairGameCurrentUser =
             await this.pairGameRepository.getNotFinishedPairGameByUserId(userId);
 
@@ -59,8 +59,9 @@ export class PairGameQuizPairsServices {
 
     async getActiveGameByUserId(userId: string) {
         const status = 'Active';
+
         const game =
-            await this.pairGameRepository.newGetActiveGameByUserId(userId, status);
+            await this.pairGameRepository.getActiveGameByUserId(userId, status);
 
         if (!game) throw new ForbiddenException();
 
@@ -69,6 +70,7 @@ export class PairGameQuizPairsServices {
 
     private createFinishedGame(game: NewPairGameEntity): NewPairGameEntity {
         game.status = 'Finished';
+
         game.finishGameDate = new Date();
 
         game.firstPlayer.answers!.sort(
@@ -104,7 +106,7 @@ export class PairGameQuizPairsServices {
         return game;
     }
 
-    async newCreatePairGame(userId: string) {
+    async createPairGame(userId: string) {
         const pairGameCurrentUser =
             await this.pairGameRepository.newGetNotFinishedPairGameByUserId(userId);
 
@@ -220,7 +222,7 @@ export class PairGameQuizPairsServices {
         dto: InputAnswersModels,
     ): Promise<AnswerPlayerOutputModel> {
         const pairGame =
-            await this.pairGameRepository.getActivePairGameByUserId(userId);
+            await this.pairGameRepository.getActivePairGameByUserId_OLD(userId);
 
         if (!pairGame) throw new ForbiddenException();
 

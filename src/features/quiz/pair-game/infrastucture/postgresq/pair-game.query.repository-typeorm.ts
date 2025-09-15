@@ -97,7 +97,7 @@ export class PairGameQueryRepositoryTypeOrm {
       .getOne();
   }
 
-    async newGetByUserId(userId: string): Promise<NewPairGameEntity | null> {
+    async getByUserId(userId: string): Promise<NewPairGameEntity | null> {
         return this.shareBuilder
             .where('pg.finishGameDate IS NULL')
             .andWhere('firstUser.id = :userId')
@@ -108,7 +108,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .getOne();
     }
 
-  async getPaging(
+  async getPaging_OLD(
     userId: string,
     query: pairGameQuery,
   ): Promise<QuizPairGameEntity[]> {
@@ -157,7 +157,7 @@ export class PairGameQueryRepositoryTypeOrm {
     return gamesPaging.addOrderBy('questions.id', 'ASC').getMany();
   }
 
-    async newGetPaging(
+    async getPaging(
         userId: string,
         query: pairGameQuery,
     ): Promise<NewPairGameEntity[]> {
@@ -204,7 +204,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .getMany();
     }
 
-  async getTotalGamesByUserId(userId: string): Promise<number> {
+  async getTotalGamesByUserId_OLD(userId: string): Promise<number> {
     return this.repository
       .createQueryBuilder('pg')
       .select('pg.id')
@@ -214,7 +214,7 @@ export class PairGameQueryRepositoryTypeOrm {
       .getCount();
   }
 
-    async newGetTotalGamesByUserId(userId: string): Promise<number> {
+    async getTotalGamesByUserId(userId: string): Promise<number> {
         return this.newRepository
             .createQueryBuilder('pg')
             .select('pg.id')
@@ -228,7 +228,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .getCount();
     }
 
-  async getStatisticByUserId(userId: string): Promise<QuizPairGameEntity[]> {
+  async getStatisticByUserId_OLD(userId: string): Promise<QuizPairGameEntity[]> {
     return this.repository
       .createQueryBuilder('pg')
       .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
@@ -245,7 +245,7 @@ export class PairGameQueryRepositoryTypeOrm {
       .getMany();
   }
 
-    async newGetStatisticByUserId(userId: string) {
+    async getStatisticByUserId(userId: string) {
       try {
           const res = await this.newRepository
               .createQueryBuilder('pg')
@@ -269,22 +269,5 @@ export class PairGameQueryRepositoryTypeOrm {
       } catch (e) {
           console.log('ERROR in newGetStatisticByUserId', e)
       }
-        // return this.newRepository
-        //     .createQueryBuilder('pg')
-        //     .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-        //     .leftJoinAndSelect('firstPlayer.user', 'firstUser')
-        //     .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-        //     .leftJoinAndSelect('secondPlayer.user', 'secondUser')
-        //     .select([
-        //         'pg.status',
-        //         'pg.firstPlayerScore',
-        //         'pg.secondPlayerScore',
-        //         'firstUser.id',
-        //         'secondUser.id',
-        //     ])
-        //     .where('firstUser.id = :userId')
-        //     .orWhere('secondUser.id = :userId')
-        //     .setParameters({ userId })
-        //     .getMany();
     }
 }
