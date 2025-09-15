@@ -18,28 +18,10 @@ export class PairGameQueryRepository {
   constructor(protected repository: PairGameQueryRepositoryTypeOrm) {}
 
   async getById(
-    id: string,
-    userId: string,
-  ): Promise<CreatedPairGameOutputModel> {
-    const pairGame = await this.repository.getById(id);
-
-    if (!pairGame) throw new NotFoundException();
-
-    if (
-      (pairGame.firstPlayer.id !== userId && !pairGame.secondPlayer) ||
-      (pairGame.firstPlayer.id !== userId &&
-        pairGame.secondPlayer.id !== userId)
-    )
-      throw new ForbiddenException();
-
-    return createdPairGameOutputModel(pairGame);
-  }
-
-  async newGetById(
       id: string,
       userId: string,
   ) {
-    const game = await this.repository.newGetById(id);
+    const game = await this.repository.getById(id);
 
     if (!game) throw new NotFoundException();
 
@@ -55,8 +37,28 @@ export class PairGameQueryRepository {
     return newCreatedPairGameOutputModel(game);
   }
 
-  async getByUserId(userId: string): Promise<CreatedPairGameOutputModel> {
-    const pairGame = await this.repository.getByUserId(userId);
+  async getById_OLD(
+    id: string,
+    userId: string,
+  ): Promise<CreatedPairGameOutputModel> {
+    const pairGame = await this.repository.getById_OLD(id);
+
+    if (!pairGame) throw new NotFoundException();
+
+    if (
+      (pairGame.firstPlayer.id !== userId && !pairGame.secondPlayer) ||
+      (pairGame.firstPlayer.id !== userId &&
+        pairGame.secondPlayer.id !== userId)
+    )
+      throw new ForbiddenException();
+
+    return createdPairGameOutputModel(pairGame);
+  }
+
+
+
+  async getByUserId_OLD(userId: string): Promise<CreatedPairGameOutputModel> {
+    const pairGame = await this.repository.getByUserId_OLD(userId);
 
     if (!pairGame) throw new NotFoundException();
 

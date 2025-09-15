@@ -74,20 +74,20 @@ export class PairGameQueryRepositoryTypeOrm {
             .orderBy('questions.index', 'ASC');
     }
 
-  async getById(id: string): Promise<QuizPairGameEntity | null> {
+  async getById_OLD(id: string): Promise<QuizPairGameEntity | null> {
     return this.building
       .where('pg."id" = :id', { id })
       .orderBy('questions.id', 'ASC')
       .getOne();
   }
 
-  async newGetById(id: string): Promise<NewPairGameEntity | null> {
+  async getById(id: string): Promise<NewPairGameEntity | null> {
         return this.shareBuilder
             .where('pg."id" = :id', { id })
             .getOne();
     }
 
-  async getByUserId(userId: string): Promise<QuizPairGameEntity | null> {
+  async getByUserId_OLD(userId: string): Promise<QuizPairGameEntity | null> {
     return this.building
       .where('pg.finishGameDate IS NULL')
       .andWhere('pg.firstPlayer.id = :userId', { userId })

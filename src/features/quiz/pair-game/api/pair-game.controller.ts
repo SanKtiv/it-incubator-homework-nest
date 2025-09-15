@@ -79,6 +79,6 @@ export class PairGameQuizPairsController {
     @CurrentUserId() userId: string,
   ) {
     //return this.pairGameQueryRepository.getById(id, userId);
-      return this.pairGameQueryRepository.newGetById(id, userId);
+      return this.pairGameQueryRepository.getById(id, userId);
   }
 }
