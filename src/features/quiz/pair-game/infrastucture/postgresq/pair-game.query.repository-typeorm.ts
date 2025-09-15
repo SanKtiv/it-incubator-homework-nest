@@ -171,18 +171,10 @@ export class PairGameQueryRepositoryTypeOrm {
             .where('firstUser.id = :userId')
             .orWhere('secondUser.id = :userId')
             .setParameters({ userId })
-            //.orderBy('pg.status', 'DESC')
-            //.orderBy('pg."pairCreatedDate"', 'DESC')
-            //.orderBy(`"${query.sortBy}"`, query.sortDirection)
-            //.addOrderBy('pg."pairCreatedDate"', 'DESC')
             .skip((query.pageNumber - 1) * query.pageSize)
             .take(query.pageSize);
 
-        // if (query.sortBy !== 'pairCreatedDate') {
-        //     idsSubQuery.addOrderBy('pg."pairCreatedDate"', 'DESC');
-        // }
-
-        const gamesPaging = this.newRepository
+        return this.newRepository
             .createQueryBuilder('pg')
             .where(`pg.id IN (${idsSubQuery.getQuery()})`)
             .setParameters(idsSubQuery.getParameters())
@@ -206,26 +198,10 @@ export class PairGameQueryRepositoryTypeOrm {
             .leftJoinAndSelect('questions.questions', 'question')
             .orderBy(`pg."${query.sortBy}"`, query.sortDirection)
             .addOrderBy('pg."pairCreatedDate"', 'DESC')
-            //.orderBy('pg."pairCreatedDate"', 'DESC')
-            //.orderBy(`"${query.sortBy}"`, query.sortDirection)
             .addOrderBy('"firstPlayerAnswers"."addedAt"', 'ASC')
             .addOrderBy('"secondPlayerAnswers"."addedAt"', 'ASC')
             .addOrderBy('questions.index', 'ASC')
-
-        // if (query.sortBy !== 'pairCreatedDate') {
-        //     gamesPaging
-        //         .addOrderBy('pg."pairCreatedDate"', 'DESC')
-        //         //.getMany();
-        // }
-        const res = await gamesPaging.getMany();
-
-        console.log('GET MY =', res)
-
-        return res;
-
-        // return gamesPaging
-        //     //.addOrderBy('questions.index', 'ASC')
-        //     .getMany();
+            .getMany();
     }
 
   async getTotalGamesByUserId(userId: string): Promise<number> {
