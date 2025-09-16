@@ -56,7 +56,7 @@ export class AnswerPlayerOutputModel {
   ) {}
 }
 
-export const newCreatedPairGameOutputModel =
+export const outputModelCreatedPairGame =
     function (game: NewPairGameEntity) {
   const answers = (ans) => ans.map((e) => ({
         questionId: e.questionId,
@@ -282,6 +282,6 @@ export const newGamesPagingOutputModel = function (
         page: query.pageNumber,
         pageSize: query.pageSize,
         totalCount: +totalGames,
-        items: games.map((game) => newCreatedPairGameOutputModel(game)),
+        items: games.map((game) => outputModelCreatedPairGame(game)),
     };
 };

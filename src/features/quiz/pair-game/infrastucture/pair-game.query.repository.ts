@@ -7,7 +7,7 @@ import { PairGameQueryRepositoryTypeOrm } from './postgresq/pair-game.query.repo
 import {
   CreatedPairGameOutputModel,
   createdPairGameOutputModel,
-  gamesPagingOutputModel, newCreatedPairGameOutputModel, newGamesPagingOutputModel, newPlayerStatisticOutputModel,
+  gamesPagingOutputModel, outputModelCreatedPairGame, newGamesPagingOutputModel, newPlayerStatisticOutputModel,
   playerStatisticOutputModel,
 } from '../api/models/output/pair-game.output.models';
 import { QuizPairGameEntity } from '../domain/pair-game.entity';
@@ -31,7 +31,7 @@ export class PairGameQueryRepository {
     )
       throw new ForbiddenException();
 
-    return newCreatedPairGameOutputModel(game);
+    return outputModelCreatedPairGame(game);
   }
 
   async getByUserId(userId: string) {
@@ -39,7 +39,7 @@ export class PairGameQueryRepository {
 
     if (!game) throw new NotFoundException();
 
-    return newCreatedPairGameOutputModel(game);
+    return outputModelCreatedPairGame(game);
   }
 
   async getPaging(userId: string, query: pairGameQuery) {
