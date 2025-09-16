@@ -61,53 +61,53 @@ export class QuizQuestionsServices {
     await this.repository.deleteQuizQuestion(quizQuestion);
   }
 
-  async createQuestion_OLD(
-    dto: QuizQuestionsInputDto,
-  ): Promise<QuizQuestionsOutputDto> {
-    const quizQuestion = new QuizQuestionsEntity();
-
-    quizQuestion.body = dto.body;
-    [quizQuestion.correctAnswers] = dto.correctAnswers;
-    quizQuestion.createdAt = new Date();
-
-    return this.repository.insert_OLD(quizQuestion);
-  }
-
-  async updateQuestionById_OLD(
-    id: string,
-    dto: QuizQuestionsInputDto,
-  ): Promise<void> {
-    const quizQuestion = await this.repository.getQuizQuestionById_OLD(id);
-
-    if (!quizQuestion) throw new NotFoundException();
-
-    quizQuestion.body = dto.body;
-    [quizQuestion.correctAnswers] = dto.correctAnswers;
-    quizQuestion.updatedAt = new Date();
-
-    await this.repository.updateQuizQuestion_OLD(quizQuestion);
-  }
-
-  async updatePublishQuestionsById_OLD(
-    id: string,
-    dto: PublishedInputDto,
-  ): Promise<void> {
-    const question = await this.repository.getQuizQuestionById_OLD(id);
-
-    if (!question) throw new NotFoundException();
-
-    question.published = dto.published;
-    question.updatedAt = new Date();
-
-    await this.repository.updateQuizQuestion_OLD(question);
-  }
-
-  async deleteQuestions_OLD(id: string): Promise<void> {
-    const quizQuestion: QuizQuestionsEntity | null =
-      await this.repository.getQuizQuestionById_OLD(id);
-
-    if (!quizQuestion) throw new NotFoundException();
-
-    await this.repository.deleteQuizQuestion_OLD(quizQuestion);
-  }
+  // async createQuestion_OLD(
+  //   dto: QuizQuestionsInputDto,
+  // ): Promise<QuizQuestionsOutputDto> {
+  //   const quizQuestion = new QuizQuestionsEntity();
+  //
+  //   quizQuestion.body = dto.body;
+  //   [quizQuestion.correctAnswers] = dto.correctAnswers;
+  //   quizQuestion.createdAt = new Date();
+  //
+  //   return this.repository.insert_OLD(quizQuestion);
+  // }
+  //
+  // async updateQuestionById_OLD(
+  //   id: string,
+  //   dto: QuizQuestionsInputDto,
+  // ): Promise<void> {
+  //   const quizQuestion = await this.repository.getQuizQuestionById_OLD(id);
+  //
+  //   if (!quizQuestion) throw new NotFoundException();
+  //
+  //   quizQuestion.body = dto.body;
+  //   [quizQuestion.correctAnswers] = dto.correctAnswers;
+  //   quizQuestion.updatedAt = new Date();
+  //
+  //   await this.repository.updateQuizQuestion_OLD(quizQuestion);
+  // }
+  //
+  // async updatePublishQuestionsById_OLD(
+  //   id: string,
+  //   dto: PublishedInputDto,
+  // ): Promise<void> {
+  //   const question = await this.repository.getQuizQuestionById_OLD(id);
+  //
+  //   if (!question) throw new NotFoundException();
+  //
+  //   question.published = dto.published;
+  //   question.updatedAt = new Date();
+  //
+  //   await this.repository.updateQuizQuestion_OLD(question);
+  // }
+  //
+  // async deleteQuestions_OLD(id: string): Promise<void> {
+  //   const quizQuestion: QuizQuestionsEntity | null =
+  //     await this.repository.getQuizQuestionById_OLD(id);
+  //
+  //   if (!quizQuestion) throw new NotFoundException();
+  //
+  //   await this.repository.deleteQuizQuestion_OLD(quizQuestion);
+  // }
 }

@@ -217,7 +217,7 @@ export class PairGameQuizPairsServices {
         return fiveRandomQuestions.map(e => mapFunc(e))
     }
 
-    async addAnswerPlayerInPairGame(
+    async addAnswerPlayerInPairGame_OLD(
         userId: string,
         dto: InputAnswersModels,
     ): Promise<AnswerPlayerOutputModel> {
@@ -311,7 +311,7 @@ export class PairGameQuizPairsServices {
         return addedAnswerPlayerOutputModel(answerPlayer);
     }
 
-    async newAddAnswerPlayerInGame(
+    async addAnswerPlayerInGame(
         userId: string,
         dto: InputAnswersModels,
     ): Promise<AnswerPlayerOutputModel> {

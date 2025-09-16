@@ -32,27 +32,27 @@ export class QuizQuestionsRepository {
     await this.repository.softRemove(QuizQuestion);
   }
 
-  async insert_OLD(dto: QuizQuestionsEntity): Promise<QuizQuestionsOutputDto> {
-    const createdQuestions = await this.repository.insert_OLD(dto);
-
-    return quizQuestionsViewModel(createdQuestions);
-  }
+  // async insert_OLD(dto: QuizQuestionsEntity): Promise<QuizQuestionsOutputDto> {
+  //   const createdQuestions = await this.repository.insert_OLD(dto);
+  //
+  //   return quizQuestionsViewModel(createdQuestions);
+  // }
 
   async getFiveRandomQuestions_OLD(): Promise<QuizQuestionsEntity[]> {
     return this.repository.findFiveRandom_OLD();
   }
 
-  async getQuizQuestionById_OLD(id: string): Promise<QuizQuestionsEntity | null> {
-    return this.repository.findOneById_OLD(id);
-  }
-
-  async updateQuizQuestion_OLD(QuizQuestion: QuizQuestionsEntity): Promise<void> {
-    await this.repository.update_OLD(QuizQuestion);
-  }
-
-  async deleteQuizQuestion_OLD(QuizQuestion: QuizQuestionsEntity): Promise<void> {
-    await this.repository.softRemove_OLD(QuizQuestion);
-  }
+  // async getQuizQuestionById_OLD(id: string): Promise<QuizQuestionsEntity | null> {
+  //   return this.repository.findOneById_OLD(id);
+  // }
+  //
+  // async updateQuizQuestion_OLD(QuizQuestion: QuizQuestionsEntity): Promise<void> {
+  //   await this.repository.update_OLD(QuizQuestion);
+  // }
+  //
+  // async deleteQuizQuestion_OLD(QuizQuestion: QuizQuestionsEntity): Promise<void> {
+  //   await this.repository.softRemove_OLD(QuizQuestion);
+  // }
 
   async clear(): Promise<void> {
     await this.repository.clear();

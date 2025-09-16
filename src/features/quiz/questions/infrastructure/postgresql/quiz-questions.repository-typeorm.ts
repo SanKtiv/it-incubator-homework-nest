@@ -40,9 +40,9 @@ export class QuizQuestionsRepositoryTypeOrm {
     await this.repository.query('TRUNCATE TABLE "new_quiz-questions" CASCADE');
   }
 
-  async insert_OLD(dto: QuizQuestionsEntity): Promise<QuizQuestionsEntity> {
-    return this.repository_OLD.save(dto);
-  }
+  // async insert_OLD(dto: QuizQuestionsEntity): Promise<QuizQuestionsEntity> {
+  //   return this.repository_OLD.save(dto);
+  // }
 
   async findFiveRandom_OLD(): Promise<QuizQuestionsEntity[]> {
     return this.repository_OLD
@@ -54,19 +54,19 @@ export class QuizQuestionsRepositoryTypeOrm {
       .getRawMany();
   }
 
-  async findOneById_OLD(id: string): Promise<QuizQuestionsEntity | null> {
-    return this.repository_OLD.findOneBy({ id });
-  }
-
-  async update_OLD(dto: QuizQuestionsEntity) {
-    await this.repository_OLD.save(dto);
-  }
-
-  async softRemove_OLD(QuizQuestion: QuizQuestionsEntity): Promise<void> {
-    await this.repository_OLD.softRemove(QuizQuestion);
-  }
-
-  async clear_OLD(): Promise<void> {
-    await this.repository_OLD.query('TRUNCATE TABLE "quiz-questions" CASCADE');
-  }
+  // async findOneById_OLD(id: string): Promise<QuizQuestionsEntity | null> {
+  //   return this.repository_OLD.findOneBy({ id });
+  // }
+  //
+  // async update_OLD(dto: QuizQuestionsEntity) {
+  //   await this.repository_OLD.save(dto);
+  // }
+  //
+  // async softRemove_OLD(QuizQuestion: QuizQuestionsEntity): Promise<void> {
+  //   await this.repository_OLD.softRemove(QuizQuestion);
+  // }
+  //
+  // async clear_OLD(): Promise<void> {
+  //   await this.repository_OLD.query('TRUNCATE TABLE "quiz-questions" CASCADE');
+  // }
 }
