@@ -7,7 +7,7 @@ import { PairGameQueryRepositoryTypeOrm } from './postgresq/pair-game.query.repo
 import {
   CreatedPairGameOutputModel,
   createdPairGameOutputModel,
-  gamesPagingOutputModel, outputModelCreatedPairGame, outputModelPairGamesPagination, newPlayerStatisticOutputModel,
+  gamesPagingOutputModel, outputModelCreatedPairGame, outputModelPairGamesPagination, outputModelPlayerStatistic,
   playerStatisticOutputModel,
 } from '../api/models/output/pair-game.output.models';
 import { QuizPairGameEntity } from '../domain/pair-game.entity';
@@ -53,7 +53,7 @@ export class PairGameQueryRepository {
   async getStatisticByUserId(userId: string) {
     const games = await this.repository.getStatisticByUserId(userId);
 
-    return newPlayerStatisticOutputModel(games, userId);
+    return outputModelPlayerStatistic(games, userId);
   }
 
   // async getById_OLD(id: string, userId: string): Promise<CreatedPairGameOutputModel> {

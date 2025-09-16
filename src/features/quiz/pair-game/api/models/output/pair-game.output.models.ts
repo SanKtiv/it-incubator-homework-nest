@@ -3,7 +3,6 @@ import { AnswersGameEntity } from '../../../domain/answers-game.entity';
 import { pairGameQuery } from '../input/input-query.dto';
 import {NewPairGameEntity} from "../../../domain/new-pair-game.entity";
 import {PlayerAnswersEntity} from "../../../domain/new-player-answers.entity";
-import {length} from "class-validator";
 
 export class CreatedPairGameOutputModel {
   constructor(
@@ -208,7 +207,7 @@ export function playerStatisticOutputModel(
   };
 }
 
-export function newPlayerStatisticOutputModel(
+export function outputModelPlayerStatistic(
     games: NewPairGameEntity[] | null | undefined,
     userId: string,
 ) {
