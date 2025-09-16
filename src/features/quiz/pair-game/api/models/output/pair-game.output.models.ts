@@ -272,7 +272,7 @@ export const gamesPagingOutputModel = function (
   };
 };
 
-export const newGamesPagingOutputModel = function (
+export const outputModelPairGamesPagination = function (
     games: NewPairGameEntity[],
     query: pairGameQuery,
     totalGames: number,
