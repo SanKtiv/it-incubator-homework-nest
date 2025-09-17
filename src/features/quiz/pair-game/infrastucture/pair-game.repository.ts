@@ -35,11 +35,11 @@ export class PairGameRepository {
     return this.repository.getOneNotFinished(userId);
   }
 
-  async getPairGamesByStatus(status: QuizPairGameStatusType) {
-    return this.repository.getByStatus(status);
-  }
+  // async getPairGamesByStatus(status: QuizPairGameStatusType) {
+  //   return this.repository.getByStatus(status);
+  // }
 
-  async newGetPairGamesByStatus(status: QuizPairGameStatusType) {
+  async getPairGamesByStatus(status: QuizPairGameStatusType) {
     return this.repository.newGetByStatus(status);
   }
 

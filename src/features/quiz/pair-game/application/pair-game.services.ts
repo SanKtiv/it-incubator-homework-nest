@@ -115,7 +115,7 @@ export class PairGameQuizPairsServices {
         const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
 
         const pendingPairGame: NewPairGameEntity | null =
-            await this.pairGameRepository.newGetPairGamesByStatus(statusPending);
+            await this.pairGameRepository.getPairGamesByStatus(statusPending);
 
         if (pendingPairGame) return this.createActiveGame(userId, pendingPairGame);
 
