@@ -23,16 +23,16 @@ export class PairGameRepository {
     return this.repository.getActiveGame(userId, status);
   }
 
+  // async getNotFinishedPairGameByUserId_OLD(
+  //   userId: string,
+  // ): Promise<QuizPairGameEntity | null | undefined> {
+  //   return this.repository.getOneNotFinished(userId);
+  // }
+
   async getNotFinishedPairGameByUserId(
     userId: string,
-  ): Promise<QuizPairGameEntity | null | undefined> {
-    return this.repository.getOneNotFinished(userId);
-  }
-
-  async newGetNotFinishedPairGameByUserId(
-    userId: string,
   ): Promise<NewPairGameEntity | null> {
-    return this.repository.newGetOneNotFinished(userId);
+    return this.repository.getOneNotFinished(userId);
   }
 
   async getPairGamesByStatus(status: QuizPairGameStatusType) {

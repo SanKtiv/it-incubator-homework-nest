@@ -65,18 +65,18 @@ export class PairGameRepositoryTypeOrm {
         .getOne();
   }
 
-  async getOneNotFinished(
-    userId: string,
-  ): Promise<QuizPairGameEntity | null | undefined> {
-    return this.getQuizPairGameBuilder
-      .where('pg.finishGameDate IS NULL')
-      .andWhere('pg.firstPlayer.id = :userId', { userId })
-      .orWhere('pg.finishGameDate IS NULL')
-      .andWhere('pg.secondPlayer.id = :userId', { userId })
-      .getOne();
-  }
+  // async getOneNotFinished_OLD(
+  //   userId: string,
+  // ): Promise<QuizPairGameEntity | null | undefined> {
+  //   return this.getQuizPairGameBuilder
+  //     .where('pg.finishGameDate IS NULL')
+  //     .andWhere('pg.firstPlayer.id = :userId', { userId })
+  //     .orWhere('pg.finishGameDate IS NULL')
+  //     .andWhere('pg.secondPlayer.id = :userId', { userId })
+  //     .getOne();
+  // }
 
-  async newGetOneNotFinished(
+  async getOneNotFinished(
     userId: string,
   ): Promise<NewPairGameEntity | null> {
     return this.newGetQuizPairGameBuilder
