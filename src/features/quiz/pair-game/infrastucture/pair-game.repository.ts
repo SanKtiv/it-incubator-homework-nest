@@ -40,7 +40,7 @@ export class PairGameRepository {
   // }
 
   async getPairGamesByStatus(status: QuizPairGameStatusType) {
-    return this.repository.newGetByStatus(status);
+    return this.repository.getByStatus(status);
   }
 
   async createPairGame(

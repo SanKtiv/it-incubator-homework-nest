@@ -27,14 +27,14 @@ export class PairGameRepositoryTypeOrm {
       .getOne();
   }
 
-  async getByStatus(status: QuizPairGameStatusType) {
-    return this.repository
-      .createQueryBuilder('pg')
-      .where('pg.status = :status', { status })
-      .getOne();
-  }
+  // async getByStatus(status: QuizPairGameStatusType) {
+  //   return this.repository
+  //     .createQueryBuilder('pg')
+  //     .where('pg.status = :status', { status })
+  //     .getOne();
+  // }
 
-  async newGetByStatus(status: QuizPairGameStatusType) {
+  async getByStatus(status: QuizPairGameStatusType) {
     return this.newRepository
       .createQueryBuilder('pg')
       .where('pg.status = :status', { status })
