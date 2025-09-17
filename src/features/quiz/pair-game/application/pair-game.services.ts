@@ -154,7 +154,7 @@ export class PairGameQuizPairsServices {
     // }
 
     async createActiveGame(userId: string, game: NewPairGameEntity) {
-        const questions = await this.newCreateFiveQuestionsForGame(game);
+        const questions = await this.createFiveQuestionsForGame(game);
 
         game.secondPlayer = this.createPlayer(userId);
         game.status = 'Active';
@@ -198,7 +198,7 @@ export class PairGameQuizPairsServices {
     //     })) as QuestionsGameEntity[];
     // }
 
-    async newCreateFiveQuestionsForGame(game: NewPairGameEntity) {
+    async createFiveQuestionsForGame(game: NewPairGameEntity) {
         const fiveRandomQuestions: NewQuizQuestionsEntity[] =
             await this.quizQuestionsRepository.getFiveRandomQuestions();
 
