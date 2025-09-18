@@ -53,7 +53,7 @@ export class PairGameRepository {
     game: NewPairGameEntity,
   ): Promise<NewPairGameEntity | null | undefined> {
     try {
-      const result = await this.repository.newCreate(game);
+      const result = await this.repository.create(game);
       return result;
     }
     catch (e) {

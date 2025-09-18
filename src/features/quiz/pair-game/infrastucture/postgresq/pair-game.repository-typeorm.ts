@@ -96,15 +96,15 @@ export class PairGameRepositoryTypeOrm {
     return this.newRepository.save(game);
   }
 
-  async create(
-    pairGame: QuizPairGameEntity,
-  ): Promise<QuizPairGameEntity | null | undefined> {
-    const createdPairGame = await this.repository.save(pairGame);
+  // async create_OLD(
+  //   pairGame: QuizPairGameEntity,
+  // ): Promise<QuizPairGameEntity | null | undefined> {
+  //   const createdPairGame = await this.repository.save(pairGame);
+  //
+  //   return this.getById(createdPairGame.id);
+  // }
 
-    return this.getById(createdPairGame.id);
-  }
-
-  async newCreate(game: NewPairGameEntity): Promise<NewPairGameEntity | null | undefined> {
+  async create(game: NewPairGameEntity): Promise<NewPairGameEntity | null | undefined> {
     const createdPairGame = await this.newRepository.save(game);
 
     return this.newGetById(createdPairGame.id);
