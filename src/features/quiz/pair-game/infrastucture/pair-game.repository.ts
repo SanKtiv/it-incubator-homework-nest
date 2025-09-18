@@ -1,57 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PairGameRepositoryTypeOrm } from './postgresq/pair-game.repository-typeorm';
-import {
-  QuizPairGameEntity,
-  QuizPairGameStatusType,
-} from '../domain/pair-game.entity';
+import {QuizPairGameStatusType} from '../domain/pair-game.entity';
 import { NewPairGameEntity } from '../domain/new-pair-game.entity';
 
 @Injectable()
 export class PairGameRepository {
   constructor(protected repository: PairGameRepositoryTypeOrm) {}
 
-  // async getActivePairGameByUserId_OLD(
-  //   userId: string,
-  // ): Promise<QuizPairGameEntity | null | undefined> {
-  //   return this.repository.getOneActive(userId);
-  // }
-
-  async getActiveGameByUserId(
-      userId: string,
-      status: string
-  ): Promise<NewPairGameEntity | null | undefined> {
-    return this.repository.getActiveGame(userId, status);
-  }
-
-  // async getNotFinishedPairGameByUserId_OLD(
-  //   userId: string,
-  // ): Promise<QuizPairGameEntity | null | undefined> {
-  //   return this.repository.getOneNotFinished(userId);
-  // }
-
-  async getNotFinishedPairGameByUserId(
-    userId: string,
-  ): Promise<NewPairGameEntity | null> {
-    return this.repository.getOneNotFinished(userId);
-  }
-
-  // async getPairGamesByStatus(status: QuizPairGameStatusType) {
-  //   return this.repository.getByStatus(status);
-  // }
-
-  async getPairGamesByStatus(status: QuizPairGameStatusType) {
-    return this.repository.getByStatus(status);
-  }
-
-  // async createPairGame_OLD(
-  //   pairGame: QuizPairGameEntity,
-  // ): Promise<QuizPairGameEntity | null | undefined> {
-  //   return this.repository.create(pairGame);
-  // }
-
-  async createPairGame(
-    game: NewPairGameEntity,
-  ): Promise<NewPairGameEntity | null | undefined> {
+  async createPairGame(game: NewPairGameEntity): Promise<NewPairGameEntity | null | undefined> {
     try {
       const result = await this.repository.create(game);
       return result;
@@ -61,10 +17,6 @@ export class PairGameRepository {
     }
   }
 
-  // async updatePairGame_OLD(pairGame: QuizPairGameEntity) {
-  //   return this.repository.update(pairGame);
-  // }
-
   async updatePairGame(game: NewPairGameEntity) {
     try {
       const res = await this.repository.update(game);
@@ -73,6 +25,18 @@ export class PairGameRepository {
     catch (e) {
       console.log('ERROR', e)
     }
+  }
+
+  async getActiveGameByUserId(userId: string, status: string): Promise<NewPairGameEntity | null | undefined> {
+    return this.repository.getActiveGame(userId, status);
+  }
+
+  async getNotFinishedPairGameByUserId(userId: string): Promise<NewPairGameEntity | null> {
+    return this.repository.getOneNotFinished(userId);
+  }
+
+  async getPairGamesByStatus(status: QuizPairGameStatusType) {
+    return this.repository.getByStatus(status);
   }
 
   async clear(): Promise<void> {
