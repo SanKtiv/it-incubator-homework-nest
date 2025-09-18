@@ -11,18 +11,18 @@ import { NewPairGameEntity } from '../../domain/new-pair-game.entity';
 export class PairGameRepositoryTypeOrm {
   constructor(
     @InjectRepository(QuizPairGameEntity)
-    protected repository: Repository<QuizPairGameEntity>,
+    protected repository_OLD: Repository<QuizPairGameEntity>,
     @InjectRepository(NewPairGameEntity)
-    protected newRepository: Repository<NewPairGameEntity>,
+    protected repository: Repository<NewPairGameEntity>,
   ) {}
-  async getById(id: string): Promise<QuizPairGameEntity | null | undefined> {
-    return this.getQuizPairGameBuilder
-        .where('pg."id" = :id', { id })
-        .getOne();
-  }
+  // async getById_OLD(id: string): Promise<QuizPairGameEntity | null | undefined> {
+  //   return this.getQuizPairGameBuilder
+  //       .where('pg."id" = :id', { id })
+  //       .getOne();
+  // }
 
-  async newGetById(id: string): Promise<NewPairGameEntity | null | undefined> {
-    return this.newGetQuizPairGameBuilder
+  async getById(id: string): Promise<NewPairGameEntity | null | undefined> {
+    return this.getQuizPairGameBuilder
       .where('pg."id" = :id', { id })
       .getOne();
   }
@@ -35,28 +35,28 @@ export class PairGameRepositoryTypeOrm {
   // }
 
   async getByStatus(status: QuizPairGameStatusType) {
-    return this.newRepository
+    return this.repository
       .createQueryBuilder('pg')
       .where('pg.status = :status', { status })
       .getOne();
   }
 
-  async getOneActive(
-    userId: string,
-  ): Promise<QuizPairGameEntity | null | undefined> {
-    return this.getQuizPairGameBuilder
-      .where('pg.status = :status', { status: 'Active' })
-      .andWhere('pg.firstPlayer.id = :userId', { userId })
-      .orWhere('pg.status = :status', { status: 'Active' })
-      .andWhere('pg.secondPlayer.id = :userId', { userId })
-      .getOne();
-  }
+  // async getOneActive_OLD(
+  //   userId: string,
+  // ): Promise<QuizPairGameEntity | null | undefined> {
+  //   return this.getQuizPairGameBuilder
+  //     .where('pg.status = :status', { status: 'Active' })
+  //     .andWhere('pg.firstPlayer.id = :userId', { userId })
+  //     .orWhere('pg.status = :status', { status: 'Active' })
+  //     .andWhere('pg.secondPlayer.id = :userId', { userId })
+  //     .getOne();
+  // }
 
   async getActiveGame(
       userId: string,
       status: string
   ): Promise<NewPairGameEntity | null | undefined> {
-    return this.newGetQuizPairGameBuilder
+    return this.getQuizPairGameBuilder
         .where('pg.status = :status')
         .andWhere('firstUser.id = :userId')
         .orWhere('pg.status = :status')
@@ -79,7 +79,7 @@ export class PairGameRepositoryTypeOrm {
   async getOneNotFinished(
     userId: string,
   ): Promise<NewPairGameEntity | null> {
-    return this.newGetQuizPairGameBuilder
+    return this.getQuizPairGameBuilder
       .where('pg.finishGameDate IS NULL')
       .andWhere('firstUser.id = :userId')
       .orWhere('pg.finishGameDate IS NULL')
@@ -93,7 +93,7 @@ export class PairGameRepositoryTypeOrm {
   // }
 
   async update(game: NewPairGameEntity) {
-    return this.newRepository.save(game);
+    return this.repository.save(game);
   }
 
   // async create_OLD(
@@ -105,46 +105,46 @@ export class PairGameRepositoryTypeOrm {
   // }
 
   async create(game: NewPairGameEntity): Promise<NewPairGameEntity | null | undefined> {
-    const createdPairGame = await this.newRepository.save(game);
+    const createdPairGame = await this.repository.save(game);
 
-    return this.newGetById(createdPairGame.id);
+    return this.getById(createdPairGame.id);
   }
 
   async clear(): Promise<void> {
-    await this.repository.query('TRUNCATE TABLE "quiz-pair-game" CASCADE');
-    await this.newRepository.query('TRUNCATE TABLE "new-pair-game" CASCADE');
+    await this.repository_OLD.query('TRUNCATE TABLE "quiz-pair-game" CASCADE');
+    await this.repository.query('TRUNCATE TABLE "new-pair-game" CASCADE');
   }
+
+  // private get getQuizPairGameBuilder_OLD() {
+  //   return this.repository
+  //     .createQueryBuilder('pg')
+  //     .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+  //     .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
+  //     .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+  //     .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
+  //     .select([
+  //       'pg',
+  //       'firstPlayer.id',
+  //       'secondPlayer.id',
+  //       'firstAccountData.login',
+  //       'secondAccountData.login',
+  //     ])
+  //     .leftJoinAndSelect(
+  //       'pg.answersFirstPlayer',
+  //       'answersFirstPlayer',
+  //       'firstPlayer.id = answersFirstPlayer.userId',
+  //     )
+  //     .leftJoinAndSelect(
+  //       'pg.answersSecondPlayer',
+  //       'answersSecondPlayer',
+  //       'secondPlayer.id = answersSecondPlayer.userId',
+  //     )
+  //     .leftJoinAndSelect('pg.questions', 'questions')
+  //     .orderBy('questions.id', 'ASC');
+  // }
 
   private get getQuizPairGameBuilder() {
     return this.repository
-      .createQueryBuilder('pg')
-      .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-      .leftJoinAndSelect('firstPlayer.accountData', 'firstAccountData')
-      .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-      .leftJoinAndSelect('secondPlayer.accountData', 'secondAccountData')
-      .select([
-        'pg',
-        'firstPlayer.id',
-        'secondPlayer.id',
-        'firstAccountData.login',
-        'secondAccountData.login',
-      ])
-      .leftJoinAndSelect(
-        'pg.answersFirstPlayer',
-        'answersFirstPlayer',
-        'firstPlayer.id = answersFirstPlayer.userId',
-      )
-      .leftJoinAndSelect(
-        'pg.answersSecondPlayer',
-        'answersSecondPlayer',
-        'secondPlayer.id = answersSecondPlayer.userId',
-      )
-      .leftJoinAndSelect('pg.questions', 'questions')
-      .orderBy('questions.id', 'ASC');
-  }
-
-  private get newGetQuizPairGameBuilder() {
-    return this.newRepository
         .createQueryBuilder('pg')
         .select(['pg'])
         .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
