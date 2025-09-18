@@ -1,20 +1,11 @@
 import {ForbiddenException, Injectable} from '@nestjs/common';
 import {PairGameRepository} from '../infrastucture/pair-game.repository';
-import {
-    QuizPairGameEntity,
-    QuizPairGameStatusType,
-} from '../domain/pair-game.entity';
-import {
-    addedAnswerPlayerOutputModel,
-    AnswerPlayerOutputModel,
-    CreatedPairGameOutputModel,
-    createdPairGameOutputModel, outputModelCreatedPairGame,
-} from '../api/models/output/pair-game.output.models';
+import { QuizPairGameStatusType } from '../domain/pair-game.entity';
+import {addedAnswerPlayerOutputModel, AnswerPlayerOutputModel, outputModelCreatedPairGame} from '../api/models/output/pair-game.output.models';
 import {QuizQuestionsRepository} from '../../questions/infrastructure/quiz-questions.repository';
-import {NewQuizQuestionsEntity, QuizQuestionsEntity} from '../../questions/domain/quiz-questions.entity';
+import {NewQuizQuestionsEntity} from '../../questions/domain/quiz-questions.entity';
 import {UsersTable} from '../../../users/domain/users.table';
 import {InputAnswersModels} from '../api/models/input/input-answers.models';
-import {AnswersGameEntity} from '../domain/answers-game.entity';
 import {NewPairGameEntity} from '../domain/new-pair-game.entity';
 import {PairGamePlayersEntity} from '../domain/pair-game-players.entity';
 import {QuestionsGameEntity} from '../domain/new-questions-game.entity';
@@ -27,36 +18,6 @@ export class PairGameQuizPairsServices {
         protected quizQuestionsRepository: QuizQuestionsRepository,
     ) {
     }
-
-    // async createPairGame_OLD(userId: string): Promise<CreatedPairGameOutputModel> {
-    //     const pairGameCurrentUser =
-    //         await this.pairGameRepository.getNotFinishedPairGameByUserId(userId);
-    //
-    //     if (pairGameCurrentUser) throw new ForbiddenException();
-    //
-    //     const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
-    //
-    //     const pendingPairGame: QuizPairGameEntity | null =
-    //         await this.pairGameRepository.getPairGamesByStatus(statusPending);
-    //
-    //     if (pendingPairGame) return this.joinToPairGame(userId, pendingPairGame);
-    //
-    //     const pairGame = new QuizPairGameEntity();
-    //
-    //     const firstPlayer = new UsersTable();
-    //
-    //     firstPlayer.id = userId;
-    //
-    //     pairGame.firstPlayer = firstPlayer;
-    //     pairGame.pairCreatedDate = new Date();
-    //     pairGame.status = statusPending;
-    //
-    //     const createdPendingPairGame =
-    //         await this.pairGameRepository.createPairGame(pairGame);
-    //
-    //     return createdPairGameOutputModel(createdPendingPairGame!);
-    // }
-
     async getActiveGameByUserId(userId: string) {
         const status = 'Active';
 
@@ -132,27 +93,6 @@ export class PairGameQuizPairsServices {
         return outputModelCreatedPairGame(createdPendingPairGame!);
     }
 
-    // async joinToPairGame(
-    //     userId: string,
-    //     pendingPairGame: QuizPairGameEntity,
-    // ): Promise<CreatedPairGameOutputModel> {
-    //     const questions: QuizQuestionsEntity[] =
-    //         await this.quizQuestionsRepository.getFiveRandomQuestions_OLD();
-    //
-    //     const secondPlayer = new UsersTable();
-    //     secondPlayer.id = userId;
-    //
-    //     pendingPairGame.secondPlayer = secondPlayer;
-    //     pendingPairGame.status = 'Active';
-    //     pendingPairGame.startGameDate = new Date();
-    //     pendingPairGame.questions = questions;
-    //
-    //     const activePairGame =
-    //         await this.pairGameRepository.createPairGame(pendingPairGame);
-    //
-    //     return createdPairGameOutputModel(activePairGame!);
-    // }
-
     async createActiveGame(userId: string, game: NewPairGameEntity) {
         const questions = await this.createFiveQuestionsForGame(game);
 
@@ -177,27 +117,6 @@ export class PairGameQuizPairsServices {
         return player;
     }
 
-    // private createAnswerPlayerEntity(): PlayerAnswersEntity {
-    //     const playerAnswer = new PlayerAnswersEntity();
-    //
-    //
-    //
-    //     return playerAnswer;
-    // }
-
-    // async createFiveQuestionsForGame(game: NewPairGameEntity) {
-    //     const fiveRandomQuestions: QuizQuestionsEntity[] =
-    //         await this.quizQuestionsRepository.getFiveRandomQuestions_OLD();
-    //
-    //     let index = 0;
-    //
-    //     return fiveRandomQuestions.map((e) => ({
-    //         index: index++,
-    //         //questions: e,
-    //         game: game,
-    //     })) as QuestionsGameEntity[];
-    // }
-
     async createFiveQuestionsForGame(game: NewPairGameEntity) {
         const fiveRandomQuestions: NewQuizQuestionsEntity[] =
             await this.quizQuestionsRepository.getFiveRandomQuestions();
@@ -216,100 +135,6 @@ export class PairGameQuizPairsServices {
 
         return fiveRandomQuestions.map(e => mapFunc(e))
     }
-
-    // async addAnswerPlayerInPairGame_OLD(
-    //     userId: string,
-    //     dto: InputAnswersModels,
-    // ): Promise<AnswerPlayerOutputModel> {
-    //     const pairGame =
-    //         await this.pairGameRepository.getActivePairGameByUserId_OLD(userId);
-    //
-    //     if (!pairGame) throw new ForbiddenException();
-    //
-    //     const countQuestionsGame: number = pairGame.questions.length;
-    //
-    //     let countAnswersFirstPlayer: number = pairGame.answersFirstPlayer.length;
-    //     let countAnswersSecondPlayer: number = pairGame.answersSecondPlayer.length;
-    //     let answerPlayer: AnswersGameEntity = new AnswersGameEntity();
-    //
-    //     if (pairGame.firstPlayer.id === userId) {
-    //         if (countAnswersFirstPlayer === countQuestionsGame)
-    //             throw new ForbiddenException();
-    //
-    //         answerPlayer = this.createAnswerPlayer(
-    //             pairGame,
-    //             userId,
-    //             dto,
-    //             countAnswersFirstPlayer,
-    //         );
-    //
-    //         pairGame.answersFirstPlayer.push(answerPlayer);
-    //
-    //         countAnswersFirstPlayer = pairGame.answersFirstPlayer.length;
-    //
-    //         if (answerPlayer.answerStatus === 'Correct') pairGame.firstPlayerScore++;
-    //     }
-    //
-    //     if (pairGame.secondPlayer.id === userId) {
-    //         if (countAnswersSecondPlayer === countQuestionsGame)
-    //             throw new ForbiddenException();
-    //
-    //         answerPlayer = this.createAnswerPlayer(
-    //             pairGame,
-    //             userId,
-    //             dto,
-    //             countAnswersSecondPlayer,
-    //         );
-    //
-    //         pairGame.answersSecondPlayer.push(answerPlayer);
-    //         countAnswersSecondPlayer = pairGame.answersSecondPlayer.length;
-    //
-    //         if (answerPlayer.answerStatus === 'Correct') pairGame.secondPlayerScore++;
-    //     }
-    //
-    //     if (
-    //         countQuestionsGame === countAnswersFirstPlayer &&
-    //         countQuestionsGame === countAnswersSecondPlayer
-    //     ) {
-    //         pairGame.status = 'Finished';
-    //
-    //         pairGame.finishGameDate = new Date();
-    //
-    //         pairGame.answersFirstPlayer.sort(
-    //             (a: any, b: any) => b.addedAt - a.addedAt,
-    //         );
-    //
-    //         pairGame.answersSecondPlayer.sort(
-    //             (a: any, b: any) => b.addedAt - a.addedAt,
-    //         );
-    //
-    //         const correctAnswersFirstPlayer = pairGame.answersFirstPlayer.find(
-    //             (e) => e.answerStatus === 'Correct',
-    //         );
-    //
-    //         const correctAnswersSecondPlayer = pairGame.answersSecondPlayer.find(
-    //             (e) => e.answerStatus === 'Correct',
-    //         );
-    //
-    //         if (
-    //             pairGame.answersFirstPlayer[0].addedAt >
-    //             pairGame.answersSecondPlayer[0].addedAt &&
-    //             correctAnswersSecondPlayer
-    //         )
-    //             pairGame.secondPlayerScore++;
-    //
-    //         if (
-    //             pairGame.answersFirstPlayer[0].addedAt <
-    //             pairGame.answersSecondPlayer[0].addedAt &&
-    //             correctAnswersFirstPlayer
-    //         )
-    //             pairGame.firstPlayerScore++;
-    //     }
-    //
-    //     await this.pairGameRepository.updatePairGame(pairGame);
-    //
-    //     return addedAnswerPlayerOutputModel(answerPlayer);
-    // }
 
     async addAnswerPlayerInGame(
         userId: string,
@@ -373,33 +198,6 @@ export class PairGameQuizPairsServices {
         return addedAnswerPlayerOutputModel(answer);
     }
 
-    // private createAnswerForPlayer(
-    //     game: NewPairGameEntity,
-    //     player: PairGamePlayersEntity,
-    //     dto: InputAnswersModels,
-    //     question: QuestionsGameEntity,
-    // ): PlayerAnswersEntity {
-    //     const answer = new PlayerAnswersEntity();
-    //
-    //         answer.player = player;
-    //         answer.questionId = question.id;
-    //     answer.gameId = game.id;
-    //     answer.addedAt = new Date();
-    //
-    //     const arrayCorrectAnswers =
-    //         question.questions.correctAnswers.split(',');
-    //
-    //     const str = (str: string) => str.trim().toLowerCase();
-    //
-    //     const resultFind: string | undefined = arrayCorrectAnswers.find(
-    //         (e) => str(e) === str(dto.answer),
-    //     );
-    //
-    //     answer.answerStatus = resultFind ? 'Correct' : 'Incorrect';
-    //
-    //     return answer;
-    // }
-
     private getAnswerStatus(
         dto: InputAnswersModels,
         question: QuestionsGameEntity
@@ -417,32 +215,4 @@ export class PairGameQuizPairsServices {
 
         return incorrectStatus;
     }
-
-    // private createAnswerPlayer(
-    //     pairGame: QuizPairGameEntity,
-    //     userId: string,
-    //     dto: InputAnswersModels,
-    //     numQuestion: number,
-    // ): AnswersGameEntity {
-    //     const questionId = pairGame.questions[numQuestion].id;
-    //
-    //     const arrayCorrectAnswers =
-    //         pairGame.questions[numQuestion].correctAnswers.split(',');
-    //
-    //     const answerPlayer = new AnswersGameEntity();
-    //
-    //     answerPlayer.userId = userId;
-    //     answerPlayer.questionId = questionId;
-    //     answerPlayer.addedAt = new Date();
-    //
-    //     const str = (str: string) => str.trim().toLowerCase();
-    //
-    //     const resultFind: string | undefined = arrayCorrectAnswers.find(
-    //         (e) => str(e) === str(dto.answer),
-    //     );
-    //
-    //     answerPlayer.answerStatus = resultFind ? 'Correct' : 'Incorrect';
-    //
-    //     return answerPlayer;
-    // }
 }
