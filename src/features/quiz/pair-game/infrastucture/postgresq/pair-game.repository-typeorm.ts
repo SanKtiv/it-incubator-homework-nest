@@ -22,7 +22,7 @@ export class PairGameRepositoryTypeOrm {
   // }
 
   async getById(id: string): Promise<NewPairGameEntity | null | undefined> {
-    return this.getQuizPairGameBuilder
+    return this.getGameBuilder
       .where('pg."id" = :id', { id })
       .getOne();
   }
@@ -56,7 +56,7 @@ export class PairGameRepositoryTypeOrm {
       userId: string,
       status: string
   ): Promise<NewPairGameEntity | null | undefined> {
-    return this.getQuizPairGameBuilder
+    return this.getGameBuilder
         .where('pg.status = :status')
         .andWhere('firstUser.id = :userId')
         .orWhere('pg.status = :status')
@@ -79,7 +79,7 @@ export class PairGameRepositoryTypeOrm {
   async getOneNotFinished(
     userId: string,
   ): Promise<NewPairGameEntity | null> {
-    return this.getQuizPairGameBuilder
+    return this.getGameBuilder
       .where('pg.finishGameDate IS NULL')
       .andWhere('firstUser.id = :userId')
       .orWhere('pg.finishGameDate IS NULL')
@@ -111,7 +111,7 @@ export class PairGameRepositoryTypeOrm {
   }
 
   async clear(): Promise<void> {
-    await this.repository_OLD.query('TRUNCATE TABLE "quiz-pair-game" CASCADE');
+    //await this.repository_OLD.query('TRUNCATE TABLE "quiz-pair-game" CASCADE');
     await this.repository.query('TRUNCATE TABLE "new-pair-game" CASCADE');
   }
 
@@ -143,7 +143,7 @@ export class PairGameRepositoryTypeOrm {
   //     .orderBy('questions.id', 'ASC');
   // }
 
-  private get getQuizPairGameBuilder() {
+  private get getGameBuilder() {
     return this.repository
         .createQueryBuilder('pg')
         .select(['pg'])
