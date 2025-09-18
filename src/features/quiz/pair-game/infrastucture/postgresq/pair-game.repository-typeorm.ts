@@ -88,11 +88,11 @@ export class PairGameRepositoryTypeOrm {
       .getOne();
   }
 
-  async update(pairGame: QuizPairGameEntity) {
-    return this.repository.save(pairGame);
-  }
+  // async update_OLD(pairGame: QuizPairGameEntity) {
+  //   return this.repository.save(pairGame);
+  // }
 
-  async newUpdate(game: NewPairGameEntity) {
+  async update(game: NewPairGameEntity) {
     return this.newRepository.save(game);
   }
 
