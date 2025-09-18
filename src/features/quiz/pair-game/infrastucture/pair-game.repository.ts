@@ -61,11 +61,11 @@ export class PairGameRepository {
     }
   }
 
-  async updatePairGame(pairGame: QuizPairGameEntity) {
-    return this.repository.update(pairGame);
-  }
+  // async updatePairGame_OLD(pairGame: QuizPairGameEntity) {
+  //   return this.repository.update(pairGame);
+  // }
 
-  async newUpdatePairGame(game: NewPairGameEntity) {
+  async updatePairGame(game: NewPairGameEntity) {
     try {
       const res = await this.repository.newUpdate(game);
       return res;

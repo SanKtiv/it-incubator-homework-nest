@@ -368,7 +368,7 @@ export class PairGameQuizPairsServices {
             countQuestionsGame === countAnswersSecondPlayer
         ) game = this.createFinishedGame(game)
 
-        await this.pairGameRepository.newUpdatePairGame(game);
+        await this.pairGameRepository.updatePairGame(game);
 
         return addedAnswerPlayerOutputModel(answer);
     }
