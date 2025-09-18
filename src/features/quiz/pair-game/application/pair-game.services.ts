@@ -127,7 +127,7 @@ export class PairGameQuizPairsServices {
         pairGame.status = statusPending;
 
         const createdPendingPairGame =
-            await this.pairGameRepository.newCreatePairGame(pairGame);
+            await this.pairGameRepository.createPairGame(pairGame);
 
         return outputModelCreatedPairGame(createdPendingPairGame!);
     }
@@ -162,7 +162,7 @@ export class PairGameQuizPairsServices {
         game.questions = questions;
 
         const activeGame =
-            await this.pairGameRepository.newCreatePairGame(game);
+            await this.pairGameRepository.createPairGame(game);
 
         return outputModelCreatedPairGame(activeGame!);
     }

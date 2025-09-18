@@ -43,13 +43,13 @@ export class PairGameRepository {
     return this.repository.getByStatus(status);
   }
 
-  async createPairGame(
-    pairGame: QuizPairGameEntity,
-  ): Promise<QuizPairGameEntity | null | undefined> {
-    return this.repository.create(pairGame);
-  }
+  // async createPairGame_OLD(
+  //   pairGame: QuizPairGameEntity,
+  // ): Promise<QuizPairGameEntity | null | undefined> {
+  //   return this.repository.create(pairGame);
+  // }
 
-  async newCreatePairGame(
+  async createPairGame(
     game: NewPairGameEntity,
   ): Promise<NewPairGameEntity | null | undefined> {
     try {
