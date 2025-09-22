@@ -41,6 +41,13 @@ export class PairGameQuizPairsController {
       return this.pairGameQueryRepository.getPaging(userId, query);
   }
 
+    @Get('users/top')
+    async getTopUsersOfGame(
+        @Query() query: pairGameQuery,
+    ) {
+        return this.pairGameQueryRepository.getPaging(userId, query);
+    }
+
   @Get('users/my-statistic')
   @UseGuards(JWTAccessAuthGuard)
   async getStatisticCurrentUser(@CurrentUserId() userId: string) {
