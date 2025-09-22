@@ -1,6 +1,7 @@
 import { QueryDto } from '../../../../../../infrastructure/models/query.dto';
 import {IsNumber, IsOptional, IsString, Min} from 'class-validator';
 import {Type} from "class-transformer";
+import {ToUpperCaseSort} from "../../../../../../infrastructure/decorators/transform/toUpperCase.decorator";
 
 export class pairGameQuery extends QueryDto {
   @IsOptional()
@@ -14,7 +15,7 @@ export class GameQueryTopUsers {
   }
 
   @IsOptional()
-  @IsString()
+  @ToUpperCaseSort()
   sort: string | string[] = ['avgScores DESC', 'sumScore DESC'];
 
   @IsOptional()

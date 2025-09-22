@@ -1,5 +1,4 @@
 import { Transform, TransformFnParams } from 'class-transformer';
-import {every} from "rxjs/operators";
 
 // Custom decorator (в библиотеке class-transformer по умолчанию нету декоратора trim)
 // не забываем установить transform: true в глобальном ValidationPipe
