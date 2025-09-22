@@ -15,7 +15,7 @@ export class GameQueryTopUsers {
 
   @IsOptional()
   @IsString()
-  sort: string | string[] = ['avgScores desc', 'sumScore desc'];
+  sort: string | string[] = ['avgScores DESC', 'sumScore DESC'];
 
   @IsOptional()
   @Type(() => Number)
