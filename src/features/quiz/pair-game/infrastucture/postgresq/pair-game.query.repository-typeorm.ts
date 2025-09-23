@@ -142,6 +142,19 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getTopUsersOfGame(query: GameQueryTopUsers) {
-
+        return  this.repository
+            .createQueryBuilder('pg')
+            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+            .leftJoinAndSelect('firstPlayer.user', 'firstUser')
+            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+            .leftJoinAndSelect('secondPlayer.user', 'secondUser')
+            .select([
+                'pg.status',
+                'firstPlayer.playerScore',
+                'secondPlayer.playerScore',
+                'firstUser.id',
+                'secondUser.id',
+            ])
+            .getMany();
     }
 }
