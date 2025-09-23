@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
 import {QuizPairGameEntity} from '../../domain/pair-game.entity';
 import {DataSource, Repository} from 'typeorm';
-import {pairGameQuery} from '../../api/models/input/input-query.dto';
+import {GameQueryTopUsers, pairGameQuery} from '../../api/models/input/input-query.dto';
 import {NewPairGameEntity} from "../../domain/new-pair-game.entity";
 
 @Injectable()
@@ -139,5 +139,9 @@ export class PairGameQueryRepositoryTypeOrm {
         } catch (e) {
             console.log('ERROR in newGetStatisticByUserId', e)
         }
+    }
+
+    async getTopUsersOfGame(query: GameQueryTopUsers) {
+
     }
 }

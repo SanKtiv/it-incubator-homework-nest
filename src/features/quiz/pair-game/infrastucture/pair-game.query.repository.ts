@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PairGameQueryRepositoryTypeOrm } from './postgresq/pair-game.query.repository-typeorm';
 import { outputModelCreatedPairGame, outputModelPairGamesPagination, outputModelPlayerStatistic } from '../api/models/output/pair-game.output.models';
-import { pairGameQuery } from '../api/models/input/input-query.dto';
+import {GameQueryTopUsers, pairGameQuery} from '../api/models/input/input-query.dto';
 
 @Injectable()
 export class PairGameQueryRepository {
@@ -48,5 +48,9 @@ export class PairGameQueryRepository {
     const games = await this.repository.getStatisticByUserId(userId);
 
     return outputModelPlayerStatistic(games, userId);
+  }
+
+  async getTopUsersOfGame(query: GameQueryTopUsers) {
+    return this.repository.getTopUsersOfGame(query)
   }
 }

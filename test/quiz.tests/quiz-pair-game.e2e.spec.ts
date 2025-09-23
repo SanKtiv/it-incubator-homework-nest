@@ -471,7 +471,8 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
 
   it('43 /pair-game-quiz/pairs/my (GET), get my all games by user1 should returned status 200', async () => {
     const resultGetGame =
-        await quizPairGameTestManager.getAllGamesByUserId(testAccessToken1, {sortBy: 'status', sortDirection: 'ASC'});
+        await quizPairGameTestManager
+            .getAllGamesByUserId(testAccessToken1, {sortBy: 'status', sortDirection: 'ASC'});
 
     // const result =
     //     await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
