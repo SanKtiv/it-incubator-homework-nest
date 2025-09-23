@@ -12,7 +12,15 @@ export const ToUpperCaseSort = () =>
         if (value) {
             if (typeof value === 'string') return value.toUpperCase();
             if (Array.isArray(value) && value.every(e => typeof e === 'string')) {
-                return value.map(e => e.split(" ")[1].toUpperCase())
+                const f = (a: string) => {
+                    const arr = a.split(" ")
+
+                    arr[1] = arr[1].toUpperCase()
+
+                    return arr.join(" ")
+                }
+
+                return value.map(f)
             }
         }
     });
