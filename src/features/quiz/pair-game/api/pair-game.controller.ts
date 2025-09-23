@@ -14,7 +14,7 @@ import { CurrentUserId } from '../../../auth/infrastructure/decorators/current-u
 import { PairGameQueryRepository } from '../infrastucture/pair-game.query.repository';
 import { InputAnswersModels } from './models/input/input-answers.models';
 import { idPairGamePipe } from '../../../../infrastructure/pipes/validation.pipe';
-import { pairGameQuery } from './models/input/input-query.dto';
+import {GameQueryTopUsers, pairGameQuery} from './models/input/input-query.dto';
 import {AnswerPlayerOutputModel} from './models/output/pair-game.output.models';
 
 @Controller('pair-game-quiz')
@@ -43,9 +43,9 @@ export class PairGameQuizPairsController {
 
     @Get('users/top')
     async getTopUsersOfGame(
-        @Query() query: pairGameQuery,
+        @Query() query: GameQueryTopUsers,
     ) {
-        return this.pairGameQueryRepository.getPaging(userId, query);
+        console.log('Query =', query);
     }
 
   @Get('users/my-statistic')

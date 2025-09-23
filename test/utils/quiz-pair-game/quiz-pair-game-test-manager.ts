@@ -50,6 +50,12 @@ export class QuizPairGameTestManager {
       .set(auth.type, auth.pass);
   }
 
+  async getTopUsersOfGame(query: any) {
+    return request(this.app.getHttpServer())
+        .get('/pair-game-quiz/users/top')
+        .query(query)
+  }
+
   async getById(id: string, accessToken: any) {
     return request(this.app.getHttpServer())
       .get(`/pair-game-quiz/pairs/${id}`)
