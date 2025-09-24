@@ -36,7 +36,7 @@ export class PairGamePlayersEntity {
     @Column({
         type: 'double precision',
         generatedType: 'STORED',
-        asExpression: `CASE WHEN gamesCount > 0 THEN playerScore::double precision / gamesCount ELSE 0 END`
+        asExpression: `CASE WHEN "gamesCount" > 0 THEN "playerScore"::double precision / "gamesCount" ELSE 0 END`
     })
     avgScores: number;
 
