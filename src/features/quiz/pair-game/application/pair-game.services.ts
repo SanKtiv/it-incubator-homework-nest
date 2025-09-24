@@ -31,8 +31,9 @@ export class PairGameQuizPairsServices {
 
     private createFinishedGame(game: NewPairGameEntity): NewPairGameEntity {
         game.status = 'Finished';
-
         game.finishGameDate = new Date();
+        game.firstPlayer.gamesCount++;
+        game.secondPlayer!.gamesCount++;
 
         game.firstPlayer.answers!.sort(
             (a: any, b: any) => b.addedAt - a.addedAt,
@@ -42,13 +43,13 @@ export class PairGameQuizPairsServices {
             (a: any, b: any) => b.addedAt - a.addedAt,
         );
 
-        const correctAnswersFirstPlayer = game.firstPlayer.answers!.find(
-            (e) => e.answerStatus === 'Correct',
-        );
+        const correctAnswersFirstPlayer =
+            game.firstPlayer.answers!
+                .find((e) => e.answerStatus === 'Correct');
 
-        const correctAnswersSecondPlayer = game.secondPlayer!.answers!.find(
-            (e) => e.answerStatus === 'Correct',
-        );
+        const correctAnswersSecondPlayer =
+            game.secondPlayer!.answers!
+                .find((e) => e.answerStatus === 'Correct');
 
         if (
             game.firstPlayer.answers![0].addedAt >
@@ -63,6 +64,24 @@ export class PairGameQuizPairsServices {
             correctAnswersFirstPlayer
         )
             game.firstPlayer.playerScore++;
+
+        if (game.firstPlayer.playerScore > game.secondPlayer!.playerScore) {
+            game.firstPlayer.winsCount++;
+
+            game.secondPlayer!.lossesCount++;
+        }
+
+        if (game.firstPlayer.playerScore < game.secondPlayer!.playerScore) {
+            game.secondPlayer!.winsCount++;
+
+            game.firstPlayer.lossesCount++;
+        }
+
+        if (game.firstPlayer.playerScore == game.secondPlayer!.playerScore) {
+            game.secondPlayer!.drawsCount++;
+
+            game.firstPlayer!.drawsCount++;
+        }
 
         return game;
     }
