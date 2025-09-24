@@ -145,7 +145,9 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getTopUsersOfGame(query: GameQueryTopUsers) {
-        return this.repositoryPlayer
+        //const sort = query.sort;
+
+        const players = this.repositoryPlayer
             .createQueryBuilder('player')
             .leftJoinAndSelect('player.user', 'u')
             .leftJoinAndSelect('u.accountData', 'data')
@@ -159,6 +161,19 @@ export class PairGameQueryRepositoryTypeOrm {
                 'player.lossesCount',
                 'player.drawsCount',
             ])
+
+        if (typeof query.sort === 'string') {
+            const sortArr = query.sort.split(' ');
+            const sortBy = sortArr[0];
+            const sortAs = sortArr[1] === "DESC" ? "DESC" : "ASC";
+
+            players.orderBy(`player."${sortBy}"`, sortAs)
+        }
+
+        return players
+            .skip((query.pageNumber - 1) * query.pageSize)
+            .take(query.pageSize)
             .getMany();
     }
+
 }

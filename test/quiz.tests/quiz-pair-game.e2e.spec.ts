@@ -625,6 +625,8 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
         await quizPairGameTestManager
             .getTopUsersOfGame(undefined);
 
+    console.log('GET TOP USERS =', resultGet.body)
+
     await expect(resultGet.statusCode).toBe(200)
   });
 

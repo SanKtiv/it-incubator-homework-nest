@@ -39,9 +39,7 @@ export class PairGameQuizPairsController {
         @CurrentUserId() userId: string,
         @Query() query: pairGameQuery,
     ) {
-        const res = await this.pairGameQueryRepository.getPaging(userId, query);
-        console.log('my GAMES =', res)
-        return res;
+        return this.pairGameQueryRepository.getPaging(userId, query);
     }
 
     @Get('users/top')
