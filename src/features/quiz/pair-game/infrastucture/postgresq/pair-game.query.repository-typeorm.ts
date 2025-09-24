@@ -4,6 +4,7 @@ import {QuizPairGameEntity} from '../../domain/pair-game.entity';
 import {DataSource, Repository} from 'typeorm';
 import {GameQueryTopUsers, pairGameQuery} from '../../api/models/input/input-query.dto';
 import {NewPairGameEntity} from "../../domain/new-pair-game.entity";
+import {PairGamePlayersEntity} from "../../domain/pair-game-players.entity";
 
 @Injectable()
 export class PairGameQueryRepositoryTypeOrm {
@@ -13,6 +14,8 @@ export class PairGameQueryRepositoryTypeOrm {
         @InjectRepository(NewPairGameEntity)
         protected repository: Repository<NewPairGameEntity>,
         @InjectDataSource() protected dataSource: DataSource,
+        @InjectRepository(PairGamePlayersEntity)
+        protected repositoryPlayer: Repository<PairGamePlayersEntity>,
     ) {
     }
     private get shareBuilder() {
@@ -142,18 +145,19 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getTopUsersOfGame(query: GameQueryTopUsers) {
-        return  this.repository
-            .createQueryBuilder('pg')
-            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect('firstPlayer.user', 'firstUser')
-            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-            .leftJoinAndSelect('secondPlayer.user', 'secondUser')
+        return this.repositoryPlayer
+            .createQueryBuilder('player')
+            .leftJoinAndSelect('player.user', 'u')
+            .leftJoinAndSelect('u.accountData', 'data')
             .select([
-                'pg.status',
-                'firstPlayer.playerScore',
-                'secondPlayer.playerScore',
-                'firstUser.id',
-                'secondUser.id',
+                'u.id',
+                'data.login',
+                'player.playerScore',
+                'player.gamesCount',
+                'player.avgScores',
+                'player.winsCount',
+                'player.lossesCount',
+                'player.drawsCount',
             ])
             .getMany();
     }

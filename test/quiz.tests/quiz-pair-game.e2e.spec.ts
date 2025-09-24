@@ -620,6 +620,13 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     await expect(resultGetGame.statusCode).toBe(200)
   });
 
+  it('44 /pair-game-quiz/users/top (GET), get statistics by top players should returned status 200', async () => {
+    const resultGet =
+        await quizPairGameTestManager
+            .getTopUsersOfGame(undefined);
+
+    await expect(resultGet.statusCode).toBe(200)
+  });
 
   // it('43-1 /pair-game-quiz/pairs/my (GET), get my all games by user1 should returned status 200', async () => {
   //   const resultGetGame =
