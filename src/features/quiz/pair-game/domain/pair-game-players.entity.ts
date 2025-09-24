@@ -33,7 +33,11 @@ export class PairGamePlayersEntity {
     @Column({type: 'smallint', default: 0})
     gamesCount: number;
 
-    @Column({type: 'double precision', default: 0})
+    @Column({
+        type: 'double precision',
+        generatedType: 'STORED',
+        asExpression: `CASE WHEN gamesCount > 0 THEN playerScore::double precision / gamesCount ELSE 0 END`
+    })
     avgScores: number;
 
     @Column({type: 'smallint', default: 0})
