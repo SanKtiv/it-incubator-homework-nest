@@ -169,6 +169,19 @@ export class PairGameQueryRepositoryTypeOrm {
 
             players.orderBy(`player."${sortBy}"`, sortAs)
         }
+        else {
+            let n = 0;
+
+            query.sort.forEach( e => {
+                const sortArr = e.split(' ')
+                const sortBy = sortArr[0];
+                const sortAs = sortArr[1] === "DESC" ? "DESC" : "ASC";
+
+                if (n === 0) players.orderBy(`player."${sortBy}"`, sortAs)
+                else players.addOrderBy(`player."${sortBy}"`, sortAs)
+                n++
+            })
+        }
 
         return players
             .skip((query.pageNumber - 1) * query.pageSize)
