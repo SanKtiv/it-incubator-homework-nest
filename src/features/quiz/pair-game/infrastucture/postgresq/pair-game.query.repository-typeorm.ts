@@ -146,6 +146,7 @@ export class PairGameQueryRepositoryTypeOrm {
 
     async getTopUsersOfGame(query: GameQueryTopUsers) {
         //const sort = query.sort;
+        console.log('QUERY =', query)
 
         const players = this.repositoryPlayer
             .createQueryBuilder('player')
