@@ -6,7 +6,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { QuizPairGameStatusType } from './pair-game.entity';
+// import { QuizPairGameStatusType } from './pair-game.entity';
 import { PairGamePlayersEntity } from './pair-game-players.entity';
 import { QuestionsGameEntity } from './new-questions-game.entity';
 
@@ -53,3 +53,8 @@ export class NewPairGameEntity {
   @Column({ type: 'timestamp with time zone', nullable: true })
   finishGameDate: Date;
 }
+
+export type QuizPairGameStatusType =
+    | 'PendingSecondPlayer'
+    | 'Active'
+    | 'Finished';

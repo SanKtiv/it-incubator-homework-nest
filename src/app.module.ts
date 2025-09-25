@@ -94,8 +94,8 @@ import { QuizQuestionsRepositoryTypeOrm } from './features/quiz/questions/infras
 import { QuizQuestionsQueryRepositoryTypeOrm } from './features/quiz/questions/infrastructure/postgresql/quiz-questions.query.repository-typeorm';
 import { QuizQuestionsRepository } from './features/quiz/questions/infrastructure/quiz-questions.repository';
 import { QuizQuestionsQueryRepository } from './features/quiz/questions/infrastructure/quiz-questions.query.repository';
-import {NewQuizQuestionsEntity, QuizQuestionsEntity} from './features/quiz/questions/domain/quiz-questions.entity';
-import { QuizPairGameEntity } from './features/quiz/pair-game/domain/pair-game.entity';
+// import {NewQuizQuestionsEntity, QuizQuestionsEntity} from './features/quiz/questions/domain/quiz-questions.entity';
+// import { QuizPairGameEntity } from './features/quiz/pair-game/domain/pair-game.entity';
 import { PairGameQuizPairsController } from './features/quiz/pair-game/api/pair-game.controller';
 import { PairGameQuizPairsServices } from './features/quiz/pair-game/application/pair-game.services';
 import { PairGameRepository } from './features/quiz/pair-game/infrastucture/pair-game.repository';
@@ -107,6 +107,7 @@ import { NewPairGameEntity } from './features/quiz/pair-game/domain/new-pair-gam
 import { PairGamePlayersEntity } from './features/quiz/pair-game/domain/pair-game-players.entity';
 import { PlayerAnswersEntity } from './features/quiz/pair-game/domain/new-player-answers.entity';
 import { QuestionsGameEntity } from './features/quiz/pair-game/domain/new-questions-game.entity';
+import {NewQuizQuestionsEntity} from "./features/quiz/questions/domain/quiz-questions.entity";
 
 dotenv.config();
 
@@ -221,8 +222,8 @@ const strategies = [
         StatusesTable,
         StatusesCommentsTable,
         StatusesPostsTable,
-        QuizQuestionsEntity,
-        QuizPairGameEntity,
+        // QuizQuestionsEntity,
+        // QuizPairGameEntity,
         AnswersGameEntity,
         NewPairGameEntity,
         PairGamePlayersEntity,
@@ -246,8 +247,8 @@ const strategies = [
       StatusesTable,
       StatusesCommentsTable,
       StatusesPostsTable,
-      QuizQuestionsEntity,
-      QuizPairGameEntity,
+      // QuizQuestionsEntity,
+      // QuizPairGameEntity,
       AnswersGameEntity,
       NewPairGameEntity,
       PairGamePlayersEntity,

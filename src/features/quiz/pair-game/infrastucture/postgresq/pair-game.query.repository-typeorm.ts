@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
-import {QuizPairGameEntity} from '../../domain/pair-game.entity';
+// import {QuizPairGameEntity} from '../../domain/pair-game.entity';
 import {DataSource, Repository} from 'typeorm';
 import {GameQueryTopUsers, pairGameQuery} from '../../api/models/input/input-query.dto';
 import {NewPairGameEntity} from "../../domain/new-pair-game.entity";
@@ -9,8 +9,8 @@ import {PairGamePlayersEntity} from "../../domain/pair-game-players.entity";
 @Injectable()
 export class PairGameQueryRepositoryTypeOrm {
     constructor(
-        @InjectRepository(QuizPairGameEntity)
-        protected repository_OLD: Repository<QuizPairGameEntity>,
+        // @InjectRepository(QuizPairGameEntity)
+        // protected repository_OLD: Repository<QuizPairGameEntity>,
         @InjectRepository(NewPairGameEntity)
         protected repository: Repository<NewPairGameEntity>,
         @InjectDataSource() protected dataSource: DataSource,
@@ -165,7 +165,7 @@ export class PairGameQueryRepositoryTypeOrm {
 
         if (typeof query.sort === 'string') {
             const sortArr = query.sort.split(' ');
-            const sortBy = sortArr[0];
+            const sortBy = sortArr[0] === 'sumScore' ? 'playerScore' : sortArr[0];
             const sortAs = sortArr[1] === "DESC" ? "DESC" : "ASC";
 
             players.orderBy(`player."${sortBy}"`, sortAs)
@@ -175,7 +175,7 @@ export class PairGameQueryRepositoryTypeOrm {
 
             query.sort.forEach( e => {
                 const sortArr = e.split(' ')
-                const sortBy = sortArr[0];
+                const sortBy = sortArr[0] === 'sumScore' ? 'playerScore' : sortArr[0];
                 const sortAs = sortArr[1] === "DESC" ? "DESC" : "ASC";
 
                 if (n === 0) players.orderBy(`player."${sortBy}"`, sortAs)
@@ -186,8 +186,8 @@ export class PairGameQueryRepositoryTypeOrm {
 
         return players
             .skip((query.pageNumber - 1) * query.pageSize)
-            .take(query.pageSize)
-            .getMany();
+            .limit(query.pageSize)
+            // .take(query.pageSize)
+            .getManyAndCount();
     }
-
 }
