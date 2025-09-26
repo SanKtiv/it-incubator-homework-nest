@@ -1,6 +1,5 @@
 import {ForbiddenException, Injectable} from '@nestjs/common';
 import {PairGameRepository} from '../infrastucture/pair-game.repository';
-// import { QuizPairGameStatusType } from '../domain/pair-game.entity';
 import {addedAnswerPlayerOutputModel, AnswerPlayerOutputModel, outputModelCreatedPairGame} from '../api/models/output/pair-game.output.models';
 import {QuizQuestionsRepository} from '../../questions/infrastructure/quiz-questions.repository';
 import {NewQuizQuestionsEntity} from '../../questions/domain/quiz-questions.entity';

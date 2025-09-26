@@ -1,17 +1,11 @@
 import {
   Column,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-// import { QuizPairGameEntity } from './pair-game.entity';
-import {NewQuizQuestionsEntity,
-  // QuizQuestionsEntity
-} from '../../questions/domain/quiz-questions.entity';
+import {NewQuizQuestionsEntity} from '../../questions/domain/quiz-questions.entity';
 import { NewPairGameEntity } from './new-pair-game.entity';
 
 @Entity('new-questions-game')

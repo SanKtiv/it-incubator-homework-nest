@@ -1,6 +1,5 @@
 import {Injectable} from '@nestjs/common';
 import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
-// import {QuizPairGameEntity} from '../../domain/pair-game.entity';
 import {DataSource, Repository} from 'typeorm';
 import {GameQueryTopUsers, pairGameQuery} from '../../api/models/input/input-query.dto';
 import {NewPairGameEntity} from "../../domain/new-pair-game.entity";
@@ -9,8 +8,6 @@ import {PairGamePlayersEntity} from "../../domain/pair-game-players.entity";
 @Injectable()
 export class PairGameQueryRepositoryTypeOrm {
     constructor(
-        // @InjectRepository(QuizPairGameEntity)
-        // protected repository_OLD: Repository<QuizPairGameEntity>,
         @InjectRepository(NewPairGameEntity)
         protected repository: Repository<NewPairGameEntity>,
         @InjectDataSource() protected dataSource: DataSource,

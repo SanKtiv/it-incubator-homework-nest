@@ -9,7 +9,6 @@ import {
 import { AccountDataTable } from './account-data.table';
 import { EmailConfirmationTable } from './email-сonfirmation.table';
 import { PasswordRecoveryTable } from './password-recovery.table';
-// import { AnswersGameEntity } from '../../quiz/pair-game/domain/answers-game.entity';
 import { PairGamePlayersEntity } from '../../quiz/pair-game/domain/pair-game-players.entity';
 
 @Entity('users')
@@ -48,19 +47,6 @@ export class UsersTable {
   )
   @JoinColumn()
   passwordRecovery: PasswordRecoveryTable;
-
-  // @OneToMany(
-  //   () => AnswersGameEntity,
-  //   (answersPairGames) => answersPairGames.userId,
-  //   {
-  //     nullable: true,
-  //     cascade: true,
-  //     eager: true,
-  //     onDelete: 'CASCADE',
-  //   },
-  // )
-  // @JoinColumn({ name: 'answersPairGames' })
-  // answersPairGames: AnswersGameEntity[];
 
   @OneToMany(() => PairGamePlayersEntity, (players) => players.user, {
     nullable: true,

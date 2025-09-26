@@ -6,7 +6,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-// import { QuizPairGameStatusType } from './pair-game.entity';
 import { PairGamePlayersEntity } from './pair-game-players.entity';
 import { QuestionsGameEntity } from './new-questions-game.entity';
 
