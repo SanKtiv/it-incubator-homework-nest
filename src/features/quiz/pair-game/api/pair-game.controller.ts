@@ -45,7 +45,6 @@ export class PairGameQuizPairsController {
     @Get('users/top')
     async getTopUsersOfGame(@Query() query: GameQueryTopUsers) {
         return this.pairGameQueryRepository.getTopUsersOfGame(query);
-        //console.log('Query =', query);
     }
 
     @Get('users/my-statistic')

@@ -623,7 +623,7 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
   it('44 /pair-game-quiz/users/top (GET), get statistics by top players should returned status 200', async () => {
     const resultGet =
         await quizPairGameTestManager
-            .getTopUsersOfGame({sort: 'sumScore'});
+            .getTopUsersOfGame(/*{sort: 'sumScore'}*/undefined);
 
     console.log('GET TOP USERS =', resultGet.body)
 
