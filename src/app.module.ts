@@ -100,7 +100,7 @@ import { PairGameQuizPairsController } from './features/quiz/pair-game/api/pair-
 import { PairGameQuizPairsServices } from './features/quiz/pair-game/application/pair-game.services';
 import { PairGameRepository } from './features/quiz/pair-game/infrastucture/pair-game.repository';
 import { PairGameRepositoryTypeOrm } from './features/quiz/pair-game/infrastucture/postgresq/pair-game.repository-typeorm';
-import { AnswersGameEntity } from './features/quiz/pair-game/domain/answers-game.entity';
+// import { AnswersGameEntity } from './features/quiz/pair-game/domain/answers-game.entity';
 import { PairGameQueryRepository } from './features/quiz/pair-game/infrastucture/pair-game.query.repository';
 import { PairGameQueryRepositoryTypeOrm } from './features/quiz/pair-game/infrastucture/postgresq/pair-game.query.repository-typeorm';
 import { NewPairGameEntity } from './features/quiz/pair-game/domain/new-pair-game.entity';
@@ -224,7 +224,7 @@ const strategies = [
         StatusesPostsTable,
         // QuizQuestionsEntity,
         // QuizPairGameEntity,
-        AnswersGameEntity,
+        // AnswersGameEntity,
         NewPairGameEntity,
         PairGamePlayersEntity,
         PlayerAnswersEntity,
@@ -249,7 +249,7 @@ const strategies = [
       StatusesPostsTable,
       // QuizQuestionsEntity,
       // QuizPairGameEntity,
-      AnswersGameEntity,
+      // AnswersGameEntity,
       NewPairGameEntity,
       PairGamePlayersEntity,
       PlayerAnswersEntity,

@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  QuizPairGameEntity,
-  QuizPairGameStatusType,
-} from '../../domain/pair-game.entity';
+// import {
+//   QuizPairGameEntity,
+//   QuizPairGameStatusType,
+// } from '../../domain/pair-game.entity';
 import { Repository } from 'typeorm';
-import { NewPairGameEntity } from '../../domain/new-pair-game.entity';
+import {NewPairGameEntity, QuizPairGameStatusType} from '../../domain/new-pair-game.entity';
 
 @Injectable()
 export class PairGameRepositoryTypeOrm {
   constructor(
-    @InjectRepository(QuizPairGameEntity)
-    protected repository_OLD: Repository<QuizPairGameEntity>,
+    // @InjectRepository(QuizPairGameEntity)
+    // protected repository_OLD: Repository<QuizPairGameEntity>,
     @InjectRepository(NewPairGameEntity)
     protected repository: Repository<NewPairGameEntity>,
   ) {}

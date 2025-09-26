@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { QuizQuestionsRepositoryTypeOrm } from './postgresql/quiz-questions.repository-typeorm';
-import {NewQuizQuestionsEntity, QuizQuestionsEntity} from '../domain/quiz-questions.entity';
+import {NewQuizQuestionsEntity,
+  // QuizQuestionsEntity
+} from '../domain/quiz-questions.entity';
 import {
   QuizQuestionsOutputDto,
   quizQuestionsViewModel,
@@ -38,9 +40,9 @@ export class QuizQuestionsRepository {
   //   return quizQuestionsViewModel(createdQuestions);
   // }
 
-  async getFiveRandomQuestions_OLD(): Promise<QuizQuestionsEntity[]> {
-    return this.repository.findFiveRandom_OLD();
-  }
+  // async getFiveRandomQuestions_OLD(): Promise<QuizQuestionsEntity[]> {
+  //   return this.repository.findFiveRandom_OLD();
+  // }
 
   // async getQuizQuestionById_OLD(id: string): Promise<QuizQuestionsEntity | null> {
   //   return this.repository.findOneById_OLD(id);

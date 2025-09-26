@@ -13,9 +13,9 @@ export class QuizQuestionsQueryRepository {
     return this.repository.getPaging(queryDto);
   }
 
-  async getQuizQuestionsPaging_OLD(
-    queryDto: QuizQuestionsQueryInputDto,
-  ): Promise<QuizQuestionsPaging> {
-    return this.repository.getPaging_OLD(queryDto);
-  }
+  // async getQuizQuestionsPaging_OLD(
+  //   queryDto: QuizQuestionsQueryInputDto,
+  // ): Promise<QuizQuestionsPaging> {
+  //   return this.repository.getPaging_OLD(queryDto);
+  // }
 }

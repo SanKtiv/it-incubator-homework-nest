@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { QuizQuestionsInputDto } from '../../api/models/quiz-questions.input.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import {NewQuizQuestionsEntity, QuizQuestionsEntity} from '../../domain/quiz-questions.entity';
+import {NewQuizQuestionsEntity,
+  // QuizQuestionsEntity
+} from '../../domain/quiz-questions.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class QuizQuestionsRepositoryTypeOrm {
   constructor(
-    @InjectRepository(QuizQuestionsEntity) protected repository_OLD: Repository<QuizQuestionsEntity>,
+    // @InjectRepository(QuizQuestionsEntity) protected repository_OLD: Repository<QuizQuestionsEntity>,
     @InjectRepository(NewQuizQuestionsEntity) protected repository: Repository<NewQuizQuestionsEntity>,
   ) {}
 
@@ -44,15 +46,15 @@ export class QuizQuestionsRepositoryTypeOrm {
   //   return this.repository_OLD.save(dto);
   // }
 
-  async findFiveRandom_OLD(): Promise<QuizQuestionsEntity[]> {
-    return this.repository_OLD
-      .createQueryBuilder('q')
-      .select('q.*')
-      .orderBy('RANDOM()')
-      .addOrderBy('id', 'ASC')
-      .limit(5)
-      .getRawMany();
-  }
+  // async findFiveRandom_OLD(): Promise<QuizQuestionsEntity[]> {
+  //   return this.repository_OLD
+  //     .createQueryBuilder('q')
+  //     .select('q.*')
+  //     .orderBy('RANDOM()')
+  //     .addOrderBy('id', 'ASC')
+  //     .limit(5)
+  //     .getRawMany();
+  // }
 
   // async findOneById_OLD(id: string): Promise<QuizQuestionsEntity | null> {
   //   return this.repository_OLD.findOneBy({ id });

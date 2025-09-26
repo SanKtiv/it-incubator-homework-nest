@@ -1,5 +1,5 @@
 // import { QuizPairGameEntity } from '../../../domain/pair-game.entity';
-import { AnswersGameEntity } from '../../../domain/answers-game.entity';
+// import { AnswersGameEntity } from '../../../domain/answers-game.entity';
 import { pairGameQuery } from '../input/input-query.dto';
 import {NewPairGameEntity} from "../../../domain/new-pair-game.entity";
 import {PlayerAnswersEntity} from "../../../domain/new-player-answers.entity";
@@ -153,7 +153,7 @@ export const outputModelCreatedPairGame =
 // });
 
 export const addedAnswerPlayerOutputModel = (
-  answerPlayer: AnswersGameEntity | PlayerAnswersEntity,
+  answerPlayer: /*AnswersGameEntity |*/ PlayerAnswersEntity,
 ): AnswerPlayerOutputModel => ({
   questionId: answerPlayer.questionId,
   answerStatus: answerPlayer.answerStatus,

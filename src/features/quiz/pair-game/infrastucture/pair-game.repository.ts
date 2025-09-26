@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PairGameRepositoryTypeOrm } from './postgresq/pair-game.repository-typeorm';
-import {QuizPairGameStatusType} from '../domain/pair-game.entity';
-import { NewPairGameEntity } from '../domain/new-pair-game.entity';
+// import {QuizPairGameStatusType} from '../domain/pair-game.entity';
+import {NewPairGameEntity, QuizPairGameStatusType} from '../domain/new-pair-game.entity';
 
 @Injectable()
 export class PairGameRepository {

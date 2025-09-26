@@ -4,7 +4,9 @@ import {
   QuizQuestionsInputDto,
 } from '../api/models/quiz-questions.input.dto';
 import { QuizQuestionsRepository } from '../infrastructure/quiz-questions.repository';
-import {NewQuizQuestionsEntity, QuizQuestionsEntity} from '../domain/quiz-questions.entity';
+import {NewQuizQuestionsEntity,
+  // QuizQuestionsEntity
+} from '../domain/quiz-questions.entity';
 import { QuizQuestionsOutputDto } from '../api/models/quiz-questions.output.dto';
 
 @Injectable()

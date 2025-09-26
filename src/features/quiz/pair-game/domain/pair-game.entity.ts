@@ -1,16 +1,16 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { UsersTable } from '../../../users/domain/users.table';
-import { QuizQuestionsEntity } from '../../questions/domain/quiz-questions.entity';
-import { AnswersGameEntity } from './answers-game.entity';
+// import {
+//   Column,
+//   Entity,
+//   JoinColumn,
+//   JoinTable,
+//   ManyToMany,
+//   ManyToOne,
+//   OneToMany,
+//   PrimaryGeneratedColumn,
+// } from 'typeorm';
+// import { UsersTable } from '../../../users/domain/users.table';
+// import { QuizQuestionsEntity } from '../../questions/domain/quiz-questions.entity';
+// import { AnswersGameEntity } from './answers-game.entity';
 
 // @Entity('quiz-pair-game')
 // export class QuizPairGameEntity {
