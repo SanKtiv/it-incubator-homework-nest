@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('new_quiz-questions')
+@Entity('questions')
 export class QuestionsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
