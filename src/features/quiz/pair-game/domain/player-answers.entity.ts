@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { PairGamePlayersEntity } from './pair-game-players.entity';
 
-@Entity('new-answers')
+@Entity('player-answers')
 export class PlayerAnswersEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
