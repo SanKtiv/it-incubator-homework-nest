@@ -103,7 +103,7 @@ import { PairGameQueryRepositoryTypeOrm } from './features/quiz/pair-game/infras
 import { NewPairGameEntity } from './features/quiz/pair-game/domain/new-pair-game.entity';
 import { PairGamePlayersEntity } from './features/quiz/pair-game/domain/pair-game-players.entity';
 import { PlayerAnswersEntity } from './features/quiz/pair-game/domain/new-player-answers.entity';
-import { QuestionsGameEntity } from './features/quiz/pair-game/domain/new-questions-game.entity';
+import { QuestionsGameEntity } from './features/quiz/pair-game/domain/questions-game.entity';
 import {QuestionsEntity} from "./features/quiz/questions/domain/quiz-questions.entity";
 
 dotenv.config();

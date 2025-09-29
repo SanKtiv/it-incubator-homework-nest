@@ -7,7 +7,7 @@ import {UsersTable} from '../../../users/domain/users.table';
 import {InputAnswersModels} from '../api/models/input/input-answers.models';
 import {NewPairGameEntity, QuizPairGameStatusType} from '../domain/new-pair-game.entity';
 import {PairGamePlayersEntity} from '../domain/pair-game-players.entity';
-import {QuestionsGameEntity} from '../domain/new-questions-game.entity';
+import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/new-player-answers.entity';
 
 @Injectable()
