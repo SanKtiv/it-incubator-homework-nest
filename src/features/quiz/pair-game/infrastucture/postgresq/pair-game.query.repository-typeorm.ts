@@ -101,7 +101,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .getMany();
     }
 
-    async getTotalGamesByUserId(userId: string): Promise<number> {
+    async getGamesByUserId(userId: string): Promise<number> {
         return this.repository
             .createQueryBuilder('pg')
             .select('pg.id')

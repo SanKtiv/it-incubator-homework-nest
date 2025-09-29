@@ -39,7 +39,7 @@ export class PairGameQueryRepository {
   async getPaging(userId: string, query: pairGameQuery) {
     const pairGames = await this.repository.getPaging(userId, query);
 
-    const totalGames = await this.repository.getTotalGamesByUserId(userId);
+    const totalGames = await this.repository.getGamesByUserId(userId);
 
     return outputModelPairGamesPagination(pairGames, query, totalGames);
   }
