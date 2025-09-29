@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QuizQuestionsRepositoryTypeOrm } from './postgresql/quiz-questions.repository-typeorm';
-import {NewQuizQuestionsEntity,
+import {QuestionsEntity,
   // QuizQuestionsEntity
 } from '../domain/quiz-questions.entity';
 import {
@@ -12,25 +12,25 @@ import {
 export class QuizQuestionsRepository {
   constructor(protected repository: QuizQuestionsRepositoryTypeOrm) {}
 
-  async insert(dto: NewQuizQuestionsEntity): Promise<QuizQuestionsOutputDto> {
+  async insert(dto: QuestionsEntity): Promise<QuizQuestionsOutputDto> {
     const createdQuestion = await this.repository.insert(dto);
 
     return quizQuestionsViewModel(createdQuestion);
   }
 
-  async getQuizQuestionById(id: string): Promise<NewQuizQuestionsEntity | null> {
+  async getQuizQuestionById(id: string): Promise<QuestionsEntity | null> {
     return this.repository.findOneById(id);
   }
 
-  async updateQuizQuestion(QuizQuestion: NewQuizQuestionsEntity): Promise<void> {
+  async updateQuizQuestion(QuizQuestion: QuestionsEntity): Promise<void> {
     await this.repository.update(QuizQuestion);
   }
 
-  async getFiveRandomQuestions(): Promise<NewQuizQuestionsEntity[]> {
+  async getFiveRandomQuestions(): Promise<QuestionsEntity[]> {
     return this.repository.getFiveRandom();
   }
 
-  async deleteQuizQuestion(QuizQuestion: NewQuizQuestionsEntity): Promise<void> {
+  async deleteQuizQuestion(QuizQuestion: QuestionsEntity): Promise<void> {
     await this.repository.softRemove(QuizQuestion);
   }
 

@@ -104,7 +104,7 @@ import { NewPairGameEntity } from './features/quiz/pair-game/domain/new-pair-gam
 import { PairGamePlayersEntity } from './features/quiz/pair-game/domain/pair-game-players.entity';
 import { PlayerAnswersEntity } from './features/quiz/pair-game/domain/new-player-answers.entity';
 import { QuestionsGameEntity } from './features/quiz/pair-game/domain/new-questions-game.entity';
-import {NewQuizQuestionsEntity} from "./features/quiz/questions/domain/quiz-questions.entity";
+import {QuestionsEntity} from "./features/quiz/questions/domain/quiz-questions.entity";
 
 dotenv.config();
 
@@ -223,7 +223,7 @@ const strategies = [
         PairGamePlayersEntity,
         PlayerAnswersEntity,
         QuestionsGameEntity,
-        NewQuizQuestionsEntity
+        QuestionsEntity
       ],
       synchronize: true,
       //logging: ['query'],
@@ -245,7 +245,7 @@ const strategies = [
       PairGamePlayersEntity,
       PlayerAnswersEntity,
       QuestionsGameEntity,
-      NewQuizQuestionsEntity
+      QuestionsEntity
     ]),
     // MongooseModule.forRoot(
     //   appSettings.env.isTesting()

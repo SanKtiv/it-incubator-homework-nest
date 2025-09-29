@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import {NewQuizQuestionsEntity} from '../../questions/domain/quiz-questions.entity';
+import {QuestionsEntity} from '../../questions/domain/quiz-questions.entity';
 import { NewPairGameEntity } from './new-pair-game.entity';
 
 @Entity('new-questions-game')
@@ -20,9 +20,9 @@ export class QuestionsGameEntity {
   @JoinColumn()
   game: NewPairGameEntity;
 
-  @ManyToOne(() => NewQuizQuestionsEntity )
+  @ManyToOne(() => QuestionsEntity )
   @JoinColumn()
-  questions: NewQuizQuestionsEntity;
+  questions: QuestionsEntity;
 
   // @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   // deletedAt?: Date; // Поле для хранения даты удаления для softRemove, softDelete

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { QuizQuestionsQueryInputDto } from '../../api/models/quiz-questions.input.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import {NewQuizQuestionsEntity,
+import {QuestionsEntity,
   // QuizQuestionsEntity
 } from '../../domain/quiz-questions.entity';
 import { Repository } from 'typeorm';
@@ -15,8 +15,8 @@ export class QuizQuestionsQueryRepositoryTypeOrm {
   constructor(
     // @InjectRepository(QuizQuestionsEntity)
     // protected repository_OLD: Repository<QuizQuestionsEntity>,
-    @InjectRepository(NewQuizQuestionsEntity)
-    protected repository: Repository<NewQuizQuestionsEntity>,
+    @InjectRepository(QuestionsEntity)
+    protected repository: Repository<QuestionsEntity>,
   ) {}
 
   async getPaging(

@@ -2,7 +2,7 @@ import {ForbiddenException, Injectable} from '@nestjs/common';
 import {PairGameRepository} from '../infrastucture/pair-game.repository';
 import {addedAnswerPlayerOutputModel, AnswerPlayerOutputModel, outputModelCreatedPairGame} from '../api/models/output/pair-game.output.models';
 import {QuizQuestionsRepository} from '../../questions/infrastructure/quiz-questions.repository';
-import {NewQuizQuestionsEntity} from '../../questions/domain/quiz-questions.entity';
+import {QuestionsEntity} from '../../questions/domain/quiz-questions.entity';
 import {UsersTable} from '../../../users/domain/users.table';
 import {InputAnswersModels} from '../api/models/input/input-answers.models';
 import {NewPairGameEntity, QuizPairGameStatusType} from '../domain/new-pair-game.entity';
@@ -136,12 +136,12 @@ export class PairGameQuizPairsServices {
     }
 
     async createFiveQuestionsForGame(game: NewPairGameEntity) {
-        const fiveRandomQuestions: NewQuizQuestionsEntity[] =
+        const fiveRandomQuestions: QuestionsEntity[] =
             await this.quizQuestionsRepository.getFiveRandomQuestions();
 
         let index = 0;
 
-        function mapFunc(q: NewQuizQuestionsEntity) {
+        function mapFunc(q: QuestionsEntity) {
             const questionGame = new QuestionsGameEntity();
 
             questionGame.game = game;

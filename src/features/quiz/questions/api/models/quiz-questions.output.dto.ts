@@ -1,4 +1,4 @@
-import {NewQuizQuestionsEntity,
+import {QuestionsEntity,
   // QuizQuestionsEntity
 } from '../../domain/quiz-questions.entity';
 import { QuizQuestionsQueryInputDto } from './quiz-questions.input.dto';
@@ -13,7 +13,7 @@ export class QuizQuestionsOutputDto {
 }
 
 export const quizQuestionsViewModel = (
-  dto: /*QuizQuestionsEntity |*/ NewQuizQuestionsEntity,
+  dto: /*QuizQuestionsEntity |*/ QuestionsEntity,
 ): QuizQuestionsOutputDto => ({
   id: dto.id,
   body: dto.body,
@@ -34,7 +34,7 @@ export class QuizQuestionsPaging {
 }
 
 export const quizQuestionsPagingViewModel = (
-  dto: /*QuizQuestionsEntity[] |*/ NewQuizQuestionsEntity[],
+  dto: /*QuizQuestionsEntity[] |*/ QuestionsEntity[],
   query: QuizQuestionsQueryInputDto,
   totalCount: number,
 ): QuizQuestionsPaging => ({

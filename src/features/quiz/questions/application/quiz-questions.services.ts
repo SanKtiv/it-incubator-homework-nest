@@ -4,7 +4,7 @@ import {
   QuizQuestionsInputDto,
 } from '../api/models/quiz-questions.input.dto';
 import { QuizQuestionsRepository } from '../infrastructure/quiz-questions.repository';
-import {NewQuizQuestionsEntity,
+import {QuestionsEntity,
   // QuizQuestionsEntity
 } from '../domain/quiz-questions.entity';
 import { QuizQuestionsOutputDto } from '../api/models/quiz-questions.output.dto';
@@ -16,7 +16,7 @@ export class QuizQuestionsServices {
   async createQuestion(
       dto: QuizQuestionsInputDto,
   ): Promise<QuizQuestionsOutputDto> {
-    const question = new NewQuizQuestionsEntity();
+    const question = new QuestionsEntity();
 
     question.body = dto.body;
     [question.correctAnswers] = dto.correctAnswers;
@@ -55,7 +55,7 @@ export class QuizQuestionsServices {
   }
 
   async deleteQuestions(id: string): Promise<void> {
-    const quizQuestion: NewQuizQuestionsEntity | null =
+    const quizQuestion: QuestionsEntity | null =
         await this.repository.getQuizQuestionById(id);
 
     if (!quizQuestion) throw new NotFoundException();

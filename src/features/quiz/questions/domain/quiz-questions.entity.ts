@@ -6,7 +6,7 @@ import {
 } from 'typeorm';
 
 @Entity('new_quiz-questions')
-export class NewQuizQuestionsEntity {
+export class QuestionsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

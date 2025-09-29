@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { QuizQuestionsInputDto } from '../../api/models/quiz-questions.input.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import {NewQuizQuestionsEntity,
+import {QuestionsEntity,
   // QuizQuestionsEntity
 } from '../../domain/quiz-questions.entity';
 import { Repository } from 'typeorm';
@@ -10,22 +10,22 @@ import { Repository } from 'typeorm';
 export class QuizQuestionsRepositoryTypeOrm {
   constructor(
     // @InjectRepository(QuizQuestionsEntity) protected repository_OLD: Repository<QuizQuestionsEntity>,
-    @InjectRepository(NewQuizQuestionsEntity) protected repository: Repository<NewQuizQuestionsEntity>,
+    @InjectRepository(QuestionsEntity) protected repository: Repository<QuestionsEntity>,
   ) {}
 
-  async insert(dto: NewQuizQuestionsEntity): Promise<NewQuizQuestionsEntity> {
+  async insert(dto: QuestionsEntity): Promise<QuestionsEntity> {
     return this.repository.save(dto);
   }
 
-  async findOneById(id: string): Promise<NewQuizQuestionsEntity | null> {
+  async findOneById(id: string): Promise<QuestionsEntity | null> {
     return this.repository.findOneBy({ id });
   }
 
-  async update(dto: NewQuizQuestionsEntity) {
+  async update(dto: QuestionsEntity) {
     await this.repository.save(dto);
   }
 
-  async getFiveRandom(): Promise<NewQuizQuestionsEntity[]> {
+  async getFiveRandom(): Promise<QuestionsEntity[]> {
     return this.repository
         .createQueryBuilder('q')
         .select(['q'])
@@ -34,7 +34,7 @@ export class QuizQuestionsRepositoryTypeOrm {
         .getMany();
   }
 
-  async softRemove(QuizQuestion: NewQuizQuestionsEntity): Promise<void> {
+  async softRemove(QuizQuestion: QuestionsEntity): Promise<void> {
     await this.repository.softRemove(QuizQuestion);
   }
 
