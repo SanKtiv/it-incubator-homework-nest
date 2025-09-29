@@ -63,8 +63,8 @@ export const outputModelCreatedPairGame =
 
   const questions = game.questions && game.questions.length > 0
       ? game.questions.map((e) => ({
-        id: e.questions.id,
-        body: e.questions.body,
+        id: e.question.id,
+        body: e.question.body,
       }))
       : null
 

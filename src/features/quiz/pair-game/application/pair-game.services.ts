@@ -146,7 +146,7 @@ export class PairGameQuizPairsServices {
 
             questionGame.game = game;
             questionGame.index = index++;
-            questionGame.questions = q;
+            questionGame.question = q;
 
             return questionGame
         }
@@ -176,7 +176,7 @@ export class PairGameQuizPairsServices {
 
             answer.gameId = game.id;
             answer.player = game.firstPlayer;
-            answer.questionId = question.questions.id;
+            answer.questionId = question.question.id;
             answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
 
@@ -195,7 +195,7 @@ export class PairGameQuizPairsServices {
 
             answer.gameId = game.id;
             answer.player = game.secondPlayer!;
-            answer.questionId = question.questions.id;
+            answer.questionId = question.question.id;
             answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
 
@@ -222,7 +222,7 @@ export class PairGameQuizPairsServices {
     ) {
         const correctStatus = 'Correct';
         const incorrectStatus = 'Incorrect';
-        const arrayCorrectAnswers = question.questions.correctAnswers.split(',');
+        const arrayCorrectAnswers = question.question.correctAnswers.split(',');
 
         const str = (str: string) => str.trim().toLowerCase();
 

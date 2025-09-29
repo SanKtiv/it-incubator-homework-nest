@@ -8,7 +8,7 @@ import {
 import {QuestionsEntity} from '../../questions/domain/quiz-questions.entity';
 import { NewPairGameEntity } from './new-pair-game.entity';
 
-@Entity('new-questions-game')
+@Entity('questions-game')
 export class QuestionsGameEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -22,7 +22,7 @@ export class QuestionsGameEntity {
 
   @ManyToOne(() => QuestionsEntity )
   @JoinColumn()
-  questions: QuestionsEntity;
+  question: QuestionsEntity;
 
   // @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   // deletedAt?: Date; // Поле для хранения даты удаления для softRemove, softDelete
