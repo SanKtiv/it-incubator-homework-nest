@@ -55,7 +55,7 @@ export class PairGameRepositoryTypeOrm {
 
   async clear(): Promise<void> {
     //await this.repository_OLD.query('TRUNCATE TABLE "quiz-pair-game" CASCADE');
-    await this.repository.query('TRUNCATE TABLE "new-pair-game" CASCADE');
+    await this.repository.query('TRUNCATE TABLE "pair-game" CASCADE');
   }
 
   private get getGameBuilder() {
