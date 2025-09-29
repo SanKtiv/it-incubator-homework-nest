@@ -1,6 +1,6 @@
 import { pairGameQuery } from '../input/input-query.dto';
 import {PairGamesEntity} from "../../../domain/pair-games.entity";
-import {PlayerAnswersEntity} from "../../../domain/new-player-answers.entity";
+import {PlayerAnswersEntity} from "../../../domain/player-answers.entity";
 
 export class CreatedPairGameOutputModel {
   constructor(

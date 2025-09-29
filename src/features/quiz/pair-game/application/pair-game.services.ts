@@ -8,7 +8,7 @@ import {InputAnswersModels} from '../api/models/input/input-answers.models';
 import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.entity';
 import {PairGamePlayersEntity} from '../domain/pair-game-players.entity';
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
-import {PlayerAnswersEntity} from '../domain/new-player-answers.entity';
+import {PlayerAnswersEntity} from '../domain/player-answers.entity';
 
 @Injectable()
 export class PairGameQuizPairsServices {
