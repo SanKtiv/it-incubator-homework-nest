@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PairGameRepositoryTypeOrm } from './postgresq/pair-game.repository-typeorm';
 // import {QuizPairGameStatusType} from '../domain/pair-game.entity';
-import {NewPairGameEntity, QuizPairGameStatusType} from '../domain/new-pair-game.entity';
+import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.entity';
 
 @Injectable()
 export class PairGameRepository {
   constructor(protected repository: PairGameRepositoryTypeOrm) {}
 
-  async createPairGame(game: NewPairGameEntity): Promise<NewPairGameEntity | null | undefined> {
+  async createPairGame(game: PairGamesEntity): Promise<PairGamesEntity | null | undefined> {
     try {
       const result = await this.repository.create(game);
       return result;
@@ -17,7 +17,7 @@ export class PairGameRepository {
     }
   }
 
-  async updatePairGame(game: NewPairGameEntity) {
+  async updatePairGame(game: PairGamesEntity) {
     try {
       const res = await this.repository.update(game);
       return res;
@@ -27,11 +27,11 @@ export class PairGameRepository {
     }
   }
 
-  async getActiveGameByUserId(userId: string, status: string): Promise<NewPairGameEntity | null | undefined> {
+  async getActiveGameByUserId(userId: string, status: string): Promise<PairGamesEntity | null | undefined> {
     return this.repository.getActiveGame(userId, status);
   }
 
-  async getNotFinishedPairGameByUserId(userId: string): Promise<NewPairGameEntity | null> {
+  async getNotFinishedPairGameByUserId(userId: string): Promise<PairGamesEntity | null> {
     return this.repository.getOneNotFinished(userId);
   }
 

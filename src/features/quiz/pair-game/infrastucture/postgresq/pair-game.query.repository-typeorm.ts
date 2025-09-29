@@ -2,14 +2,14 @@ import {Injectable} from '@nestjs/common';
 import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
 import {DataSource, Repository} from 'typeorm';
 import {GameQueryTopUsers, pairGameQuery} from '../../api/models/input/input-query.dto';
-import {NewPairGameEntity} from "../../domain/new-pair-game.entity";
+import {PairGamesEntity} from "../../domain/pair-games.entity";
 import {PairGamePlayersEntity} from "../../domain/pair-game-players.entity";
 
 @Injectable()
 export class PairGameQueryRepositoryTypeOrm {
     constructor(
-        @InjectRepository(NewPairGameEntity)
-        protected repository: Repository<NewPairGameEntity>,
+        @InjectRepository(PairGamesEntity)
+        protected repository: Repository<PairGamesEntity>,
         @InjectDataSource() protected dataSource: DataSource,
         @InjectRepository(PairGamePlayersEntity)
         protected repositoryPlayer: Repository<PairGamePlayersEntity>,
@@ -40,13 +40,13 @@ export class PairGameQueryRepositoryTypeOrm {
             .orderBy('questions.index', 'ASC');
     }
 
-    async getById(id: string): Promise<NewPairGameEntity | null> {
+    async getById(id: string): Promise<PairGamesEntity | null> {
         return this.shareBuilder
             .where('pg."id" = :id', {id})
             .getOne();
     }
 
-    async getByUserId(userId: string): Promise<NewPairGameEntity | null> {
+    async getByUserId(userId: string): Promise<PairGamesEntity | null> {
         return this.shareBuilder
             .where('pg.finishGameDate IS NULL')
             .andWhere('firstUser.id = :userId')
@@ -57,7 +57,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .getOne();
     }
 
-    async getPaging(userId: string, query: pairGameQuery): Promise<NewPairGameEntity[]> {
+    async getPaging(userId: string, query: pairGameQuery): Promise<PairGamesEntity[]> {
         const idsSubQuery = this.repository
             .createQueryBuilder('pg')
             .select('pg.id')

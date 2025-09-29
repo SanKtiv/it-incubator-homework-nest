@@ -10,7 +10,7 @@ import { PairGamePlayersEntity } from './pair-game-players.entity';
 import { QuestionsGameEntity } from './questions-game.entity';
 
 @Entity('pair-game')
-export class NewPairGameEntity {
+export class PairGamesEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

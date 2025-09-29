@@ -1,5 +1,5 @@
 import { pairGameQuery } from '../input/input-query.dto';
-import {NewPairGameEntity} from "../../../domain/new-pair-game.entity";
+import {PairGamesEntity} from "../../../domain/pair-games.entity";
 import {PlayerAnswersEntity} from "../../../domain/new-player-answers.entity";
 
 export class CreatedPairGameOutputModel {
@@ -54,7 +54,7 @@ export class AnswerPlayerOutputModel {
 }
 
 export const outputModelCreatedPairGame =
-    function (game: NewPairGameEntity) {
+    function (game: PairGamesEntity) {
   const answers = (ans) => ans.map((e) => ({
         questionId: e.questionId,
         answerStatus: e.answerStatus,
@@ -108,7 +108,7 @@ export const addedAnswerPlayerOutputModel = (
 });
 
 export function outputModelPlayerStatistic(
-    games: NewPairGameEntity[] | null | undefined,
+    games: PairGamesEntity[] | null | undefined,
     userId: string,
 ) {
     const statistic = {
@@ -123,7 +123,7 @@ export function outputModelPlayerStatistic(
     if (games) {
         statistic.gamesCount = games.length;
 
-        function find(game: NewPairGameEntity) {
+        function find(game: PairGamesEntity) {
             if (!(game.status === 'Finished')) return;
 
             if (game.firstPlayer.playerScore === game.secondPlayer!.playerScore)
@@ -158,7 +158,7 @@ export function outputModelPlayerStatistic(
 }
 
 export const outputModelPairGamesPagination = function (
-    games: NewPairGameEntity[],
+    games: PairGamesEntity[],
     query: pairGameQuery,
     totalGames: number,
 ) {

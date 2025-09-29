@@ -5,7 +5,7 @@ import {QuizQuestionsRepository} from '../../questions/infrastructure/quiz-quest
 import {QuestionsEntity} from '../../questions/domain/quiz-questions.entity';
 import {UsersTable} from '../../../users/domain/users.table';
 import {InputAnswersModels} from '../api/models/input/input-answers.models';
-import {NewPairGameEntity, QuizPairGameStatusType} from '../domain/new-pair-game.entity';
+import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.entity';
 import {PairGamePlayersEntity} from '../domain/pair-game-players.entity';
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/new-player-answers.entity';
@@ -28,7 +28,7 @@ export class PairGameQuizPairsServices {
         return game;
     }
 
-    private createFinishedGame(game: NewPairGameEntity): NewPairGameEntity {
+    private createFinishedGame(game: PairGamesEntity): PairGamesEntity {
         game.status = 'Finished';
         game.finishGameDate = new Date();
         game.firstPlayer.gamesCount++;
@@ -93,12 +93,12 @@ export class PairGameQuizPairsServices {
 
         const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
 
-        const pendingPairGame: NewPairGameEntity | null =
+        const pendingPairGame: PairGamesEntity | null =
             await this.pairGameRepository.getPairGamesByStatus(statusPending);
 
         if (pendingPairGame) return this.createActiveGame(userId, pendingPairGame);
 
-        const pairGame = new NewPairGameEntity();
+        const pairGame = new PairGamesEntity();
 
         pairGame.firstPlayer = this.createPlayer(userId);
 
@@ -111,7 +111,7 @@ export class PairGameQuizPairsServices {
         return outputModelCreatedPairGame(createdPendingPairGame!);
     }
 
-    async createActiveGame(userId: string, game: NewPairGameEntity) {
+    async createActiveGame(userId: string, game: PairGamesEntity) {
         const questions = await this.createFiveQuestionsForGame(game);
 
         game.secondPlayer = this.createPlayer(userId);
@@ -135,7 +135,7 @@ export class PairGameQuizPairsServices {
         return player;
     }
 
-    async createFiveQuestionsForGame(game: NewPairGameEntity) {
+    async createFiveQuestionsForGame(game: PairGamesEntity) {
         const fiveRandomQuestions: QuestionsEntity[] =
             await this.quizQuestionsRepository.getFiveRandomQuestions();
 

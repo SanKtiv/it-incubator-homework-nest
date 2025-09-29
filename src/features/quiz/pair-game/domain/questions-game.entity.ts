@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import {QuestionsEntity} from '../../questions/domain/quiz-questions.entity';
-import { NewPairGameEntity } from './new-pair-game.entity';
+import { PairGamesEntity } from './pair-games.entity';
 
 @Entity('questions-game')
 export class QuestionsGameEntity {
@@ -16,9 +16,9 @@ export class QuestionsGameEntity {
   @Column({ type: 'smallint' })
   index: number;
 
-  @ManyToOne(() => NewPairGameEntity, (game) => game.questions)
+  @ManyToOne(() => PairGamesEntity, (game) => game.questions)
   @JoinColumn()
-  game: NewPairGameEntity;
+  game: PairGamesEntity;
 
   @ManyToOne(() => QuestionsEntity )
   @JoinColumn()

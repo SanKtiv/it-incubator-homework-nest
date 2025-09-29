@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {NewPairGameEntity, QuizPairGameStatusType} from '../../domain/new-pair-game.entity';
+import {PairGamesEntity, QuizPairGameStatusType} from '../../domain/pair-games.entity';
 
 @Injectable()
 export class PairGameRepositoryTypeOrm {
   constructor(
-    @InjectRepository(NewPairGameEntity)
-    protected repository: Repository<NewPairGameEntity>,
+    @InjectRepository(PairGamesEntity)
+    protected repository: Repository<PairGamesEntity>,
   ) {}
 
-  async getById(id: string): Promise<NewPairGameEntity | null | undefined> {
+  async getById(id: string): Promise<PairGamesEntity | null | undefined> {
     return this.getGameBuilder
       .where('pg."id" = :id', { id })
       .getOne();
@@ -23,7 +23,7 @@ export class PairGameRepositoryTypeOrm {
       .getOne();
   }
 
-  async getActiveGame(userId: string, status: string): Promise<NewPairGameEntity | null | undefined> {
+  async getActiveGame(userId: string, status: string): Promise<PairGamesEntity | null | undefined> {
     return this.getGameBuilder
         .where('pg.status = :status')
         .andWhere('firstUser.id = :userId')
@@ -33,7 +33,7 @@ export class PairGameRepositoryTypeOrm {
         .getOne();
   }
 
-  async getOneNotFinished(userId: string): Promise<NewPairGameEntity | null> {
+  async getOneNotFinished(userId: string): Promise<PairGamesEntity | null> {
     return this.getGameBuilder
       .where('pg.finishGameDate IS NULL')
       .andWhere('firstUser.id = :userId')
@@ -43,11 +43,11 @@ export class PairGameRepositoryTypeOrm {
       .getOne();
   }
 
-  async update(game: NewPairGameEntity) {
+  async update(game: PairGamesEntity) {
     return this.repository.save(game);
   }
 
-  async create(game: NewPairGameEntity): Promise<NewPairGameEntity | null | undefined> {
+  async create(game: PairGamesEntity): Promise<PairGamesEntity | null | undefined> {
     const createdPairGame = await this.repository.save(game);
 
     return this.getById(createdPairGame.id);
