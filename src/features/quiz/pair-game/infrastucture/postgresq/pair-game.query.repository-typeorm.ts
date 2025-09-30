@@ -92,7 +92,7 @@ export class PairGameQueryRepositoryTypeOrm {
                 'pg.id = secondPlayerAnswers.gameId',
             )
             .leftJoinAndSelect('pg.questions', 'questions')
-            .leftJoinAndSelect('questions.questions', 'question')
+            .leftJoinAndSelect('questions.question', 'question')
             .orderBy(`pg."${query.sortBy}"`, query.sortDirection)
             .addOrderBy('pg."pairCreatedDate"', 'DESC')
             .addOrderBy('"firstPlayerAnswers"."addedAt"', 'ASC')
