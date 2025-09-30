@@ -36,7 +36,7 @@ export class PairGameQueryRepositoryTypeOrm {
                 'pg.id = secondPlayerAnswers.gameId',
             )
             .leftJoinAndSelect('pg.questions', 'questions')
-            .leftJoinAndSelect('questions.questions', 'question')
+            .leftJoinAndSelect('questions.question', 'question')
             .orderBy('questions.index', 'ASC');
     }
 

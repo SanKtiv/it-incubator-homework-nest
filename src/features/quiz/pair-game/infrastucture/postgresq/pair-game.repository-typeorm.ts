@@ -34,13 +34,13 @@ export class PairGameRepositoryTypeOrm {
   }
 
   async getOneNotFinished(userId: string): Promise<PairGamesEntity | null> {
-    return this.getGameBuilder
-      .where('pg.finishGameDate IS NULL')
-      .andWhere('firstUser.id = :userId')
-      .orWhere('pg.finishGameDate IS NULL')
-      .andWhere('secondUser.id = :userId')
-      .setParameters({ userId })
-      .getOne();
+      return this.getGameBuilder
+          .where('pg.finishGameDate IS NULL')
+          .andWhere('firstUser.id = :userId')
+          .orWhere('pg.finishGameDate IS NULL')
+          .andWhere('secondUser.id = :userId')
+          .setParameters({ userId })
+          .getOne();
   }
 
   async update(game: PairGamesEntity) {
@@ -79,7 +79,7 @@ export class PairGameRepositoryTypeOrm {
             'pg.id = secondPlayerAnswers.gameId',
         )
         .leftJoinAndSelect('pg.questions', 'questions')
-        .leftJoinAndSelect('questions.questions', 'question')
+        .leftJoinAndSelect('questions.question', 'question')
         .orderBy('questions.index', 'ASC');
   }
 }

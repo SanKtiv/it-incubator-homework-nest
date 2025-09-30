@@ -24,6 +24,10 @@ export class PairGameQuizPairsController {
         protected pairGameQueryRepository: PairGameQueryRepository,
     ) {
     }
+    @Get('testing-create-game')
+    async testing() {
+        return this.pairGameServices.createPairGame('90e660c7-d0f2-4508-841f-f1c01b1fab06');
+    }
 
     @Get('pairs/my-current')
     @UseGuards(JWTAccessAuthGuard)
