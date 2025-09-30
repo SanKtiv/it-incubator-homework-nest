@@ -95,7 +95,7 @@ import { QuizQuestionsQueryRepositoryTypeOrm } from './features/quiz/questions/i
 import { QuizQuestionsRepository } from './features/quiz/questions/infrastructure/quiz-questions.repository';
 import { QuizQuestionsQueryRepository } from './features/quiz/questions/infrastructure/quiz-questions.query.repository';
 import { PairGameQuizPairsController } from './features/quiz/pair-game/api/pair-game.controller';
-import { PairGameQuizPairsServices } from './features/quiz/pair-game/application/pair-game.services';
+import { GameServices } from './features/quiz/pair-game/application/pair-game.services';
 import { PairGameRepository } from './features/quiz/pair-game/infrastucture/pair-game.repository';
 import { PairGameRepositoryTypeOrm } from './features/quiz/pair-game/infrastucture/postgresq/pair-game.repository-typeorm';
 import { PairGameQueryRepository } from './features/quiz/pair-game/infrastucture/pair-game.query.repository';
@@ -119,7 +119,7 @@ const services = [
   DevicesService,
   RequestApiService,
   QuizQuestionsServices,
-  PairGameQuizPairsServices,
+  GameServices,
 ];
 
 const mongoRepositories = [

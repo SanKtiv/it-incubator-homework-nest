@@ -11,7 +11,7 @@ import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
 
 @Injectable()
-export class PairGameQuizPairsServices {
+export class GameServices {
     constructor(
         protected pairGameRepository: PairGameRepository,
         protected quizQuestionsRepository: QuizQuestionsRepository,

@@ -8,7 +8,7 @@ import {
     Query,
     UseGuards,
 } from '@nestjs/common';
-import {PairGameQuizPairsServices} from '../application/pair-game.services';
+import {GameServices} from '../application/pair-game.services';
 import {JWTAccessAuthGuard} from '../../../../infrastructure/guards/jwt-access-auth.guard';
 import {CurrentUserId} from '../../../auth/infrastructure/decorators/current-user-id.param.decorator';
 import {PairGameQueryRepository} from '../infrastucture/pair-game.query.repository';
@@ -20,7 +20,7 @@ import {AnswerPlayerOutputModel} from './models/output/pair-game.output.models';
 @Controller('pair-game-quiz')
 export class PairGameQuizPairsController {
     constructor(
-        protected pairGameServices: PairGameQuizPairsServices,
+        protected pairGameServices: GameServices,
         protected pairGameQueryRepository: PairGameQueryRepository,
     ) {
     }

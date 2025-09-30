@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { PairGameQuizPairsServices } from '../../../src/features/quiz/pair-game/application/pair-game.services';
+import { GameServices } from '../../../src/features/quiz/pair-game/application/pair-game.services';
 import { PairGameQueryRepository } from '../../../src/features/quiz/pair-game/infrastucture/pair-game.query.repository';
 
 export class QuizPairGameTestManager {
@@ -9,14 +9,14 @@ export class QuizPairGameTestManager {
       strict: false,
     });
 
-    this.pairGameQuizService = app.get(PairGameQuizPairsServices, {
+    this.pairGameQuizService = app.get(GameServices, {
       strict: false,
     });
   }
 
   private pairGameQuizQueryRepositories: PairGameQueryRepository;
 
-  private pairGameQuizService: PairGameQuizPairsServices;
+  private pairGameQuizService: GameServices;
 
   async createGame(userId: string) {
     return this.pairGameQuizService.createPairGame(userId);
