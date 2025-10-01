@@ -31,8 +31,8 @@ export class PairGameRepository {
     return this.repository.getActiveGame(userId, status);
   }
 
-  async getNotFinishedPairGameByUserId(userId: string): Promise<PairGamesEntity | null> {
-    return this.repository.getOneNotFinished(userId);
+  async getUnfinishedGameByUserId(userId: string): Promise<PairGamesEntity | null> {
+    return this.repository.getOneUnfinished(userId);
   }
 
   async getPairGamesByStatus(status: QuizPairGameStatusType) {

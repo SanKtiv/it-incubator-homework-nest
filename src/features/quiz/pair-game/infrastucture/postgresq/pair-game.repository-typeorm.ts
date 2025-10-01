@@ -33,7 +33,7 @@ export class PairGameRepositoryTypeOrm {
         .getOne();
   }
 
-  async getOneNotFinished(userId: string): Promise<PairGamesEntity | null> {
+  async getOneUnfinished(userId: string): Promise<PairGamesEntity | null> {
       return this.getGameBuilder
           .where('pg.finishGameDate IS NULL')
           .andWhere('firstUser.id = :userId')
