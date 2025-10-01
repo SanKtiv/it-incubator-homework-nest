@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import {ForbiddenException, Injectable} from '@nestjs/common';
 import { PairGameRepositoryTypeOrm } from './postgresq/pair-game.repository-typeorm';
-// import {QuizPairGameStatusType} from '../domain/pair-game.entity';
 import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.entity';
 
 @Injectable()
@@ -32,7 +31,11 @@ export class PairGameRepository {
   }
 
   async getUnfinishedGameByUserId(userId: string): Promise<PairGamesEntity | null> {
-    return this.repository.getOneUnfinished(userId);
+    const game = await this.repository.getOneUnfinished(userId);
+
+    if (game) throw new ForbiddenException();
+
+    return game;
   }
 
   async getPairGamesByStatus(status: QuizPairGameStatusType) {

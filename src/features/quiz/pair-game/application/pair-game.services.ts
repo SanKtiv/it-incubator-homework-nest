@@ -86,10 +86,7 @@ export class GameServices {
     }
 
     async createPairGame(userId: string) {
-        const pairGameCurrentUser =
-            await this.pairGameRepository.getUnfinishedGameByUserId(userId);
-
-        if (pairGameCurrentUser) throw new ForbiddenException();
+        await this.pairGameRepository.getUnfinishedGameByUserId(userId);
 
         const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
 
