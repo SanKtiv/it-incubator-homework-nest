@@ -9,12 +9,15 @@ import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.enti
 import {PairGamePlayersEntity} from '../domain/pair-game-players.entity';
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
+import {UsersService} from "../../../users/application/users.service";
+import {UsersRepository} from "../../../users/infrastructure/users.repository";
 
 @Injectable()
 export class GameServices {
     constructor(
         protected pairGameRepository: PairGameRepository,
         protected quizQuestionsRepository: QuizQuestionsRepository,
+        protected usersRepository: UsersRepository,
     ) {
     }
     async getActiveGameByUserId(userId: string) {
@@ -158,6 +161,7 @@ export class GameServices {
         dto: InputAnswersModels,
     ): Promise<AnswerPlayerOutputModel> {
         let game = await this.getActiveGameByUserId(userId);
+        const usersStatistic = await this.usersRepository.findById(userId);
 
         const getLength = arr => arr ? arr.length : 0;
 
@@ -183,7 +187,10 @@ export class GameServices {
 
             countAnswersFirstPlayer = game.firstPlayer.answers!.length;
 
-            if (answer.answerStatus === 'Correct') game.firstPlayer.playerScore++;
+            if (answer.answerStatus === 'Correct') {
+                game.firstPlayer.playerScore++;
+                usersStatistic?.statistic.sumScore++;
+            }
         }
 
         if (game.secondPlayer!.user.id === userId) {

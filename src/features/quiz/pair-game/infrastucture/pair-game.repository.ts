@@ -1,4 +1,4 @@
-import {ForbiddenException, Injectable} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import { PairGameRepositoryTypeOrm } from './postgresq/pair-game.repository-typeorm';
 import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.entity';
 

@@ -41,7 +41,7 @@ export class UsersService {
     return this.usersRepository.create(user);
   }
 
-  createCodeWithExpireDate() {
+  private createCodeWithExpireDate() {
     return {
       confirmationCode: uuidv4(),
       expirationDate: add(new Date(), { hours: 1, minutes: 5 }) as Date,
