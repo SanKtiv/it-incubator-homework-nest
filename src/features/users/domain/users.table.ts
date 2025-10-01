@@ -10,6 +10,7 @@ import { AccountDataTable } from './account-data.table';
 import { EmailConfirmationTable } from './email-сonfirmation.table';
 import { PasswordRecoveryTable } from './password-recovery.table';
 import { PairGamePlayersEntity } from '../../quiz/pair-game/domain/pair-game-players.entity';
+import {UsersStatisticEntity} from "./statistic.table";
 
 @Entity('users')
 export class UsersTable {
@@ -56,6 +57,10 @@ export class UsersTable {
   })
   @JoinColumn()
   pairGamePlayer: PairGamePlayersEntity[];
+
+  @OneToOne(() => UsersStatisticEntity)
+  @JoinColumn()
+  statistic: UsersStatisticEntity;
 
   @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   deletedAt?: Date; // Поле для хранения даты удаления для softRemove, softDelete
