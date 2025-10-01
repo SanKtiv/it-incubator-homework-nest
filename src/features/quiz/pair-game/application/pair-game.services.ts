@@ -28,7 +28,7 @@ export class GameServices {
         return game;
     }
 
-    private createFinishedGame(game: PairGamesEntity): PairGamesEntity {
+    private updateGameToFinishedStatus(game: PairGamesEntity): PairGamesEntity {
         game.status = 'Finished';
         game.finishGameDate = new Date();
         game.firstPlayer.gamesCount++;
@@ -209,7 +209,7 @@ export class GameServices {
         if (
             countQuestionsGame === countAnswersFirstPlayer &&
             countQuestionsGame === countAnswersSecondPlayer
-        ) game = this.createFinishedGame(game)
+        ) game = this.updateGameToFinishedStatus(game)
 
         await this.pairGameRepository.updatePairGame(game);
 
