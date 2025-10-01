@@ -85,7 +85,7 @@ export class GameServices {
         return game;
     }
 
-    async createPairGame(userId: string) {
+    async createGame(userId: string) {
         await this.pairGameRepository.getUnfinishedGameByUserId(userId);
 
         const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';

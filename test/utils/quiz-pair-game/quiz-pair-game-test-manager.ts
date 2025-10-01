@@ -19,7 +19,7 @@ export class QuizPairGameTestManager {
   private pairGameQuizService: GameServices;
 
   async createGame(userId: string) {
-    return this.pairGameQuizService.createPairGame(userId);
+    return this.pairGameQuizService.createGame(userId);
   }
 
   async getGameById(id: string, userId: string) {

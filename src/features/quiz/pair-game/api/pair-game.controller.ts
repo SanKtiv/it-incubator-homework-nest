@@ -26,7 +26,7 @@ export class PairGameQuizPairsController {
     }
     @Get('testing-create-game')
     async testing() {
-        return this.pairGameServices.createPairGame('90e660c7-d0f2-4508-841f-f1c01b1fab06');
+        return this.pairGameServices.createGame('90e660c7-d0f2-4508-841f-f1c01b1fab06');
     }
 
     @Get('pairs/my-current')
@@ -61,7 +61,7 @@ export class PairGameQuizPairsController {
     @HttpCode(200)
     @UseGuards(JWTAccessAuthGuard)
     async createOrJoinPairGame(@CurrentUserId() userId: string) {
-        return this.pairGameServices.createPairGame(userId);
+        return this.pairGameServices.createGame(userId);
     }
 
     @Post('pairs/my-current/answers')
