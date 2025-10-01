@@ -86,29 +86,31 @@ export class GameServices {
     }
 
     async createGame(userId: string) {
-        await this.pairGameRepository.getUnfinishedGameByUserId(userId);
+        const unfinishedGame: PairGamesEntity | null =
+            await this.pairGameRepository.getUnfinishedGameByUserId(userId);
+
+        if (unfinishedGame) throw new ForbiddenException();
 
         const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
 
-        const pendingPairGame: PairGamesEntity | null =
+        const pendingGame: PairGamesEntity | null =
             await this.pairGameRepository.getPairGamesByStatus(statusPending);
 
-        if (pendingPairGame) return this.createActiveGame(userId, pendingPairGame);
+        if (pendingGame) return this.joinToGame(userId, pendingGame);
 
-        const pairGame = new PairGamesEntity();
+        const game = new PairGamesEntity();
 
-        pairGame.firstPlayer = this.createPlayer(userId);
+        game.firstPlayer = this.createPlayer(userId);
 
-        pairGame.pairCreatedDate = new Date();
-        pairGame.status = statusPending;
+        game.pairCreatedDate = new Date();
+        game.status = statusPending;
 
-        const createdPendingPairGame =
-            await this.pairGameRepository.createPairGame(pairGame);
+        const createdGame = await this.pairGameRepository.createPairGame(game);
 
-        return outputModelCreatedPairGame(createdPendingPairGame!);
+        return outputModelCreatedPairGame(createdGame!);
     }
 
-    async createActiveGame(userId: string, game: PairGamesEntity) {
+    async joinToGame(userId: string, game: PairGamesEntity) {
         const questions = await this.createFiveQuestionsForGame(game);
 
         game.secondPlayer = this.createPlayer(userId);

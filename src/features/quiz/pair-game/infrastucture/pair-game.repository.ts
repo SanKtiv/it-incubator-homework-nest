@@ -31,11 +31,7 @@ export class PairGameRepository {
   }
 
   async getUnfinishedGameByUserId(userId: string): Promise<PairGamesEntity | null> {
-    const game = await this.repository.getOneUnfinished(userId);
-
-    if (game) throw new ForbiddenException();
-
-    return game;
+    return this.repository.getOneUnfinished(userId);
   }
 
   async getPairGamesByStatus(status: QuizPairGameStatusType) {
