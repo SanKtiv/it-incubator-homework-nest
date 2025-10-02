@@ -213,7 +213,10 @@ export class GameServices {
 
             countAnswersSecondPlayer = game.secondPlayer!.answers!.length;
 
-            if (answer.answerStatus === 'Correct') game.secondPlayer!.playerScore++;
+            if (answer.answerStatus === 'Correct') {
+                game.secondPlayer!.playerScore++;
+                usersStatistic!.statistic.sumScore++;
+            }
         }
 
         if (
