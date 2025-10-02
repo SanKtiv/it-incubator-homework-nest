@@ -20,6 +20,10 @@ export class GameServices {
         protected usersRepository: UsersRepository,
     ) {
     }
+    async userById(userId: string) {
+        return this.usersRepository.findById(userId)
+    }
+
     async getActiveGameByUserId(userId: string) {
         const status = 'Active';
 
@@ -189,7 +193,7 @@ export class GameServices {
 
             if (answer.answerStatus === 'Correct') {
                 game.firstPlayer.playerScore++;
-                usersStatistic?.statistic.sumScore++;
+                usersStatistic!.statistic.sumScore++;
             }
         }
 
