@@ -65,9 +65,11 @@ export class PairGameRepositoryTypeOrm {
         .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
         .leftJoinAndSelect('firstPlayer.user', 'firstUser')
         .leftJoinAndSelect('firstUser.accountData', 'firstAccountData')
+        .leftJoinAndSelect('firstUser.statistic', 'firstStatistic')
         .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
         .leftJoinAndSelect('secondPlayer.user', 'secondUser')
         .leftJoinAndSelect('secondUser.accountData', 'secondAccountData')
+        .leftJoinAndSelect('secondUser.statistic', 'secondStatistic')
         .leftJoinAndSelect(
             'firstPlayer.answers',
             'firstPlayerAnswers',
