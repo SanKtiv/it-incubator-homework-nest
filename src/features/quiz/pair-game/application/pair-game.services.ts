@@ -9,7 +9,6 @@ import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.enti
 import {PairGamePlayersEntity} from '../domain/pair-game-players.entity';
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
-import {UsersRepository} from "../../../users/infrastructure/users.repository";
 
 @Injectable()
 export class GameServices {
@@ -74,13 +73,13 @@ export class GameServices {
         }
 
         if (game.firstPlayer.playerScore > game.secondPlayer!.playerScore) {
-            game.firstPlayer.winsCount++;
+            game.firstPlayer.user.statistic.winsCount++;
 
             game.secondPlayer!.user.statistic.lossesCount++;
         }
 
         if (game.firstPlayer.playerScore < game.secondPlayer!.playerScore) {
-            game.secondPlayer!.winsCount++;
+            game.secondPlayer!.user.statistic.winsCount++;
 
             game.firstPlayer.user.statistic.lossesCount++;
         }
