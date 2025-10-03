@@ -14,11 +14,7 @@ export class PairGamePlayersEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => UsersTable, (user) => user.pairGamePlayer,{
-        cascade: true,
-        eager: true,
-        onDelete: 'CASCADE',
-    })
+    @ManyToOne(() => UsersTable, (user) => user.pairGamePlayer)
     @JoinColumn()
     user: UsersTable;
 

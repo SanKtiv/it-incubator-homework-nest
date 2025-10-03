@@ -10,12 +10,14 @@ import {PairGamePlayersEntity} from '../domain/pair-game-players.entity';
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
 import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
+import {UsersRepository} from "../../../users/infrastructure/users.repository";
 
 @Injectable()
 export class GameServices {
     constructor(
         protected pairGameRepository: PairGameRepository,
         protected quizQuestionsRepository: QuizQuestionsRepository,
+        protected usersRepository: UsersRepository,
     ) {
     }
     async getActiveGameByUserId(userId: string) {
@@ -105,7 +107,7 @@ export class GameServices {
 
         const game = new PairGamesEntity();
 
-        game.firstPlayer = this.createPlayer(userId);
+        game.firstPlayer = await this.createPlayer(userId);
 
         game.pairCreatedDate = new Date();
         game.status = statusPending;
@@ -118,7 +120,7 @@ export class GameServices {
     async joinToGame(userId: string, game: PairGamesEntity) {
         const questions = await this.createFiveQuestionsForGame(game);
 
-        game.secondPlayer = this.createPlayer(userId);
+        game.secondPlayer = await this.createPlayer(userId);
         game.status = 'Active';
         game.startGameDate = new Date();
         game.questions = questions;
@@ -129,7 +131,9 @@ export class GameServices {
         return outputModelCreatedPairGame(activeGame!);
     }
 
-    private createPlayer(userId: string): PairGamePlayersEntity {
+    async createPlayer(userId: string): Promise<PairGamePlayersEntity> {
+        const user = await this.usersRepository.findById(userId);
+
         const player = new PairGamePlayersEntity();
 
         player.user = new UsersTable();
