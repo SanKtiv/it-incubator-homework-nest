@@ -9,6 +9,7 @@ import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.enti
 import {PairGamePlayersEntity} from '../domain/pair-game-players.entity';
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
+import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
 
 @Injectable()
 export class GameServices {
@@ -132,6 +133,7 @@ export class GameServices {
         const player = new PairGamePlayersEntity();
 
         player.user = new UsersTable();
+        player.user.statistic = new UsersStatisticEntity();
         player.user.id = userId;
         player.answers = null;
 
@@ -162,7 +164,8 @@ export class GameServices {
         dto: InputAnswersModels,
     ): Promise<AnswerPlayerOutputModel> {
         let game = await this.getActiveGameByUserId(userId);
-
+        console.log('1')
+        console.log('user statistic =', game.firstPlayer.user.statistic)
         const getLength = arr => arr ? arr.length : 0;
 
         const countQuestionsGame = getLength(game.questions);
@@ -170,7 +173,7 @@ export class GameServices {
         let countAnswersSecondPlayer = getLength(game.secondPlayer!.answers);
 
         const answer = new PlayerAnswersEntity();
-
+        console.log('2')
         if (game.firstPlayer.user.id === userId) {
             if (countAnswersFirstPlayer === countQuestionsGame)
                 throw new ForbiddenException();
@@ -192,7 +195,7 @@ export class GameServices {
                 game.firstPlayer.user.statistic.sumScore++;
             }
         }
-
+        console.log('3')
         if (game.secondPlayer!.user.id === userId) {
             if (countAnswersSecondPlayer === countQuestionsGame)
                 throw new ForbiddenException();
@@ -214,14 +217,14 @@ export class GameServices {
                 game.secondPlayer!.user.statistic.sumScore++;
             }
         }
-
+        console.log('4')
         if (
             countQuestionsGame === countAnswersFirstPlayer &&
             countQuestionsGame === countAnswersSecondPlayer
         ) game = this.updateGameToFinishedStatus(game)
-
+        console.log('5')
         await this.pairGameRepository.updatePairGame(game);
-
+        console.log('6')
         return addedAnswerPlayerOutputModel(answer);
     }
 
