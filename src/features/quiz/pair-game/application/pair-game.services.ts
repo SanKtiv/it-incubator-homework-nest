@@ -17,10 +17,6 @@ export class GameServices {
         protected quizQuestionsRepository: QuizQuestionsRepository,
     ) {
     }
-    async userById(userId: string) {
-        return this.usersRepository.findById(userId)
-    }
-
     async getActiveGameByUserId(userId: string) {
         const status = 'Active';
 
