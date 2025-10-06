@@ -137,7 +137,7 @@ export class GameServices {
         const player = new PairGamePlayersEntity();
 
         player.user = new UsersTable();
-        player.user.statistic = new UsersStatisticEntity();
+        //player.user.statistic = new UsersStatisticEntity();
         player.user.id = userId;
         player.answers = null;
 
