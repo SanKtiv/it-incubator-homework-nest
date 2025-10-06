@@ -6,7 +6,10 @@ export class UsersStatisticEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(() => UsersTable, (user) => user.statistic)
+    @OneToOne(() => UsersTable, (user) => user.statistic, {
+        cascade: true,
+        eager: true,
+    })
     user: UsersTable;
 
     @Column({type: 'smallint', default: 0})
