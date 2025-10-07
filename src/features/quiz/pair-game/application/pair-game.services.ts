@@ -132,7 +132,6 @@ export class GameServices {
     }
 
     async createPlayer(userId: string): Promise<PairGamePlayersEntity> {
-        const user = await this.usersRepository.findById(userId);
 
         const player = new PairGamePlayersEntity();
 
