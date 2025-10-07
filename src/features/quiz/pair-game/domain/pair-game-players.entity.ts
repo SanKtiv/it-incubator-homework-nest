@@ -32,7 +32,11 @@ export class PairGamePlayersEntity {
     @Column({type: 'smallint', default: 0})
     playerScore: number;
 
-    @OneToOne(() => UsersStatisticEntity, (statistic) => statistic.user)
+    @OneToOne(() => UsersStatisticEntity, (statistic) => statistic.player, {
+    cascade: true,
+    eager: true,
+    onDelete: 'CASCADE',
+    })
     @JoinColumn()
     statistic: UsersStatisticEntity;
 }

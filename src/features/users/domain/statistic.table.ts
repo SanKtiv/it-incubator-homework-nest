@@ -12,11 +12,7 @@ export class UsersStatisticEntity {
     //     eager: true,
     // })
     // user: UsersTable;
-    @OneToOne(() => PairGamePlayersEntity, (player) => player.statistic, {
-        cascade: true,
-        eager: true,
-        onDelete: 'CASCADE',
-    })
+    @OneToOne(() => PairGamePlayersEntity, (player) => player.statistic)
     @JoinColumn()
     player: PairGamePlayersEntity
 
