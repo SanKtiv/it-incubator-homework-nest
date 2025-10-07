@@ -49,11 +49,20 @@ export class UsersTable {
   @JoinColumn()
   passwordRecovery: PasswordRecoveryTable;
 
-  @OneToMany(() => PairGamePlayersEntity, (players) => players.user, {
-    //onDelete: 'CASCADE',
+  // @OneToMany(() => PairGamePlayersEntity, (players) => players.user, {
+  //   //onDelete: 'CASCADE',
+  // })
+  // @JoinColumn()
+  // pairGamePlayer: PairGamePlayersEntity[];
+
+  @OneToOne(() => PairGamePlayersEntity, (players) => players.user, {
+    nullable: true,
+    cascade: true,
+    eager: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
-  pairGamePlayer: PairGamePlayersEntity[];
+  pairGamePlayer: PairGamePlayersEntity;
 
   @OneToOne(() => UsersStatisticEntity, (statistic) => statistic.user)
   @JoinColumn()

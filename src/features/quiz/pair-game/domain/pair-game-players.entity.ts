@@ -4,6 +4,7 @@ import {
     JoinColumn,
     ManyToOne,
     OneToMany,
+    OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import {UsersTable} from '../../../users/domain/users.table';
@@ -14,11 +15,7 @@ export class PairGamePlayersEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => UsersTable, (user) => user.pairGamePlayer, {
-        nullable: true,
-        cascade: true,
-        eager: true,
-    })
+    @OneToOne(() => UsersTable, (user) => user.pairGamePlayer)
     @JoinColumn()
     user: UsersTable;
 
