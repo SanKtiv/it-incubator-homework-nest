@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import {UsersTable} from '../../../users/domain/users.table';
 import {PlayerAnswersEntity} from './player-answers.entity';
+import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
 
 @Entity('pair-game-players')
 export class PairGamePlayersEntity {
@@ -30,4 +31,8 @@ export class PairGamePlayersEntity {
 
     @Column({type: 'smallint', default: 0})
     playerScore: number;
+
+    @OneToOne(() => UsersStatisticEntity, (statistic) => statistic.user)
+    @JoinColumn()
+    statistic: UsersStatisticEntity;
 }

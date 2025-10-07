@@ -64,9 +64,9 @@ export class UsersTable {
   @JoinColumn()
   pairGamePlayer: PairGamePlayersEntity;
 
-  @OneToOne(() => UsersStatisticEntity, (statistic) => statistic.user)
-  @JoinColumn()
-  statistic: UsersStatisticEntity;
+  // @OneToOne(() => UsersStatisticEntity, (statistic) => statistic.user)
+  // @JoinColumn()
+  // statistic: UsersStatisticEntity;
 
   @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   deletedAt?: Date; // Поле для хранения даты удаления для softRemove, softDelete

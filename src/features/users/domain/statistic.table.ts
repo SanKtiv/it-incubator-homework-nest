@@ -1,16 +1,24 @@
-import {Column, Entity, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {UsersTable} from "./users.table";
+import {PairGamePlayersEntity} from "../../quiz/pair-game/domain/pair-game-players.entity";
 
 @Entity('users-statistic')
 export class UsersStatisticEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(() => UsersTable, (user) => user.statistic, {
+    // @OneToOne(() => UsersTable, (user) => user.statistic, {
+    //     cascade: true,
+    //     eager: true,
+    // })
+    // user: UsersTable;
+    @OneToOne(() => PairGamePlayersEntity, (player) => player.statistic, {
         cascade: true,
         eager: true,
+        onDelete: 'CASCADE',
     })
-    user: UsersTable;
+    @JoinColumn()
+    player: PairGamePlayersEntity
 
     @Column({type: 'smallint', default: 0})
     sumScore: number;
