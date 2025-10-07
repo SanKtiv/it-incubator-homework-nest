@@ -10,6 +10,7 @@ import {
 import {UsersTable} from '../../../users/domain/users.table';
 import {PlayerAnswersEntity} from './player-answers.entity';
 import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
+import {GamePlayerScoresEntity} from "./game-player-scores";
 
 @Entity('pair-game-players')
 export class PairGamePlayersEntity {
@@ -29,8 +30,15 @@ export class PairGamePlayersEntity {
     @JoinColumn()
     answers: PlayerAnswersEntity[] | null;
 
-    @Column({type: 'smallint', default: 0})
-    playerScore: number;
+    // @Column({type: 'smallint', default: 0})
+    // playerScore: number;
+    @OneToMany(() => GamePlayerScoresEntity, (score) => score.playerScore, {
+        cascade: true,
+        eager: true,
+        onDelete: 'CASCADE',
+    })
+    @JoinColumn()
+    gameScore: GamePlayerScoresEntity;
 
     @OneToOne(() => UsersStatisticEntity, (statistic) => statistic.player, {
     cascade: true,
