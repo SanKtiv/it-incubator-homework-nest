@@ -105,21 +105,21 @@ export class GameServices {
 
         if (pendingGame) return this.joinToGame(userId, pendingGame);
 
-        const game = await this.createGame(userId);
+        const game = await this.createGame(userId, statusPending);
 
         const createdGame = await this.pairGameRepository.createPairGame(game);
 
         return outputModelCreatedPairGame(createdGame!);
     }
 
-    async createGame(userId: string) {
+    async createGame(userId: string, status: string) {
         const game = new PairGamesEntity();
 
         game.firstPlayer = await this.createPlayer(userId);
 
         game.pairCreatedDate = new Date();
 
-        game.status = 'PendingSecondPlayer';
+        game.status = status;
 
         return game;
     }
