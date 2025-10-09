@@ -92,7 +92,7 @@ export class GameServices {
         return game;
     }
 
-    async createGame(userId: string) {
+    async connectToGame(userId: string) {
         const unfinishedGame: PairGamesEntity | null =
             await this.pairGameRepository.getUnfinishedGameByUserId(userId);
 
@@ -105,16 +105,23 @@ export class GameServices {
 
         if (pendingGame) return this.joinToGame(userId, pendingGame);
 
+        const game = await this.createGame(userId);
+
+        const createdGame = await this.pairGameRepository.createPairGame(game);
+
+        return outputModelCreatedPairGame(createdGame!);
+    }
+
+    async createGame(userId: string) {
         const game = new PairGamesEntity();
 
         game.firstPlayer = await this.createPlayer(userId);
 
         game.pairCreatedDate = new Date();
-        game.status = statusPending;
 
-        const createdGame = await this.pairGameRepository.createPairGame(game);
+        game.status = 'PendingSecondPlayer';
 
-        return outputModelCreatedPairGame(createdGame!);
+        return game;
     }
 
     async joinToGame(userId: string, game: PairGamesEntity) {
