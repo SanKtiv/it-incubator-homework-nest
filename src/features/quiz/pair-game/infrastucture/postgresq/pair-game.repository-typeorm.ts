@@ -18,11 +18,16 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getByStatus(status: QuizPairGameStatusType) {
-        return this.repository
-            .createQueryBuilder('game')
-            .where('game.status = :status')
-            .setParameters({status})
-            .getOne();
+      return this.repository.findOne({
+        where: {
+          status: status,
+        }
+      })
+        // return this.repository
+        //     .createQueryBuilder('game')
+        //     .where('game.status = :status')
+        //     .setParameters({status})
+        //     .getOne();
     }
 
     async getActiveGame(userId: string, status: string): Promise<PairGamesEntity | null | undefined> {
