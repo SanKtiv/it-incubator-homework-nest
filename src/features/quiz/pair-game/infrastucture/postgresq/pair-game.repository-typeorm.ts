@@ -12,7 +12,7 @@ export class PairGameRepositoryTypeOrm {
 
   async getById(id: string): Promise<PairGamesEntity | null | undefined> {
     return this.getGameBuilder
-      .where('pg."id" = :id', { id })
+      .where('game."id" = :id', { id })
       .getOne();
   }
 
@@ -25,22 +25,35 @@ export class PairGameRepositoryTypeOrm {
 
   async getActiveGame(userId: string, status: string): Promise<PairGamesEntity | null | undefined> {
     return this.getGameBuilder
-        .where('pg.status = :status')
+        .where('game.status = :status')
         .andWhere('firstUser.id = :userId')
-        .orWhere('pg.status = :status')
+        .orWhere('game.status = :status')
         .andWhere('secondUser.id = :userId')
         .setParameters({ status, userId })
         .getOne();
   }
 
   async getOneUnfinished(userId: string): Promise<PairGamesEntity | null> {
-      return this.getGameBuilder
-          .where('pg.finishGameDate IS NULL')
-          .andWhere('firstUser.id = :userId')
-          .orWhere('pg.finishGameDate IS NULL')
-          .andWhere('secondUser.id = :userId')
-          .setParameters({ userId })
-          .getOne();
+
+    return this.repository
+        .createQueryBuilder('game')
+        .leftJoin('game.firstPlayer', 'firstPlayer')
+        .leftJoin('firstPlayer.user', 'firstUser')
+        .leftJoin('game.secondPlayer', 'secondPlayer')
+        .leftJoin('secondPlayer.user', 'secondUser')
+        .where('game.finishGameDate IS NULL')
+        .andWhere('firstUser.id = :userId')
+        .orWhere('game.finishGameDate IS NULL')
+        .andWhere('secondUser.id = :userId')
+        .setParameters({ userId })
+        .getOne()
+      // return this.getGameBuilder
+      //     .where('game.finishGameDate IS NULL')
+      //     .andWhere('firstUser.id = :userId')
+      //     .orWhere('game.finishGameDate IS NULL')
+      //     .andWhere('secondUser.id = :userId')
+      //     .setParameters({ userId })
+      //     .getOne();
   }
 
   async update(game: PairGamesEntity) {
@@ -60,27 +73,27 @@ export class PairGameRepositoryTypeOrm {
 
   private get getGameBuilder() {
     return this.repository
-        .createQueryBuilder('pg')
-        .select(['pg'])
-        .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
+        .createQueryBuilder('game')
+        .select(['game'])
+        .leftJoinAndSelect('game.firstPlayer', 'firstPlayer')
         .leftJoinAndSelect('firstPlayer.user', 'firstUser')
         .leftJoinAndSelect('firstUser.accountData', 'firstAccountData')
         .leftJoinAndSelect('firstUser.statistic', 'firstStatistic')
-        .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
+        .leftJoinAndSelect('game.secondPlayer', 'secondPlayer')
         .leftJoinAndSelect('secondPlayer.user', 'secondUser')
         .leftJoinAndSelect('secondUser.accountData', 'secondAccountData')
         .leftJoinAndSelect('secondUser.statistic', 'secondStatistic')
         .leftJoinAndSelect(
             'firstPlayer.answers',
             'firstPlayerAnswers',
-            'pg.id = firstPlayerAnswers.gameId',
+            'game.id = firstPlayerAnswers.gameId',
         )
         .leftJoinAndSelect(
             'secondPlayer.answers',
             'secondPlayerAnswers',
-            'pg.id = secondPlayerAnswers.gameId',
+            'game.id = secondPlayerAnswers.gameId',
         )
-        .leftJoinAndSelect('pg.questions', 'questions')
+        .leftJoinAndSelect('game.questions', 'questions')
         .leftJoinAndSelect('questions.question', 'question')
         .orderBy('questions.index', 'ASC');
   }
