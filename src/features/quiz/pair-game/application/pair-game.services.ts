@@ -11,6 +11,7 @@ import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
 import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
 import {UsersRepository} from "../../../users/infrastructure/users.repository";
+import {GamePlayerScoresEntity} from "../domain/game-player-scores";
 
 @Injectable()
 export class GameServices {
@@ -135,7 +136,8 @@ export class GameServices {
         const player = new PairGamePlayersEntity();
 
         player.user = new UsersTable();
-        //player.user.statistic = new UsersStatisticEntity();
+        player.gameScore = new GamePlayerScoresEntity();
+        player.statistic = new UsersStatisticEntity();
         player.user.id = userId;
         player.answers = null;
 
