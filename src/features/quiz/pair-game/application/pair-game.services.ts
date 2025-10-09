@@ -17,7 +17,6 @@ export class GameServices {
     constructor(
         protected pairGameRepository: PairGameRepository,
         protected quizQuestionsRepository: QuizQuestionsRepository,
-        protected usersRepository: UsersRepository,
     ) {
     }
     async getActiveGameByUserId(userId: string) {
