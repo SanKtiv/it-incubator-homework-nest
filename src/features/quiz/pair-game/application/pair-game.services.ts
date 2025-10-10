@@ -112,7 +112,7 @@ export class GameServices {
         return outputModelCreatedPairGame(createdGame!);
     }
 
-    async createGame(userId: string, status: string) {
+    async createGame(userId: string, status: QuizPairGameStatusType) {
         const game = new PairGamesEntity();
 
         game.firstPlayer = await this.createPlayer(userId);
@@ -143,7 +143,7 @@ export class GameServices {
         const player = new PairGamePlayersEntity();
 
         player.user = new UsersTable();
-        player.gameScore = new GamePlayerScoresEntity();
+        player.gameScore = [new GamePlayerScoresEntity()];
         player.statistic = new UsersStatisticEntity();
         player.user.id = userId;
         player.answers = null;

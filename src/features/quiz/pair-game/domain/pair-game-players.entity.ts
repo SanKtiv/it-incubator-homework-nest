@@ -38,7 +38,7 @@ export class PairGamePlayersEntity {
         onDelete: 'CASCADE',
     })
     @JoinColumn()
-    gameScore: GamePlayerScoresEntity;
+    gameScore: GamePlayerScoresEntity[];
 
     @OneToOne(() => UsersStatisticEntity, (statistic) => statistic.player, {
     cascade: true,
