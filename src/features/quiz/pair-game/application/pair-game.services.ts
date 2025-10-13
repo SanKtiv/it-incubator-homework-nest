@@ -34,8 +34,8 @@ export class GameServices {
     private updateGameToFinishedStatus(game: PairGamesEntity): PairGamesEntity {
         game.status = 'Finished';
         game.finishGameDate = new Date();
-        game.firstPlayer.user.statistic.gamesCount++;
-        game.secondPlayer!.user.statistic.gamesCount++;
+        game.firstPlayer.statistic.gamesCount++;
+        game.secondPlayer!.statistic.gamesCount++;
 
         game.firstPlayer.answers!.sort(
             (a: any, b: any) => b.addedAt - a.addedAt,
@@ -58,8 +58,8 @@ export class GameServices {
             game.secondPlayer!.answers![0].addedAt &&
             correctAnswersSecondPlayer
         ) {
-            game.secondPlayer!.playerScore++;
-            game.secondPlayer!.user.statistic.sumScore++;
+            game.secondPlayer!.gameScore.score++;
+            game.secondPlayer!.statistic.sumScore++;
         }
 
         if (
@@ -68,7 +68,7 @@ export class GameServices {
             correctAnswersFirstPlayer
         ) {
             game.firstPlayer.playerScore++;
-            game.firstPlayer.user.statistic.sumScore++;
+            game.firstPlayer.user.sumScore++;
         }
 
         if (game.firstPlayer.playerScore > game.secondPlayer!.playerScore) {
@@ -175,8 +175,7 @@ export class GameServices {
         dto: InputAnswersModels,
     ): Promise<AnswerPlayerOutputModel> {
         let game = await this.getActiveGameByUserId(userId);
-        console.log('1')
-        console.log('user statistic =', game.firstPlayer.user.statistic)
+
         const getLength = arr => arr ? arr.length : 0;
 
         const countQuestionsGame = getLength(game.questions);
@@ -184,7 +183,7 @@ export class GameServices {
         let countAnswersSecondPlayer = getLength(game.secondPlayer!.answers);
 
         const answer = new PlayerAnswersEntity();
-        console.log('2')
+
         if (game.firstPlayer.user.id === userId) {
             if (countAnswersFirstPlayer === countQuestionsGame)
                 throw new ForbiddenException();
@@ -202,8 +201,8 @@ export class GameServices {
             countAnswersFirstPlayer = game.firstPlayer.answers!.length;
 
             if (answer.answerStatus === 'Correct') {
-                game.firstPlayer.playerScore++;
-                game.firstPlayer.user.statistic.sumScore++;
+                game.firstPlayer.gameScore[0].score++;
+                game.firstPlayer.statistic.sumScore++;
             }
         }
         console.log('3')
@@ -224,18 +223,18 @@ export class GameServices {
             countAnswersSecondPlayer = game.secondPlayer!.answers!.length;
 
             if (answer.answerStatus === 'Correct') {
-                game.secondPlayer!.playerScore++;
-                game.secondPlayer!.user.statistic.sumScore++;
+                game.secondPlayer!.gameScore[0].score++;;
+                game.secondPlayer!.statistic.sumScore++;
             }
         }
-        console.log('4')
+
         if (
             countQuestionsGame === countAnswersFirstPlayer &&
             countQuestionsGame === countAnswersSecondPlayer
         ) game = this.updateGameToFinishedStatus(game)
-        console.log('5')
+
         await this.pairGameRepository.updatePairGame(game);
-        console.log('6')
+
         return addedAnswerPlayerOutputModel(answer);
     }
 
