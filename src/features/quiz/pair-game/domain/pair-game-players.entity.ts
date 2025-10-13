@@ -17,10 +17,6 @@ export class PairGamePlayersEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(() => UsersTable, (user) => user.pairGamePlayer)
-    @JoinColumn()
-    user: UsersTable;
-
     @OneToMany(() => PlayerAnswersEntity, (answer) => answer.player, {
         nullable: true,
         cascade: true,

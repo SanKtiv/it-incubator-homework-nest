@@ -12,9 +12,6 @@ export class UsersStatisticEntity {
     //     eager: true,
     // })
     // user: UsersTable;
-    @OneToOne(() => PairGamePlayersEntity, (player) => player.statistic)
-    @JoinColumn()
-    player: PairGamePlayersEntity
 
     @Column({type: 'smallint', default: 0})
     sumScore: number;

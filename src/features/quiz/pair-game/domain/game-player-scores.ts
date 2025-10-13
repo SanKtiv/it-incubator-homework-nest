@@ -7,9 +7,8 @@ export class GamePlayerScoresEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(() => PairGamesEntity)
-    @JoinColumn()
-    pairGame: PairGamesEntity;
+    @Column('uuid')
+    gameId: string;
 
     @ManyToOne(() => PairGamePlayersEntity, (player) => player.gameScore)
     @JoinColumn()
