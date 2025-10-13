@@ -58,7 +58,7 @@ export class GameServices {
             game.secondPlayer!.answers![0].addedAt &&
             correctAnswersSecondPlayer
         ) {
-            game.secondPlayer!.gameScore.score++;
+            game.secondPlayer!.gameScore[0].score++;
             game.secondPlayer!.statistic.sumScore++;
         }
 
@@ -67,26 +67,26 @@ export class GameServices {
             game.secondPlayer!.answers![0].addedAt &&
             correctAnswersFirstPlayer
         ) {
-            game.firstPlayer.playerScore++;
-            game.firstPlayer.user.sumScore++;
+            game.firstPlayer.gameScore[0].score++;
+            game.firstPlayer.statistic.sumScore++;
         }
 
-        if (game.firstPlayer.playerScore > game.secondPlayer!.playerScore) {
-            game.firstPlayer.user.statistic.winsCount++;
+        if (game.firstPlayer.gameScore[0].score > game.secondPlayer!.gameScore[0].score) {
+            game.firstPlayer.statistic.winsCount++;
 
-            game.secondPlayer!.user.statistic.lossesCount++;
+            game.secondPlayer!.statistic.lossesCount++;
         }
 
-        if (game.firstPlayer.playerScore < game.secondPlayer!.playerScore) {
-            game.secondPlayer!.user.statistic.winsCount++;
+        if (game.firstPlayer.gameScore[0].score < game.secondPlayer!.gameScore[0].score) {
+            game.secondPlayer!.statistic.winsCount++;
 
-            game.firstPlayer.user.statistic.lossesCount++;
+            game.firstPlayer.statistic.lossesCount++;
         }
 
-        if (game.firstPlayer.playerScore == game.secondPlayer!.playerScore) {
-            game.secondPlayer!.user.statistic.drawsCount++;
+        if (game.firstPlayer.gameScore[0].score == game.secondPlayer!.gameScore[0].score) {
+            game.secondPlayer!.statistic.drawsCount++;
 
-            game.firstPlayer.user.statistic.drawsCount++;
+            game.firstPlayer.statistic.drawsCount++;
         }
 
         return game;
