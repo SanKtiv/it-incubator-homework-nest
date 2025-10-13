@@ -55,7 +55,8 @@ export class UsersTable {
   // @JoinColumn()
   // pairGamePlayer: PairGamePlayersEntity[];
 
-  @OneToOne(() => PairGamePlayersEntity, (players) => players.user, {
+  @OneToOne(() => PairGamePlayersEntity,
+      (players) => players.user, {
     nullable: true,
     cascade: true,
     eager: true,

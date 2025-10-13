@@ -7,13 +7,13 @@ export class GamePlayerScoresEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('uuid')
+    @Column({type: 'uuid'})
     gameId: string;
+
+    @Column({type: 'smallint', default: 0})
+    score: number;
 
     @ManyToOne(() => PairGamePlayersEntity, (player) => player.gameScore)
     @JoinColumn()
     playerScore: PairGamePlayersEntity;
-
-    @Column({type: 'smallint', default: 0})
-    score: number;
 }
