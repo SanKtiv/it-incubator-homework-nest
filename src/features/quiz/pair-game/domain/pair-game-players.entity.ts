@@ -17,7 +17,15 @@ export class PairGamePlayersEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToMany(() => PlayerAnswersEntity, (answer) => answer.player, {
+    @OneToOne(() => UsersTable,
+        (user) => user.pairGamePlayer,
+        { onDelete: 'CASCADE' })
+    @JoinColumn()
+    user: UsersTable;
+
+    @OneToMany(() => PlayerAnswersEntity,
+        (answer) => answer.player,
+        {
         nullable: true,
         cascade: true,
         eager: true,
@@ -28,7 +36,9 @@ export class PairGamePlayersEntity {
 
     // @Column({type: 'smallint', default: 0})
     // playerScore: number;
-    @OneToMany(() => GamePlayerScoresEntity, (score) => score.playerScore, {
+    @OneToMany(() => GamePlayerScoresEntity,
+        (score) => score.playerScore,
+        {
         cascade: true,
         eager: true,
         onDelete: 'CASCADE',
@@ -36,7 +46,8 @@ export class PairGamePlayersEntity {
     @JoinColumn()
     gameScore: GamePlayerScoresEntity[];
 
-    @OneToOne(() => UsersStatisticEntity, (statistic) => statistic.player, {
+    @OneToOne(() => UsersStatisticEntity,
+        (statistic) => statistic.player, {
     cascade: true,
     eager: true,
     onDelete: 'CASCADE',

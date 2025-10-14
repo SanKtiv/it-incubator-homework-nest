@@ -13,6 +13,8 @@ export class UsersStatisticEntity {
     // })
     // user: UsersTable;
 
+
+
     @Column({type: 'smallint', default: 0})
     sumScore: number;
 
