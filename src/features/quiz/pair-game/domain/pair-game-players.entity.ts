@@ -18,8 +18,8 @@ export class PairGamePlayersEntity {
     id: string;
 
     @OneToOne(() => UsersTable,
-        (user) => user.pairGamePlayer,
-        { onDelete: 'CASCADE' })
+        (user) => user.pairGamePlayer
+    )
     @JoinColumn()
     user: UsersTable;
 
