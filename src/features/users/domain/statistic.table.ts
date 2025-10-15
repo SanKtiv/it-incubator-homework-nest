@@ -13,6 +13,11 @@ export class UsersStatisticEntity {
     // })
     // user: UsersTable;
 
+    @OneToOne(() => PairGamePlayersEntity,
+        (player) => player.statistic
+    )
+    @JoinColumn()
+    player: PairGamePlayersEntity;
 
 
     @Column({type: 'smallint', default: 0})
