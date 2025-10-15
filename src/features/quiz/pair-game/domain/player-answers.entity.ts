@@ -15,7 +15,10 @@ export class PlayerAnswersEntity {
   @Column({ type: 'uuid' })
   gameId: string;
 
-  @ManyToOne(() => PairGamePlayersEntity, (player) => player.answers)
+  @ManyToOne(
+      () => PairGamePlayersEntity,
+      (player) => player.answers
+  )
   @JoinColumn()
   player: PairGamePlayersEntity;
 

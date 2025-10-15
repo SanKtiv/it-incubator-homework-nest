@@ -93,18 +93,19 @@ export class GameServices {
     }
 
     async connectToGame(userId: string) {
+        console.log('Start')
         const unfinishedGame: PairGamesEntity | null =
             await this.pairGameRepository.getUnfinishedGameByUserId(userId);
-
+        console.log('1')
         if (unfinishedGame) throw new ForbiddenException();
 
         const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
 
         const pendingGame: PairGamesEntity | null =
             await this.pairGameRepository.getPairGamesByStatus(statusPending);
-
+        console.log('2')
         if (pendingGame) return this.joinToGame(userId, pendingGame);
-
+        console.log('3')
         return this.createGame(userId, statusPending);
     }
 
@@ -116,7 +117,7 @@ export class GameServices {
         game.pairCreatedDate = new Date();
 
         game.status = status;
-
+console.log('GAME =', game)
         const createdGame = await this.pairGameRepository.createPairGame(game);
 
         return outputModelCreatedPairGame(createdGame!);

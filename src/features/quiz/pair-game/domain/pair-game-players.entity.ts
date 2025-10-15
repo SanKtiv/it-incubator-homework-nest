@@ -18,7 +18,11 @@ export class PairGamePlayersEntity {
     id: string;
 
     @OneToOne(() => UsersTable,
-        (user) => user.pairGamePlayer
+        (user) => user.pairGamePlayer,
+        {
+            cascade: false,
+            eager: false
+        }
     )
     @JoinColumn()
     user: UsersTable;
@@ -31,12 +35,10 @@ export class PairGamePlayersEntity {
         eager: true,
         onDelete: 'CASCADE',
     })
-    @JoinColumn()
     answers: PlayerAnswersEntity[] | null;
 
-    // @Column({type: 'smallint', default: 0})
-    // playerScore: number;
-    @OneToMany(() => GamePlayerScoresEntity,
+    @OneToMany(
+        () => GamePlayerScoresEntity,
         (score) => score.playerScore,
         {
         cascade: true,
@@ -46,8 +48,10 @@ export class PairGamePlayersEntity {
     @JoinColumn()
     gameScore: GamePlayerScoresEntity[];
 
-    @OneToOne(() => UsersStatisticEntity,
-        (statistic) => statistic.player, {
+    @OneToOne(
+        () => UsersStatisticEntity,
+        (statistic) => statistic.player,
+        {
     cascade: true,
     eager: true,
     onDelete: 'CASCADE',
