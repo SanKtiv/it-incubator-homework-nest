@@ -17,17 +17,20 @@ export class PairGamePlayersEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(
-    // @ManyToOne(
-        () => UsersTable,
-        // (user) => user.pairGamePlayer,
-        {
-            cascade: false,
-            eager: false
-        }
-    )
-    @JoinColumn()
-    user: UsersTable;
+    @Column({ type: 'uuid', nullable: false })
+    userId: string;
+
+    // @OneToOne(
+    // // @ManyToOne(
+    //     () => UsersTable,
+    //     // (user) => user.pairGamePlayer,
+    //     {
+    //         cascade: false,
+    //         eager: false
+    //     }
+    // )
+    // @JoinColumn()
+    // user: UsersTable;
 
     @OneToMany(() => PlayerAnswersEntity,
         (answer) => answer.player,
