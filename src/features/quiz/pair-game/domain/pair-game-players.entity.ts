@@ -17,8 +17,10 @@ export class PairGamePlayersEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(() => UsersTable,
-        (user) => user.pairGamePlayer,
+    @OneToOne(
+    // @ManyToOne(
+        () => UsersTable,
+        // (user) => user.pairGamePlayer,
         {
             cascade: false,
             eager: false
@@ -45,7 +47,6 @@ export class PairGamePlayersEntity {
         eager: true,
         onDelete: 'CASCADE',
     })
-    @JoinColumn()
     gameScore: GamePlayerScoresEntity[];
 
     @OneToOne(

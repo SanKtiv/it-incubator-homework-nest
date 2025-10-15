@@ -13,7 +13,8 @@ export class GamePlayerScoresEntity {
     @Column({type: 'smallint', default: 0})
     score: number;
 
-    @ManyToOne(() => PairGamePlayersEntity,
+    @ManyToOne(
+        () => PairGamePlayersEntity,
         (player) => player.gameScore
     )
     @JoinColumn()
