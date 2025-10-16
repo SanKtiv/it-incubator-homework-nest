@@ -52,16 +52,16 @@ export class UsersTable {
     @JoinColumn()
     passwordRecovery: PasswordRecoveryTable;
 
-    // @OneToOne(
+    @OneToOne(
     // @OneToMany(
-    //     () => PairGamePlayersEntity,
+        () => PairGamePlayersEntity,
     //     (players) => players.user,
-    //     {
-    //         nullable: true,
-    //     }
-    // )
-    // // @JoinColumn()
-    // pairGamePlayer: PairGamePlayersEntity[] | null;
+        {
+            nullable: true,
+        }
+    )
+    @JoinColumn()
+    pairGamePlayer: PairGamePlayersEntity | null;
 
     @DeleteDateColumn({type: 'timestamp with time zone', nullable: true})
     deletedAt?: Date; // Поле для хранения даты удаления для softRemove, softDelete
