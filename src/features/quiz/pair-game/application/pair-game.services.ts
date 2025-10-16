@@ -141,10 +141,10 @@ console.log('GAME =', game)
 
         const player = new PairGamePlayersEntity();
 
-        player.user = new UsersTable();
+        //player.user = new UsersTable();
         player.gameScore = [new GamePlayerScoresEntity()];
         player.statistic = new UsersStatisticEntity();
-        player.user.id = userId;
+        player.userId = userId;
         player.answers = null;
 
         return player;
@@ -183,7 +183,7 @@ console.log('GAME =', game)
 
         const answer = new PlayerAnswersEntity();
 
-        if (game.firstPlayer.user.id === userId) {
+        if (game.firstPlayer.userId === userId) {
             if (countAnswersFirstPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 
@@ -205,7 +205,7 @@ console.log('GAME =', game)
             }
         }
         console.log('3')
-        if (game.secondPlayer!.user.id === userId) {
+        if (game.secondPlayer!.userId === userId) {
             if (countAnswersSecondPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 

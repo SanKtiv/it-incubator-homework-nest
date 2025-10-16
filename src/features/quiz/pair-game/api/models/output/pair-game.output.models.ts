@@ -72,7 +72,7 @@ export const outputModelCreatedPairGame =
     id: game.id,
     firstPlayerProgress: {
       player: {
-        id: game.firstPlayer.user.id,
+        id: game.firstPlayer.userId,
         login: game.firstPlayer.user.accountData.login,
       },
       answers: answers(game.firstPlayer.answers),
