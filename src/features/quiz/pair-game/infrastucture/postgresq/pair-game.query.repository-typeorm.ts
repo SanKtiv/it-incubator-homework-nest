@@ -3,7 +3,7 @@ import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
 import {DataSource, Repository} from 'typeorm';
 import {GameQueryTopUsers, pairGameQuery} from '../../api/models/input/input-query.dto';
 import {PairGamesEntity} from "../../domain/pair-games.entity";
-import {PairGamePlayersEntity} from "../../domain/pair-game-players.entity";
+import {PlayersEntity} from "../../domain/players.entity";
 
 @Injectable()
 export class PairGameQueryRepositoryTypeOrm {
@@ -11,8 +11,8 @@ export class PairGameQueryRepositoryTypeOrm {
         @InjectRepository(PairGamesEntity)
         protected repository: Repository<PairGamesEntity>,
         @InjectDataSource() protected dataSource: DataSource,
-        @InjectRepository(PairGamePlayersEntity)
-        protected repositoryPlayer: Repository<PairGamePlayersEntity>,
+        @InjectRepository(PlayersEntity)
+        protected repositoryPlayer: Repository<PlayersEntity>,
     ) {
     }
     private get shareBuilder() {

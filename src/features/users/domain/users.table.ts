@@ -9,7 +9,7 @@ import {
 import {AccountDataTable} from './account-data.table';
 import {EmailConfirmationTable} from './email-сonfirmation.table';
 import {PasswordRecoveryTable} from './password-recovery.table';
-import {PairGamePlayersEntity} from '../../quiz/pair-game/domain/pair-game-players.entity';
+import {PlayersEntity} from '../../quiz/pair-game/domain/players.entity';
 import {UsersStatisticEntity} from "./statistic.table";
 
 @Entity('users')
@@ -52,16 +52,14 @@ export class UsersTable {
     @JoinColumn()
     passwordRecovery: PasswordRecoveryTable;
 
-    @OneToOne(
-    // @OneToMany(
-        () => PairGamePlayersEntity,
-    //     (players) => players.user,
+    @OneToMany(
+        () => PlayersEntity,
+        (players) => players.user,
         {
             nullable: true,
         }
     )
-    @JoinColumn()
-    pairGamePlayer: PairGamePlayersEntity | null;
+    players: PlayersEntity[] | null;
 
     @DeleteDateColumn({type: 'timestamp with time zone', nullable: true})
     deletedAt?: Date; // Поле для хранения даты удаления для softRemove, softDelete

@@ -16,12 +16,12 @@ export class PairGameQueryRepository {
 
     if (!game) throw new NotFoundException();
 
-    const firstPlayerId = game.firstPlayer.userId;
+    const firstPlayerId = game.firstPlayer.user.id;
     const secondPlayer = game.secondPlayer;
 
     if (
         (firstPlayerId !== userId && !secondPlayer) ||
-        (firstPlayerId !== userId && secondPlayer!.userId !== userId)
+        (firstPlayerId !== userId && secondPlayer!.user.id !== userId)
     )
       throw new ForbiddenException();
 

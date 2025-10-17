@@ -101,7 +101,7 @@ import { PairGameRepositoryTypeOrm } from './features/quiz/pair-game/infrastuctu
 import { PairGameQueryRepository } from './features/quiz/pair-game/infrastucture/pair-game.query.repository';
 import { PairGameQueryRepositoryTypeOrm } from './features/quiz/pair-game/infrastucture/postgresq/pair-game.query.repository-typeorm';
 import { PairGamesEntity } from './features/quiz/pair-game/domain/pair-games.entity';
-import { PairGamePlayersEntity } from './features/quiz/pair-game/domain/pair-game-players.entity';
+import { PlayersEntity } from './features/quiz/pair-game/domain/players.entity';
 import { PlayerAnswersEntity } from './features/quiz/pair-game/domain/player-answers.entity';
 import { QuestionsGameEntity } from './features/quiz/pair-game/domain/questions-game.entity';
 import {QuestionsEntity} from "./features/quiz/questions/domain/quiz-questions.entity";
@@ -222,7 +222,7 @@ const strategies = [
         StatusesCommentsTable,
         StatusesPostsTable,
         PairGamesEntity,
-        PairGamePlayersEntity,
+        PlayersEntity,
         PlayerAnswersEntity,
         QuestionsGameEntity,
         QuestionsEntity,
@@ -246,7 +246,7 @@ const strategies = [
       StatusesCommentsTable,
       StatusesPostsTable,
       PairGamesEntity,
-      PairGamePlayersEntity,
+      PlayersEntity,
       PlayerAnswersEntity,
       QuestionsGameEntity,
       QuestionsEntity,

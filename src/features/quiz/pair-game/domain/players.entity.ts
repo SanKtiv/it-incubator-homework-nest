@@ -13,24 +13,20 @@ import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
 import {GamePlayerScoresEntity} from "./game-player-scores";
 
 @Entity('pair-game-players')
-export class PairGamePlayersEntity {
+export class PlayersEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'uuid', nullable: false })
-    userId: string;
-
-    // @OneToOne(
-    // // @ManyToOne(
-    //     () => UsersTable,
-    //     // (user) => user.pairGamePlayer,
-    //     {
-    //         cascade: false,
-    //         eager: false
-    //     }
-    // )
-    // @JoinColumn()
-    // user: UsersTable;
+    @ManyToOne(
+        () => UsersTable,
+        (user) => user.players,
+        {
+            cascade: true,
+            eager: true
+        }
+    )
+    @JoinColumn()
+    user: UsersTable;
 
     @OneToMany(() => PlayerAnswersEntity,
         (answer) => answer.player,
