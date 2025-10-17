@@ -44,10 +44,12 @@ export class PairGameRepositoryTypeOrm {
 
         return this.repository
             .createQueryBuilder('game')
-            .leftJoin('game.firstPlayer', 'firstPlayer')
-            .leftJoin('firstPlayer.user', 'firstUser')
-            .leftJoin('game.secondPlayer', 'secondPlayer')
-            .leftJoin('secondPlayer.user', 'secondUser')
+            .leftJoinAndSelect('game.firstPlayer', 'firstPlayer')
+            .leftJoinAndSelect('firstPlayer.players', 'firstQuizPlayer')
+            .leftJoinAndSelect('firstQuizPlayer.user', 'firstUser')
+            .leftJoinAndSelect('game.secondPlayer', 'secondPlayer')
+            .leftJoinAndSelect('secondPlayer.players', 'secondQuizPlayer')
+            .leftJoinAndSelect('secondQuizPlayer.user', 'secondUser')
             .where('game.finishGameDate IS NULL')
             .andWhere('firstUser.id = :userId')
             .orWhere('game.finishGameDate IS NULL')

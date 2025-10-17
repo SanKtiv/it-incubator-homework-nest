@@ -20,7 +20,10 @@ export class PlayersEntity {
 
     @OneToOne(
         () => QuizPlayersEntity,
-        (quizPlayer) => quizPlayer.players
+        (quizPlayer) => quizPlayer.players,
+        // {
+        //     nullable: true,
+        // }
     )
     @JoinColumn()
     quizPlayer: QuizPlayersEntity;

@@ -1,13 +1,10 @@
 import {
-    Column,
     Entity,
     JoinColumn,
-    ManyToOne,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import {UsersTable} from '../../../users/domain/users.table';
 import {PlayerAnswersEntity} from './player-answers.entity';
 import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
 import {GamePlayerScoresEntity} from "./game-player-scores";
@@ -21,11 +18,11 @@ export class QuizPlayersEntity {
     @OneToOne(
         () => PlayersEntity,
         (player) => player.quizPlayer,
-        {
-            cascade: true,
-            eager: true,
-            onDelete: 'CASCADE',
-        }
+        // {
+        //     cascade: true,
+        //     eager: true,
+        //     onDelete: 'CASCADE',
+        // }
     )
     @JoinColumn()
     players: PlayersEntity;
@@ -33,31 +30,35 @@ export class QuizPlayersEntity {
     @OneToMany(() => PlayerAnswersEntity,
         (answer) => answer.player,
         {
-        nullable: true,
-        cascade: true,
-        eager: true,
-        onDelete: 'CASCADE',
-    })
+            nullable: true,
+            cascade: true,
+            eager: true,
+            onDelete: 'CASCADE',
+        })
     answers: PlayerAnswersEntity[] | null;
 
     @OneToMany(
         () => GamePlayerScoresEntity,
         (score) => score.playerScore,
         {
-        cascade: true,
-        eager: true,
-        onDelete: 'CASCADE',
-    })
-    gameScore: GamePlayerScoresEntity[];
+            nullable: true,
+            cascade: true,
+            eager: true,
+            onDelete: 'CASCADE',
+        }
+    )
+    gameScore: GamePlayerScoresEntity[] | null;
 
     @OneToOne(
         () => UsersStatisticEntity,
         (statistic) => statistic.player,
-        {
-    cascade: true,
-    eager: true,
-    onDelete: 'CASCADE',
-    })
+            // {
+
+        // cascade: true,
+        // eager: true,
+        // onDelete: 'CASCADE',
+        // }
+    )
     @JoinColumn()
     statistic: UsersStatisticEntity;
 }

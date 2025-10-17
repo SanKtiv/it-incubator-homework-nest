@@ -16,6 +16,10 @@ import { UsersRepository } from '../infrastructure/users.repository';
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
+  async getUserById(userId: string) {
+    return await this.usersRepository.findById(userId);
+  }
+
   async createUser(dto: UsersInputDto): Promise<UsersTable> {
     await this.existUserLogin(dto.login);
     await this.existUserEmail(dto.email);

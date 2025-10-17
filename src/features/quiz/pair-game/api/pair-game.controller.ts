@@ -26,7 +26,7 @@ export class PairGameQuizPairsController {
     }
     @Get('testing-create-game')
     async testing() {
-        return this.pairGameServices.connectToGame('3b4bc9aa-a959-4b3e-ab17-93a6a6a94cd6');
+        return this.pairGameServices.connectToGame('2360b966-18a2-4c26-b686-50f43cc8d90d');
     }
 
     @Get('pairs/my-current')

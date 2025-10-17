@@ -13,12 +13,14 @@ import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
 import {UsersRepository} from "../../../users/infrastructure/users.repository";
 import {GamePlayerScoresEntity} from "../domain/game-player-scores";
 import {PlayersEntity} from "../domain/players.entity";
+import {UsersService} from "../../../users/application/users.service";
 
 @Injectable()
 export class GameServices {
     constructor(
         protected pairGameRepository: PairGameRepository,
         protected quizQuestionsRepository: QuizQuestionsRepository,
+        protected usersService: UsersService,
     ) {
     }
     async getActiveGameByUserId(userId: string) {
@@ -59,7 +61,7 @@ export class GameServices {
             game.secondPlayer!.answers![0].addedAt &&
             correctAnswersSecondPlayer
         ) {
-            game.secondPlayer!.gameScore[0].score++;
+            game.secondPlayer!.gameScore![0].score++;
             game.secondPlayer!.statistic.sumScore++;
         }
 
@@ -68,23 +70,23 @@ export class GameServices {
             game.secondPlayer!.answers![0].addedAt &&
             correctAnswersFirstPlayer
         ) {
-            game.firstPlayer.gameScore[0].score++;
+            game.firstPlayer.gameScore![0].score++;
             game.firstPlayer.statistic.sumScore++;
         }
 
-        if (game.firstPlayer.gameScore[0].score > game.secondPlayer!.gameScore[0].score) {
+        if (game.firstPlayer.gameScore![0].score > game.secondPlayer!.gameScore![0].score) {
             game.firstPlayer.statistic.winsCount++;
 
             game.secondPlayer!.statistic.lossesCount++;
         }
 
-        if (game.firstPlayer.gameScore[0].score < game.secondPlayer!.gameScore[0].score) {
+        if (game.firstPlayer.gameScore![0].score < game.secondPlayer!.gameScore![0].score) {
             game.secondPlayer!.statistic.winsCount++;
 
             game.firstPlayer.statistic.lossesCount++;
         }
 
-        if (game.firstPlayer.gameScore[0].score == game.secondPlayer!.gameScore[0].score) {
+        if (game.firstPlayer.gameScore![0].score == game.secondPlayer!.gameScore![0].score) {
             game.secondPlayer!.statistic.drawsCount++;
 
             game.firstPlayer.statistic.drawsCount++;
@@ -98,6 +100,7 @@ export class GameServices {
         const unfinishedGame: PairGamesEntity | null =
             await this.pairGameRepository.getUnfinishedGameByUserId(userId);
         console.log('1')
+        console.log('unfinishedGame =', unfinishedGame)
         if (unfinishedGame) throw new ForbiddenException();
 
         const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
@@ -113,21 +116,26 @@ export class GameServices {
     async createGame(userId: string, status: QuizPairGameStatusType) {
         const game = new PairGamesEntity();
 
-        game.firstPlayer = await this.createPlayer(userId);
+        game.firstPlayer = await this.createQuizPlayer(userId, game);
 
         game.pairCreatedDate = new Date();
 
         game.status = status;
 console.log('GAME =', game)
-        const createdGame = await this.pairGameRepository.createPairGame(game);
+        console.log('firstPlayer =', game.firstPlayer)
+        console.log(' players =', game.firstPlayer.players)
+        console.log(' statistic =', game.firstPlayer.statistic)
+        console.log(' user =', game.firstPlayer.players.user)
 
+        const createdGame = await this.pairGameRepository.createPairGame(game);
+        console.log('createdGame is complete')
         return outputModelCreatedPairGame(createdGame!);
     }
 
     async joinToGame(userId: string, game: PairGamesEntity) {
         const questions = await this.createFiveQuestionsForGame(game);
 
-        game.secondPlayer = await this.createPlayer(userId);
+        game.secondPlayer = await this.createQuizPlayer(userId, game);
         game.status = 'Active';
         game.startGameDate = new Date();
         game.questions = questions;
@@ -138,17 +146,27 @@ console.log('GAME =', game)
         return outputModelCreatedPairGame(activeGame!);
     }
 
-    async createPlayer(userId: string): Promise<QuizPlayersEntity> {
+    async createQuizPlayer(userId: string, game: PairGamesEntity): Promise<QuizPlayersEntity> {
 
         const quizPlayer = new QuizPlayersEntity();
 
         quizPlayer.players = new PlayersEntity();
-        quizPlayer.players.user = new UsersTable();
-        quizPlayer.gameScore = [new GamePlayerScoresEntity()];
+
+        const user = await this.usersService.getUserById(userId);
+
+        quizPlayer.players.user = user!;
+        console.log('createPlayer2')
+
+        console.log('createPlayer3')
+
+        console.log('createPlayer4')
+        quizPlayer.gameScore = null;
+        console.log('createPlayer5')
         quizPlayer.statistic = new UsersStatisticEntity();
+        console.log('createPlayer6')
         quizPlayer.players.user.id = userId;
         quizPlayer.answers = null;
-
+        console.log('createPlayer7')
         return quizPlayer;
     }
 
@@ -202,7 +220,7 @@ console.log('GAME =', game)
             countAnswersFirstPlayer = game.firstPlayer.answers!.length;
 
             if (answer.answerStatus === 'Correct') {
-                game.firstPlayer.gameScore[0].score++;
+                game.firstPlayer.gameScore![0].score++;
                 game.firstPlayer.statistic.sumScore++;
             }
         }
@@ -224,7 +242,7 @@ console.log('GAME =', game)
             countAnswersSecondPlayer = game.secondPlayer!.answers!.length;
 
             if (answer.answerStatus === 'Correct') {
-                game.secondPlayer!.gameScore[0].score++;;
+                game.secondPlayer!.gameScore![0].score++;;
                 game.secondPlayer!.statistic.sumScore++;
             }
         }
