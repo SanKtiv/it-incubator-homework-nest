@@ -16,7 +16,10 @@ export class QuestionsGameEntity {
   @Column({ type: 'smallint' })
   index: number;
 
-  @ManyToOne(() => PairGamesEntity, (game) => game.questions)
+  @ManyToOne(
+      () => PairGamesEntity,
+      (game) => game.questions
+  )
   @JoinColumn()
   game: PairGamesEntity;
 

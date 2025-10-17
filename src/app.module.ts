@@ -232,7 +232,7 @@ const strategies = [
         PlayersEntity
       ],
       synchronize: true,
-      //logging: ['query'],
+      logging: ['query'],
     }),
     TypeOrmModule.forFeature([
       BlogsTable,

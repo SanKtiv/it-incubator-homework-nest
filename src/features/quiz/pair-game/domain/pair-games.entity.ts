@@ -44,6 +44,7 @@ export class PairGamesEntity {
         eager: true,
         onDelete: 'CASCADE',
     })
+    @JoinColumn()
     questions: QuestionsGameEntity[] | null;
 
     @Column({type: 'character varying'})

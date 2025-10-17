@@ -118,7 +118,13 @@ export class GameServices {
 
         game.firstPlayer = await this.createQuizPlayer(userId, game);
 
+        game.secondPlayer = null;
+
         game.pairCreatedDate = new Date();
+
+        const questions = await this.createFiveQuestionsForGame(game);
+
+        game.questions = questions;
 
         game.status = status;
 console.log('GAME =', game)
@@ -164,7 +170,6 @@ console.log('GAME =', game)
         console.log('createPlayer5')
         quizPlayer.statistic = new UsersStatisticEntity();
         console.log('createPlayer6')
-        quizPlayer.players.user.id = userId;
         quizPlayer.answers = null;
         console.log('createPlayer7')
         return quizPlayer;
