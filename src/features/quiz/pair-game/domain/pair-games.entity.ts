@@ -6,7 +6,7 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import {PlayersEntity} from './players.entity';
+import {QuizPlayersEntity} from './quiz-players.entity';
 import {QuestionsGameEntity} from './questions-game.entity';
 
 @Entity('pair-game')
@@ -15,17 +15,17 @@ export class PairGamesEntity {
     id: string;
 
     @OneToOne(
-        () => PlayersEntity,
+        () => QuizPlayersEntity,
         {
             cascade: true,
             eager: true,
         }
     )
     @JoinColumn()
-    firstPlayer: PlayersEntity;
+    firstPlayer: QuizPlayersEntity;
 
     @OneToOne(
-        () => PlayersEntity,
+        () => QuizPlayersEntity,
         {
             nullable: true,
             cascade: true,
@@ -33,7 +33,7 @@ export class PairGamesEntity {
         }
     )
     @JoinColumn()
-    secondPlayer: PlayersEntity | null;
+    secondPlayer: QuizPlayersEntity | null;
 
     @OneToMany(
         () => QuestionsGameEntity,

@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { PlayersEntity } from './players.entity';
+import { QuizPlayersEntity } from './quiz-players.entity';
 
 @Entity('player-answers')
 export class PlayerAnswersEntity {
@@ -16,11 +16,11 @@ export class PlayerAnswersEntity {
   gameId: string;
 
   @ManyToOne(
-      () => PlayersEntity,
+      () => QuizPlayersEntity,
       (player) => player.answers
   )
   @JoinColumn()
-  player: PlayersEntity;
+  player: QuizPlayersEntity;
 
   @Column({ type: 'uuid' })
   questionId: string;

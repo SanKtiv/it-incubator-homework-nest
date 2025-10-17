@@ -1,6 +1,6 @@
 import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {UsersTable} from "./users.table";
-import {PlayersEntity} from "../../quiz/pair-game/domain/players.entity";
+import {QuizPlayersEntity} from "../../quiz/pair-game/domain/quiz-players.entity";
 
 @Entity('users-statistic')
 export class UsersStatisticEntity {
@@ -13,11 +13,11 @@ export class UsersStatisticEntity {
     // })
     // user: UsersTable;
 
-    @OneToOne(() => PlayersEntity,
+    @OneToOne(() => QuizPlayersEntity,
         (player) => player.statistic
     )
     @JoinColumn()
-    player: PlayersEntity;
+    player: QuizPlayersEntity;
 
 
     @Column({type: 'smallint', default: 0})

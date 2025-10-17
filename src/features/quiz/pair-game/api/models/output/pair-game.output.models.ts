@@ -72,8 +72,8 @@ export const outputModelCreatedPairGame =
     id: game.id,
     firstPlayerProgress: {
       player: {
-        id: game.firstPlayer.user.id,
-        login: game.firstPlayer.user.accountData.login,
+        id: game.firstPlayer.players.user.id,
+        login: game.firstPlayer.players.user.accountData.login,
       },
       answers: answers(game.firstPlayer.answers),
       score: game.firstPlayer.gameScore[0].score,
@@ -81,8 +81,8 @@ export const outputModelCreatedPairGame =
     secondPlayerProgress: game.secondPlayer ?
         {
           player: {
-            id: game.secondPlayer.user.id,
-            login: game.secondPlayer.user.accountData.login,
+            id: game.secondPlayer.players.user.id,
+            login: game.secondPlayer.players.user.accountData.login,
           },
           answers: answers(game.secondPlayer.answers),
           score: game.secondPlayer.gameScore[0].score,
@@ -129,7 +129,7 @@ export function outputModelPlayerStatistic(
             if (game.firstPlayer.gameScore[0].score === game.secondPlayer!.gameScore[0].score)
                 statistic.drawsCount++;
 
-            if (game.firstPlayer.user.id === userId) {
+            if (game.firstPlayer.players.user.id === userId) {
                 statistic.sumScore += game.firstPlayer.gameScore[0].score;
 
                 if (game.firstPlayer.gameScore[0].score > game.secondPlayer!.gameScore[0].score)

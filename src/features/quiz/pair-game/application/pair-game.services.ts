@@ -6,12 +6,13 @@ import {QuestionsEntity} from '../../questions/domain/quiz-questions.entity';
 import {UsersTable} from '../../../users/domain/users.table';
 import {InputAnswersModels} from '../api/models/input/input-answers.models';
 import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.entity';
-import {PlayersEntity} from '../domain/players.entity';
+import {QuizPlayersEntity} from '../domain/quiz-players.entity';
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
 import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
 import {UsersRepository} from "../../../users/infrastructure/users.repository";
 import {GamePlayerScoresEntity} from "../domain/game-player-scores";
+import {PlayersEntity} from "../domain/players.entity";
 
 @Injectable()
 export class GameServices {
@@ -137,17 +138,18 @@ console.log('GAME =', game)
         return outputModelCreatedPairGame(activeGame!);
     }
 
-    async createPlayer(userId: string): Promise<PlayersEntity> {
+    async createPlayer(userId: string): Promise<QuizPlayersEntity> {
 
-        const player = new PlayersEntity();
+        const quizPlayer = new QuizPlayersEntity();
 
-        player.user = new UsersTable();
-        player.gameScore = [new GamePlayerScoresEntity()];
-        player.statistic = new UsersStatisticEntity();
-        player.user.id = userId;
-        player.answers = null;
+        quizPlayer.players = new PlayersEntity();
+        quizPlayer.players.user = new UsersTable();
+        quizPlayer.gameScore = [new GamePlayerScoresEntity()];
+        quizPlayer.statistic = new UsersStatisticEntity();
+        quizPlayer.players.user.id = userId;
+        quizPlayer.answers = null;
 
-        return player;
+        return quizPlayer;
     }
 
     async createFiveQuestionsForGame(game: PairGamesEntity) {
@@ -183,7 +185,7 @@ console.log('GAME =', game)
 
         const answer = new PlayerAnswersEntity();
 
-        if (game.firstPlayer.user.id === userId) {
+        if (game.firstPlayer.players.user.id === userId) {
             if (countAnswersFirstPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 
@@ -205,7 +207,7 @@ console.log('GAME =', game)
             }
         }
         console.log('3')
-        if (game.secondPlayer!.user.id === userId) {
+        if (game.secondPlayer!.players.user.id === userId) {
             if (countAnswersSecondPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 

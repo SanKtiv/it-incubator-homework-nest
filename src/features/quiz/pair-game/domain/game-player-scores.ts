@@ -1,5 +1,5 @@
 import {Entity, Column, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
-import {PlayersEntity} from "./players.entity";
+import {QuizPlayersEntity} from "./quiz-players.entity";
 import {PairGamesEntity} from "./pair-games.entity";
 
 @Entity('game-player-scores')
@@ -14,9 +14,9 @@ export class GamePlayerScoresEntity {
     score: number;
 
     @ManyToOne(
-        () => PlayersEntity,
+        () => QuizPlayersEntity,
         (player) => player.gameScore
     )
     @JoinColumn()
-    playerScore: PlayersEntity;
+    playerScore: QuizPlayersEntity;
 }
