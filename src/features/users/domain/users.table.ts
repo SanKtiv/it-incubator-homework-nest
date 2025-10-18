@@ -58,6 +58,8 @@ export class UsersTable {
         (players) => players.user,
         {
             nullable: true,
+            cascade: false,
+            eager: false,
         }
     )
     @JoinColumn()

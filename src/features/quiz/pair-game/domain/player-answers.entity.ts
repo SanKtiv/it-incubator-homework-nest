@@ -20,7 +20,7 @@ export class PlayerAnswersEntity {
       (player) => player.answers
   )
   @JoinColumn()
-  player: QuizPlayersEntity;
+  quizPlayer: QuizPlayersEntity;
 
   @Column({ type: 'uuid' })
   questionId: string;

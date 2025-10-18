@@ -27,7 +27,10 @@ export class AccountDataTable {
   @DeleteDateColumn({ type: 'timestamp with time zone', nullable: true })
   deletedAt?: Date; // Поле для хранения даты удаления для softRemove, softDelete
 
-  @OneToOne(() => UsersTable, (user) => user.accountData, {
+  @OneToOne(
+      () => UsersTable,
+      (user) => user.accountData,
+      {
     //cascade: true,
     onDelete: 'CASCADE',
   })

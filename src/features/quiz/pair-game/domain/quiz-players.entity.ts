@@ -18,17 +18,17 @@ export class QuizPlayersEntity {
     @OneToOne(
         () => PlayersEntity,
         (player) => player.quizPlayer,
-        // {
-        //     cascade: true,
-        //     eager: true,
-        //     onDelete: 'CASCADE',
-        // }
+        {
+            cascade: true,
+            eager: true,
+            //     onDelete: 'CASCADE',
+        }
     )
     @JoinColumn()
     players: PlayersEntity;
 
     @OneToMany(() => PlayerAnswersEntity,
-        (answer) => answer.player,
+        (answer) => answer.quizPlayer,
         {
             nullable: true,
             cascade: true,
@@ -51,13 +51,12 @@ export class QuizPlayersEntity {
 
     @OneToOne(
         () => UsersStatisticEntity,
-        (statistic) => statistic.player,
-            // {
-
-        // cascade: true,
-        // eager: true,
-        // onDelete: 'CASCADE',
-        // }
+        (statistic) => statistic.quizPlayer,
+        {
+            cascade: true,
+            eager: true,
+            onDelete: 'CASCADE',
+        }
     )
     @JoinColumn()
     statistic: UsersStatisticEntity;

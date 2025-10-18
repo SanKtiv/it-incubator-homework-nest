@@ -122,9 +122,7 @@ export class GameServices {
 
         game.pairCreatedDate = new Date();
 
-        const questions = await this.createFiveQuestionsForGame(game);
-
-        game.questions = questions;
+        game.questions = null;
 
         game.status = status;
 console.log('GAME =', game)
@@ -215,7 +213,7 @@ console.log('GAME =', game)
             const question = game.questions![countAnswersFirstPlayer]
 
             answer.gameId = game.id;
-            answer.player = game.firstPlayer;
+            answer.quizPlayer = game.firstPlayer;
             answer.questionId = question.question.id;
             answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
@@ -237,7 +235,7 @@ console.log('GAME =', game)
             const question = game.questions![countAnswersSecondPlayer]
 
             answer.gameId = game.id;
-            answer.player = game.secondPlayer!;
+            answer.quizPlayer = game.secondPlayer!;
             answer.questionId = question.question.id;
             answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
