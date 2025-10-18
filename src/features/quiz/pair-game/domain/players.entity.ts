@@ -12,19 +12,20 @@ export class PlayersEntity {
         (user) => user.players,
         {
             cascade: true,
-            eager: true
+            eager: true,
         }
     )
     @JoinColumn()
     user: UsersTable;
 
-    @OneToOne(
-        () => QuizPlayersEntity,
-        (quizPlayer) => quizPlayer.players,
-        // {
-        //     nullable: true,
-        // }
-    )
-    @JoinColumn()
-    quizPlayer: QuizPlayersEntity;
+    // @OneToOne(
+    //     () => QuizPlayersEntity,
+    //     (quizPlayer) => quizPlayer.players,
+    //     {
+    //         cascade: false,
+    //         eager: false,
+    //     }
+    // )
+    // @JoinColumn()
+    // quizPlayer: QuizPlayersEntity;
 }

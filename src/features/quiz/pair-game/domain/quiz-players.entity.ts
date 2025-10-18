@@ -17,7 +17,7 @@ export class QuizPlayersEntity {
 
     @OneToOne(
         () => PlayersEntity,
-        (player) => player.quizPlayer,
+        // (player) => player.quizPlayer,
         {
             cascade: true,
             eager: true,
@@ -51,7 +51,7 @@ export class QuizPlayersEntity {
 
     @OneToOne(
         () => UsersStatisticEntity,
-        (statistic) => statistic.quizPlayer,
+        //(statistic) => statistic.quizPlayer,
         {
             cascade: true,
             eager: true,

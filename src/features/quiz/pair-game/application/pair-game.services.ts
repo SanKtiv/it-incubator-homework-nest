@@ -158,10 +158,9 @@ console.log('GAME =', game)
 
         const user = await this.usersService.getUserById(userId);
 
-        quizPlayer.players.user = user!;
-        console.log('createPlayer2')
+        quizPlayer.players.user = new UsersTable();
 
-        console.log('createPlayer3')
+        quizPlayer.players.user.id = userId;
 
         console.log('createPlayer4')
         quizPlayer.gameScore = null;

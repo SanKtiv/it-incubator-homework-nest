@@ -7,16 +7,16 @@ export class UsersStatisticEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(
-        () => QuizPlayersEntity,
-        (player) => player.statistic,
-        {
-            cascade: false,
-            eager: false,
-        }
-    )
-    @JoinColumn()
-    quizPlayer: QuizPlayersEntity;
+    // @OneToOne(
+    //     () => QuizPlayersEntity,
+    //     (player) => player.statistic,
+    //     {
+    //         cascade: false,
+    //         eager: false,
+    //     }
+    // )
+    // @JoinColumn()
+    // quizPlayer: QuizPlayersEntity;
 
 
     @Column({type: 'smallint', default: 0})
