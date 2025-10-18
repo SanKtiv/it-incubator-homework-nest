@@ -11,7 +11,7 @@ export class PlayersEntity {
         () => UsersTable,
         (user) => user.players,
         {
-            cascade: true,
+            cascade: ['insert', 'update'],
             eager: true,
         }
     )

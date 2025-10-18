@@ -21,7 +21,6 @@ export class QuizPlayersEntity {
         {
             cascade: true,
             eager: true,
-            //     onDelete: 'CASCADE',
         }
     )
     @JoinColumn()

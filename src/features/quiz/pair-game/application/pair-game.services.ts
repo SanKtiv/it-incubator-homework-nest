@@ -156,7 +156,7 @@ console.log('GAME =', game)
 
         quizPlayer.players = new PlayersEntity();
 
-        const user = await this.usersService.getUserById(userId);
+        //const user = await this.usersService.getUserById(userId);
 
         quizPlayer.players.user = new UsersTable();
 

@@ -17,7 +17,7 @@ export class PairGamesEntity {
     @OneToOne(
         () => QuizPlayersEntity,
         {
-            cascade: true,
+            cascade: ['insert', 'update'],
             eager: true,
         }
     )
@@ -28,7 +28,7 @@ export class PairGamesEntity {
         () => QuizPlayersEntity,
         {
             nullable: true,
-            cascade: true,
+            cascade: ['insert', 'update'],
             eager: true,
         }
     )
