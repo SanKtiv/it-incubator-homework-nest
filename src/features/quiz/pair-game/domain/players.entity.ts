@@ -1,14 +1,12 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {UsersTable} from "../../../users/domain/users.table";
 import {PlayerAnswersEntity} from "./player-answers.entity";
+import {PairGamesEntity} from "./pair-games.entity";
 
 @Entity('players')
 export class PlayersEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
-
-    @Column({type: 'uuid'})
-    gameId: string;
 
     @Column({type: 'smallint', default: 0})
     score: number;
@@ -32,6 +30,16 @@ export class PlayersEntity {
     )
     @JoinColumn()
     user: UsersTable;
+
+    @ManyToOne(
+        () => PairGamesEntity,
+        (game) => game.players,
+        {
+            onDelete: 'CASCADE',
+        }
+    )
+    @JoinColumn()
+    game: PairGamesEntity;
 
     @OneToMany(
         () => PlayerAnswersEntity,

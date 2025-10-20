@@ -26,7 +26,10 @@ export class PairGameQuizPairsController {
     }
     @Get('testing-create-game')
     async testing() {
-        return this.pairGameServices.connectToGame('298816d8-2bf7-433f-93ff-06516e10826b');
+        const res =
+            await this.pairGameServices.connectToGame('2f8f3851-ff40-418c-88fd-a4d9f6cf9f09');
+        console.log('return =', res)
+        return res;
     }
 
     @Get('pairs/my-current')

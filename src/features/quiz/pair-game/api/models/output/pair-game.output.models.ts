@@ -1,110 +1,119 @@
-import { pairGameQuery } from '../input/input-query.dto';
+import {pairGameQuery} from '../input/input-query.dto';
 import {PairGamesEntity} from "../../../domain/pair-games.entity";
 import {PlayerAnswersEntity} from "../../../domain/player-answers.entity";
 
 export class CreatedPairGameOutputModel {
-  constructor(
-    public id: string,
-    public firstPlayerProgress: PlayersProgressClass,
-    public secondPlayerProgress: PlayersProgressClass | null,
-    public questions: PairGameQuestionsClass[] | null,
-    public status: string,
-    public pairCreatedDate: string,
-    public startGameDate: string | null = null,
-    public finishGameDate: string | null = null,
-  ) {}
+    constructor(
+        public id: string,
+        public firstPlayerProgress: PlayersProgressClass,
+        public secondPlayerProgress: PlayersProgressClass | null,
+        public questions: PairGameQuestionsClass[] | null,
+        public status: string,
+        public pairCreatedDate: string,
+        public startGameDate: string | null = null,
+        public finishGameDate: string | null = null,
+    ) {
+    }
 }
 
 export class PlayersProgressClass {
-  constructor(
-    public answers: PlayersAnswersClass[],
-    public player: PlayersClass,
-    public score: number = 0,
-  ) {}
+    constructor(
+        public answers: PlayersAnswersClass[],
+        public player: PlayersClass,
+        public score: number = 0,
+    ) {
+    }
 }
 
 export class PlayersAnswersClass {
-  constructor(
-    public questionId: string,
-    public answerStatus: string,
-    public addedAt: string,
-  ) {}
+    constructor(
+        public questionId: string,
+        public answerStatus: string,
+        public addedAt: string,
+    ) {
+    }
 }
 
 export class PlayersClass {
-  constructor(
-    public id: string,
-    public login: string,
-  ) {}
+    constructor(
+        public id: string,
+        public login: string,
+    ) {
+    }
 }
 
 export class PairGameQuestionsClass {
-  constructor(
-    public id: string,
-    public body: string,
-  ) {}
+    constructor(
+        public id: string,
+        public body: string,
+    ) {
+    }
 }
 
 export class AnswerPlayerOutputModel {
-  constructor(
-    public questionId: string,
-    public answerStatus: 'Correct' | 'Incorrect',
-    public addedAt: string,
-  ) {}
+    constructor(
+        public questionId: string,
+        public answerStatus: 'Correct' | 'Incorrect',
+        public addedAt: string,
+    ) {
+    }
 }
 
 export const outputModelCreatedPairGame =
     function (game: PairGamesEntity) {
-  const answers = (ans) => ans.map((e) => ({
-        questionId: e.questionId,
-        answerStatus: e.answerStatus,
-        addedAt: e.addedAt.toISOString(),
-      }))
+        const answers = (ans) => ans.map((e) => ({
+            questionId: e.questionId,
+            answerStatus: e.answerStatus,
+            addedAt: e.addedAt.toISOString(),
+        }))
 
-  const questions = game.questions && game.questions.length > 0
-      ? game.questions.map((e) => ({
-        id: e.question.id,
-        body: e.question.body,
-      }))
-      : null
+        const questions = game.questions && game.questions.length > 0
+            ? game.questions.map((e) => ({
+                id: e.question.id,
+                body: e.question.body,
+            }))
+            : null
 
-  return {
-    id: game.id,
-    firstPlayerProgress: {
-      player: {
-        id: game.firstPlayer.user.id,
-        login: game.firstPlayer.user.accountData.login,
-      },
-      answers: answers(game.firstPlayer.answers),
-      score: game.firstPlayer.score,
-    },
-    secondPlayerProgress: game.secondPlayer ?
-        {
-          player: {
-            id: game.secondPlayer.user.id,
-            login: game.secondPlayer.user.accountData.login,
-          },
-          answers: answers(game.secondPlayer.answers),
-          score: game.secondPlayer.score,
-        } : game.secondPlayer,
-    questions: questions,
-    status: game.status,
-    pairCreatedDate: game.pairCreatedDate.toISOString(),
-    startGameDate: game.startGameDate ?
-        game.startGameDate.toISOString() :
-        game.startGameDate,
-    finishGameDate: game.finishGameDate ?
-        game.finishGameDate.toISOString() :
-        game.finishGameDate
-  }
-}
+        const firstPlayer = game.players[0];
+        const secondPlayer = game.players[1];
+
+        return {
+            id: game.id,
+            firstPlayerProgress: {
+                player: {
+                    id: firstPlayer.user.id,
+                    login: firstPlayer.user.accountData.login,
+                },
+                answers: answers(firstPlayer.answers),
+                score: firstPlayer.score,
+            },
+            secondPlayerProgress: secondPlayer ?
+                {
+                    player: {
+                        id: secondPlayer.user.id,
+                        login: secondPlayer.user.accountData.login,
+                    },
+                    answers: answers(secondPlayer.answers),
+                    score: secondPlayer.score,
+                } : null,
+            questions: questions,
+            status: game.status,
+            pairCreatedDate: game.pairCreatedDate.toISOString(),
+            startGameDate: game.startGameDate ?
+                game.startGameDate.toISOString() :
+                game.startGameDate,
+            finishGameDate: game.finishGameDate ?
+                game.finishGameDate.toISOString() :
+                game.finishGameDate
+        }
+    }
 
 export const addedAnswerPlayerOutputModel = (
-  answerPlayer: PlayerAnswersEntity,
+    answerPlayer: PlayerAnswersEntity,
 ): AnswerPlayerOutputModel => ({
-  questionId: answerPlayer.questionId,
-  answerStatus: answerPlayer.answerStatus,
-  addedAt: answerPlayer.addedAt.toISOString(),
+    questionId: answerPlayer.questionId,
+    answerStatus: answerPlayer.answerStatus,
+    addedAt: answerPlayer.addedAt.toISOString(),
 });
 
 export function outputModelPlayerStatistic(
@@ -126,24 +135,27 @@ export function outputModelPlayerStatistic(
         function find(game: PairGamesEntity) {
             if (!(game.status === 'Finished')) return;
 
-            if (game.firstPlayer.score === game.secondPlayer!.score)
+            const firstPlayer = game.players[0];
+            const secondPlayer = game.players[1];
+
+            if (firstPlayer.score === secondPlayer!.score)
                 statistic.drawsCount++;
 
-            if (game.firstPlayer.user.id === userId) {
-                statistic.sumScore += game.firstPlayer.score;
+            if (firstPlayer.user.id === userId) {
+                statistic.sumScore += firstPlayer.score;
 
-                if (game.firstPlayer.score > game.secondPlayer!.score)
+                if (firstPlayer.score > secondPlayer!.score)
                     statistic.winsCount++;
 
-                if (game.firstPlayer.score < game.secondPlayer!.score)
+                if (firstPlayer.score < secondPlayer!.score)
                     statistic.lossesCount++;
             } else {
-                statistic.sumScore += game.secondPlayer!.score;
+                statistic.sumScore += secondPlayer!.score;
 
-                if (game.firstPlayer.score < game.secondPlayer!.score)
+                if (firstPlayer.score < secondPlayer!.score)
                     statistic.winsCount++;
 
-                if (game.firstPlayer.score > game.secondPlayer!.score)
+                if (firstPlayer.score > secondPlayer!.score)
                     statistic.lossesCount++;
             }
         }

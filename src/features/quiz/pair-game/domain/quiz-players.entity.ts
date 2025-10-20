@@ -15,48 +15,48 @@ export class QuizPlayersEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(
-        () => PlayersEntity,
-        // (player) => player.quizPlayer,
-        {
-            cascade: true,
-            eager: true,
-        }
-    )
-    @JoinColumn()
-    players: PlayersEntity;
+    // @OneToOne(
+    //     () => PlayersEntity,
+    //     // (player) => player.quizPlayer,
+    //     {
+    //         cascade: true,
+    //         eager: true,
+    //     }
+    // )
+    // @JoinColumn()
+    // players: PlayersEntity;
+    //
+    // @OneToMany(() => PlayerAnswersEntity,
+    //     (answer) => answer.player,
+    //     {
+    //         nullable: true,
+    //         cascade: true,
+    //         eager: true,
+    //         onDelete: 'CASCADE',
+    //     })
+    // answers: PlayerAnswersEntity[] | null;
 
-    @OneToMany(() => PlayerAnswersEntity,
-        (answer) => answer.player,
-        {
-            nullable: true,
-            cascade: true,
-            eager: true,
-            onDelete: 'CASCADE',
-        })
-    answers: PlayerAnswersEntity[] | null;
+    // @OneToMany(
+    //     () => GamePlayerScoresEntity,
+    //     (score) => score.playerScore,
+    //     {
+    //         nullable: true,
+    //         cascade: true,
+    //         eager: true,
+    //         onDelete: 'CASCADE',
+    //     }
+    // )
+    // gameScore: GamePlayerScoresEntity[] | null;
 
-    @OneToMany(
-        () => GamePlayerScoresEntity,
-        (score) => score.playerScore,
-        {
-            nullable: true,
-            cascade: true,
-            eager: true,
-            onDelete: 'CASCADE',
-        }
-    )
-    gameScore: GamePlayerScoresEntity[] | null;
-
-    @OneToOne(
-        () => UsersStatisticEntity,
-        //(statistic) => statistic.quizPlayer,
-        {
-            cascade: true,
-            eager: true,
-            onDelete: 'CASCADE',
-        }
-    )
-    @JoinColumn()
-    statistic: UsersStatisticEntity;
+    // @OneToOne(
+    //     () => UsersStatisticEntity,
+    //     //(statistic) => statistic.quizPlayer,
+    //     {
+    //         cascade: true,
+    //         eager: true,
+    //         onDelete: 'CASCADE',
+    //     }
+    // )
+    // @JoinColumn()
+    // statistic: UsersStatisticEntity;
 }

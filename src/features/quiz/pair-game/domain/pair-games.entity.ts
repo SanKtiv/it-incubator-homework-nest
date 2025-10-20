@@ -3,7 +3,6 @@ import {
     Entity,
     JoinColumn,
     OneToMany,
-    OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import {QuestionsGameEntity} from './questions-game.entity';
@@ -14,26 +13,39 @@ export class PairGamesEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(
+    @OneToMany(
         () => PlayersEntity,
+        (player) => player.game,
         {
             cascade: ['insert', 'update'],
             eager: true,
         }
     )
     @JoinColumn()
-    firstPlayer: PlayersEntity;
+    players: PlayersEntity[];
 
-    @OneToOne(
-        () => PlayersEntity,
-        {
-            nullable: true,
-            cascade: ['insert', 'update'],
-            eager: true,
-        }
-    )
-    @JoinColumn()
-    secondPlayer: PlayersEntity | null;
+    // @OneToOne(
+    //     () => PlayersEntity,
+    //     (player) => player.firstGame,
+    //     {
+    //         cascade: ['insert', 'update'],
+    //         eager: true,
+    //     }
+    // )
+    // @JoinColumn()
+    // firstPlayer: PlayersEntity;
+    //
+    // @OneToOne(
+    //     () => PlayersEntity,
+    //     (player) => player.secondGame,
+    //     {
+    //         nullable: true,
+    //         cascade: ['insert', 'update'],
+    //         eager: true,
+    //     }
+    // )
+    // @JoinColumn()
+    // secondPlayer: PlayersEntity | null;
 
     @OneToMany(
         () => QuestionsGameEntity,
@@ -54,10 +66,10 @@ export class PairGamesEntity {
     pairCreatedDate: Date;
 
     @Column({type: 'timestamp with time zone', nullable: true})
-    startGameDate: Date;
+    startGameDate: Date | null;
 
     @Column({type: 'timestamp with time zone', nullable: true})
-    finishGameDate: Date;
+    finishGameDate: Date | null;
 }
 
 export type QuizPairGameStatusType =

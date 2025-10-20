@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
+import {IsNull, Repository} from 'typeorm';
 import {PairGamesEntity, QuizPairGameStatusType} from '../../domain/pair-games.entity';
 
 @Injectable()
@@ -12,17 +12,22 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getById(id: string): Promise<PairGamesEntity | null | undefined> {
-        return this.getGameBuilder
-            .where('game."id" = :id', {id})
-            .getOne();
+        // return this.getGameBuilder
+        //     .where('game."id" = :id', {id})
+        //     .getOne();
+        return this.repository.findOne({
+            where: {
+                id: id,
+            }
+        })
     }
 
     async getByStatus(status: QuizPairGameStatusType) {
-      return this.repository.findOne({
-        where: {
-          status: status,
-        }
-      })
+        return this.repository.findOne({
+            where: {
+                status: status,
+            }
+        })
         // return this.repository
         //     .createQueryBuilder('game')
         //     .where('game.status = :status')
@@ -41,21 +46,29 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getOneUnfinished(userId: string): Promise<PairGamesEntity | null> {
-
         return this.repository
-            .createQueryBuilder('game')
-            .leftJoinAndSelect('game.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect('firstPlayer.players', 'firstQuizPlayer')
-            .leftJoinAndSelect('firstQuizPlayer.user', 'firstUser')
-            .leftJoinAndSelect('game.secondPlayer', 'secondPlayer')
-            .leftJoinAndSelect('secondPlayer.players', 'secondQuizPlayer')
-            .leftJoinAndSelect('secondQuizPlayer.user', 'secondUser')
-            .where('game.finishGameDate IS NULL')
-            .andWhere('firstUser.id = :userId')
-            .orWhere('game.finishGameDate IS NULL')
-            .andWhere('secondUser.id = :userId')
-            .setParameters({userId})
-            .getOne()
+            .findOne({
+                relations: {players: {user: true}},
+                where: {
+                    finishGameDate: IsNull(),
+                    players: {
+                        user: {id: userId}
+                    }
+                },
+            })
+
+        // return this.repository
+        //     .createQueryBuilder('game')
+        //     .leftJoinAndSelect('game.firstPlayer', 'firstPlayer')
+        //     .leftJoinAndSelect('firstPlayer.user', 'firstUser')
+        //     .leftJoinAndSelect('game.secondPlayer', 'secondPlayer')
+        //     .leftJoinAndSelect('secondPlayer.user', 'secondUser')
+        //     .where('game.finishGameDate IS NULL')
+        //     .andWhere('firstUser.id = :userId')
+        //     .orWhere('game.finishGameDate IS NULL')
+        //     .andWhere('secondUser.id = :userId')
+        //     .setParameters({userId})
+        //     .getOne()
         // return this.getGameBuilder
         //     .where('game.finishGameDate IS NULL')
         //     .andWhere('firstUser.id = :userId')
