@@ -72,20 +72,20 @@ export const outputModelCreatedPairGame =
     id: game.id,
     firstPlayerProgress: {
       player: {
-        id: game.firstPlayer.players.user.id,
-        login: game.firstPlayer.players.user.accountData.login,
+        id: game.firstPlayer.user.id,
+        login: game.firstPlayer.user.accountData.login,
       },
       answers: answers(game.firstPlayer.answers),
-      score: game.firstPlayer.gameScore![0].score,
+      score: game.firstPlayer.score,
     },
     secondPlayerProgress: game.secondPlayer ?
         {
           player: {
-            id: game.secondPlayer.players.user.id,
-            login: game.secondPlayer.players.user.accountData.login,
+            id: game.secondPlayer.user.id,
+            login: game.secondPlayer.user.accountData.login,
           },
           answers: answers(game.secondPlayer.answers),
-          score: game.secondPlayer.gameScore![0].score,
+          score: game.secondPlayer.score,
         } : game.secondPlayer,
     questions: questions,
     status: game.status,
@@ -126,24 +126,24 @@ export function outputModelPlayerStatistic(
         function find(game: PairGamesEntity) {
             if (!(game.status === 'Finished')) return;
 
-            if (game.firstPlayer.gameScore![0].score === game.secondPlayer!.gameScore![0].score)
+            if (game.firstPlayer.score === game.secondPlayer!.score)
                 statistic.drawsCount++;
 
-            if (game.firstPlayer.players.user.id === userId) {
-                statistic.sumScore += game.firstPlayer.gameScore![0].score;
+            if (game.firstPlayer.user.id === userId) {
+                statistic.sumScore += game.firstPlayer.score;
 
-                if (game.firstPlayer.gameScore![0].score > game.secondPlayer!.gameScore![0].score)
+                if (game.firstPlayer.score > game.secondPlayer!.score)
                     statistic.winsCount++;
 
-                if (game.firstPlayer.gameScore![0].score < game.secondPlayer!.gameScore![0].score)
+                if (game.firstPlayer.score < game.secondPlayer!.score)
                     statistic.lossesCount++;
             } else {
-                statistic.sumScore += game.secondPlayer!.gameScore![0].score;
+                statistic.sumScore += game.secondPlayer!.score;
 
-                if (game.firstPlayer.gameScore![0].score < game.secondPlayer!.gameScore![0].score)
+                if (game.firstPlayer.score < game.secondPlayer!.score)
                     statistic.winsCount++;
 
-                if (game.firstPlayer.gameScore![0].score > game.secondPlayer!.gameScore![0].score)
+                if (game.firstPlayer.score > game.secondPlayer!.score)
                     statistic.lossesCount++;
             }
         }

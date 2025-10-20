@@ -53,17 +53,16 @@ export class UsersTable {
     @JoinColumn()
     passwordRecovery: PasswordRecoveryTable;
 
-    @OneToOne(
+    @OneToMany(
         () => PlayersEntity,
         (players) => players.user,
         {
             nullable: true,
             cascade: false,
-            eager: false,
         }
     )
     @JoinColumn()
-    players: PlayersEntity | null;
+    players: PlayersEntity[] | null;
 
     @DeleteDateColumn({type: 'timestamp with time zone', nullable: true})
     deletedAt?: Date; // Поле для хранения даты удаления для softRemove, softDelete

@@ -10,8 +10,6 @@ import {QuizPlayersEntity} from '../domain/quiz-players.entity';
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
 import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
-import {UsersRepository} from "../../../users/infrastructure/users.repository";
-import {GamePlayerScoresEntity} from "../domain/game-player-scores";
 import {PlayersEntity} from "../domain/players.entity";
 import {UsersService} from "../../../users/application/users.service";
 
@@ -37,8 +35,6 @@ export class GameServices {
     private updateGameToFinishedStatus(game: PairGamesEntity): PairGamesEntity {
         game.status = 'Finished';
         game.finishGameDate = new Date();
-        game.firstPlayer.statistic.gamesCount++;
-        game.secondPlayer!.statistic.gamesCount++;
 
         game.firstPlayer.answers!.sort(
             (a: any, b: any) => b.addedAt - a.addedAt,
@@ -60,36 +56,28 @@ export class GameServices {
             game.firstPlayer.answers![0].addedAt >
             game.secondPlayer!.answers![0].addedAt &&
             correctAnswersSecondPlayer
-        ) {
-            game.secondPlayer!.gameScore![0].score++;
-            game.secondPlayer!.statistic.sumScore++;
-        }
+        ) game.secondPlayer!.score++;
+
 
         if (
             game.firstPlayer.answers![0].addedAt <
             game.secondPlayer!.answers![0].addedAt &&
             correctAnswersFirstPlayer
-        ) {
-            game.firstPlayer.gameScore![0].score++;
-            game.firstPlayer.statistic.sumScore++;
+        ) game.firstPlayer.score++;
+
+        if (game.firstPlayer.score > game.secondPlayer!.score) {
+            game.firstPlayer.win++;
+            game.secondPlayer!.lose++;
         }
 
-        if (game.firstPlayer.gameScore![0].score > game.secondPlayer!.gameScore![0].score) {
-            game.firstPlayer.statistic.winsCount++;
-
-            game.secondPlayer!.statistic.lossesCount++;
+        if (game.firstPlayer.score < game.secondPlayer!.score) {
+            game.secondPlayer!.win++;
+            game.firstPlayer.lose++;
         }
 
-        if (game.firstPlayer.gameScore![0].score < game.secondPlayer!.gameScore![0].score) {
-            game.secondPlayer!.statistic.winsCount++;
-
-            game.firstPlayer.statistic.lossesCount++;
-        }
-
-        if (game.firstPlayer.gameScore![0].score == game.secondPlayer!.gameScore![0].score) {
-            game.secondPlayer!.statistic.drawsCount++;
-
-            game.firstPlayer.statistic.drawsCount++;
+        if (game.firstPlayer.score == game.secondPlayer!.score) {
+            game.secondPlayer!.draw++;
+            game.firstPlayer.draw++;
         }
 
         return game;
@@ -127,9 +115,7 @@ export class GameServices {
         game.status = status;
 console.log('GAME =', game)
         console.log('firstPlayer =', game.firstPlayer)
-        console.log(' players =', game.firstPlayer.players)
-        console.log(' statistic =', game.firstPlayer.statistic)
-        console.log(' user =', game.firstPlayer.players.user)
+        console.log(' user =', game.firstPlayer.user)
 
         const createdGame = await this.pairGameRepository.createPairGame(game);
         console.log('createdGame is complete')
@@ -150,26 +136,22 @@ console.log('GAME =', game)
         return outputModelCreatedPairGame(activeGame!);
     }
 
-    async createQuizPlayer(userId: string, game: PairGamesEntity): Promise<QuizPlayersEntity> {
+    async createQuizPlayer(userId: string, game: PairGamesEntity): Promise<PlayersEntity> {
 
-        const quizPlayer = new QuizPlayersEntity();
-
-        quizPlayer.players = new PlayersEntity();
+        const player = new PlayersEntity();
 
         //const user = await this.usersService.getUserById(userId);
 
-        quizPlayer.players.user = new UsersTable();
+        player.user = new UsersTable();
 
-        quizPlayer.players.user.id = userId;
+        player.user.id = userId;
 
         console.log('createPlayer4')
-        quizPlayer.gameScore = null;
         console.log('createPlayer5')
-        quizPlayer.statistic = new UsersStatisticEntity();
         console.log('createPlayer6')
-        quizPlayer.answers = null;
+        player.answers = null;
         console.log('createPlayer7')
-        return quizPlayer;
+        return player;
     }
 
     async createFiveQuestionsForGame(game: PairGamesEntity) {
@@ -205,14 +187,14 @@ console.log('GAME =', game)
 
         const answer = new PlayerAnswersEntity();
 
-        if (game.firstPlayer.players.user.id === userId) {
+        if (game.firstPlayer.user.id === userId) {
             if (countAnswersFirstPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 
             const question = game.questions![countAnswersFirstPlayer]
 
             answer.gameId = game.id;
-            answer.quizPlayer = game.firstPlayer;
+            answer.player = game.firstPlayer;
             answer.questionId = question.question.id;
             answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
@@ -222,19 +204,18 @@ console.log('GAME =', game)
             countAnswersFirstPlayer = game.firstPlayer.answers!.length;
 
             if (answer.answerStatus === 'Correct') {
-                game.firstPlayer.gameScore![0].score++;
-                game.firstPlayer.statistic.sumScore++;
+                game.firstPlayer.score++;
             }
         }
         console.log('3')
-        if (game.secondPlayer!.players.user.id === userId) {
+        if (game.secondPlayer!.user.id === userId) {
             if (countAnswersSecondPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 
             const question = game.questions![countAnswersSecondPlayer]
 
             answer.gameId = game.id;
-            answer.quizPlayer = game.secondPlayer!;
+            answer.player = game.secondPlayer!;
             answer.questionId = question.question.id;
             answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
@@ -244,8 +225,7 @@ console.log('GAME =', game)
             countAnswersSecondPlayer = game.secondPlayer!.answers!.length;
 
             if (answer.answerStatus === 'Correct') {
-                game.secondPlayer!.gameScore![0].score++;;
-                game.secondPlayer!.statistic.sumScore++;
+                game.secondPlayer!.score++;;
             }
         }
 

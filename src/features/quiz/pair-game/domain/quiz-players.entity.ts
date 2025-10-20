@@ -27,7 +27,7 @@ export class QuizPlayersEntity {
     players: PlayersEntity;
 
     @OneToMany(() => PlayerAnswersEntity,
-        (answer) => answer.quizPlayer,
+        (answer) => answer.player,
         {
             nullable: true,
             cascade: true,
