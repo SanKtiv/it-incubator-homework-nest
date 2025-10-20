@@ -27,7 +27,7 @@ export class PairGameQuizPairsController {
     @Get('testing-create-game')
     async testing() {
         const res =
-            await this.pairGameServices.connectToGame('2f8f3851-ff40-418c-88fd-a4d9f6cf9f09');
+            await this.pairGameServices.connectToGame('70dfe8f5-3458-4ce3-8a39-3136c4d16867');
         console.log('return =', res)
         return res;
     }

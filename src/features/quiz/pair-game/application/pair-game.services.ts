@@ -125,11 +125,14 @@ export class GameServices {
     async joinToGame(userId: string, game: PairGamesEntity) {
         const questions = await this.createFiveQuestionsForGame(game);
 
-        game.players[1] = await this.createPlayer(userId, game);
+        const player = await this.createPlayer(userId, game);
+
+        game.players.push(player);
         game.status = 'Active';
         game.startGameDate = new Date();
         game.questions = questions;
 
+        console.log('game =', game)
         const activeGame =
             await this.pairGameRepository.createPairGame(game);
 
