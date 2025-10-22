@@ -18,6 +18,11 @@ export class PairGameRepositoryTypeOrm {
         return this.repository.findOne({
             where: {
                 id: id,
+            },
+            order: {
+                questions: {
+                    index: 'ASC'
+                }
             }
         })
     }

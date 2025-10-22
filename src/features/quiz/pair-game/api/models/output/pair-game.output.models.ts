@@ -67,12 +67,12 @@ export const outputModelCreatedPairGame =
             addedAt: e.addedAt.toISOString(),
         }))
 
-        // const questions = game.questions && game.questions.length > 0
-        //     ? game.questions.map((e) => ({
-        //         id: e.question.id,
-        //         body: e.question.body,
-        //     }))
-        //     : null
+        const questions = game.questions && game.questions.length > 0
+            ? game.questions.map((e) => ({
+                id: e.question.id,
+                body: e.question.body,
+            }))
+            : null
 
         const firstPlayer = game.players[0];
         const secondPlayer = game.players[1];
@@ -96,7 +96,7 @@ export const outputModelCreatedPairGame =
                     answers: answers(secondPlayer.answers),
                     score: secondPlayer.score,
                 } : null,
-            // questions: questions,
+            questions: questions,
             status: game.status,
             pairCreatedDate: game.pairCreatedDate.toISOString(),
             startGameDate: game.startGameDate ?

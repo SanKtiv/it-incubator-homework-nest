@@ -23,7 +23,11 @@ export class QuestionsGameEntity {
   @JoinColumn()
   game: PairGamesEntity;
 
-  @ManyToOne(() => QuestionsEntity )
+  @ManyToOne(
+      () => QuestionsEntity,
+      {
+        eager: true,
+      })
   @JoinColumn()
   question: QuestionsEntity;
 
