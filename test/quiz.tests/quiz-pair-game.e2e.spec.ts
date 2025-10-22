@@ -196,21 +196,21 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     testAccessToken4 = resultLoginUser.accessToken;
   });
 
-//   it('11 /pair-game-quiz/pairs/connection (POST), create game №1 user1 should returned status 200', async () => {
-//     const resultCreatePairGame =
-//       await quizPairGameTestManager.create(testAccessToken1);
-//
-//     await expect(resultCreatePairGame.statusCode).toBe(200)
-//
-//     idExistPairGame1 = resultCreatePairGame.body.id;
-//   });
-//
-//   it('12 /pair-game-quiz/pairs/connection (POST), connection game №1 user1 should returned status 403', async () => {
-//     const resultCreatePairGame =
-//         await quizPairGameTestManager.create(testAccessToken1);
-//
-//     await expect(resultCreatePairGame.statusCode).toBe(403)
-//   });
+  it('11 /pair-game-quiz/pairs/connection (POST), create game №1 user1 should returned status 200', async () => {
+    const resultCreatePairGame =
+      await quizPairGameTestManager.create(testAccessToken1);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+
+    idExistPairGame1 = resultCreatePairGame.body.id;
+  });
+
+  it('12 /pair-game-quiz/pairs/connection (POST), connection game №1 user1 should returned status 403', async () => {
+    const resultCreatePairGame =
+        await quizPairGameTestManager.create(testAccessToken1);
+
+    await expect(resultCreatePairGame.statusCode).toBe(403)
+  });
 //
 //   it('13 /pair-game-quiz/pairs/my-current (GET), get current game user2 should returned status 404', async () => {
 //     const resultGetGame =

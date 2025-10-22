@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
-import {DataSource, Repository} from 'typeorm';
+import {DataSource, IsNull, Repository} from 'typeorm';
 import {GameQueryTopUsers, pairGameQuery} from '../../api/models/input/input-query.dto';
 import {PairGamesEntity} from "../../domain/pair-games.entity";
 import {QuizPlayersEntity} from "../../domain/quiz-players.entity";
@@ -47,14 +47,28 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getByUserId(userId: string): Promise<PairGamesEntity | null> {
-        return this.shareBuilder
-            .where('pg.finishGameDate IS NULL')
-            .andWhere('firstUser.id = :userId')
-            .orWhere('pg.finishGameDate IS NULL')
-            .andWhere('secondUser.id = :userId')
-            .setParameters({userId})
-            .orderBy('questions.index', 'ASC')
-            .getOne();
+        return this.repository
+            .findOne({
+                relations: {
+                    players: {user: true}
+                    },
+                where: {
+                    finishGameDate: IsNull(),
+                    players: {user: {id: userId}}
+                },
+                order: {
+                    questions: {index: 'ASC'}
+                }
+            })
+
+        // return this.shareBuilder
+        //     .where('pg.finishGameDate IS NULL')
+        //     .andWhere('firstUser.id = :userId')
+        //     .orWhere('pg.finishGameDate IS NULL')
+        //     .andWhere('secondUser.id = :userId')
+        //     .setParameters({userId})
+        //     .orderBy('questions.index', 'ASC')
+        //     .getOne();
     }
 
     async getPaging(userId: string, query: pairGameQuery): Promise<PairGamesEntity[]> {

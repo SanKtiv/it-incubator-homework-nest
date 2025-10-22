@@ -149,16 +149,12 @@ export class GameServices {
 
         const player = new PlayersEntity();
 
-        //const user = await this.usersService.getUserById(userId);
-
         player.user = new UsersTable();
-
 
         player.user.id = userId;
 
-        console.log('createPlayer6')
         player.answers = null;
-        console.log('createPlayer7')
+
         return player;
     }
 
