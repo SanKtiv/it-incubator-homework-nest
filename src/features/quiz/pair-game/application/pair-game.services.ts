@@ -132,11 +132,17 @@ export class GameServices {
         game.startGameDate = new Date();
         game.questions = questions;
 
-        console.log('game =', game)
         const activeGame =
             await this.pairGameRepository.createPairGame(game);
 
-        return outputModelCreatedPairGame(activeGame!);
+        try {
+            const out = outputModelCreatedPairGame(activeGame!);
+            return out;
+        }
+        catch (e) {
+            console.log('ERROR =', e)
+        }
+
     }
 
     async createPlayer(userId: string, game: PairGamesEntity): Promise<PlayersEntity> {
