@@ -41,9 +41,19 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getById(id: string): Promise<PairGamesEntity | null> {
-        return this.shareBuilder
-            .where('pg."id" = :id', {id})
-            .getOne();
+        return this.repository.findOne({
+            where: {
+                id: id,
+            },
+            order: {
+                questions: {
+                    index: 'ASC'
+                },
+                players: {
+                    index: 'ASC'
+                }
+            }
+        })
     }
 
     async getByUserId(userId: string): Promise<PairGamesEntity | null | undefined> {
