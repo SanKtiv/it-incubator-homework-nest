@@ -46,29 +46,48 @@ export class PairGameQueryRepositoryTypeOrm {
             .getOne();
     }
 
-    async getByUserId(userId: string): Promise<PairGamesEntity | null> {
-        return this.repository
-            .findOne({
-                relations: {
-                    players: {user: true}
-                    },
-                where: {
-                    finishGameDate: IsNull(),
-                    players: {user: {id: userId}}
-                },
-                order: {
-                    questions: {index: 'ASC'}
-                }
-            })
+    async getByUserId(userId: string): Promise<PairGamesEntity | null | undefined> {
+        // return this.repository
+        //     .findOne({
+        //         relations: {
+        //             players: {user: true}
+        //             },
+        //         where: {
+        //             finishGameDate: IsNull(),
+        //             players: {user: {id: userId}}
+        //         },
+        //         order: {
+        //             questions: {index: 'ASC'}
+        //         }
+        //     })
+        try {
+            const subQueryGamesWithUserByUserId =
+                this.repository
+                    .createQueryBuilder('g')
+                    .select('g.id')
+                    .leftJoin('g.players', 'p')
+                    .leftJoin('p.user', 'u')
+                    .where('game.finishGameDate IS NULL')
+                    .andWhere('u.id = :userId')
+                    // .setParameters({ userId })
 
-        // return this.shareBuilder
-        //     .where('pg.finishGameDate IS NULL')
-        //     .andWhere('firstUser.id = :userId')
-        //     .orWhere('pg.finishGameDate IS NULL')
-        //     .andWhere('secondUser.id = :userId')
-        //     .setParameters({userId})
-        //     .orderBy('questions.index', 'ASC')
-        //     .getOne();
+            const result = await this.repository
+                .createQueryBuilder('game')
+                .where(`game.id IN (${subQueryGamesWithUserByUserId.getQuery()})`)
+                //.setParameters(subQueryGamesWithUserByUserId.getParameters())
+                .setParameters({ userId })
+                .leftJoinAndSelect('game.players', 'players')
+                .leftJoinAndSelect('players.user', 'user')
+                .leftJoinAndSelect('game.questions', 'questions')
+                .orderBy('questions.index', 'ASC')
+                .getOne();
+
+            return result;
+        }
+        catch (e) {
+            console.log('ERROR in PairGameQueryRepositoryTypeOrm', e)
+        }
+
     }
 
     async getPaging(userId: string, query: pairGameQuery): Promise<PairGamesEntity[]> {

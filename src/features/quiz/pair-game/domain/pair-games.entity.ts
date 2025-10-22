@@ -24,29 +24,6 @@ export class PairGamesEntity {
     @JoinColumn()
     players: PlayersEntity[];
 
-    // @OneToOne(
-    //     () => PlayersEntity,
-    //     (player) => player.firstGame,
-    //     {
-    //         cascade: ['insert', 'update'],
-    //         eager: true,
-    //     }
-    // )
-    // @JoinColumn()
-    // firstPlayer: PlayersEntity;
-    //
-    // @OneToOne(
-    //     () => PlayersEntity,
-    //     (player) => player.secondGame,
-    //     {
-    //         nullable: true,
-    //         cascade: ['insert', 'update'],
-    //         eager: true,
-    //     }
-    // )
-    // @JoinColumn()
-    // secondPlayer: PlayersEntity | null;
-
     @OneToMany(
         () => QuestionsGameEntity,
         (questions) => questions.game,
