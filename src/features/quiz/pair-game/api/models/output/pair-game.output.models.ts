@@ -74,8 +74,7 @@ export const outputModelCreatedPairGame =
             }))
             : null
 
-        const firstPlayer = game.players[0];
-        const secondPlayer = game.players[1];
+        const [firstPlayer, secondPlayer] = game.players;
 
         return {
             id: game.id,

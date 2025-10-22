@@ -12,9 +12,6 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getById(id: string): Promise<PairGamesEntity | null | undefined> {
-        // return this.getGameBuilder
-        //     .where('game."id" = :id', {id})
-        //     .getOne();
         return this.repository.findOne({
             where: {
                 id: id,

@@ -10,10 +10,8 @@ import {QuestionsEntity} from '../../questions/domain/quiz-questions.entity';
 import {UsersTable} from '../../../users/domain/users.table';
 import {InputAnswersModels} from '../api/models/input/input-answers.models';
 import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.entity';
-import {QuizPlayersEntity} from '../domain/quiz-players.entity';
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
-import {UsersStatisticEntity} from "../../../users/domain/statistic.table";
 import {PlayersEntity} from "../domain/players.entity";
 import {UsersService} from "../../../users/application/users.service";
 
@@ -106,11 +104,15 @@ export class GameServices {
 
     async createGame(userId: string, status: QuizPairGameStatusType) {
         const game = new PairGamesEntity();
+
         const array: PlayersEntity[] = [];
-        const player = await this.createPlayer(userId, game);
+
+        const player = await this.createPlayer(userId);
 
         array.push(player)
+
         game.players = array;
+
         game.pairCreatedDate = new Date();
 
         game.questions = null;
@@ -125,11 +127,16 @@ export class GameServices {
     async joinToGame(userId: string, game: PairGamesEntity) {
         const questions = await this.createFiveQuestionsForGame(game);
 
-        const player = await this.createPlayer(userId, game);
+        const player = await this.createPlayer(userId);
+
+        player.index = 1;
 
         game.players.push(player);
+
         game.status = 'Active';
+
         game.startGameDate = new Date();
+
         game.questions = questions;
 
         const activeGame =
@@ -145,7 +152,7 @@ export class GameServices {
 
     }
 
-    async createPlayer(userId: string, game: PairGamesEntity): Promise<PlayersEntity> {
+    async createPlayer(userId: string): Promise<PlayersEntity> {
 
         const player = new PlayersEntity();
 

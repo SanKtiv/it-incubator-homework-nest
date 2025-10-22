@@ -33,9 +33,7 @@ export class PairGameQueryRepository {
 
     if (!game) throw new NotFoundException();
 
-    return game;
-
-    // return outputModelCreatedPairGame(game);
+     return outputModelCreatedPairGame(game);
   }
 
   async getPaging(userId: string, query: pairGameQuery) {

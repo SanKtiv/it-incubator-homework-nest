@@ -47,19 +47,6 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getByUserId(userId: string): Promise<PairGamesEntity | null | undefined> {
-        // return this.repository
-        //     .findOne({
-        //         relations: {
-        //             players: {user: true}
-        //             },
-        //         where: {
-        //             finishGameDate: IsNull(),
-        //             players: {user: {id: userId}}
-        //         },
-        //         order: {
-        //             questions: {index: 'ASC'}
-        //         }
-        //     })
         try {
             const subQueryGamesWithUserByUserId =
                 this.repository
@@ -69,17 +56,19 @@ export class PairGameQueryRepositoryTypeOrm {
                     .leftJoin('p.user', 'u')
                     .where('game.finishGameDate IS NULL')
                     .andWhere('u.id = :userId')
-                    // .setParameters({ userId })
 
             const result = await this.repository
                 .createQueryBuilder('game')
                 .where(`game.id IN (${subQueryGamesWithUserByUserId.getQuery()})`)
-                //.setParameters(subQueryGamesWithUserByUserId.getParameters())
                 .setParameters({ userId })
                 .leftJoinAndSelect('game.players', 'players')
                 .leftJoinAndSelect('players.user', 'user')
+                .leftJoinAndSelect('user.accountData', 'account')
+                .leftJoinAndSelect('players.answers', 'answers')
                 .leftJoinAndSelect('game.questions', 'questions')
-                .orderBy('questions.index', 'ASC')
+                .leftJoinAndSelect('questions.question', 'question')
+                .orderBy('players.index', 'ASC')
+                .addOrderBy('questions.index', 'ASC')
                 .getOne();
 
             return result;

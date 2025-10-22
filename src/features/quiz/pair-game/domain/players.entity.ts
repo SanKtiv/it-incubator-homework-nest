@@ -9,6 +9,9 @@ export class PlayersEntity {
     id: string;
 
     @Column({type: 'smallint', default: 0})
+    index: number;
+
+    @Column({type: 'smallint', default: 0})
     score: number;
 
     @Column({type: 'smallint', default: 0})
