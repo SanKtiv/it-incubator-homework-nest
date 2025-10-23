@@ -38,12 +38,27 @@ export class PairGameRepositoryTypeOrm {
     }
 
     async getActiveGame(userId: string, status: string): Promise<PairGamesEntity | null | undefined> {
-        return this.getGameBuilder
-            .where('game.status = :status')
-            .andWhere('firstUser.id = :userId')
-            .orWhere('game.status = :status')
-            .andWhere('secondUser.id = :userId')
-            .setParameters({status, userId})
+        const subQueryGamesWithUserByUserId =
+            this.repository
+                .createQueryBuilder('g')
+                .select('g.id')
+                .leftJoin('g.players', 'p')
+                .leftJoin('p.user', 'u')
+                .where('game.status = :status')
+                .andWhere('u.id = :userId')
+
+        return await this.repository
+            .createQueryBuilder('game')
+            .where(`game.id IN (${subQueryGamesWithUserByUserId.getQuery()})`)
+            .setParameters({ status, userId })
+            .leftJoinAndSelect('game.players', 'players')
+            .leftJoinAndSelect('players.user', 'user')
+            .leftJoinAndSelect('user.accountData', 'account')
+            .leftJoinAndSelect('players.answers', 'answers')
+            .leftJoinAndSelect('game.questions', 'questions')
+            .leftJoinAndSelect('questions.question', 'question')
+            .orderBy('players.index', 'ASC')
+            .addOrderBy('questions.index', 'ASC')
             .getOne();
     }
 

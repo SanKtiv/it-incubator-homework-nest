@@ -192,52 +192,53 @@ export class GameServices {
 
         const getLength = arr => arr ? arr.length : 0;
 
+        const [firstPlayer, secondPlayer] = game.players;
+
         const countQuestionsGame = getLength(game.questions);
-        let countAnswersFirstPlayer = getLength(game.players[0].answers);
-        let countAnswersSecondPlayer = getLength(game.players[1]!.answers);
+        let countAnswersFirstPlayer = getLength(firstPlayer.answers);
+        let countAnswersSecondPlayer = getLength(secondPlayer!.answers);
 
         const answer = new PlayerAnswersEntity();
 
-        if (game.players[0].user.id === userId) {
+        if (firstPlayer.user.id === userId) {
             if (countAnswersFirstPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 
             const question = game.questions![countAnswersFirstPlayer]
 
             answer.gameId = game.id;
-            answer.player = game.players[0];
+            answer.player = firstPlayer;
             answer.questionId = question.question.id;
             answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
 
-            game.players[0].answers!.push(answer);
+            firstPlayer.answers!.push(answer);
 
-            countAnswersFirstPlayer = game.players[0].answers!.length;
+            countAnswersFirstPlayer = firstPlayer.answers!.length;
 
             if (answer.answerStatus === 'Correct') {
-                game.players[0].score++;
+                firstPlayer.score++;
             }
         }
-        console.log('3')
-        if (game.players[1]!.user.id === userId) {
+
+        if (secondPlayer!.user.id === userId) {
             if (countAnswersSecondPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 
             const question = game.questions![countAnswersSecondPlayer]
 
             answer.gameId = game.id;
-            answer.player = game.players[1]!;
+            answer.player = secondPlayer!;
             answer.questionId = question.question.id;
             answer.addedAt = new Date();
             answer.answerStatus = this.getAnswerStatus(dto, question);
 
-            game.players[1]!.answers!.push(answer);
+            secondPlayer!.answers!.push(answer);
 
-            countAnswersSecondPlayer = game.players[1]!.answers!.length;
+            countAnswersSecondPlayer = secondPlayer!.answers!.length;
 
             if (answer.answerStatus === 'Correct') {
-                game.players[1]!.score++;
-                ;
+                secondPlayer!.score++;
             }
         }
 
