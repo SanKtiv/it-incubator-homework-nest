@@ -36,51 +36,53 @@ export class GameServices {
     }
 
     private updateGameToFinishedStatus(game: PairGamesEntity): PairGamesEntity {
+        const [firstPlayer, secondPlayer] = game.players;
+
         game.status = 'Finished';
         game.finishGameDate = new Date();
 
-        game.players[0].answers!.sort(
+        firstPlayer.answers!.sort(
             (a: any, b: any) => b.addedAt - a.addedAt,
         );
 
-        game.players[1]!.answers!.sort(
+        secondPlayer!.answers!.sort(
             (a: any, b: any) => b.addedAt - a.addedAt,
         );
 
         const correctAnswersFirstPlayer =
-            game.players[0].answers!
+            firstPlayer.answers!
                 .find((e) => e.answerStatus === 'Correct');
 
         const correctAnswersSecondPlayer =
-            game.players[1]!.answers!
+            secondPlayer!.answers!
                 .find((e) => e.answerStatus === 'Correct');
 
         if (
-            game.players[0].answers![0].addedAt >
-            game.players[1]!.answers![0].addedAt &&
+            firstPlayer.answers![0].addedAt >
+            secondPlayer!.answers![0].addedAt &&
             correctAnswersSecondPlayer
-        ) game.players[1]!.score++;
+        ) secondPlayer!.score++;
 
 
         if (
-            game.players[0].answers![0].addedAt <
-            game.players[1]!.answers![0].addedAt &&
+            firstPlayer.answers![0].addedAt <
+            secondPlayer!.answers![0].addedAt &&
             correctAnswersFirstPlayer
-        ) game.players[0].score++;
+        ) firstPlayer.score++;
 
-        if (game.players[0].score > game.players[1]!.score) {
-            game.players[0].win++;
-            game.players[1]!.lose++;
+        if (firstPlayer.score > secondPlayer!.score) {
+            firstPlayer.win++;
+            secondPlayer!.lose++;
         }
 
-        if (game.players[0].score < game.players[1]!.score) {
-            game.players[1]!.win++;
-            game.players[0].lose++;
+        if (firstPlayer.score < secondPlayer!.score) {
+            secondPlayer!.win++;
+            firstPlayer.lose++;
         }
 
-        if (game.players[0].score == game.players[1]!.score) {
-            game.players[1]!.draw++;
-            game.players[0].draw++;
+        if (firstPlayer.score == secondPlayer!.score) {
+            secondPlayer!.draw++;
+            firstPlayer.draw++;
         }
 
         return game;
@@ -216,9 +218,7 @@ export class GameServices {
 
             countAnswersFirstPlayer = firstPlayer.answers!.length;
 
-            if (answer.answerStatus === 'Correct') {
-                firstPlayer.score++;
-            }
+            if (answer.answerStatus === 'Correct') firstPlayer.score++;
         }
 
         if (secondPlayer!.user.id === userId) {
@@ -237,9 +237,7 @@ export class GameServices {
 
             countAnswersSecondPlayer = secondPlayer!.answers!.length;
 
-            if (answer.answerStatus === 'Correct') {
-                secondPlayer!.score++;
-            }
+            if (answer.answerStatus === 'Correct') secondPlayer!.score++;
         }
 
         if (
