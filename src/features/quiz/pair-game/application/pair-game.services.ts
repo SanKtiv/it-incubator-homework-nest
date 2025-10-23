@@ -147,8 +147,7 @@ export class GameServices {
         try {
             const out = outputModelCreatedPairGame(activeGame!);
             return out;
-        }
-        catch (e) {
+        } catch (e) {
             console.log('ERROR =', e)
         }
 
@@ -248,6 +247,7 @@ export class GameServices {
         await this.pairGameRepository.updatePairGame(game);
 
         return addedAnswerPlayerOutputModel(answer);
+
     }
 
     private getAnswerStatus(

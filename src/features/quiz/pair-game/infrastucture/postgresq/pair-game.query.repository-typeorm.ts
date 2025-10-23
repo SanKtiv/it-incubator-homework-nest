@@ -15,6 +15,7 @@ export class PairGameQueryRepositoryTypeOrm {
         protected repositoryPlayer: Repository<QuizPlayersEntity>,
     ) {
     }
+
     private get shareBuilder() {
         return this.repository
             .createQueryBuilder('pg')
@@ -40,6 +41,15 @@ export class PairGameQueryRepositoryTypeOrm {
             .orderBy('questions.index', 'ASC');
     }
 
+    async checkOnError(arg: any) {
+        try {
+            return arg;
+        }
+        catch(e) {
+            console.log(`ERROR in ${arg} =`, e);
+        }
+    }
+
     async getById(id: string): Promise<PairGamesEntity | null> {
         return this.repository.findOne({
             where: {
@@ -57,36 +67,28 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getByUserId(userId: string): Promise<PairGamesEntity | null | undefined> {
-        try {
-            const subQueryGamesWithUserByUserId =
-                this.repository
-                    .createQueryBuilder('g')
-                    .select('g.id')
-                    .leftJoin('g.players', 'p')
-                    .leftJoin('p.user', 'u')
-                    .where('game.finishGameDate IS NULL')
-                    .andWhere('u.id = :userId')
+        const subQueryGamesWithUserByUserId =
+            this.repository
+                .createQueryBuilder('g')
+                .select('g.id')
+                .leftJoin('g.players', 'p')
+                .leftJoin('p.user', 'u')
+                .where('game.finishGameDate IS NULL')
+                .andWhere('u.id = :userId')
 
-            const result = await this.repository
-                .createQueryBuilder('game')
-                .where(`game.id IN (${subQueryGamesWithUserByUserId.getQuery()})`)
-                .setParameters({ userId })
-                .leftJoinAndSelect('game.players', 'players')
-                .leftJoinAndSelect('players.user', 'user')
-                .leftJoinAndSelect('user.accountData', 'account')
-                .leftJoinAndSelect('players.answers', 'answers')
-                .leftJoinAndSelect('game.questions', 'questions')
-                .leftJoinAndSelect('questions.question', 'question')
-                .orderBy('players.index', 'ASC')
-                .addOrderBy('questions.index', 'ASC')
-                .getOne();
-
-            return result;
-        }
-        catch (e) {
-            console.log('ERROR in PairGameQueryRepositoryTypeOrm', e)
-        }
-
+        return this.repository
+            .createQueryBuilder('game')
+            .where(`game.id IN (${subQueryGamesWithUserByUserId.getQuery()})`)
+            .setParameters({userId})
+            .leftJoinAndSelect('game.players', 'players')
+            .leftJoinAndSelect('players.user', 'user')
+            .leftJoinAndSelect('user.accountData', 'account')
+            .leftJoinAndSelect('players.answers', 'answers')
+            .leftJoinAndSelect('game.questions', 'questions')
+            .leftJoinAndSelect('questions.question', 'question')
+            .orderBy('players.index', 'ASC')
+            .addOrderBy('questions.index', 'ASC')
+            .getOne();
     }
 
     async getPaging(userId: string, query: pairGameQuery): Promise<PairGamesEntity[]> {
@@ -150,20 +152,19 @@ export class PairGameQueryRepositoryTypeOrm {
     async getStatisticByUserId(userId: string) {
         try {
             const res = await this.repository
-                .createQueryBuilder('pg')
-                .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-                .leftJoinAndSelect('firstPlayer.user', 'firstUser')
+                .createQueryBuilder('game')
+                .leftJoinAndSelect('game.players', 'players')
+                .leftJoinAndSelect('players.user', 'user')
                 .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-                .leftJoinAndSelect('secondPlayer.user', 'secondUser')
                 .select([
-                    'pg.status',
-                    'firstPlayer.playerScore',
-                    'secondPlayer.playerScore',
-                    'firstUser.id',
-                    'secondUser.id',
+                    'game.status',
+                    'players.score',
+                    'players.win',
+                    'players.lose',
+                    'players.draw',
+                    'user.id',
                 ])
-                .where('firstUser.id = :userId')
-                .orWhere('secondUser.id = :userId')
+                .where('user.id = :userId')
                 .setParameters({userId})
                 .getMany();
 
@@ -198,11 +199,10 @@ export class PairGameQueryRepositoryTypeOrm {
             const sortAs = sortArr[1] === "DESC" ? "DESC" : "ASC";
 
             players.orderBy(`player."${sortBy}"`, sortAs)
-        }
-        else {
+        } else {
             let n = 0;
 
-            query.sort.forEach( e => {
+            query.sort.forEach(e => {
                 const sortArr = e.split(' ')
                 const sortBy = sortArr[0] === 'sumScore' ? 'playerScore' : sortArr[0];
                 const sortAs = sortArr[1] === "DESC" ? "DESC" : "ASC";

@@ -47,7 +47,7 @@ export class PairGameQueryRepository {
 
   async getStatisticByUserId(userId: string) {
     const games = await this.repository.getStatisticByUserId(userId);
-
+console.log('user statistic games =', games)
     return outputModelPlayerStatistic(games, userId);
   }
 
