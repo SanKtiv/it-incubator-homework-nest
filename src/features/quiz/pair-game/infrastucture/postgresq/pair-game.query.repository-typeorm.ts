@@ -155,7 +155,6 @@ export class PairGameQueryRepositoryTypeOrm {
                 .createQueryBuilder('game')
                 .leftJoinAndSelect('game.players', 'players')
                 .leftJoinAndSelect('players.user', 'user')
-                .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
                 .select([
                     'game.status',
                     'players.score',
@@ -170,7 +169,7 @@ export class PairGameQueryRepositoryTypeOrm {
 
             return res;
         } catch (e) {
-            console.log('ERROR in newGetStatisticByUserId', e)
+            console.log('ERROR in getStatisticByUserId', e)
         }
     }
 

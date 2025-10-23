@@ -132,31 +132,13 @@ export function outputModelPlayerStatistic(
         statistic.gamesCount = games.length;
 
         function find(game: PairGamesEntity) {
-            if (!(game.status === 'Finished')) return;
+            // if (!(game.status === 'Finished')) return;
+            const [player] = game.players;
 
-            const firstPlayer = game.players[0];
-            const secondPlayer = game.players[1];
-
-            if (firstPlayer.score === secondPlayer!.score)
-                statistic.drawsCount++;
-
-            if (firstPlayer.user.id === userId) {
-                statistic.sumScore += firstPlayer.score;
-
-                if (firstPlayer.score > secondPlayer!.score)
-                    statistic.winsCount++;
-
-                if (firstPlayer.score < secondPlayer!.score)
-                    statistic.lossesCount++;
-            } else {
-                statistic.sumScore += secondPlayer!.score;
-
-                if (firstPlayer.score < secondPlayer!.score)
-                    statistic.winsCount++;
-
-                if (firstPlayer.score > secondPlayer!.score)
-                    statistic.lossesCount++;
-            }
+            statistic.sumScore += player.score;
+            statistic.winsCount += player.win;
+            statistic.lossesCount += player.lose;
+            statistic.drawsCount += player.draw;
         }
 
         games.forEach((game) => find(game));
