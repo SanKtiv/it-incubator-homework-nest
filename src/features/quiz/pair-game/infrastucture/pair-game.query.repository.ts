@@ -11,6 +11,15 @@ import {GameQueryTopUsers, pairGameQuery} from '../api/models/input/input-query.
 export class PairGameQueryRepository {
   constructor(protected repository: PairGameQueryRepositoryTypeOrm) {}
 
+  async checkOnError(arg: any) {
+    try {
+      return arg;
+    }
+    catch(e) {
+      console.log(`ERROR in ${arg} =`, e);
+    }
+  }
+
   async getById(id: string, userId: string) {
     const game = await this.repository.getById(id);
 
@@ -38,9 +47,9 @@ export class PairGameQueryRepository {
   }
 
   async getPaging(userId: string, query: pairGameQuery) {
-    const pairGames = await this.repository.getPaging(userId, query);
+    const pairGames = await this.checkOnError(await this.repository.getPaging(userId, query));
 
-    const totalGames = await this.repository.getGamesByUserId(userId);
+    const totalGames = await this.checkOnError(await this.repository.getGamesByUserId(userId));
 
     return outputModelPairGamesPagination(pairGames, query, totalGames);
   }
