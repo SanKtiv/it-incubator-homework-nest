@@ -121,14 +121,11 @@ export class PairGameQueryRepositoryTypeOrm {
 
     async getGamesByUserId(userId: string): Promise<number> {
         return this.repository
-            .createQueryBuilder('pg')
-            .select('pg.id')
-            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect('firstPlayer.user', 'firstUser')
-            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-            .leftJoinAndSelect('secondPlayer.user', 'secondUser')
-            .where('firstUser.id = :userId')
-            .orWhere('secondUser.id = :userId')
+            .createQueryBuilder('game')
+            .select('game.id')
+            .leftJoinAndSelect('game.players', 'player')
+            .leftJoinAndSelect('players.user', 'user')
+            .where('user.id = :userId')
             .setParameters({userId})
             .getCount();
     }
