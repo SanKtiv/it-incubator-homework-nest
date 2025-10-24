@@ -93,44 +93,28 @@ export class PairGameQueryRepositoryTypeOrm {
 
     async getPaging(userId: string, query: pairGameQuery): Promise<PairGamesEntity[]> {
         const idsSubQuery = this.repository
-            .createQueryBuilder('pg')
-            .select('pg.id')
-            .leftJoin('pg.firstPlayer', 'firstPlayer')
-            .leftJoin('firstPlayer.user', 'firstUser')
-            .leftJoin('pg.secondPlayer', 'secondPlayer')
-            .leftJoin('secondPlayer.user', 'secondUser')
-            .where('firstUser.id = :userId')
-            .orWhere('secondUser.id = :userId')
-            .setParameters({userId})
+            .createQueryBuilder('g')
+            .select('g.id')
+            .leftJoin('g.players', 'p')
+            .leftJoin('p.user', 'u')
+            .where('u.id = :userId')
             .skip((query.pageNumber - 1) * query.pageSize)
             .take(query.pageSize);
 
         return this.repository
-            .createQueryBuilder('pg')
-            .where(`pg.id IN (${idsSubQuery.getQuery()})`)
-            .setParameters(idsSubQuery.getParameters())
-            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect('firstPlayer.user', 'firstUser')
-            .leftJoinAndSelect('firstUser.accountData', 'firstAccountData')
-            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-            .leftJoinAndSelect('secondPlayer.user', 'secondUser')
-            .leftJoinAndSelect('secondUser.accountData', 'secondAccountData')
-            .leftJoinAndSelect(
-                'firstPlayer.answers',
-                'firstPlayerAnswers',
-                'pg.id = firstPlayerAnswers.gameId',
-            )
-            .leftJoinAndSelect(
-                'secondPlayer.answers',
-                'secondPlayerAnswers',
-                'pg.id = secondPlayerAnswers.gameId',
-            )
-            .leftJoinAndSelect('pg.questions', 'questions')
+            .createQueryBuilder('game')
+            .where(`game.id IN (${idsSubQuery.getQuery()})`)
+            .setParameters({userId})
+            .leftJoinAndSelect('game.players', 'players')
+            .leftJoinAndSelect('players.user', 'user')
+            .leftJoinAndSelect('user.accountData', 'account')
+            .leftJoinAndSelect('players.answers', 'answers', 'game.id = answers.gameId')
+            .leftJoinAndSelect('game.questions', 'questions')
             .leftJoinAndSelect('questions.question', 'question')
-            .orderBy(`pg."${query.sortBy}"`, query.sortDirection)
-            .addOrderBy('pg."pairCreatedDate"', 'DESC')
-            .addOrderBy('"firstPlayerAnswers"."addedAt"', 'ASC')
-            .addOrderBy('"secondPlayerAnswers"."addedAt"', 'ASC')
+            .orderBy(`game."${query.sortBy}"`, query.sortDirection)
+            .addOrderBy('players.index', 'ASC')
+            .addOrderBy('game."pairCreatedDate"', 'DESC')
+            .addOrderBy('"answers"."addedAt"', 'ASC')
             .addOrderBy('questions.index', 'ASC')
             .getMany();
     }

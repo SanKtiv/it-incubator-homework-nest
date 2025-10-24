@@ -594,32 +594,32 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
       answer: 'Answer_2',
     })
   });
-//
-//   it('43 /pair-game-quiz/pairs/my (GET), get my all games by user1 should returned status 200', async () => {
-//     const resultGetGame =
-//         await quizPairGameTestManager
-//             .getAllGamesByUserId(testAccessToken1, {sortBy: 'status', sortDirection: 'ASC'});
-//
-//     // const result =
-//     //     await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
-//     // console.log('Statistic user1 =', result.body)
-//
-//     const items: any = resultGetGame.body.items;
-//     const id = items[0].id
-//
-//     const game = await quizPairGameTestManager.getById(id, testAccessToken1);
-//
-//     // console.log('GAME1=', items[0].status)
-//     // console.log('GAME1=', items[0].pairCreatedDate)
-//     // console.log('GAME2=', items[1].status)
-//     // console.log('GAME2=', items[1].pairCreatedDate)
-//     // console.log('GAME3=', items[2].status)
-//     // console.log('GAME3=', items[2].pairCreatedDate)
-//     //console.log('GAME4=', items[3].pairCreatedDate)
-//     //console.log('get questions game by id =', game.body.questions)
-//     await expect(resultGetGame.statusCode).toBe(200)
-//   });
-//
+
+  it('43 /pair-game-quiz/pairs/my (GET), get my all games by user1 should returned status 200', async () => {
+    const resultGetGame =
+        await quizPairGameTestManager
+            .getAllGamesByUserId(testAccessToken1, {sortBy: 'status', sortDirection: 'ASC'});
+
+    // const result =
+    //     await quizPairGameTestManager.getStatisticByUserId(testAccessToken1);
+    // console.log('Statistic user1 =', result.body)
+
+    const items: any = resultGetGame.body.items;
+    const id = items[0].id
+
+    const game = await quizPairGameTestManager.getById(id, testAccessToken1);
+
+    // console.log('GAME1=', items[0].status)
+    // console.log('GAME1=', items[0].pairCreatedDate)
+    // console.log('GAME2=', items[1].status)
+    // console.log('GAME2=', items[1].pairCreatedDate)
+    // console.log('GAME3=', items[2].status)
+    // console.log('GAME3=', items[2].pairCreatedDate)
+    //console.log('GAME4=', items[3].pairCreatedDate)
+    //console.log('get questions game by id =', game.body.questions)
+    await expect(resultGetGame.statusCode).toBe(200)
+  });
+
 //   it('44 /pair-game-quiz/users/top (GET), get statistics by top players should returned status 200', async () => {
 //     const resultGet =
 //         await quizPairGameTestManager
