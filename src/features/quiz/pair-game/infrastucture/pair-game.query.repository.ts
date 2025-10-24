@@ -50,7 +50,7 @@ export class PairGameQueryRepository {
     const pairGames = await this.checkOnError(await this.repository.getPaging(userId, query));
 
     const totalGames = await this.checkOnError(await this.repository.getGamesByUserId(userId));
-
+console.log('HELLO')
     return outputModelPairGamesPagination(pairGames, query, totalGames);
   }
 
