@@ -11,7 +11,7 @@ import {GameQueryTopUsers, pairGameQuery} from '../api/models/input/input-query.
 export class PairGameQueryRepository {
   constructor(protected repository: PairGameQueryRepositoryTypeOrm) {}
 
-  async checkOnError(arg: any) {
+  checkOnError(arg: any) {
     try {
       return arg;
     }
@@ -26,8 +26,6 @@ export class PairGameQueryRepository {
     if (!game) throw new NotFoundException();
 
     const [firstPlayer, secondPlayer] = game.players;
-    // const firstPlayerUserId = game.players[0].user.id;
-    // const secondPlayer = game.players[1];
 
     if (
         (firstPlayer.user.id !== userId && !secondPlayer) ||
@@ -47,10 +45,11 @@ export class PairGameQueryRepository {
   }
 
   async getPaging(userId: string, query: pairGameQuery) {
-    const pairGames = await this.checkOnError(await this.repository.getPaging(userId, query));
 
-    const totalGames = await this.checkOnError(await this.repository.getGamesByUserId(userId));
-console.log('HELLO')
+    const pairGames = await this.repository.getPaging(userId, query);
+
+    const totalGames = await this.repository.getGamesByUserId(userId);
+
     return outputModelPairGamesPagination(pairGames, query, totalGames);
   }
 

@@ -92,6 +92,7 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getPaging(userId: string, query: pairGameQuery): Promise<PairGamesEntity[]> {
+
         const idsSubQuery = this.repository
             .createQueryBuilder('g')
             .select('g.id')
@@ -123,7 +124,7 @@ export class PairGameQueryRepositoryTypeOrm {
         return this.repository
             .createQueryBuilder('game')
             .select('game.id')
-            .leftJoinAndSelect('game.players', 'player')
+            .leftJoinAndSelect('game.players', 'players')
             .leftJoinAndSelect('players.user', 'user')
             .where('user.id = :userId')
             .setParameters({userId})
