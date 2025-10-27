@@ -1,4 +1,4 @@
-import {pairGameQuery} from '../input/input-query.dto';
+import {GameQueryTopUsers, pairGameQuery} from '../input/input-query.dto';
 import {PairGamesEntity} from "../../../domain/pair-games.entity";
 import {PlayerAnswersEntity} from "../../../domain/player-answers.entity";
 
@@ -163,3 +163,36 @@ export const outputModelPairGamesPagination = function (
         items: games.map((game) => outputModelCreatedPairGame(game)),
     };
 };
+
+export class PlayerClass {
+    constructor(
+        id: string,
+        login: string,
+    ) {}
+}
+
+export class PlayerStatisticClass {
+    constructor(
+        sumScore: number,
+        avgScores: number,
+        gamesCount: number,
+        winsCount: number,
+        lossesCount: number,
+        drawsCount: number,
+        player: PlayerClass,
+    ) {}
+}
+
+export const outputModelStatisticTopUsers = (
+    games: any,
+    totalGames: number,
+    query: GameQueryTopUsers) => {
+    return {
+        pagesCount: Math.ceil(+totalGames / +query.pageSize),
+        page: query.pageNumber,
+        pageSize: query.pageSize,
+        totalCount: +totalGames,
+        items: games
+    }
+}
+

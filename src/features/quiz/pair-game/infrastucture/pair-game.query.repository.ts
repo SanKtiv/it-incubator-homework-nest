@@ -6,6 +6,7 @@ import {
 import { PairGameQueryRepositoryTypeOrm } from './postgresq/pair-game.query.repository-typeorm';
 import { outputModelCreatedPairGame, outputModelPairGamesPagination, outputModelPlayerStatistic } from '../api/models/output/pair-game.output.models';
 import {GameQueryTopUsers, pairGameQuery} from '../api/models/input/input-query.dto';
+import {reportTranspileErrors} from "ts-loader/dist/instances";
 
 @Injectable()
 export class PairGameQueryRepository {
@@ -60,6 +61,10 @@ export class PairGameQueryRepository {
   }
 
   async getTopUsersOfGame(query: GameQueryTopUsers) {
-    return this.repository.getTopUsersOfGame(query)
+    return this.repository.getTop(query)
+  }
+
+  async getTop(query: GameQueryTopUsers) {
+    return this.repository.getTop(query)
   }
 }

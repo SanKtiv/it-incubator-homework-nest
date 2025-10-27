@@ -4,6 +4,7 @@ import {DataSource, IsNull, Repository} from 'typeorm';
 import {GameQueryTopUsers, pairGameQuery} from '../../api/models/input/input-query.dto';
 import {PairGamesEntity} from "../../domain/pair-games.entity";
 import {QuizPlayersEntity} from "../../domain/quiz-players.entity";
+import {PlayersEntity} from "../../domain/players.entity";
 
 @Injectable()
 export class PairGameQueryRepositoryTypeOrm {
@@ -12,7 +13,7 @@ export class PairGameQueryRepositoryTypeOrm {
         protected repository: Repository<PairGamesEntity>,
         @InjectDataSource() protected dataSource: DataSource,
         @InjectRepository(QuizPlayersEntity)
-        protected repositoryPlayer: Repository<QuizPlayersEntity>,
+        protected repositoryPlayer: Repository<PlayersEntity>,
     ) {
     }
 
@@ -44,8 +45,7 @@ export class PairGameQueryRepositoryTypeOrm {
     async checkOnError(arg: any) {
         try {
             return arg;
-        }
-        catch(e) {
+        } catch (e) {
             console.log(`ERROR in ${arg} =`, e);
         }
     }
@@ -155,12 +155,56 @@ export class PairGameQueryRepositoryTypeOrm {
         }
     }
 
+    async getTop(query: GameQueryTopUsers) {
+        const topUsers = this.repository
+            .createQueryBuilder('game')
+            .leftJoin('game.players', 'players')
+            .leftJoin('players.user', 'user')
+            .leftJoin('user.accountData', 'account')
+            .select('user.id', 'userId')
+            .addSelect('account.login', 'login')
+            .addSelect('SUM(players.score)', 'sumScore')
+            .addSelect('ROUND(SUM(players.score)::numeric / COUNT(players.id), 2)', 'avgScores')
+            .addSelect('COUNT(players.id)', 'gamesCount')
+            .addSelect('SUM(players.win)', 'winsCount')
+            .addSelect('SUM(players.lose)', 'lossesCount')
+            .addSelect('SUM(players.draw)', 'drawsCount')
+            .groupBy('user.id')
+            .addGroupBy('account.login')
+        //.orderBy('"sumScore"', 'DESC')
+        //.getRawMany();
+        let sortBy, sortAs = '';
+
+        if (typeof query.sort === 'string') {
+            [sortBy, sortAs] = query.sort.split(' ');
+
+            topUsers.orderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC' | undefined)
+        }
+        else {
+            let n = 0;
+
+            query.sort.forEach(e => {
+                [sortBy, sortAs] = e.split(' ');
+
+                if (n === 0) {
+                    topUsers.orderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC' | undefined)
+                }
+                else {
+                    topUsers.addOrderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC' | undefined)
+                    n++
+                }
+            })
+        }
+
+        return topUsers.getRawMany();
+    }
+
     async getTopUsersOfGame(query: GameQueryTopUsers) {
         //const sort = query.sort;
         console.log('QUERY =', query)
 
         const players = this.repositoryPlayer
-            .createQueryBuilder('player')
+            .createQueryBuilder('players')
             .leftJoinAndSelect('player.user', 'u')
             .leftJoinAndSelect('u.accountData', 'data')
             .select([
