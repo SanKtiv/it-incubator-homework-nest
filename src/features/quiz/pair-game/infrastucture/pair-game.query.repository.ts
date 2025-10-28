@@ -4,7 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PairGameQueryRepositoryTypeOrm } from './postgresq/pair-game.query.repository-typeorm';
-import { outputModelCreatedPairGame, outputModelPairGamesPagination, outputModelPlayerStatistic } from '../api/models/output/pair-game.output.models';
+import {
+  outputModelCreatedPairGame,
+  outputModelPairGamesPagination,
+  outputModelPlayerStatistic,
+  outputModelStatisticTopUsers
+} from '../api/models/output/pair-game.output.models';
 import {GameQueryTopUsers, pairGameQuery} from '../api/models/input/input-query.dto';
 import {reportTranspileErrors} from "ts-loader/dist/instances";
 
@@ -65,6 +70,8 @@ export class PairGameQueryRepository {
   }
 
   async getTop(query: GameQueryTopUsers) {
-    return this.repository.getTop(query)
+    const statistic = await this.repository.getTop(query);
+
+    return outputModelStatisticTopUsers(statistic, 3, query);
   }
 }
