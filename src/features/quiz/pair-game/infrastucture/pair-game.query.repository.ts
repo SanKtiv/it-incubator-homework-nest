@@ -71,7 +71,8 @@ export class PairGameQueryRepository {
 
   async getTop(query: GameQueryTopUsers) {
     const statistic = await this.repository.getTop(query);
+    return statistic;
 
-    return outputModelStatisticTopUsers(statistic, 3, query);
+    // return outputModelStatisticTopUsers(statistic, 3, query);
   }
 }

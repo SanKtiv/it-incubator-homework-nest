@@ -163,6 +163,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .leftJoin('user.accountData', 'account')
             .select('user.id', 'userId')
             .addSelect('account.login', 'login')
+            .addSelect('SUM(user.id)', 'totalUsers')
             .addSelect('SUM(players.score)', 'sumScore')
             .addSelect('ROUND(SUM(players.score)::numeric / COUNT(players.id), 2)', 'avgScores')
             .addSelect('COUNT(players.id)', 'gamesCount')
@@ -171,8 +172,7 @@ export class PairGameQueryRepositoryTypeOrm {
             .addSelect('SUM(players.draw)', 'drawsCount')
             .groupBy('user.id')
             .addGroupBy('account.login')
-        //.orderBy('"sumScore"', 'DESC')
-        //.getRawMany();
+
         let sortBy, sortAs = '';
 
         if (typeof query.sort === 'string') {
@@ -196,7 +196,10 @@ export class PairGameQueryRepositoryTypeOrm {
             })
         }
 
-        return topUsers.getRawMany();
+        return topUsers
+            .skip((query.pageNumber - 1) * query.pageSize)
+            .limit(query.pageSize)
+            .getRawMany();
     }
 
     async getTopUsersOfGame(query: GameQueryTopUsers) {
