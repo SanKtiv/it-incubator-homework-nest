@@ -163,7 +163,6 @@ export class PairGameQueryRepositoryTypeOrm {
             .leftJoin('user.accountData', 'account')
             .select('user.id', 'userId')
             .addSelect('account.login', 'login')
-            .addSelect('SUM(user.id)', 'totalUsers')
             .addSelect('SUM(players.score)', 'sumScore')
             .addSelect('ROUND(SUM(players.score)::numeric / COUNT(players.id), 2)', 'avgScores')
             .addSelect('COUNT(players.id)', 'gamesCount')

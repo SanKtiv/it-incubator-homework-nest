@@ -30,7 +30,7 @@ export class PairGameQuizPairsController {
             await this.pairGameQueryRepository.getTop({
                 sort: ['avgScores DESC', 'sumScore DESC'],
                 pageNumber: 1,
-                pageSize: 2
+                pageSize: 3
             });
         console.log('return =', res)
         return res;
