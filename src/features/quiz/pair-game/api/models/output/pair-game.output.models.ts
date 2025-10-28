@@ -168,7 +168,8 @@ export class PlayerClass {
     constructor(
         id: string,
         login: string,
-    ) {}
+    ) {
+    }
 }
 
 export class PlayerStatisticClass {
@@ -180,11 +181,23 @@ export class PlayerStatisticClass {
         lossesCount: number,
         drawsCount: number,
         player: PlayerClass,
-    ) {}
+    ) {
+    }
+}
+
+export class outputModelStatisticTopUsersClass {
+    constructor(
+        pagesCount: number,
+        page: number,
+        pageSize: number,
+        totalCount: number,
+        items: PlayerStatisticClass[]
+    ) {
+    }
 }
 
 export const outputModelStatisticTopUsers = (
-    games: any,
+    games: any[],
     totalGames: number,
     query: GameQueryTopUsers) => {
     return {
@@ -192,7 +205,19 @@ export const outputModelStatisticTopUsers = (
         page: query.pageNumber,
         pageSize: query.pageSize,
         totalCount: +totalGames,
-        items: games
+        items: games.map(e => ({
+                player: {
+                    id: e.userId,
+                    login: e.login,
+                },
+                sumScore: +e.sumScore,
+                avgScores: +e.avgScores,
+                gamesCount: +e.gamesCount,
+                winsCount: +e.winsCount,
+                lossesCount: +e.lossesCount,
+                drawsCount: +e.drawsCount,
+            })
+        )
     }
 }
 
