@@ -14,4 +14,8 @@ export class UsersQueryRepository {
   async getUsersPaging(query: UsersQuery): Promise<UsersPagingDto> {
     return this.usersQueryRepository.usersPaging(query);
   }
+
+  async getCountUsersWithPlayers() {
+    return this.usersQueryRepository.usersWithPlayers()
+  }
 }

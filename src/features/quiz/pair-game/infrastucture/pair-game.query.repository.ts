@@ -12,10 +12,12 @@ import {
 } from '../api/models/output/pair-game.output.models';
 import {GameQueryTopUsers, pairGameQuery} from '../api/models/input/input-query.dto';
 import {reportTranspileErrors} from "ts-loader/dist/instances";
+import {UsersQueryRepositoryTypeOrm} from "../../../users/infrastructure/postgresqldb/users.query.repository-typeorm";
 
 @Injectable()
 export class PairGameQueryRepository {
-  constructor(protected repository: PairGameQueryRepositoryTypeOrm) {}
+  constructor(protected repository: PairGameQueryRepositoryTypeOrm,
+              protected repositoryUsers: UsersQueryRepositoryTypeOrm) {}
 
   checkOnError(arg: any) {
     try {
@@ -71,8 +73,9 @@ export class PairGameQueryRepository {
 
   async getTop(query: GameQueryTopUsers) {
     const statistic = await this.repository.getTop(query);
-    return statistic;
 
-    // return outputModelStatisticTopUsers(statistic, 3, query);
+    const totalPlayers = await this.repositoryUsers.usersWithPlayers()
+
+    return outputModelStatisticTopUsers(statistic, totalPlayers, query);
   }
 }

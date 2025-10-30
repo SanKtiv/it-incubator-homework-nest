@@ -197,15 +197,15 @@ export class outputModelStatisticTopUsersClass {
 }
 
 export const outputModelStatisticTopUsers = (
-    games: any[],
-    totalGames: number,
+    usersStatistic: any[],
+    totalPlayers: number,
     query: GameQueryTopUsers) => {
     return {
-        pagesCount: Math.ceil(+totalGames / +query.pageSize),
+        pagesCount: Math.ceil(+totalPlayers / +query.pageSize),
         page: query.pageNumber,
         pageSize: query.pageSize,
-        totalCount: +totalGames,
-        items: games.map(e => ({
+        totalCount: +totalPlayers,
+        items: usersStatistic.map(e => ({
                 player: {
                     id: e.userId,
                     login: e.login,

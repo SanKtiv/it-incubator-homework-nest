@@ -14,10 +14,7 @@ import {
 
 @Injectable()
 export class UsersQueryRepositoryTypeOrm {
-  constructor(
-    @InjectDataSource() protected dataSource: DataSource,
-    @InjectRepository(UsersTable) protected repository: Repository<UsersTable>,
-  ) {}
+  constructor(@InjectRepository(UsersTable) protected repository: Repository<UsersTable>) {}
 
   async infoCurrentUser(id: string): Promise<InfoCurrentUserDto> {
     const user = await this.repository.findOneBy({ id: id });
@@ -59,5 +56,13 @@ export class UsersQueryRepositoryTypeOrm {
       .getMany();
 
     return usersPagingDto(totalUsers, query, usersPaging);
+  }
+
+  async usersWithPlayers() {
+    return this.repository
+        .createQueryBuilder('user')
+        .leftJoin('user.players', 'players')
+        .where('players.id IS NOT NULL')
+        .getCount()
   }
 }
