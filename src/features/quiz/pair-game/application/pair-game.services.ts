@@ -142,7 +142,7 @@ export class GameServices {
         game.questions = questions;
 
         const activeGame =
-            await this.pairGameRepository.createPairGame(game);
+            await this.pairGameRepository.updatePairGame(game);
 
         try {
             const out = outputModelCreatedPairGame(activeGame!);
