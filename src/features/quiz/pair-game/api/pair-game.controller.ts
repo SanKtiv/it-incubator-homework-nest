@@ -27,7 +27,7 @@ export class PairGameQuizPairsController {
     @Get('testing-create-game')
     async testing() {
         const res =
-            await this.pairGameQueryRepository.getTop({
+            await this.pairGameQueryRepository.getStatisticOfGamePlayers({
                 sort: ['avgScores DESC', 'sumScore DESC'],
                 pageNumber: 1,
                 pageSize: 3
@@ -55,7 +55,7 @@ export class PairGameQuizPairsController {
 
     @Get('users/top')
     async getTopUsersOfGame(@Query() query: GameQueryTopUsers) {
-        return this.pairGameQueryRepository.getTopUsersOfGame(query);
+        return this.pairGameQueryRepository.getStatisticOfGamePlayers(query);
     }
 
     @Get('users/my-statistic')

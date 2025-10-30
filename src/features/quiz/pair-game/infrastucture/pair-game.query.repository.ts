@@ -11,22 +11,12 @@ import {
   outputModelStatisticTopUsers
 } from '../api/models/output/pair-game.output.models';
 import {GameQueryTopUsers, pairGameQuery} from '../api/models/input/input-query.dto';
-import {reportTranspileErrors} from "ts-loader/dist/instances";
 import {UsersQueryRepositoryTypeOrm} from "../../../users/infrastructure/postgresqldb/users.query.repository-typeorm";
 
 @Injectable()
 export class PairGameQueryRepository {
   constructor(protected repository: PairGameQueryRepositoryTypeOrm,
               protected repositoryUsers: UsersQueryRepositoryTypeOrm) {}
-
-  checkOnError(arg: any) {
-    try {
-      return arg;
-    }
-    catch(e) {
-      console.log(`ERROR in ${arg} =`, e);
-    }
-  }
 
   async getById(id: string, userId: string) {
     const game = await this.repository.getById(id);
@@ -67,11 +57,7 @@ export class PairGameQueryRepository {
     return outputModelPlayerStatistic(games, userId);
   }
 
-  async getTopUsersOfGame(query: GameQueryTopUsers) {
-    return this.repository.getTop(query)
-  }
-
-  async getTop(query: GameQueryTopUsers) {
+  async getStatisticOfGamePlayers(query: GameQueryTopUsers) {
     const statistic = await this.repository.getTop(query);
 
     const totalPlayers = await this.repositoryUsers.usersWithPlayers()
