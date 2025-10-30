@@ -123,6 +123,9 @@ export class GameServices {
 
         const createdGame = await this.pairGameRepository.createPairGame(game);
 
+        console.log('createdGame =', createdGame)
+        console.log('players =', createdGame?.players)
+
         return outputModelCreatedPairGame(createdGame!);
     }
 

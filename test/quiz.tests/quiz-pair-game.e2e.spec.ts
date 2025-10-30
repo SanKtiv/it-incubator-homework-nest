@@ -92,118 +92,118 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     await clearDB.clearDB();
   });
 
-//   it('2 /sa/quiz/questions (POST), should returned many question models and status 201', async () => {
-//     const response1 = await quizQuestionsTestManager.create(
-//         inputModelMany[0],
-//       authBasic,
-//     );
-//     const response2 = await quizQuestionsTestManager.create(
-//         inputModelMany[1],
-//       authBasic,
-//     );
-//     const response3 = await quizQuestionsTestManager.create(
-//         inputModelMany[2],
-//       authBasic,
-//     );
-//     const response4 = await quizQuestionsTestManager.create(
-//         inputModelMany[3],
-//       authBasic,
-//     );
-//     const response5 = await quizQuestionsTestManager.create(
-//         inputModelMany[4],
-//       authBasic,
-//     );
-//
-//     await expect(response3.statusCode).toBe(201);
-//   });
-//
-//   it('2-1 /sa/quiz/questions (POST), should returned many question models and status 201', async () => {
-//
-//
-//     const response1 = await quizQuestionsTestManager.create(
-//         inputModelMany[5],
-//         authBasic,
-//     );
-//     const response2 = await quizQuestionsTestManager.create(
-//         inputModelMany[6],
-//         authBasic,
-//     );
-//     const response3 = await quizQuestionsTestManager.create(
-//         inputModelMany[7],
-//         authBasic,
-//     );
-//     const response4 = await quizQuestionsTestManager.create(
-//         inputModelMany[8],
-//         authBasic,
-//     );
-//     const response5 = await quizQuestionsTestManager.create(
-//         inputModelMany[9],
-//         authBasic,
-//     );
-//
-//     await expect(response3.statusCode).toBe(201);
-//   });
-//
-//   it('3 /sa/users (POST), handler method create user1, should returned status 201 and correct user model', async () => {
-//     await userTestManger.adminCreateUser(userTest1, authBasic);
-//   });
-//
-//   it('4 /sa/users (POST), handler method create user2, should returned status 201 and correct user model', async () => {
-//     await userTestManger.adminCreateUser(userTest2, authBasic);
-//   });
-//
-//   it('5 /sa/users (POST), handler method create user3, should returned status 201 and correct user model', async () => {
-//     await userTestManger.adminCreateUser(userTest3, authBasic);
-//   });
-//
-//   it('6 /sa/users (POST), handler method create user4, should returned status 201 and correct user model', async () => {
-//     await userTestManger.adminCreateUser(userTest4, authBasic);
-//   });
-//
-//   it('7 /auth/login (POST), handler method login user1, should returned status 200 and correct access token', async () => {
-//     const resultLoginUser = await userTestManger.login(
-//       userTest1.login,
-//       userTest1.password,
-//     );
-//
-//     testAccessToken1 = resultLoginUser.accessToken;
-//   });
-//
-//   it('8 /auth/login (POST), handler method login user2, should returned status 200 and correct access token', async () => {
-//     const resultLoginUser = await userTestManger.login(
-//       userTest2.login,
-//       userTest2.password,
-//     );
-//
-//     testAccessToken2 = resultLoginUser.accessToken;
-//   });
-//
-//   it('9 /auth/login (POST), handler method login user3, should returned status 200 and correct access token', async () => {
-//     const resultLoginUser = await userTestManger.login(
-//         userTest3.login,
-//         userTest3.password,
-//     );
-//
-//     testAccessToken3 = resultLoginUser.accessToken;
-//   });
-//
-//   it('10 /auth/login (POST), handler method login user4, should returned status 200 and correct access token', async () => {
-//     const resultLoginUser = await userTestManger.login(
-//         userTest4.login,
-//         userTest4.password,
-//     );
-//
-//     testAccessToken4 = resultLoginUser.accessToken;
-//   });
-//
-//   it('11 /pair-game-quiz/pairs/connection (POST), create game №1 user1 should returned status 200', async () => {
-//     const resultCreatePairGame =
-//       await quizPairGameTestManager.create(testAccessToken1);
-//
-//     await expect(resultCreatePairGame.statusCode).toBe(200)
-//
-//     idExistPairGame1 = resultCreatePairGame.body.id;
-//   });
+  it('2 /sa/quiz/questions (POST), should returned many question models and status 201', async () => {
+    const response1 = await quizQuestionsTestManager.create(
+        inputModelMany[0],
+      authBasic,
+    );
+    const response2 = await quizQuestionsTestManager.create(
+        inputModelMany[1],
+      authBasic,
+    );
+    const response3 = await quizQuestionsTestManager.create(
+        inputModelMany[2],
+      authBasic,
+    );
+    const response4 = await quizQuestionsTestManager.create(
+        inputModelMany[3],
+      authBasic,
+    );
+    const response5 = await quizQuestionsTestManager.create(
+        inputModelMany[4],
+      authBasic,
+    );
+
+    await expect(response3.statusCode).toBe(201);
+  });
+
+  it('2-1 /sa/quiz/questions (POST), should returned many question models and status 201', async () => {
+
+
+    const response1 = await quizQuestionsTestManager.create(
+        inputModelMany[5],
+        authBasic,
+    );
+    const response2 = await quizQuestionsTestManager.create(
+        inputModelMany[6],
+        authBasic,
+    );
+    const response3 = await quizQuestionsTestManager.create(
+        inputModelMany[7],
+        authBasic,
+    );
+    const response4 = await quizQuestionsTestManager.create(
+        inputModelMany[8],
+        authBasic,
+    );
+    const response5 = await quizQuestionsTestManager.create(
+        inputModelMany[9],
+        authBasic,
+    );
+
+    await expect(response3.statusCode).toBe(201);
+  });
+
+  it('3 /sa/users (POST), handler method create user1, should returned status 201 and correct user model', async () => {
+    await userTestManger.adminCreateUser(userTest1, authBasic);
+  });
+
+  it('4 /sa/users (POST), handler method create user2, should returned status 201 and correct user model', async () => {
+    await userTestManger.adminCreateUser(userTest2, authBasic);
+  });
+
+  it('5 /sa/users (POST), handler method create user3, should returned status 201 and correct user model', async () => {
+    await userTestManger.adminCreateUser(userTest3, authBasic);
+  });
+
+  it('6 /sa/users (POST), handler method create user4, should returned status 201 and correct user model', async () => {
+    await userTestManger.adminCreateUser(userTest4, authBasic);
+  });
+
+  it('7 /auth/login (POST), handler method login user1, should returned status 200 and correct access token', async () => {
+    const resultLoginUser = await userTestManger.login(
+      userTest1.login,
+      userTest1.password,
+    );
+
+    testAccessToken1 = resultLoginUser.accessToken;
+  });
+
+  it('8 /auth/login (POST), handler method login user2, should returned status 200 and correct access token', async () => {
+    const resultLoginUser = await userTestManger.login(
+      userTest2.login,
+      userTest2.password,
+    );
+
+    testAccessToken2 = resultLoginUser.accessToken;
+  });
+
+  it('9 /auth/login (POST), handler method login user3, should returned status 200 and correct access token', async () => {
+    const resultLoginUser = await userTestManger.login(
+        userTest3.login,
+        userTest3.password,
+    );
+
+    testAccessToken3 = resultLoginUser.accessToken;
+  });
+
+  it('10 /auth/login (POST), handler method login user4, should returned status 200 and correct access token', async () => {
+    const resultLoginUser = await userTestManger.login(
+        userTest4.login,
+        userTest4.password,
+    );
+
+    testAccessToken4 = resultLoginUser.accessToken;
+  });
+
+  it('11 /pair-game-quiz/pairs/connection (POST), create game №1 user1 should returned status 200', async () => {
+    const resultCreatePairGame =
+      await quizPairGameTestManager.create(testAccessToken1);
+
+    await expect(resultCreatePairGame.statusCode).toBe(200)
+
+    idExistPairGame1 = resultCreatePairGame.body.id;
+  });
 //
 //   it('12 /pair-game-quiz/pairs/connection (POST), connection game №1 user1 should returned status 403', async () => {
 //     const resultCreatePairGame =
