@@ -177,7 +177,7 @@ export class PairGameQueryRepositoryTypeOrm {
         if (typeof query.sort === 'string') {
             [sortBy, sortAs] = query.sort.split(' ');
 
-            topUsers.orderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC' | undefined)
+            topUsers.orderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC')
         }
         else {
             let n = 0;
@@ -186,10 +186,10 @@ export class PairGameQueryRepositoryTypeOrm {
                 [sortBy, sortAs] = e.split(' ');
 
                 if (n === 0) {
-                    topUsers.orderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC' | undefined)
+                    topUsers.orderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC')
                 }
                 else {
-                    topUsers.addOrderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC' | undefined)
+                    topUsers.addOrderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC')
                     n++
                 }
             })
