@@ -6,24 +6,16 @@ import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.enti
 export class PairGameRepository {
   constructor(protected repository: PairGameRepositoryTypeOrm) {}
 
-  async createPairGame(game: PairGamesEntity): Promise<PairGamesEntity | null | undefined> {
-    try {
-      const result = await this.repository.create(game);
-      return result;
-    }
-    catch (e) {
-      console.log('ERROR in newCreatePairGame -', e)
-    }
+  async createGame(game: PairGamesEntity): Promise<PairGamesEntity | null | undefined> {
+      return this.repository.create(game);
   }
 
-  async updatePairGame(game: PairGamesEntity) {
-    try {
-      const res = await this.repository.update(game);
-      return res;
-    }
-    catch (e) {
-      console.log('ERROR', e)
-    }
+  async getGameById(id: string): Promise<PairGamesEntity | null | undefined> {
+    return this.repository.getById( id )
+  }
+
+  async updateGame(game: PairGamesEntity) {
+    return this.repository.update(game);
   }
 
   async getActiveGameByUserId(userId: string, status: string): Promise<PairGamesEntity | null | undefined> {

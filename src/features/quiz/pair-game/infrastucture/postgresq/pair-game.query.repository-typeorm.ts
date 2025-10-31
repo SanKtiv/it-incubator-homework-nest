@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
-import {DataSource, IsNull, Repository} from 'typeorm';
+import {DataSource, Repository} from 'typeorm';
 import {GameQueryTopUsers, pairGameQuery} from '../../api/models/input/input-query.dto';
 import {PairGamesEntity} from "../../domain/pair-games.entity";
 import {QuizPlayersEntity} from "../../domain/quiz-players.entity";
@@ -14,42 +14,7 @@ export class PairGameQueryRepositoryTypeOrm {
         @InjectDataSource() protected dataSource: DataSource,
         @InjectRepository(QuizPlayersEntity)
         protected repositoryPlayer: Repository<PlayersEntity>,
-    ) {
-    }
-
-    private get shareBuilder() {
-        return this.repository
-            .createQueryBuilder('pg')
-            .select(['pg'])
-            .leftJoinAndSelect('pg.firstPlayer', 'firstPlayer')
-            .leftJoinAndSelect('firstPlayer.user', 'firstUser')
-            .leftJoinAndSelect('firstUser.accountData', 'firstAccountData')
-            .leftJoinAndSelect('pg.secondPlayer', 'secondPlayer')
-            .leftJoinAndSelect('secondPlayer.user', 'secondUser')
-            .leftJoinAndSelect('secondUser.accountData', 'secondAccountData')
-            .leftJoinAndSelect(
-                'firstPlayer.answers',
-                'firstPlayerAnswers',
-                'pg.id = firstPlayerAnswers.gameId',
-            )
-            .leftJoinAndSelect(
-                'secondPlayer.answers',
-                'secondPlayerAnswers',
-                'pg.id = secondPlayerAnswers.gameId',
-            )
-            .leftJoinAndSelect('pg.questions', 'questions')
-            .leftJoinAndSelect('questions.question', 'question')
-            .orderBy('questions.index', 'ASC');
-    }
-
-    async checkOnError(arg: any) {
-        try {
-            return arg;
-        } catch (e) {
-            console.log(`ERROR in ${arg} =`, e);
-        }
-    }
-
+    ) { }
     async getById(id: string): Promise<PairGamesEntity | null> {
         return this.repository.findOne({
             where: {

@@ -13,14 +13,12 @@ import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.enti
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
 import {PlayersEntity} from "../domain/players.entity";
-import {UsersService} from "../../../users/application/users.service";
 
 @Injectable()
 export class GameServices {
     constructor(
         protected pairGameRepository: PairGameRepository,
         protected quizQuestionsRepository: QuizQuestionsRepository,
-        protected usersService: UsersService,
     ) {
     }
 
@@ -99,9 +97,15 @@ export class GameServices {
         const pendingGame: PairGamesEntity | null =
             await this.pairGameRepository.getPairGamesByStatus(statusPending);
 
-        if (pendingGame) return this.joinToGame(userId, pendingGame);
+        let game: PairGamesEntity | null | undefined;
 
-        return this.createGame(userId, statusPending);
+        if (pendingGame) game = await this.joinToGame(userId, pendingGame);
+
+        else game = await this.createGame(userId, statusPending);
+
+        game = await this.pairGameRepository.getGameById(game!.id)
+
+        return outputModelCreatedPairGame(game!);
     }
 
     async createGame(userId: string, status: QuizPairGameStatusType) {
@@ -121,12 +125,7 @@ export class GameServices {
 
         game.status = status;
 
-        const createdGame = await this.pairGameRepository.createPairGame(game);
-
-        console.log('createdGame =', createdGame)
-        console.log('players =', createdGame?.players)
-
-        return outputModelCreatedPairGame(createdGame!);
+        return this.pairGameRepository.createGame(game);
     }
 
     async joinToGame(userId: string, game: PairGamesEntity) {
@@ -144,16 +143,7 @@ export class GameServices {
 
         game.questions = questions;
 
-        const activeGame =
-            await this.pairGameRepository.updatePairGame(game);
-
-        try {
-            const out = outputModelCreatedPairGame(activeGame!);
-            return out;
-        } catch (e) {
-            console.log('ERROR =', e)
-        }
-
+        return this.pairGameRepository.updateGame(game);
     }
 
     async createPlayer(userId: string): Promise<PlayersEntity> {
@@ -247,7 +237,7 @@ export class GameServices {
             countQuestionsGame === countAnswersSecondPlayer
         ) game = this.updateGameToFinishedStatus(game)
 
-        await this.pairGameRepository.updatePairGame(game);
+        await this.pairGameRepository.updateGame(game);
 
         return addedAnswerPlayerOutputModel(answer);
 
