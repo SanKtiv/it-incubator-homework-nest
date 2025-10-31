@@ -150,13 +150,11 @@ export class PairGameQueryRepositoryTypeOrm {
             query.sort.forEach(e => {
                 [sortBy, sortAs] = e.split(' ');
 
-                if (n === 0) {
-                    topUsers.orderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC')
-                }
-                else {
-                    topUsers.addOrderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC')
-                    n++
-                }
+                if (n === 0) topUsers.orderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC');
+
+                if (n !== 0) topUsers.addOrderBy(`"${sortBy}"`, sortAs as 'ASC' | 'DESC');
+
+                n++;
             })
         }
 

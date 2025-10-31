@@ -27,8 +27,12 @@ export class PairGameQuizPairsController {
     @Get('testing-create-game')
     async testing() {
         const res =
-            await this.pairGameServices
-                .connectToGame('061aafd0-0704-45db-8382-13bfe20627c2');
+            this.pairGameQueryRepository
+                .getStatisticOfGamePlayers({
+                    pageSize: 3,
+                    pageNumber: 1,
+                    sort: ['sumScore DESC', 'avgScores DESC']
+                });
         console.log('return =', res)
         return res;
     }
