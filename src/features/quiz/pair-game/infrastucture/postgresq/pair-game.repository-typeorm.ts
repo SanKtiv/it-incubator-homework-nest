@@ -8,9 +8,7 @@ export class PairGameRepositoryTypeOrm {
     constructor(
         @InjectRepository(PairGamesEntity)
         protected repository: Repository<PairGamesEntity>,
-    ) {
-    }
-
+    ) {}
     async getById(id: string): Promise<PairGamesEntity | null | undefined> {
         return this.repository.findOne({
             where: {
@@ -30,11 +28,6 @@ export class PairGameRepositoryTypeOrm {
                 status: status,
             }
         })
-        // return this.repository
-        //     .createQueryBuilder('game')
-        //     .where('game.status = :status')
-        //     .setParameters({status})
-        //     .getOne();
     }
 
     async getActiveGame(userId: string, status: string): Promise<PairGamesEntity | null | undefined> {
@@ -50,7 +43,7 @@ export class PairGameRepositoryTypeOrm {
         return await this.repository
             .createQueryBuilder('game')
             .where(`game.id IN (${subQueryGamesWithUserByUserId.getQuery()})`)
-            .setParameters({ status, userId })
+            .setParameters({status, userId})
             .leftJoinAndSelect('game.players', 'players')
             .leftJoinAndSelect('players.user', 'user')
             .leftJoinAndSelect('user.accountData', 'account')
@@ -73,26 +66,6 @@ export class PairGameRepositoryTypeOrm {
                     }
                 },
             })
-
-        // return this.repository
-        //     .createQueryBuilder('game')
-        //     .leftJoinAndSelect('game.firstPlayer', 'firstPlayer')
-        //     .leftJoinAndSelect('firstPlayer.user', 'firstUser')
-        //     .leftJoinAndSelect('game.secondPlayer', 'secondPlayer')
-        //     .leftJoinAndSelect('secondPlayer.user', 'secondUser')
-        //     .where('game.finishGameDate IS NULL')
-        //     .andWhere('firstUser.id = :userId')
-        //     .orWhere('game.finishGameDate IS NULL')
-        //     .andWhere('secondUser.id = :userId')
-        //     .setParameters({userId})
-        //     .getOne()
-        // return this.getGameBuilder
-        //     .where('game.finishGameDate IS NULL')
-        //     .andWhere('firstUser.id = :userId')
-        //     .orWhere('game.finishGameDate IS NULL')
-        //     .andWhere('secondUser.id = :userId')
-        //     .setParameters({ userId })
-        //     .getOne();
     }
 
     async update(game: PairGamesEntity) {
