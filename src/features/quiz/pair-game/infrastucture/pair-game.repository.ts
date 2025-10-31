@@ -11,11 +11,11 @@ export class PairGameRepository {
   }
 
   async getGameById(id: string): Promise<PairGamesEntity | null | undefined> {
-    return this.repository.getById( id )
+    return this.repository.getById(id)
   }
 
-  async updateGame(game: PairGamesEntity) {
-    return this.repository.update(game);
+  async saveGame(game: PairGamesEntity) {
+    return this.repository.save(game);
   }
 
   async getActiveGameByUserId(userId: string, status: string): Promise<PairGamesEntity | null | undefined> {

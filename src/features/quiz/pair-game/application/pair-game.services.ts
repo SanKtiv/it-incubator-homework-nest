@@ -125,7 +125,7 @@ export class GameServices {
 
         game.status = status;
 
-        return this.pairGameRepository.createGame(game);
+        return this.pairGameRepository.saveGame(game);
     }
 
     async joinToGame(userId: string, game: PairGamesEntity) {
@@ -143,7 +143,7 @@ export class GameServices {
 
         game.questions = questions;
 
-        return this.pairGameRepository.updateGame(game);
+        return this.pairGameRepository.saveGame(game);
     }
 
     async createPlayer(userId: string): Promise<PlayersEntity> {
@@ -237,7 +237,7 @@ export class GameServices {
             countQuestionsGame === countAnswersSecondPlayer
         ) game = this.updateGameToFinishedStatus(game)
 
-        await this.pairGameRepository.updateGame(game);
+        await this.pairGameRepository.saveGame(game);
 
         return addedAnswerPlayerOutputModel(answer);
 

@@ -15,9 +15,8 @@ export class PairGameRepositoryTypeOrm {
                 id: id,
             },
             order: {
-                questions: {
-                    index: 'ASC'
-                }
+                questions: {index: 'ASC'},
+                players: { index: 'ASC' }
             }
         })
     }
@@ -68,7 +67,7 @@ export class PairGameRepositoryTypeOrm {
             })
     }
 
-    async update(game: PairGamesEntity) {
+    async save(game: PairGamesEntity) {
         return this.repository.save(game);
     }
 
