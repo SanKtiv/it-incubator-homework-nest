@@ -26,16 +26,6 @@ export class PairGameQuizPairsController {
     }
     @Get('testing-create-game')
     async testing() {
-        const res =
-            this.pairGameQueryRepository
-                .getStatisticOfGamePlayers({
-                    pageSize: 3,
-                    pageNumber: 2,
-                    // sort: ['sumScore DESC', 'avgScores DESC']
-                    sort: 'avgScores DESC'
-                });
-        console.log('return =', res)
-        return res;
     }
 
     @Get('pairs/my-current')

@@ -9,8 +9,6 @@ import {
 import {AccountDataTable} from './account-data.table';
 import {EmailConfirmationTable} from './email-сonfirmation.table';
 import {PasswordRecoveryTable} from './password-recovery.table';
-import {QuizPlayersEntity} from '../../quiz/pair-game/domain/quiz-players.entity';
-import {UsersStatisticEntity} from "./statistic.table";
 import {PlayersEntity} from "../../quiz/pair-game/domain/players.entity";
 
 @Entity('users')

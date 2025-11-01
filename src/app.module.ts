@@ -101,12 +101,9 @@ import { PairGameRepositoryTypeOrm } from './features/quiz/pair-game/infrastuctu
 import { PairGameQueryRepository } from './features/quiz/pair-game/infrastucture/pair-game.query.repository';
 import { PairGameQueryRepositoryTypeOrm } from './features/quiz/pair-game/infrastucture/postgresq/pair-game.query.repository-typeorm';
 import { PairGamesEntity } from './features/quiz/pair-game/domain/pair-games.entity';
-import { QuizPlayersEntity } from './features/quiz/pair-game/domain/quiz-players.entity';
 import { PlayerAnswersEntity } from './features/quiz/pair-game/domain/player-answers.entity';
 import { QuestionsGameEntity } from './features/quiz/pair-game/domain/questions-game.entity';
 import {QuestionsEntity} from "./features/quiz/questions/domain/quiz-questions.entity";
-import {UsersStatisticEntity} from "./features/users/domain/statistic.table";
-import {GamePlayerScoresEntity} from "./features/quiz/pair-game/domain/game-player-scores";
 import {PlayersEntity} from "./features/quiz/pair-game/domain/players.entity";
 
 dotenv.config();
@@ -223,12 +220,9 @@ const strategies = [
         StatusesCommentsTable,
         StatusesPostsTable,
         PairGamesEntity,
-        QuizPlayersEntity,
         PlayerAnswersEntity,
         QuestionsGameEntity,
         QuestionsEntity,
-        UsersStatisticEntity,
-        GamePlayerScoresEntity,
         PlayersEntity
       ],
       synchronize: true,
@@ -248,12 +242,9 @@ const strategies = [
       StatusesCommentsTable,
       StatusesPostsTable,
       PairGamesEntity,
-      QuizPlayersEntity,
       PlayerAnswersEntity,
       QuestionsGameEntity,
       QuestionsEntity,
-      UsersStatisticEntity,
-      GamePlayerScoresEntity,
       PlayersEntity
     ]),
     // MongooseModule.forRoot(
