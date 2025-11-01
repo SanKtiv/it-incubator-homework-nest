@@ -1,19 +1,14 @@
 import {Injectable} from '@nestjs/common';
-import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
-import {DataSource, Repository} from 'typeorm';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
 import {GameQueryTopUsers, pairGameQuery} from '../../api/models/input/input-query.dto';
 import {PairGamesEntity} from "../../domain/pair-games.entity";
-import {QuizPlayersEntity} from "../../domain/quiz-players.entity";
-import {PlayersEntity} from "../../domain/players.entity";
 
 @Injectable()
 export class PairGameQueryRepositoryTypeOrm {
     constructor(
         @InjectRepository(PairGamesEntity)
         protected repository: Repository<PairGamesEntity>,
-        @InjectDataSource() protected dataSource: DataSource,
-        @InjectRepository(QuizPlayersEntity)
-        protected repositoryPlayer: Repository<PlayersEntity>,
     ) { }
     async getById(id: string): Promise<PairGamesEntity | null> {
         return this.repository.findOne({
@@ -97,8 +92,7 @@ export class PairGameQueryRepositoryTypeOrm {
     }
 
     async getStatisticByUserId(userId: string) {
-        try {
-            const res = await this.repository
+        return this.repository
                 .createQueryBuilder('game')
                 .leftJoinAndSelect('game.players', 'players')
                 .leftJoinAndSelect('players.user', 'user')
@@ -113,11 +107,6 @@ export class PairGameQueryRepositoryTypeOrm {
                 .where('user.id = :userId')
                 .setParameters({userId})
                 .getMany();
-
-            return res;
-        } catch (e) {
-            console.log('ERROR in getStatisticByUserId', e)
-        }
     }
 
     async getTop(query: GameQueryTopUsers) {
@@ -159,54 +148,10 @@ export class PairGameQueryRepositoryTypeOrm {
         }
 
         return topUsers
-            .skip((query.pageNumber - 1) * query.pageSize)
+            .offset((query.pageNumber - 1) * query.pageSize)
+            //.skip((query.pageNumber - 1) * query.pageSize)
+            //.take(query.pageSize)
             .limit(query.pageSize)
             .getRawMany();
-    }
-
-    async getTopUsersOfGame(query: GameQueryTopUsers) {
-        //const sort = query.sort;
-        console.log('QUERY =', query)
-
-        const players = this.repositoryPlayer
-            .createQueryBuilder('players')
-            .leftJoinAndSelect('player.user', 'u')
-            .leftJoinAndSelect('u.accountData', 'data')
-            .select([
-                'u.id',
-                'data.login',
-                'player.playerScore',
-                'player.gamesCount',
-                'player.avgScores',
-                'player.winsCount',
-                'player.lossesCount',
-                'player.drawsCount',
-            ])
-
-        if (typeof query.sort === 'string') {
-            const sortArr = query.sort.split(' ');
-            const sortBy = sortArr[0] === 'sumScore' ? 'playerScore' : sortArr[0];
-            const sortAs = sortArr[1] === "DESC" ? "DESC" : "ASC";
-
-            players.orderBy(`player."${sortBy}"`, sortAs)
-        } else {
-            let n = 0;
-
-            query.sort.forEach(e => {
-                const sortArr = e.split(' ')
-                const sortBy = sortArr[0] === 'sumScore' ? 'playerScore' : sortArr[0];
-                const sortAs = sortArr[1] === "DESC" ? "DESC" : "ASC";
-
-                if (n === 0) players.orderBy(`player."${sortBy}"`, sortAs)
-                else players.addOrderBy(`player."${sortBy}"`, sortAs)
-                n++
-            })
-        }
-
-        return players
-            .skip((query.pageNumber - 1) * query.pageSize)
-            .limit(query.pageSize)
-            // .take(query.pageSize)
-            .getManyAndCount();
     }
 }
