@@ -33,7 +33,7 @@ export class GameServices {
         return game;
     }
 
-    private updateGameToFinishedStatus(game: PairGamesEntity): PairGamesEntity {
+    private updateGameToFinishedStatus(game: PairGamesEntity) {
         const [firstPlayer, secondPlayer] = game.players;
 
         game.status = 'Finished';
@@ -82,8 +82,6 @@ export class GameServices {
             secondPlayer!.draw++;
             firstPlayer.draw++;
         }
-
-        return game;
     }
 
     async connectToGame(userId: string) {
@@ -111,13 +109,13 @@ export class GameServices {
     async createGame(userId: string, status: QuizPairGameStatusType) {
         const game = new PairGamesEntity();
 
-        const array: PlayersEntity[] = [];
+        const players: PlayersEntity[] = [];
 
         const player = await this.createPlayer(userId);
 
-        array.push(player)
+        players.push(player)
 
-        game.players = array;
+        game.players = players;
 
         game.pairCreatedDate = new Date();
 
@@ -178,64 +176,91 @@ export class GameServices {
         return fiveRandomQuestions.map(e => mapFunc(e))
     }
 
+    createAnswerForPlayer(game:  PairGamesEntity,
+                                player: PlayersEntity,
+                                dto: InputAnswersModels,
+                                countAnswers: number,) {
+        const answer = new PlayerAnswersEntity();
+
+        const question = game.questions![countAnswers]
+
+        answer.gameId = game.id;
+        answer.player = player;
+        answer.questionId = question.question.id;
+        answer.addedAt = new Date();
+        answer.answerStatus = this.getAnswerStatus(dto, question);
+
+        player.answers!.push(answer);
+
+        if (answer.answerStatus === 'Correct') player.score++;
+
+        return answer;
+    }
+
     async addAnswerPlayerInGame(
         userId: string,
         dto: InputAnswersModels,
     ): Promise<AnswerPlayerOutputModel> {
-        let game = await this.getActiveGameByUserId(userId);
+        const game = await this.getActiveGameByUserId(userId);
 
-        const getLength = arr => arr ? arr.length : 0;
+        if (!game || !game.questions) throw new ForbiddenException();
 
         const [firstPlayer, secondPlayer] = game.players;
 
-        const countQuestionsGame = getLength(game.questions);
-        let countAnswersFirstPlayer = getLength(firstPlayer.answers);
-        let countAnswersSecondPlayer = getLength(secondPlayer!.answers);
+        if (!firstPlayer || !firstPlayer.answers) throw new ForbiddenException();
+        if (!secondPlayer || !secondPlayer.answers) throw new ForbiddenException();
 
-        const answer = new PlayerAnswersEntity();
+        const countQuestionsGame = game.questions.length;
+        let countAnswersFirstPlayer = firstPlayer.answers.length;
+        let countAnswersSecondPlayer = secondPlayer.answers.length;
+
+        let answer: PlayerAnswersEntity
 
         if (firstPlayer.user.id === userId) {
-            if (countAnswersFirstPlayer === countQuestionsGame)
-                throw new ForbiddenException();
+            if (countAnswersFirstPlayer === countQuestionsGame) throw new ForbiddenException();
 
-            const question = game.questions![countAnswersFirstPlayer]
+            // const question = game.questions![countAnswersFirstPlayer]
+            //
+            // answer.gameId = game.id;
+            // answer.player = firstPlayer;
+            // answer.questionId = question.question.id;
+            // answer.addedAt = new Date();
+            // answer.answerStatus = this.getAnswerStatus(dto, question);
+            //
+            // firstPlayer.answers!.push(answer);
+            //
+            // countAnswersFirstPlayer = firstPlayer.answers!.length;
+            //
+            // if (answer.answerStatus === 'Correct') firstPlayer.score++;
+            answer = this.createAnswerForPlayer(game, firstPlayer, dto, countAnswersFirstPlayer);
 
-            answer.gameId = game.id;
-            answer.player = firstPlayer;
-            answer.questionId = question.question.id;
-            answer.addedAt = new Date();
-            answer.answerStatus = this.getAnswerStatus(dto, question);
-
-            firstPlayer.answers!.push(answer);
-
-            countAnswersFirstPlayer = firstPlayer.answers!.length;
-
-            if (answer.answerStatus === 'Correct') firstPlayer.score++;
+            countAnswersFirstPlayer++;
         }
 
         if (secondPlayer!.user.id === userId) {
             if (countAnswersSecondPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 
-            const question = game.questions![countAnswersSecondPlayer]
+            // const question = game.questions![countAnswersSecondPlayer]
+            //
+            // answer.gameId = game.id;
+            // answer.player = secondPlayer!;
+            // answer.questionId = question.question.id;
+            // answer.addedAt = new Date();
+            // answer.answerStatus = this.getAnswerStatus(dto, question);
+            //
+            // secondPlayer!.answers!.push(answer);
+            //
+            // countAnswersSecondPlayer = secondPlayer!.answers!.length;
+            //
+            // if (answer.answerStatus === 'Correct') secondPlayer!.score++;
+            answer = this.createAnswerForPlayer(game, secondPlayer, dto, countAnswersSecondPlayer);
 
-            answer.gameId = game.id;
-            answer.player = secondPlayer!;
-            answer.questionId = question.question.id;
-            answer.addedAt = new Date();
-            answer.answerStatus = this.getAnswerStatus(dto, question);
-
-            secondPlayer!.answers!.push(answer);
-
-            countAnswersSecondPlayer = secondPlayer!.answers!.length;
-
-            if (answer.answerStatus === 'Correct') secondPlayer!.score++;
+            countAnswersSecondPlayer++;
         }
 
-        if (
-            countQuestionsGame === countAnswersFirstPlayer &&
-            countQuestionsGame === countAnswersSecondPlayer
-        ) game = this.updateGameToFinishedStatus(game)
+        if (countQuestionsGame === countAnswersFirstPlayer &&
+            countQuestionsGame === countAnswersSecondPlayer) this.updateGameToFinishedStatus(game)
 
         await this.pairGameRepository.saveGame(game);
 
