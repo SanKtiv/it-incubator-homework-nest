@@ -111,7 +111,7 @@ export class GameServices {
 
         const players: PlayersEntity[] = [];
 
-        const player = await this.createPlayer(userId);
+        const player = this.createPlayer(userId);
 
         players.push(player)
 
@@ -129,7 +129,7 @@ export class GameServices {
     async joinToGame(userId: string, game: PairGamesEntity) {
         const questions = await this.createFiveQuestionsForGame(game);
 
-        const player = await this.createPlayer(userId);
+        const player = this.createPlayer(userId);
 
         player.index = 1;
 
@@ -144,7 +144,7 @@ export class GameServices {
         return this.pairGameRepository.saveGame(game);
     }
 
-    async createPlayer(userId: string): Promise<PlayersEntity> {
+    createPlayer(userId: string): PlayersEntity {
 
         const player = new PlayersEntity();
 
@@ -176,10 +176,29 @@ export class GameServices {
         return fiveRandomQuestions.map(e => mapFunc(e))
     }
 
-    createAnswerForPlayer(game:  PairGamesEntity,
-                                player: PlayersEntity,
-                                dto: InputAnswersModels,
-                                countAnswers: number,) {
+    getQuestionForAnswer(game: PairGamesEntity, ) {
+
+    }
+
+    createAnswer(gameId: string,
+                 player: PlayersEntity,
+                 questionId: string,
+                 status: 'Correct' | 'Incorrect') {
+        const answer = new PlayerAnswersEntity();
+
+        answer.gameId = gameId;
+        answer.player = player;
+        answer.questionId = questionId;
+        answer.addedAt = new Date();
+        answer.answerStatus = status;
+
+        return answer;
+    }
+
+    createAnswerForPlayer(game: PairGamesEntity,
+                          player: PlayersEntity,
+                          dto: InputAnswersModels,
+                          countAnswers: number,) {
         const answer = new PlayerAnswersEntity();
 
         const question = game.questions![countAnswers]
@@ -207,18 +226,26 @@ export class GameServices {
 
         const [firstPlayer, secondPlayer] = game.players;
 
-        if (!firstPlayer || !firstPlayer.answers) throw new ForbiddenException();
-        if (!secondPlayer || !secondPlayer.answers) throw new ForbiddenException();
+        if (!firstPlayer || !firstPlayer.answers ||
+            !secondPlayer || !secondPlayer.answers) throw new ForbiddenException();
 
         const countQuestionsGame = game.questions.length;
         let countAnswersFirstPlayer = firstPlayer.answers.length;
         let countAnswersSecondPlayer = secondPlayer.answers.length;
 
-        let answer: PlayerAnswersEntity
+        let answer2: PlayerAnswersEntity
 
         if (firstPlayer.user.id === userId) {
             if (countAnswersFirstPlayer === countQuestionsGame) throw new ForbiddenException();
 
+            const question =
+                game.questions[countAnswersFirstPlayer];
+
+            const questionId = question.question.id
+
+            const status = this.getAnswerStatus(dto, question)
+
+            const answer = this.createAnswer(game.id, firstPlayer, questionId, status)
             // const question = game.questions![countAnswersFirstPlayer]
             //
             // answer.gameId = game.id;
@@ -232,12 +259,12 @@ export class GameServices {
             // countAnswersFirstPlayer = firstPlayer.answers!.length;
             //
             // if (answer.answerStatus === 'Correct') firstPlayer.score++;
-            answer = this.createAnswerForPlayer(game, firstPlayer, dto, countAnswersFirstPlayer);
+            answer2 = this.createAnswerForPlayer(game, firstPlayer, dto, countAnswersFirstPlayer);
 
             countAnswersFirstPlayer++;
         }
 
-        if (secondPlayer!.user.id === userId) {
+        if (secondPlayer.user.id === userId) {
             if (countAnswersSecondPlayer === countQuestionsGame)
                 throw new ForbiddenException();
 
@@ -254,7 +281,7 @@ export class GameServices {
             // countAnswersSecondPlayer = secondPlayer!.answers!.length;
             //
             // if (answer.answerStatus === 'Correct') secondPlayer!.score++;
-            answer = this.createAnswerForPlayer(game, secondPlayer, dto, countAnswersSecondPlayer);
+            answer2 = this.createAnswerForPlayer(game, secondPlayer, dto, countAnswersSecondPlayer);
 
             countAnswersSecondPlayer++;
         }
@@ -264,7 +291,7 @@ export class GameServices {
 
         await this.pairGameRepository.saveGame(game);
 
-        return addedAnswerPlayerOutputModel(answer);
+        return addedAnswerPlayerOutputModel(answer2);
 
     }
 
