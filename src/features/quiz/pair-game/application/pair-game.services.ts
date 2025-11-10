@@ -224,13 +224,17 @@ export class GameServices {
 
         if (!game) throw new ForbiddenException();
 
+        const questions = game.questions;
+
+        if (!questions) throw new ForbiddenException();
+
         const answer = new PlayerAnswersEntity();
 
         game.players.forEach( (player, index) => {
             if (player.user.id === userId) {
-                const [questions, answers] = [game.questions, player.answers];
+                const answers = player.answers;
 
-                if (!questions || !answers) throw new ForbiddenException();
+                if (!answers) throw new ForbiddenException();
 
                 if (questions.length === answers.length) throw new ForbiddenException();
 
@@ -248,12 +252,9 @@ export class GameServices {
             }
         })
 
-        const countQuestionsGame = game.questions.length;
-        let countAnswersFirstPlayer = firstPlayer.answers.length;
-        let countAnswersSecondPlayer = secondPlayer.answers.length;
-
-        if (countQuestionsGame === countAnswersFirstPlayer &&
-            countQuestionsGame === countAnswersSecondPlayer) this.updateGameToFinishedStatus(game)
+        if (questions.length === game.players[0].answers?.length &&
+            questions.length === game.players[1].answers?.length)
+            this.updateGameToFinishedStatus(game)
 
         await this.pairGameRepository.saveGame(game);
 
