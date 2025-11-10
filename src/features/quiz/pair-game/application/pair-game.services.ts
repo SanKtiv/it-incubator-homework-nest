@@ -222,76 +222,42 @@ export class GameServices {
     ): Promise<AnswerPlayerOutputModel> {
         const game = await this.getActiveGameByUserId(userId);
 
-        if (!game || !game.questions) throw new ForbiddenException();
+        if (!game) throw new ForbiddenException();
 
-        const [firstPlayer, secondPlayer] = game.players;
+        const answer = new PlayerAnswersEntity();
 
-        if (!firstPlayer || !firstPlayer.answers ||
-            !secondPlayer || !secondPlayer.answers) throw new ForbiddenException();
+        game.players.forEach( (player, index) => {
+            if (player.user.id === userId) {
+                const [questions, answers] = [game.questions, player.answers];
+
+                if (!questions || !answers) throw new ForbiddenException();
+
+                if (questions.length === answers.length) throw new ForbiddenException();
+
+                const question = questions[answers.length];
+
+                answer.gameId = game.id;
+                answer.player = player;
+                answer.questionId = question.question.id;
+                answer.addedAt = new Date();
+                answer.answerStatus = this.getAnswerStatus(dto, question);
+
+                game.players[index].answers?.push(answer);
+
+                if (answer.answerStatus === 'Correct') game.players[index].score++;
+            }
+        })
 
         const countQuestionsGame = game.questions.length;
         let countAnswersFirstPlayer = firstPlayer.answers.length;
         let countAnswersSecondPlayer = secondPlayer.answers.length;
-
-        let answer2: PlayerAnswersEntity
-
-        if (firstPlayer.user.id === userId) {
-            if (countAnswersFirstPlayer === countQuestionsGame) throw new ForbiddenException();
-
-            const question =
-                game.questions[countAnswersFirstPlayer];
-
-            const questionId = question.question.id
-
-            const status = this.getAnswerStatus(dto, question)
-
-            const answer = this.createAnswer(game.id, firstPlayer, questionId, status)
-            // const question = game.questions![countAnswersFirstPlayer]
-            //
-            // answer.gameId = game.id;
-            // answer.player = firstPlayer;
-            // answer.questionId = question.question.id;
-            // answer.addedAt = new Date();
-            // answer.answerStatus = this.getAnswerStatus(dto, question);
-            //
-            // firstPlayer.answers!.push(answer);
-            //
-            // countAnswersFirstPlayer = firstPlayer.answers!.length;
-            //
-            // if (answer.answerStatus === 'Correct') firstPlayer.score++;
-            answer2 = this.createAnswerForPlayer(game, firstPlayer, dto, countAnswersFirstPlayer);
-
-            countAnswersFirstPlayer++;
-        }
-
-        if (secondPlayer.user.id === userId) {
-            if (countAnswersSecondPlayer === countQuestionsGame)
-                throw new ForbiddenException();
-
-            // const question = game.questions![countAnswersSecondPlayer]
-            //
-            // answer.gameId = game.id;
-            // answer.player = secondPlayer!;
-            // answer.questionId = question.question.id;
-            // answer.addedAt = new Date();
-            // answer.answerStatus = this.getAnswerStatus(dto, question);
-            //
-            // secondPlayer!.answers!.push(answer);
-            //
-            // countAnswersSecondPlayer = secondPlayer!.answers!.length;
-            //
-            // if (answer.answerStatus === 'Correct') secondPlayer!.score++;
-            answer2 = this.createAnswerForPlayer(game, secondPlayer, dto, countAnswersSecondPlayer);
-
-            countAnswersSecondPlayer++;
-        }
 
         if (countQuestionsGame === countAnswersFirstPlayer &&
             countQuestionsGame === countAnswersSecondPlayer) this.updateGameToFinishedStatus(game)
 
         await this.pairGameRepository.saveGame(game);
 
-        return addedAnswerPlayerOutputModel(answer2);
+        return addedAnswerPlayerOutputModel(answer);
 
     }
 
