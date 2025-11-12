@@ -21,7 +21,6 @@ export class GameServices {
         protected quizQuestionsRepository: QuizQuestionsRepository,
     ) {
     }
-
     async getActiveGameByUserId(userId: string) {
         const status = 'Active';
 
@@ -174,46 +173,6 @@ export class GameServices {
         }
 
         return fiveRandomQuestions.map(e => mapFunc(e))
-    }
-
-    getQuestionForAnswer(game: PairGamesEntity, ) {
-
-    }
-
-    createAnswer(gameId: string,
-                 player: PlayersEntity,
-                 questionId: string,
-                 status: 'Correct' | 'Incorrect') {
-        const answer = new PlayerAnswersEntity();
-
-        answer.gameId = gameId;
-        answer.player = player;
-        answer.questionId = questionId;
-        answer.addedAt = new Date();
-        answer.answerStatus = status;
-
-        return answer;
-    }
-
-    createAnswerForPlayer(game: PairGamesEntity,
-                          player: PlayersEntity,
-                          dto: InputAnswersModels,
-                          countAnswers: number,) {
-        const answer = new PlayerAnswersEntity();
-
-        const question = game.questions![countAnswers]
-
-        answer.gameId = game.id;
-        answer.player = player;
-        answer.questionId = question.question.id;
-        answer.addedAt = new Date();
-        answer.answerStatus = this.getAnswerStatus(dto, question);
-
-        player.answers!.push(answer);
-
-        if (answer.answerStatus === 'Correct') player.score++;
-
-        return answer;
     }
 
     async addAnswerPlayerInGame(
