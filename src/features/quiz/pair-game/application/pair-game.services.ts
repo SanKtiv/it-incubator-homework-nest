@@ -13,6 +13,8 @@ import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.enti
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
 import {PlayersEntity} from "../domain/players.entity";
+import {timeout} from "rxjs/operators";
+import {setTimeout} from "timers";
 
 @Injectable()
 export class GameServices {
@@ -38,12 +40,18 @@ export class GameServices {
         game.status = 'Finished';
         game.finishGameDate = new Date();
 
+        game.players.forEach( (player: PlayersEntity, index: number) => {
+            while (game.players[index].answers?.length < game.questions?.length) {
+                game.players[index].answers?.push()
+            }
+        })
+
         firstPlayer.answers!.sort(
-            (a: any, b: any) => b.addedAt - a.addedAt,
+            (a: PlayerAnswersEntity, b: PlayerAnswersEntity) => b.addedAt - a.addedAt,
         );
 
         secondPlayer!.answers!.sort(
-            (a: any, b: any) => b.addedAt - a.addedAt,
+            (a: PlayerAnswersEntity, b: PlayerAnswersEntity) => b.addedAt - a.addedAt,
         );
 
         const correctAnswersFirstPlayer =
@@ -211,6 +219,11 @@ export class GameServices {
             }
         })
 
+        const playerHaveAllAnswers = game.players.find(player =>
+            player.answers && player.answers.length === questions.length)
+
+        if (playerHaveAllAnswers) setTimeout(this.updateGameToFinishedStatus, 10000, game)
+
         if (questions.length === game.players[0].answers?.length &&
             questions.length === game.players[1].answers?.length)
             this.updateGameToFinishedStatus(game)
@@ -237,5 +250,13 @@ export class GameServices {
         if (resultFind) return correctStatus;
 
         return incorrectStatus;
+    }
+
+    async autoGameFinishing(player: PlayersEntity) {
+        const lastAnswerDate: Date = player.answers![-1].addedAt;
+
+        const finishGameDate: Date = new Date(lastAnswerDate.getTime() + 10000);
+
+        setTimeout()
     }
 }
