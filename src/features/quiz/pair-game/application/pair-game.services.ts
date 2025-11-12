@@ -110,7 +110,7 @@ export class GameServices {
 
         const players: PlayersEntity[] = [];
 
-        const player = this.createPlayer(userId);
+        const player = this.createPlayerByUserId(userId);
 
         players.push(player)
 
@@ -128,7 +128,7 @@ export class GameServices {
     async joinToGame(userId: string, game: PairGamesEntity) {
         const questions = await this.createFiveQuestionsForGame(game);
 
-        const player = this.createPlayer(userId);
+        const player = this.createPlayerByUserId(userId);
 
         player.index = 1;
 
@@ -143,7 +143,7 @@ export class GameServices {
         return this.pairGameRepository.saveGame(game);
     }
 
-    createPlayer(userId: string): PlayersEntity {
+    createPlayerByUserId(userId: string): PlayersEntity {
 
         const player = new PlayersEntity();
 
