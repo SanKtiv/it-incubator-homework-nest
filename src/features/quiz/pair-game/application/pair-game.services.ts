@@ -39,26 +39,25 @@ export class GameServices {
         game.status = 'Finished';
         game.finishGameDate = new Date();
 
+        const questions = game.questions;
+
+        if (!questions) return;
+
+        const countGameQuestions = questions.length;
+
         game.players.forEach( (player: PlayersEntity, index: number) => {
-            const currentPlayer = game.players[index];
+            let playerAnswers = game.players[index].answers;
 
-            if (!currentPlayer.answers) {
-                currentPlayer.answers = [];
+            if (!playerAnswers) playerAnswers = [];
 
+            const countAnswers = playerAnswers.length;
 
+            if (countAnswers < countGameQuestions) {
+                while (countAnswers < countGameQuestions) {
+                    const answer = this.creatIncorrectAnswerByGame(player, questions[countAnswers].question.id);
 
-                return
-            }
-            if (   currentPlayer.answers.length < game.questions?.length) {
-
-                const emptyAnswer = new PlayerAnswersEntity();
-
-                emptyAnswer.gameId = game.id;
-                emptyAnswer.answerStatus = 'Incorrect';
-                emptyAnswer.player = player;
-                emptyAnswer.addedAt = new Date();
-
-                currentPlayer.answers?.push(emptyAnswer)
+                    playerAnswers.push(answer)
+                }
             }
         })
 
