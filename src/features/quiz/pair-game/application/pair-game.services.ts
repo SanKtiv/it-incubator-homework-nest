@@ -13,7 +13,6 @@ import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.enti
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
 import {PlayersEntity} from "../domain/players.entity";
-import {timeout} from "rxjs/operators";
 import {setTimeout} from "timers";
 
 @Injectable()
@@ -41,8 +40,25 @@ export class GameServices {
         game.finishGameDate = new Date();
 
         game.players.forEach( (player: PlayersEntity, index: number) => {
-            while (game.players[index].answers?.length < game.questions?.length) {
-                game.players[index].answers?.push()
+            const currentPlayer = game.players[index];
+
+            if (!currentPlayer.answers) {
+                currentPlayer.answers = [];
+
+
+
+                return
+            }
+            if (   currentPlayer.answers.length < game.questions?.length) {
+
+                const emptyAnswer = new PlayerAnswersEntity();
+
+                emptyAnswer.gameId = game.id;
+                emptyAnswer.answerStatus = 'Incorrect';
+                emptyAnswer.player = player;
+                emptyAnswer.addedAt = new Date();
+
+                currentPlayer.answers?.push(emptyAnswer)
             }
         })
 
@@ -258,5 +274,17 @@ export class GameServices {
         const finishGameDate: Date = new Date(lastAnswerDate.getTime() + 10000);
 
         setTimeout()
+    }
+
+    creatIncorrectAnswerByGame(player: PlayersEntity, questionId: string) {
+        const answer = new PlayerAnswersEntity();
+
+        answer.gameId = player.game.id;
+        answer.answerStatus = 'Incorrect';
+        answer.addedAt = new Date();
+        answer.player = player;
+        answer.questionId = questionId;
+
+        return answer;
     }
 }
