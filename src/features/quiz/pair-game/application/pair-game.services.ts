@@ -54,20 +54,30 @@ export class GameServices {
 
             if (countAnswers < countGameQuestions) {
                 while (countAnswers < countGameQuestions) {
-                    const answer = this.creatIncorrectAnswerByGame(player, questions[countAnswers].question.id);
+                    const questionId = questions[countAnswers].question.id;
+
+                    const answer =
+                        this.creatIncorrectAnswerByGame(player, questionId);
 
                     playerAnswers.push(answer)
                 }
             }
+
+            const sortDateByDesc =
+                (a: PlayerAnswersEntity, b: PlayerAnswersEntity) => b.addedAt - a.addedAt;
+
+            playerAnswers.sort(sortDateByDesc);
         })
 
-        firstPlayer.answers!.sort(
-            (a: PlayerAnswersEntity, b: PlayerAnswersEntity) => b.addedAt - a.addedAt,
-        );
+        game.players.forEach( (player: PlayersEntity, index: number) => {
+            const playerAnswers = game.players[index].answers!;
 
-        secondPlayer!.answers!.sort(
-            (a: PlayerAnswersEntity, b: PlayerAnswersEntity) => b.addedAt - a.addedAt,
-        );
+            const findCorrectAnswer = (a: PlayerAnswersEntity) => a.answerStatus === 'Correct';
+
+            const oneAnswerIsCorrect = playerAnswers.find(findCorrectAnswer);
+
+
+        })
 
         const correctAnswersFirstPlayer =
             firstPlayer.answers!
