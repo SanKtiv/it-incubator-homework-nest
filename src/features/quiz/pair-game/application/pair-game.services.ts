@@ -50,7 +50,7 @@ export class GameServices {
                     const questionId = questions[countAnswers].question.id;
 
                     const answer =
-                        this.creatIncorrectAnswerByGame(player, questionId);
+                        this.createIncorrectAnswerByGame(player, questionId);
 
                     playerAnswers.push(answer)
                 }
@@ -58,7 +58,7 @@ export class GameServices {
         })
     }
 
-    addOneScoreForSpeedAnswers(game: PairGamesEntity) {
+    addOneScoreForFasterAnswers(game: PairGamesEntity) {
         const players = game.players;
 
         const sortPlayersByAsc =
@@ -77,50 +77,58 @@ export class GameServices {
 
         const [firstPlayer, secondPlayer] = players;
 
-        const correctAnswersFirstPlayer =
-            firstPlayer.answers!
-                .find((e) => e.answerStatus === 'Correct');
+        const findOneCorrectAnswer = (a: PlayerAnswersEntity) => a.answerStatus === 'Correct';
 
-        const correctAnswersSecondPlayer =
-            secondPlayer!.answers!
-                .find((e) => e.answerStatus === 'Correct');
+        const correctAnswerFirstPlayer = firstPlayer.answers!.find(findOneCorrectAnswer);
 
-        if (
-            firstPlayer.answers![0].addedAt >
-            secondPlayer!.answers![0].addedAt &&
-            correctAnswersSecondPlayer
-        ) secondPlayer!.score++;
+        const correctAnswerSecondPlayer = secondPlayer.answers!.find(findOneCorrectAnswer);
 
+        const firstPlayerFaster =
+            firstPlayer.answers![0].addedAt < secondPlayer.answers![0].addedAt;
 
-        if (
-            firstPlayer.answers![0].addedAt <
-            secondPlayer!.answers![0].addedAt &&
-            correctAnswersFirstPlayer
-        ) firstPlayer.score++;
+        if (correctAnswerFirstPlayer && firstPlayerFaster) firstPlayer.score++;
 
-        if (firstPlayer.score > secondPlayer!.score) {
+        if (correctAnswerSecondPlayer && !firstPlayerFaster) secondPlayer.score++;
+    }
+
+    determinationOfTheWinner(game: PairGamesEntity) {
+        const [firstPlayer, secondPlayer] = game.players;
+
+        if (firstPlayer.score > secondPlayer.score) {
             firstPlayer.win++;
-            secondPlayer!.lose++;
+            secondPlayer.lose++;
         }
 
-        if (firstPlayer.score < secondPlayer!.score) {
-            secondPlayer!.win++;
+        if (firstPlayer.score < secondPlayer.score) {
+            secondPlayer.win++;
             firstPlayer.lose++;
         }
 
-        if (firstPlayer.score == secondPlayer!.score) {
-            secondPlayer!.draw++;
+        if (firstPlayer.score === secondPlayer.score) {
+            secondPlayer.draw++;
             firstPlayer.draw++;
         }
     }
 
-    private updateGameToFinishedStatus(game: PairGamesEntity) {
+    async finishingGame(game: PairGamesEntity) {
         game.status = 'Finished';
         game.finishGameDate = new Date();
 
         this.addIncorrectPlayerAnswers(game);
 
-        this.addOneScoreForSpeedAnswers(game);
+        this.addOneScoreForFasterAnswers(game);
+
+        this.determinationOfTheWinner(game);
+
+        await this.pairGameRepository.saveGame(game);
+    }
+
+    async autoFinishingGame(gameId: string) {
+        const game = await this.pairGameRepository.getGameById(gameId);
+
+        if (!game || game.status !== 'Active') return;
+
+        await this.finishingGame(game);
     }
 
     async connectToGame(userId: string) {
@@ -215,25 +223,51 @@ export class GameServices {
         return fiveRandomQuestions.map(e => mapFunc(e))
     }
 
-    async addAnswerPlayerInGame(
-        userId: string,
-        dto: InputAnswersModels,
-    ): Promise<AnswerPlayerOutputModel> {
+    async addAnswerPlayerInGame(userId: string, dto: InputAnswersModels): Promise<AnswerPlayerOutputModel> {
         const game = await this.getActiveGameByUserId(userId);
 
         if (!game) throw new ForbiddenException();
 
-        const questions = game.questions;
+        const answer = this.createAndAddPlayerAnswerInGame(userId, game, dto);
 
-        if (!questions) throw new ForbiddenException();
+        const contQuestions = game.questions!.length;
+
+        const playerHaveAllAnswers =
+            game.players.find(player => player.answers && player.answers.length === contQuestions);
+
+        if (playerHaveAllAnswers) setTimeout(() => this.autoFinishingGame(game.id), 10000);
+
+        const [firstPlayer, secondPlayer] = game.players;
+
+        if (contQuestions === firstPlayer.answers!.length &&
+            contQuestions === secondPlayer.answers!.length) await this.finishingGame(game);
+
+        return addedAnswerPlayerOutputModel(answer);
+    }
+
+    private getAnswerStatus(dto: InputAnswersModels, question: QuestionsGameEntity) {
+        const correctStatus = 'Correct';
+        const incorrectStatus = 'Incorrect';
+        const arrayCorrectAnswers = question.question.correctAnswers.split(',');
+
+        const str = (str: string) => str.trim().toLowerCase();
+
+        const resultFind: string | undefined =
+            arrayCorrectAnswers.find((e) => str(e) === str(dto.answer));
+
+        if (resultFind) return correctStatus;
+
+        return incorrectStatus;
+    }
+
+    createAndAddPlayerAnswerInGame(userId: string, game: PairGamesEntity, dto: InputAnswersModels) {
+        const questions = game.questions!;
 
         const answer = new PlayerAnswersEntity();
 
-        game.players.forEach( (player, index) => {
+        game.players.forEach( (player: PlayersEntity, index: number) => {
             if (player.user.id === userId) {
-                const answers = player.answers;
-
-                if (!answers) throw new ForbiddenException();
+                const answers = player.answers!;
 
                 if (questions.length === answers.length) throw new ForbiddenException();
 
@@ -251,48 +285,10 @@ export class GameServices {
             }
         })
 
-        const playerHaveAllAnswers = game.players.find(player =>
-            player.answers && player.answers.length === questions.length)
-
-        if (playerHaveAllAnswers) setTimeout(this.updateGameToFinishedStatus, 10000, game)
-
-        if (questions.length === game.players[0].answers?.length &&
-            questions.length === game.players[1].answers?.length)
-            this.updateGameToFinishedStatus(game)
-
-        await this.pairGameRepository.saveGame(game);
-
-        return addedAnswerPlayerOutputModel(answer);
-
+        return answer;
     }
 
-    private getAnswerStatus(
-        dto: InputAnswersModels,
-        question: QuestionsGameEntity
-    ) {
-        const correctStatus = 'Correct';
-        const incorrectStatus = 'Incorrect';
-        const arrayCorrectAnswers = question.question.correctAnswers.split(',');
-
-        const str = (str: string) => str.trim().toLowerCase();
-
-        const resultFind: string | undefined =
-            arrayCorrectAnswers.find((e) => str(e) === str(dto.answer));
-
-        if (resultFind) return correctStatus;
-
-        return incorrectStatus;
-    }
-
-    async autoGameFinishing(player: PlayersEntity) {
-        const lastAnswerDate: Date = player.answers![-1].addedAt;
-
-        const finishGameDate: Date = new Date(lastAnswerDate.getTime() + 10000);
-
-        setTimeout()
-    }
-
-    creatIncorrectAnswerByGame(player: PlayersEntity, questionId: string) {
+    createIncorrectAnswerByGame(player: PlayersEntity, questionId: string) {
         const answer = new PlayerAnswersEntity();
 
         answer.gameId = player.game.id;
