@@ -33,15 +33,8 @@ export class GameServices {
         return game;
     }
 
-    private updateGameToFinishedStatus(game: PairGamesEntity) {
-        const [firstPlayer, secondPlayer] = game.players;
-
-        game.status = 'Finished';
-        game.finishGameDate = new Date();
-
-        const questions = game.questions;
-
-        if (!questions) return;
+    addIncorrectPlayerAnswers(game: PairGamesEntity) {
+        const questions = game.questions!;
 
         const countGameQuestions = questions.length;
 
@@ -62,6 +55,19 @@ export class GameServices {
                     playerAnswers.push(answer)
                 }
             }
+        })
+    }
+
+    addOneScoreForSpeedAnswers(game: PairGamesEntity) {
+        const players = game.players;
+
+        const sortPlayersByAsc =
+            (a: PlayersEntity, b: PlayersEntity) => a.index - b.index;
+
+        players.sort(sortPlayersByAsc);
+
+        players.forEach( (player: PlayersEntity, index: number) => {
+            const playerAnswers = game.players[index].answers!;
 
             const sortDateByDesc =
                 (a: PlayerAnswersEntity, b: PlayerAnswersEntity) => b.addedAt - a.addedAt;
@@ -69,15 +75,7 @@ export class GameServices {
             playerAnswers.sort(sortDateByDesc);
         })
 
-        game.players.forEach( (player: PlayersEntity, index: number) => {
-            const playerAnswers = game.players[index].answers!;
-
-            const findCorrectAnswer = (a: PlayerAnswersEntity) => a.answerStatus === 'Correct';
-
-            const oneAnswerIsCorrect = playerAnswers.find(findCorrectAnswer);
-
-
-        })
+        const [firstPlayer, secondPlayer] = players;
 
         const correctAnswersFirstPlayer =
             firstPlayer.answers!
@@ -114,6 +112,15 @@ export class GameServices {
             secondPlayer!.draw++;
             firstPlayer.draw++;
         }
+    }
+
+    private updateGameToFinishedStatus(game: PairGamesEntity) {
+        game.status = 'Finished';
+        game.finishGameDate = new Date();
+
+        this.addIncorrectPlayerAnswers(game);
+
+        this.addOneScoreForSpeedAnswers(game);
     }
 
     async connectToGame(userId: string) {
