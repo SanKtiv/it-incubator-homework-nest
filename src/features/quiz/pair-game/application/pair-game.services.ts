@@ -69,8 +69,7 @@ export class GameServices {
         players.forEach( (player: PlayersEntity, index: number) => {
             const playerAnswers = game.players[index].answers!;
 
-            const sortDateByDesc =
-                (a: PlayerAnswersEntity, b: PlayerAnswersEntity) => b.addedAt - a.addedAt;
+            const sortDateByDesc = (a: any, b: any) => b.addedAt - a.addedAt;
 
             playerAnswers.sort(sortDateByDesc);
         })
