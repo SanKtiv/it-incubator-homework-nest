@@ -26,6 +26,9 @@ export class PairGameQuizPairsController {
     }
     @Get('testing-create-game')
     async testing() {
+        console.log('START')
+        return this.pairGameServices.addAnswerPlayerInGameTest('8272aee5-0b74-4223-8595-e4cbb5381fe4', {answer: 'Answer_1'})
+        // return this.pairGameServices.autoFinishingGame('b61b2cdf-a880-4b58-b111-5f4ac831aef1');
     }
 
     @Get('pairs/my-current')

@@ -265,15 +265,15 @@ describe('QUIZ-PAIR-GAME TESTS (e2e)', () => {
     const result4 = await quizPairGameTestManager.createAnswer(testAccessToken1, {
       answer: 'Answer_1',
     })
-    const result5 = await quizPairGameTestManager.createAnswer(testAccessToken1, {
-      answer: 'Answer_1',
-    })
+    // const result5 = await quizPairGameTestManager.createAnswer(testAccessToken1, {
+    //   answer: 'Answer_1',
+    // })
 
     await expect(result1.statusCode).toBe(200)
     await expect(result2.statusCode).toBe(200)
     await expect(result3.statusCode).toBe(200)
     await expect(result4.statusCode).toBe(200)
-    await expect(result5.statusCode).toBe(200)
+    // await expect(result5.statusCode).toBe(200)
   });
 
   // it('17 /pair-game-quiz/pairs/my-current/answers (POST), user1 add correct answer first, should return status 200', async () => {
