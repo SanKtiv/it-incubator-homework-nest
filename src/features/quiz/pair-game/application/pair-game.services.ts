@@ -229,17 +229,17 @@ export class GameServices {
 
         const answer = this.createPlayerAnswerAndAddInGame(userId, game, dto);
 
-        const contQuestions = game.questions!.length;
+        const countQuestions = game.questions!.length;
 
         const playerHaveAllAnswers =
-            game.players.find(player => player.answers && player.answers.length === contQuestions);
+            game.players.find(player => player.answers && player.answers.length === countQuestions);
 
         if (playerHaveAllAnswers) setTimeout(() => this.autoFinishingGame(game.id), 10000);
 
         const [firstPlayer, secondPlayer] = game.players;
 
-        if (contQuestions === firstPlayer.answers!.length &&
-            contQuestions === secondPlayer.answers!.length) await this.finishingGame(game);
+        if (countQuestions === firstPlayer.answers!.length &&
+            countQuestions === secondPlayer.answers!.length) await this.finishingGame(game);
 
         return addedAnswerPlayerOutputModel(answer);
     }
