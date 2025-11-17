@@ -227,7 +227,7 @@ export class GameServices {
 
         if (!game) throw new ForbiddenException();
 
-        const answer = this.createAndAddPlayerAnswerInGame(userId, game, dto);
+        const answer = this.createPlayerAnswerAndAddInGame(userId, game, dto);
 
         const contQuestions = game.questions!.length;
 
@@ -259,7 +259,7 @@ export class GameServices {
         return incorrectStatus;
     }
 
-    createAndAddPlayerAnswerInGame(userId: string, game: PairGamesEntity, dto: InputAnswersModels) {
+    createPlayerAnswerAndAddInGame(userId: string, game: PairGamesEntity, dto: InputAnswersModels) {
         const questions = game.questions!;
 
         const answer = new PlayerAnswersEntity();
