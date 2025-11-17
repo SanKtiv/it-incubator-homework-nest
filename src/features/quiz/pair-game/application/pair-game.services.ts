@@ -109,7 +109,7 @@ export class GameServices {
         }
     }
 
-    async finishingGame(game: PairGamesEntity) {
+    finishingGame(game: PairGamesEntity) {
         game.status = 'Finished';
         game.finishGameDate = new Date();
 
@@ -118,8 +118,6 @@ export class GameServices {
         this.addOneScoreForFasterAnswers(game);
 
         this.determinationOfTheWinner(game);
-
-        await this.pairGameRepository.saveGame(game);
     }
 
     async autoFinishingGame(gameId: string) {
@@ -127,7 +125,9 @@ export class GameServices {
 
         if (!game || game.status !== 'Active') return;
 
-        await this.finishingGame(game);
+        this.finishingGame(game);
+
+        await this.pairGameRepository.saveGame(game);
     }
 
     async connectToGame(userId: string) {
@@ -239,7 +239,9 @@ export class GameServices {
         const [firstPlayer, secondPlayer] = game.players;
 
         if (countQuestions === firstPlayer.answers!.length &&
-            countQuestions === secondPlayer.answers!.length) await this.finishingGame(game);
+            countQuestions === secondPlayer.answers!.length) this.finishingGame(game);
+
+        await this.pairGameRepository.saveGame(game);
 
         return addedAnswerPlayerOutputModel(answer);
     }
