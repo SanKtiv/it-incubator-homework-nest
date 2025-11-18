@@ -33,6 +33,27 @@ export class GameServices {
         return game;
     }
 
+    async connectToGame(userId: string) {
+        let game: PairGamesEntity | null | undefined =
+            await this.pairGameRepository.getUnfinishedGameByUserId(userId);
+
+        if (game) throw new ForbiddenException();
+
+        const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
+
+        game = await this.pairGameRepository.getPairGamesByStatus(statusPending);
+
+        if (game) await this.joinSecondPlayerToGame(userId, game);
+
+        else game = this.createGame(userId, statusPending);
+
+        game = await this.pairGameRepository.saveGame(game);
+
+        game = await this.pairGameRepository.getGameById(game!.id)
+
+        return outputModelCreatedPairGame(game!);
+    }
+
     addIncorrectPlayerAnswers(game: PairGamesEntity) {
         const questions = game.questions!;
 
@@ -126,29 +147,7 @@ export class GameServices {
         await this.pairGameRepository.saveGame(game);
     }
 
-    async connectToGame(userId: string) {
-        const unfinishedGame: PairGamesEntity | null =
-            await this.pairGameRepository.getUnfinishedGameByUserId(userId);
-
-        if (unfinishedGame) throw new ForbiddenException();
-
-        const statusPending: QuizPairGameStatusType = 'PendingSecondPlayer';
-
-        const pendingGame: PairGamesEntity | null =
-            await this.pairGameRepository.getPairGamesByStatus(statusPending);
-
-        let game: PairGamesEntity | null | undefined;
-
-        if (pendingGame) game = await this.joinToGame(userId, pendingGame);
-
-        else game = await this.createGame(userId, statusPending);
-
-        game = await this.pairGameRepository.getGameById(game!.id)
-
-        return outputModelCreatedPairGame(game!);
-    }
-
-    async createGame(userId: string, status: QuizPairGameStatusType) {
+    createGame(userId: string, status: QuizPairGameStatusType) {
         const game = new PairGamesEntity();
 
         const players: PlayersEntity[] = [];
@@ -165,10 +164,10 @@ export class GameServices {
 
         game.status = status;
 
-        return this.pairGameRepository.saveGame(game);
+        return game;
     }
 
-    async joinToGame(userId: string, game: PairGamesEntity) {
+    async joinSecondPlayerToGame(userId: string, game: PairGamesEntity) {
         const questions = await this.createFiveQuestionsForGame(game);
 
         const player = this.createPlayerByUserId(userId);
@@ -182,8 +181,6 @@ export class GameServices {
         game.startGameDate = new Date();
 
         game.questions = questions;
-
-        return this.pairGameRepository.saveGame(game);
     }
 
     createPlayerByUserId(userId: string): PlayersEntity {
@@ -273,6 +270,7 @@ export class GameServices {
 
         return addedAnswerPlayerOutputModel(answer);
     }
+
     private getAnswerStatus(dto: InputAnswersModels, question: QuestionsGameEntity) {
         const correctStatus = 'Correct';
         const incorrectStatus = 'Incorrect';
