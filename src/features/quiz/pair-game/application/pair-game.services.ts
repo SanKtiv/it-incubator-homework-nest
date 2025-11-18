@@ -141,6 +141,8 @@ export class GameServices {
         const gameId = game!.id;
 
         setTimeout(async () => {
+
+            console.log('START AUTOFINISHING');
                 const gameActive = await this.pairGameRepository.getGameById(gameId);
 
                 if (!gameActive || gameActive.status !== 'Active') return;
