@@ -137,14 +137,19 @@ export class GameServices {
         this.determinationOfTheWinner(game);
     }
 
-    async autoFinishingGame(gameId: string) {
-        const game = await this.pairGameRepository.getGameById(gameId);
+    autoFinishingGame(game: PairGamesEntity, delay: number) {
+        const gameId = game!.id;
 
-        if (!game || game.status !== 'Active') return;
+        setTimeout(async () => {
+                const gameActive = await this.pairGameRepository.getGameById(gameId);
 
-        this.finishingGame(game);
+                if (!gameActive || gameActive.status !== 'Active') return;
 
-        await this.pairGameRepository.saveGame(game);
+                this.finishingGame(gameActive);
+
+                await this.pairGameRepository.saveGame(gameActive);
+            },
+            delay)
     }
 
     createGame(userId: string, status: QuizPairGameStatusType) {
@@ -258,8 +263,7 @@ export class GameServices {
         const playerHaveAllAnswers =
             game.players.find(player => player.answers && player.answers.length === countQuestions);
 
-        if (playerHaveAllAnswers)
-            setTimeout(() => this.autoFinishingGame(game.id), 10000);
+        if (playerHaveAllAnswers) this.autoFinishingGame(game, 10000);
 
         const [firstPlayer, secondPlayer] = game.players;
 
