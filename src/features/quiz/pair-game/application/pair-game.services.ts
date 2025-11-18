@@ -265,7 +265,7 @@ export class GameServices {
         const playerHaveAllAnswers =
             game.players.find(player => player.answers && player.answers.length === countQuestions);
 
-        if (playerHaveAllAnswers) this.autoFinishingGame(game, 70000);
+        if (playerHaveAllAnswers) this.autoFinishingGame(game, 7000);
 
         const [firstPlayer, secondPlayer] = game.players;
 
