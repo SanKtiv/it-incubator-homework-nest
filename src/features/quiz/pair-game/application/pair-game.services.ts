@@ -215,38 +215,38 @@ export class GameServices {
         return fiveRandomQuestions.map(e => mapFunc(e))
     }
 
+    // async addAnswerPlayerInGame(userId: string, dto: InputAnswersModels): Promise<AnswerPlayerOutputModel> {
+    //     const game = await this.getActiveGameByUserId(userId);
+    //
+    //     if (!game) throw new ForbiddenException();
+    //
+    //     const answer = this.createPlayerAnswerAndAddInGame(userId, game, dto);
+    //
+    //     const countQuestions = game.questions!.length;
+    //
+    //     const playerHaveAllAnswers =
+    //         game.players.find(player => player.answers && player.answers.length === countQuestions);
+    //
+    //     if (playerHaveAllAnswers) setTimeout(async () => {
+    //         try {
+    //             await this.autoFinishingGame(game.id)
+    //         }
+    //         catch (e) {
+    //             console.log('ERROR =', e)
+    //         }},
+    //         10000);
+    //
+    //     const [firstPlayer, secondPlayer] = game.players;
+    //
+    //     if (countQuestions === firstPlayer.answers!.length &&
+    //         countQuestions === secondPlayer.answers!.length) this.finishingGame(game);
+    //
+    //     await this.pairGameRepository.saveGame(game);
+    //
+    //     return addedAnswerPlayerOutputModel(answer);
+    // }
+
     async addAnswerPlayerInGame(userId: string, dto: InputAnswersModels): Promise<AnswerPlayerOutputModel> {
-        const game = await this.getActiveGameByUserId(userId);
-
-        if (!game) throw new ForbiddenException();
-
-        const answer = this.createPlayerAnswerAndAddInGame(userId, game, dto);
-
-        const countQuestions = game.questions!.length;
-
-        const playerHaveAllAnswers =
-            game.players.find(player => player.answers && player.answers.length === countQuestions);
-
-        if (playerHaveAllAnswers) setTimeout(async () => {
-            try {
-                await this.autoFinishingGame(game.id)
-            }
-            catch (e) {
-                console.log('ERROR =', e)
-            }},
-            10000);
-
-        const [firstPlayer, secondPlayer] = game.players;
-
-        if (countQuestions === firstPlayer.answers!.length &&
-            countQuestions === secondPlayer.answers!.length) this.finishingGame(game);
-
-        await this.pairGameRepository.saveGame(game);
-
-        return addedAnswerPlayerOutputModel(answer);
-    }
-
-    async addAnswerPlayerInGameTest(userId: string, dto: InputAnswersModels): Promise<AnswerPlayerOutputModel> {
         const game = await this.getActiveGameByUserId(userId);
 
         if (!game) throw new ForbiddenException();
