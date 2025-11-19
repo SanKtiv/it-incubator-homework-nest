@@ -23,11 +23,10 @@ async function bootstrap() {
 
   const PORT = process.env.PORT || appSettings.api.APP_PORT;
 
-  console.log('App starting listen port:', PORT);
-  console.log('ENV:', appSettings.env.getEnv());
-
   await app.listen(PORT, '0.0.0.0');
 
+  console.log('App starting listen port:', PORT);
+  console.log('ENV:', appSettings.env.getEnv());
   console.log('SERVER STARTED');
 }
 
