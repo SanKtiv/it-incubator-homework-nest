@@ -13,7 +13,7 @@ import {PairGamesEntity, QuizPairGameStatusType} from '../domain/pair-games.enti
 import {QuestionsGameEntity} from '../domain/questions-game.entity';
 import {PlayerAnswersEntity} from '../domain/player-answers.entity';
 import {PlayersEntity} from "../domain/players.entity";
-import {setTimeout} from "timers";
+import {setTimeout as sleep} from "timers/promises";
 
 @Injectable()
 export class GameServices {
@@ -137,31 +137,18 @@ export class GameServices {
         this.determinationOfTheWinner(game);
     }
 
-    autoFinishingGame(game: PairGamesEntity, delay: number) {
-        const gameId = game!.id;
+    private async autoFinishingGame(game: PairGamesEntity) {
+        await sleep(10000);
 
-        setTimeout(() => console.log('1 sec'), 1000)
-        setTimeout(() => console.log('2 sec'), 2000)
-        setTimeout(() => console.log('3 sec'), 3000)
-        setTimeout(() => console.log('4 sec'), 4000)
-        setTimeout(() => console.log('5 sec'), 5000)
-        setTimeout(() => console.log('6 sec'), 6000)
-        setTimeout(() => console.log('7 sec'), 7000)
-        setTimeout(() => console.log('8 sec'), 8000)
-        setTimeout(() => console.log('9 sec'), 9000)
+        console.log('START AUTOFINISHING');
 
-        setTimeout(async () => {
+        const gameActive = await this.pairGameRepository.getGameById(game.id);
 
-            console.log('START AUTOFINISHING');
-                const gameActive = await this.pairGameRepository.getGameById(gameId);
+        if (!gameActive || gameActive.status !== 'Active') return;
 
-                if (!gameActive || gameActive.status !== 'Active') return;
+        this.finishingGame(gameActive);
 
-                this.finishingGame(gameActive);
-
-                await this.pairGameRepository.saveGame(gameActive);
-            },
-            delay)
+        await this.pairGameRepository.saveGame(gameActive);
     }
 
     createGame(userId: string, status: QuizPairGameStatusType) {
@@ -244,7 +231,8 @@ export class GameServices {
         const playerHaveAllAnswers =
             game.players.find(player => player.answers && player.answers.length === countQuestions);
 
-        if (playerHaveAllAnswers) this.autoFinishingGame(game, 10000);
+        if (playerHaveAllAnswers) this.autoFinishingGame(game);
+
 
         const [firstPlayer, secondPlayer] = game.players;
 

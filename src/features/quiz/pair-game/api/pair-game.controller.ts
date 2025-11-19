@@ -27,7 +27,7 @@ export class PairGameQuizPairsController {
     @Get('testing-create-game')
     async testing() {
         console.log('START')
-        return this.pairGameServices.addAnswerPlayerInGame('f615f56b-e4dd-4a00-84b0-6b24d6e85382', {answer: 'Answer_1'})
+        return this.pairGameServices.addAnswerPlayerInGame('0b2d8470-57f5-4230-a0a6-aea9bc231639', {answer: 'Answer_1'})
         //return this.pairGameQueryRepository.getById('5ac46300-53a1-4f31-98ea-aefccc08e598', '6b66a90e-6508-4e4e-a6f9-28a49a9b4879');
         // return this.pairGameServices.autoFinishingGame('b61b2cdf-a880-4b58-b111-5f4ac831aef1');
     }
