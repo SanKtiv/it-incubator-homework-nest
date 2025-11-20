@@ -138,7 +138,7 @@ export class GameServices {
     }
 
     private async autoFinishingGame(game: PairGamesEntity) {
-        await sleep(90000);
+        await sleep(9000);
 
         console.log('START AUTOFINISHING');
 
