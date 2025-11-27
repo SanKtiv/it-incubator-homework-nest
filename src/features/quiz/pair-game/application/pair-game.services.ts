@@ -158,7 +158,7 @@ export class GameServices {
 
         const player = this.createPlayerByUserId(userId);
 
-        players.push(player)
+        players.push(player);
 
         game.players = players;
 
