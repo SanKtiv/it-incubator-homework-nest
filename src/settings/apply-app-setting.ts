@@ -3,8 +3,9 @@ import {
   INestApplication,
   ValidationPipe,
 } from '@nestjs/common';
+import { appSettings } from './app-settings'
 import cookieParser from 'cookie-parser';
-//import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from '../app.module';
 import { useContainer } from 'class-validator';
 import { ErrorsFilter } from '../infrastructure/filters/exception.filter';
@@ -12,7 +13,7 @@ import { TooManyRequestsMiddleware } from '../infrastructure/middlewares/count-r
 import { RequestApiService } from '../features/requests/application/request-api.service';
 
 // Префикс нашего приложения (http://site.com/api)
-//const APP_PREFIX = '/api';
+const APP_PREFIX = '/api';
 
 // Используем данную функцию в main.ts и в e2e тестах
 export const applyAppSettings = (app: INestApplication) => {
@@ -38,7 +39,7 @@ export const applyAppSettings = (app: INestApplication) => {
   //setAppPrefix(app);
 
   // Конфигурация swagger документации
-  //setSwagger(app);
+  setSwagger(app);
 
   // Применение глобальных pipes
   setAppPipes(app);
@@ -54,22 +55,22 @@ export const applyAppSettings = (app: INestApplication) => {
 //     app.setGlobalPrefix(APP_PREFIX);
 // };
 
-// const setSwagger = (app: INestApplication) => {
-//     if (!appSettings.env.isProduction()) {
-//         const swaggerPath = APP_PREFIX + '/swagger-doc';
-//
-//         const config = new DocumentBuilder()
-//             .setTitle('BLOGGER API')
-//             .addBearerAuth()
-//             .setVersion('1.0')
-//             .build();
-//
-//         const document = SwaggerModule.createDocument(app, config);
-//         SwaggerModule.setup(swaggerPath, app, document, {
-//             customSiteTitle: 'Blogger Swagger',
-//         });
-//     }
-// };
+const setSwagger = (app: INestApplication) => {
+    if (!appSettings.env.isProduction()) {
+        const swaggerPath = APP_PREFIX + '/swagger-doc';
+
+        const config = new DocumentBuilder()
+            .setTitle('BLOGGER API')
+            .addBearerAuth()
+            .setVersion('1.0')
+            .build();
+
+        const document = SwaggerModule.createDocument(app, config);
+        SwaggerModule.setup(swaggerPath, app, document, {
+            customSiteTitle: 'Blogger Swagger',
+        });
+    }
+};
 
 const setAppPipes = (app: INestApplication) => {
   app.useGlobalPipes(
