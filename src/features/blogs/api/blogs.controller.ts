@@ -12,6 +12,12 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { BlogQuery, BlogsInputDto } from './models/input/blogs.input.dto';
 import { BlogsService } from '../application/blogs.service';
 import {
@@ -33,6 +39,7 @@ import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 
 @Controller('blogs')
+@ApiTags('blogs')
 export class BlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
@@ -44,6 +51,9 @@ export class BlogsController {
 
   @Post()
   @UseGuards(BasicAuthGuard)
+  @ApiOperation({ summary: 'New blog' })
+  @ApiResponse({ status: 201, description: 'Created' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
   async createBlog(@Body() dto: BlogsInputDto): Promise<BlogsViewDto> {
     return this.blogsService.createBlog(dto);
   }
