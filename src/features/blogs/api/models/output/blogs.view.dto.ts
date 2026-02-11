@@ -1,18 +1,41 @@
 import { BlogDocument } from '../../../domain/blogs.schema';
 import { BlogQuery } from '../input/blogs.input.dto';
 import { BlogsTable } from '../../../domain/blog.entity';
-import { rethrow } from '@nestjs/core/helpers/rethrow';
-import retryTimes = jest.retryTimes;
+import {ApiProperty} from "@nestjs/swagger";
+
+// export class BlogsViewDto {
+//   constructor(
+//       public id: string,
+//       public name: string,
+//       public description: string,
+//       public websiteUrl: string,
+//       public createdAt: string,
+//       public isMembership: boolean,
+//   ) {}
+// }
 
 export class BlogsViewDto {
+  @ApiProperty() public id: string;
+  @ApiProperty() public name: string;
+  @ApiProperty() public description: string;
+  @ApiProperty() public websiteUrl: string;
+  @ApiProperty() public createdAt: string;
+  @ApiProperty() public isMembership: boolean;
   constructor(
-    public id: string,
-    public name: string,
-    public description: string,
-    public websiteUrl: string,
-    public createdAt: string,
-    public isMembership: boolean,
-  ) {}
+      id: string,
+      name: string,
+      description: string,
+      websiteUrl: string,
+      createdAt: string,
+      isMembership: boolean,
+  ) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.isMembership = isMembership;
+    this.websiteUrl = websiteUrl;
+    this.createdAt = createdAt
+  }
 }
 
 export class BlogsViewPagingDto {

@@ -17,7 +17,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiTags,
-  ApiQuery
+  ApiQuery, ApiOkResponse
 } from '@nestjs/swagger';
 import { BlogQuery, BlogsInputDto } from './models/input/blogs.input.dto';
 import { BlogsService } from '../application/blogs.service';
@@ -74,12 +74,21 @@ export class BlogsController {
   }
 
   @Get()
-  @ApiQuery({ type: BlogQuery })
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    type: BlogsViewPagingDto
+  })
+  //@ApiQuery({ type: BlogQuery })
   async getBlogsPaging(@Query() query: BlogQuery): Promise<BlogsViewPagingDto> {
     return this.blogsQueryRepository.findBlogs(query);
   }
 
   @Get(':blogId')
+  @ApiOkResponse({
+    description: 'Success',
+    type: BlogsViewDto
+  })
   async getBlogById(
     @Param('blogId', paramIdIsUUIdPipe) id: string,
   ): Promise<BlogsViewDto> {
