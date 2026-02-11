@@ -9,6 +9,7 @@ import {
 import { Type } from 'class-transformer';
 import { Trim } from '../../../../../infrastructure/decorators/transform/trim-custom.decorator';
 import { ToUpperCase } from '../../../../../infrastructure/decorators/transform/toUpperCase.decorator';
+import {ApiProperty} from "@nestjs/swagger";
 
 export class BlogsInputDto {
   @Length(1, 15)
@@ -48,28 +49,49 @@ export class CreatingBlogDto {
 export class BlogQuery {
   @IsOptional()
   @IsString()
+  @ApiProperty({
+    type: String || null,
+    default: null
+  })
   searchNameTerm: string | null = null;
 
   @IsOptional()
   @IsString()
+  @ApiProperty({
+    type: String,
+    default: 'createdAt'
+  })
   sortBy: string = 'createdAt';
 
   @IsOptional()
   @ToUpperCase()
   @IsString()
+  @ApiProperty({
+    type: String,
+    default: 'DESC'
+  })
   sortDirection: 'ASC' | 'DESC' = 'DESC';
-  //sortDirection: 'asc' | 'desc' = 'desc';
 
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(0)
+  @ApiProperty({
+    type: Number,
+    minimum: 0,
+    default: 1
+  })
   pageNumber: number = 1;
 
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(0)
+  @ApiProperty({
+    type: Number,
+    minimum: 0,
+    default: 10
+  })
   pageSize: number = 10;
 
   constructor(query: Partial<BlogQuery> = {}) {
