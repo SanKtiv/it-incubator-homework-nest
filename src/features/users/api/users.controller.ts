@@ -17,7 +17,7 @@ import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe
 import { UsersQuery } from './models/input/users.query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
-import {ApiBasicAuth} from "@nestjs/swagger";
+import {ApiBasicAuth, ApiParam} from "@nestjs/swagger";
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
@@ -42,6 +42,7 @@ export class UsersController {
   @Delete(':userId')
   @HttpCode(204)
   @UsePipes(paramIdIsUUIdPipe)
+  // @ApiParam({name: 'userId'})
   async deleteUserById(@Param('userId') id: string) {
     await this.usersService.deleteUserById(id);
   }

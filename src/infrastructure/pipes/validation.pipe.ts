@@ -3,7 +3,6 @@ import {
   Injectable,
   ArgumentMetadata,
   NotFoundException,
-  ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
 import { BlogsQueryRepositoryMongo } from '../../features/blogs/infrastructure/mongodb/blogs.query.repository-mongo';
