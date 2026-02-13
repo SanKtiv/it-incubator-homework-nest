@@ -17,9 +17,11 @@ import { paramIdIsUUIdPipe } from '../../../infrastructure/pipes/validation.pipe
 import { UsersQuery } from './models/input/users.query.dto';
 import { BasicAuthGuard } from '../../../infrastructure/guards/basic.guard';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
+import {ApiBasicAuth} from "@nestjs/swagger";
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
+@ApiBasicAuth()
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
