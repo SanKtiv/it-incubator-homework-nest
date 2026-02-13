@@ -4,8 +4,8 @@ import {
   infoCurrentUserDto,
   InfoCurrentUserDto,
 } from '../../../auth/api/models/output/info-current-user.dto';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UsersTable } from '../../domain/users.table';
 import {
   UsersPagingDto,

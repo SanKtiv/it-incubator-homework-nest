@@ -7,6 +7,11 @@ import {
 import { Type } from 'class-transformer';
 import { ToUpperCase } from '../../../../../infrastructure/decorators/transform/toUpperCase.decorator';
 
+enum sortDirection {
+  ASC = 'ASC',
+  DESC = 'DESC'
+}
+
 export class UsersQuery {
   @IsOptional()
   @IsString()
@@ -23,7 +28,8 @@ export class UsersQuery {
   @IsOptional()
   @ToUpperCase()
   @IsString()
-  sortDirection: 'ASC' | 'DESC' = 'DESC';
+  // sortDirection: 'ASC' | 'DESC' = 'DESC';
+  sortDirection: sortDirection = sortDirection.DESC;
 
   @IsOptional()
   @Type(() => Number)
